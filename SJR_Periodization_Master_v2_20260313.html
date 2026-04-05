@@ -1,0 +1,1580 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Periodization Guide — Sprint · Jump · Resilience</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Mono:wght@300;400;500&family=Barlow+Condensed:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f8f6f1;
+    --bg2: #f0ede6;
+    --surface: #ffffff;
+    --border: #ddd9d0;
+    --border-light: #eae6de;
+    --ink: #18160f;
+    --ink-muted: #5c5848;
+    --ink-dim: #9c9888;
+
+    --gpp: #2a5c7a;
+    --spp: #5a2a7a;
+    --comp: #c8341a;
+    --trans: #2a7a4a;
+    --maint: #7a6a2a;
+    --rehab: #4a6a8a;
+
+    --shaylan: #c8341a;
+    --cadence: #5a2a7a;
+    --patrick: #2a5c7a;
+
+    --week-w: 52px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 300;
+    line-height: 1.65;
+  }
+
+  /* HEADER */
+  .header {
+    background: var(--ink);
+    color: #f8f6f1;
+    padding: 3.5rem 2rem 3rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .header::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      repeating-linear-gradient(
+        90deg,
+        transparent,
+        transparent calc(var(--week-w) - 1px),
+        rgba(255,255,255,0.03) calc(var(--week-w) - 1px),
+        rgba(255,255,255,0.03) var(--week-w)
+      );
+    pointer-events: none;
+  }
+
+  .header-eyebrow {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: rgba(248,246,241,0.35);
+    margin-bottom: 0.75rem;
+  }
+
+  .header h1 {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: clamp(2.5rem, 8vw, 5.5rem);
+    font-weight: 800;
+    letter-spacing: 0.02em;
+    line-height: 0.92;
+    margin-bottom: 1rem;
+  }
+
+  .header h1 span { color: #c8a96e; }
+
+  .header-desc {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.05rem;
+    font-style: italic;
+    color: rgba(248,246,241,0.55);
+    max-width: 580px;
+    line-height: 1.5;
+    font-weight: 300;
+  }
+
+  .header-athletes {
+    display: flex;
+    gap: 1.5rem;
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid rgba(255,255,255,0.08);
+    flex-wrap: wrap;
+  }
+
+  .athlete-chip {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.62rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 0.3rem 0.85rem;
+    border-radius: 1px;
+    border: 1px solid;
+  }
+
+  .chip-s { color: var(--shaylan); border-color: rgba(200,52,26,0.4); background: rgba(200,52,26,0.1); }
+  .chip-c { color: #c8a9e8; border-color: rgba(90,42,122,0.4); background: rgba(90,42,122,0.12); }
+  .chip-p { color: #a9c8e8; border-color: rgba(42,92,122,0.4); background: rgba(42,92,122,0.12); }
+
+  /* NAV */
+  nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(248,246,241,0.97);
+    backdrop-filter: blur(8px);
+    border-bottom: 2px solid var(--ink);
+    padding: 0 2rem;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+
+  nav ul { list-style: none; display: inline-flex; }
+
+  nav a {
+    display: block;
+    padding: 0.85rem 1rem;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+    text-decoration: none;
+    border-bottom: 2px solid transparent;
+    transition: all 0.15s;
+    margin-bottom: -2px;
+  }
+
+  nav a:hover { color: var(--ink); border-bottom-color: var(--ink); }
+
+  /* MAIN */
+  main { max-width: 1060px; margin: 0 auto; padding: 2.5rem 2rem; }
+
+  section { margin-bottom: 4rem; }
+
+  .section-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.58rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--ink-dim);
+    margin-bottom: 0.4rem;
+  }
+
+  h2 {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 2rem;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    color: var(--ink);
+    margin-bottom: 1.25rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 2px solid var(--ink);
+  }
+
+  h3 {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin: 2rem 0 0.75rem;
+    color: var(--ink);
+  }
+
+  p { color: var(--ink-muted); font-size: 0.95rem; margin-bottom: 0.75rem; line-height: 1.65; }
+  strong { color: var(--ink); font-weight: 600; }
+  em { font-style: italic; }
+
+  /* PHASE BLOCKS */
+  .phase-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin: 1rem 0 1.5rem;
+  }
+
+  .phase-pill {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.58rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 0.25rem 0.65rem;
+    border-radius: 1px;
+    border: 1px solid;
+  }
+
+  .ph-gpp { background: rgba(42,92,122,0.1); color: var(--gpp); border-color: rgba(42,92,122,0.3); }
+  .ph-spp { background: rgba(90,42,122,0.1); color: var(--spp); border-color: rgba(90,42,122,0.3); }
+  .ph-comp { background: rgba(200,52,26,0.1); color: var(--comp); border-color: rgba(200,52,26,0.3); }
+  .ph-trans { background: rgba(42,122,74,0.1); color: var(--trans); border-color: rgba(42,122,74,0.3); }
+  .ph-maint { background: rgba(122,106,42,0.1); color: var(--maint); border-color: rgba(122,106,42,0.3); }
+  .ph-rehab { background: rgba(74,106,138,0.1); color: var(--rehab); border-color: rgba(74,106,138,0.3); }
+
+  /* Exercise Library deep-link button */
+  .el-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.58rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 0.28rem 0.7rem;
+    border-radius: 2px;
+    border: 1px solid;
+    text-decoration: none;
+    transition: all 0.15s;
+    margin-left: auto;
+  }
+
+  .el-link::after { content: ' →'; }
+
+  .el-link-gpp  { color: var(--gpp);   border-color: rgba(42,92,122,0.4);  background: rgba(42,92,122,0.06); }
+  .el-link-spp  { color: var(--spp);   border-color: rgba(90,42,122,0.4);  background: rgba(90,42,122,0.06); }
+  .el-link-comp { color: var(--comp);  border-color: rgba(200,52,26,0.4);  background: rgba(200,52,26,0.06); }
+  .el-link-rts  { color: var(--rehab); border-color: rgba(74,106,138,0.4); background: rgba(74,106,138,0.06); }
+
+  .el-link:hover { opacity: 0.75; }
+
+  /* PRINCIPLE CARDS */
+  .principle-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    margin: 1rem 0;
+  }
+
+  .principle-card {
+    background: var(--surface);
+    padding: 1.25rem;
+  }
+
+  .pc-num {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: var(--border);
+    line-height: 1;
+    margin-bottom: 0.5rem;
+  }
+
+  .pc-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 1rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--ink);
+    margin-bottom: 0.5rem;
+  }
+
+  .pc-body { font-size: 0.88rem; color: var(--ink-muted); }
+
+  /* TIMELINE / GANTT */
+  .gantt-wrap {
+    overflow-x: auto;
+    margin: 1.5rem 0;
+    border: 1px solid var(--border);
+  }
+
+  .gantt {
+    min-width: 900px;
+    background: var(--surface);
+  }
+
+  .gantt-header {
+    display: grid;
+    grid-template-columns: 120px repeat(22, var(--week-w));
+    border-bottom: 2px solid var(--ink);
+    background: var(--ink);
+  }
+
+  .gantt-corner {
+    padding: 0.5rem 0.75rem;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.55rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: rgba(248,246,241,0.4);
+    border-right: 1px solid rgba(255,255,255,0.08);
+  }
+
+  .gantt-week {
+    padding: 0.5rem 0.25rem;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.52rem;
+    letter-spacing: 0.05em;
+    color: rgba(248,246,241,0.5);
+    text-align: center;
+    border-right: 1px solid rgba(255,255,255,0.05);
+  }
+
+  .gantt-week.month-start {
+    color: rgba(248,246,241,0.85);
+    border-right: 1px solid rgba(255,255,255,0.15);
+  }
+
+  .gantt-row {
+    display: grid;
+    grid-template-columns: 120px repeat(22, var(--week-w));
+    border-bottom: 1px solid var(--border-light);
+    min-height: 40px;
+    align-items: center;
+  }
+
+  .gantt-row:last-child { border-bottom: none; }
+
+  .gantt-label {
+    padding: 0.5rem 0.75rem;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+    border-right: 1px solid var(--border);
+    background: var(--bg2);
+  }
+
+  .gantt-cell {
+    height: 100%;
+    min-height: 40px;
+    border-right: 1px solid var(--border-light);
+    position: relative;
+  }
+
+  /* Block spans */
+  .gantt-block {
+    position: absolute;
+    top: 6px;
+    bottom: 6px;
+    left: 2px;
+    right: 2px;
+    border-radius: 2px;
+    display: flex;
+    align-items: center;
+    padding: 0 6px;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.5rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    overflow: hidden;
+    font-weight: 500;
+  }
+
+  .block-gpp { background: rgba(42,92,122,0.2); color: var(--gpp); border: 1px solid rgba(42,92,122,0.35); }
+  .block-spp { background: rgba(90,42,122,0.2); color: var(--spp); border: 1px solid rgba(90,42,122,0.35); }
+  .block-comp { background: rgba(200,52,26,0.2); color: var(--comp); border: 1px solid rgba(200,52,26,0.35); }
+  .block-trans { background: rgba(42,122,74,0.18); color: var(--trans); border: 1px solid rgba(42,122,74,0.3); }
+  .block-maint { background: rgba(122,106,42,0.15); color: var(--maint); border: 1px solid rgba(122,106,42,0.3); }
+  .block-rehab { background: rgba(74,106,138,0.15); color: var(--rehab); border: 1px solid rgba(74,106,138,0.3); }
+  .block-peak { background: rgba(200,52,26,0.35); color: #8a1a08; border: 1px solid rgba(200,52,26,0.6); font-weight: 700; }
+  .block-taper { background: rgba(200,169,110,0.25); color: #7a5a18; border: 1px solid rgba(200,169,110,0.5); }
+  .block-event { background: var(--ink); color: #f8f6f1; border: none; font-weight: 700; justify-content: center; }
+
+  /* TEMPLATE BLOCKS */
+  .template {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    margin: 1.5rem 0;
+    overflow: hidden;
+  }
+
+  .template-header {
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .template-name {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 1.2rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--ink);
+  }
+
+  .template-duration {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.1em;
+    color: var(--ink-dim);
+    text-transform: uppercase;
+  }
+
+  .template-body {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1px;
+    background: var(--border-light);
+  }
+
+  .template-col {
+    background: var(--surface);
+    padding: 1rem 1.25rem;
+  }
+
+  .tcol-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.55rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--ink-dim);
+    margin-bottom: 0.6rem;
+  }
+
+  .tcol-items { list-style: none; }
+
+  .tcol-items li {
+    font-size: 0.88rem;
+    color: var(--ink-muted);
+    padding: 0.2rem 0;
+    border-bottom: 1px solid var(--border-light);
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 0.5rem;
+  }
+
+  .tcol-items li:last-child { border-bottom: none; }
+
+  .tcol-items .ex-ref {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.55rem;
+    color: var(--ink-dim);
+    letter-spacing: 0.05em;
+    white-space: nowrap;
+  }
+
+  /* SCENARIO CARDS */
+  .scenario {
+    border: 1px solid var(--border);
+    margin: 1.5rem 0;
+    overflow: hidden;
+  }
+
+  .scenario-header {
+    padding: 1.25rem 1.5rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .scenario-athlete {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--ink-dim);
+    margin-bottom: 0.3rem;
+  }
+
+  .scenario-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 1.4rem;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    color: var(--ink);
+    margin-bottom: 0.4rem;
+  }
+
+  .scenario-window {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--ink-muted);
+    letter-spacing: 0.05em;
+  }
+
+  .scenario-body { padding: 1.25rem 1.5rem; }
+
+  /* PHASE ROWS within scenario */
+  .phase-row {
+    display: grid;
+    grid-template-columns: 140px 1fr;
+    gap: 1.25rem;
+    padding: 0.85rem 0;
+    border-bottom: 1px solid var(--border-light);
+    align-items: start;
+  }
+
+  .phase-row:last-child { border-bottom: none; }
+
+  .pr-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding-top: 0.1rem;
+  }
+
+  .pr-content { font-size: 0.9rem; color: var(--ink-muted); }
+  .pr-content strong { color: var(--ink); }
+
+  /* GATE BOX */
+  .gate-box {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--ink);
+    padding: 1rem 1.25rem;
+    margin: 1rem 0;
+    font-size: 0.88rem;
+    color: var(--ink-muted);
+  }
+
+  .gate-box .gl {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.55rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--ink-dim);
+    margin-bottom: 0.4rem;
+  }
+
+  .gate-box.red { border-left-color: var(--comp); }
+  .gate-box.purple { border-left-color: var(--spp); }
+  .gate-box.blue { border-left-color: var(--gpp); }
+  .gate-box.green { border-left-color: var(--trans); }
+
+  /* LOAD TABLE */
+  .load-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.85rem;
+    margin: 1rem 0;
+  }
+
+  .load-table th {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.55rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--ink-dim);
+    text-align: left;
+    padding: 0.5rem 0.75rem;
+    border-bottom: 2px solid var(--ink);
+    background: var(--bg2);
+  }
+
+  .load-table td {
+    padding: 0.6rem 0.75rem;
+    border-bottom: 1px solid var(--border-light);
+    color: var(--ink-muted);
+    vertical-align: top;
+  }
+
+  .load-table td:first-child { color: var(--ink); font-weight: 600; font-family: 'Barlow Condensed', sans-serif; font-size: 0.95rem; letter-spacing: 0.05em; text-transform: uppercase; }
+
+  .load-table tr:hover td { background: var(--bg2); }
+
+  /* VOLUME BARS */
+  .vol-bar-wrap { display: flex; align-items: center; gap: 0.5rem; }
+  .vol-bar {
+    height: 6px;
+    border-radius: 1px;
+    background: var(--ink);
+    opacity: 0.15;
+    flex-shrink: 0;
+  }
+  .vol-bar.v1 { width: 20px; opacity: 0.2; }
+  .vol-bar.v2 { width: 40px; opacity: 0.35; }
+  .vol-bar.v3 { width: 65px; opacity: 0.5; }
+  .vol-bar.v4 { width: 90px; opacity: 0.7; }
+  .vol-bar.v5 { width: 110px; opacity: 0.9; }
+
+  /* FOOTER */
+  footer {
+    background: var(--ink);
+    padding: 2rem;
+    text-align: center;
+    margin-top: 3rem;
+  }
+
+  footer p {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.58rem;
+    letter-spacing: 0.1em;
+    color: rgba(248,246,241,0.3);
+    text-transform: uppercase;
+    margin-bottom: 0.3rem;
+  }
+
+  ::-webkit-scrollbar { width: 4px; height: 4px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--border); }
+
+  @media (max-width: 600px) {
+    main { padding: 1.25rem 1rem; }
+    .header { padding: 2rem 1rem 2rem; }
+    nav { padding: 0 0.5rem; }
+    .phase-row { grid-template-columns: 1fr; gap: 0.3rem; }
+    .pr-label { padding-top: 0; }
+  }
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div class="header-eyebrow">Sprint · Jump · Resilience — Document V</div>
+  <h1>Periodization<br><span>Guide</span></h1>
+  <div class="header-desc">The engine that drives the Exercise Library across time. Four universal templates — GPP, SPP, Competition Peak, and Return-to-Sport — mapped to three athletes, three timelines, and one family.</div>
+  <div class="header-athletes">
+    <span class="athlete-chip chip-s">Shaylan — Nationals → Berkeley GPP</span>
+    <span class="athlete-chip chip-c">Cadence — Commonwealth Peak · Glasgow July 23</span>
+    <span class="athlete-chip chip-p">Patrick — Return-to-Sport Ramp · King of the Court</span>
+  </div>
+</header>
+
+<nav>
+  <ul>
+    <li><a href="#principles">Principles</a></li>
+    <li><a href="#phases">Phase Definitions</a></li>
+    <li><a href="#calendar">Master Calendar</a></li>
+    <li><a href="#templates">Templates</a></li>
+    <li><a href="#shaylan">Shaylan</a></li>
+    <li><a href="#cadence">Cadence</a></li>
+    <li><a href="#patrick">Patrick</a></li>
+    <li><a href="#load">Load Management</a></li>
+    <li><a href="#collagen">Nutrition Timing</a></li>
+  </ul>
+</nav>
+
+<main>
+
+<!-- ═══════════════════════════ PRINCIPLES ═══════════════════════════ -->
+<section id="principles">
+  <div class="section-label">01 — Foundation</div>
+  <h2>Periodization Principles</h2>
+
+  <p>Periodization is not a schedule. It is a <em>biological argument</em> — an acknowledgment that the human body cannot express all qualities simultaneously, that adaptation requires sequenced stress and recovery, and that peak performance on a specific date requires working backward from that date with precision. The calendar serves the physiology, not the other way around.</p>
+
+  <p>For this family, three additional constraints apply that conventional periodization literature rarely addresses simultaneously: <strong>active injury management during a performance build</strong> (Cadence), <strong>neurological recovery intersecting with sport-specific preparation</strong> (Patrick), and <strong>environment transition mid-season</strong> (Shaylan, Berkeley). The templates below absorb these constraints rather than ignoring them.</p>
+
+  <div class="principle-grid">
+    <div class="principle-card">
+      <div class="pc-num">01</div>
+      <div class="pc-title">Specificity Over Time</div>
+      <div class="pc-body">Training progressively narrows toward the demands of the target event. GPP is broad. SPP is focused. Competition prep is precise. Schexnayder: every training decision should be defensible against the question — does this make the athlete better at the event?</div>
+    </div>
+    <div class="principle-card">
+      <div class="pc-num">02</div>
+      <div class="pc-title">Supercompensation</div>
+      <div class="pc-body">Tissue adapts during recovery, not during loading. The load is the stimulus; the rest is the adaptation. Baar: collagen synthesis peaks 6 hours post-load. The taper before competition is not lost training — it is the final adaptation window.</div>
+    </div>
+    <div class="principle-card">
+      <div class="pc-num">03</div>
+      <div class="pc-title">CNS Budget</div>
+      <div class="pc-body">The nervous system has a finite recovery capacity. Natera: maximal intensity work (sprints, jumps, heavy lifts) draws from the same CNS budget. Track volume and weight room volume are not separate — they compete. Account for both.</div>
+    </div>
+    <div class="principle-card">
+      <div class="pc-num">04</div>
+      <div class="pc-title">Tissue Lag</div>
+      <div class="pc-body">Tendons, fascia, and cartilage adapt 8–12 weeks behind muscle. Baar: you can train muscle faster than tendon tolerates. Injury is the body collecting a debt the athlete didn't know they owed. Load progression must respect tissue timelines, not ambition timelines.</div>
+    </div>
+    <div class="principle-card">
+      <div class="pc-num">05</div>
+      <div class="pc-title">Reversibility</div>
+      <div class="pc-body">Detraining begins within 2 weeks of inactivity for neuromuscular qualities; cardiovascular fitness degrades faster. The goal during injury or transition is maintenance, not improvement. Holding 80% of peak capacity costs far less than rebuilding from 40%.</div>
+    </div>
+    <div class="principle-card">
+      <div class="pc-num">06</div>
+      <div class="pc-title">Individual Response</div>
+      <div class="pc-body">Templates are starting points. Autoregulation — adjusting session load based on daily readiness — is not weakness, it is sophistication. McGill: pain is data. Nerve symptom changes are data. The template bends to the athlete, not the athlete to the template.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════ PHASE DEFINITIONS ═══════════════════════════ -->
+<section id="phases">
+  <div class="section-label">02 — Vocabulary</div>
+  <h2>Phase Definitions</h2>
+
+  <div class="phase-legend">
+    <span class="phase-pill ph-gpp">GPP</span>
+    <span class="phase-pill ph-spp">SPP</span>
+    <span class="phase-pill ph-comp">Competition</span>
+    <span class="phase-pill ph-trans">Transition</span>
+    <span class="phase-pill ph-maint">Maintenance</span>
+    <span class="phase-pill ph-rehab">Rehab/Bridge</span>
+  </div>
+
+  <table class="load-table">
+    <thead>
+      <tr>
+        <th>Phase</th>
+        <th>Duration</th>
+        <th>Primary Goal</th>
+        <th>Volume</th>
+        <th>Intensity</th>
+        <th>Library Tags Active</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>GPP</td>
+        <td>4–8 weeks</td>
+        <td>Build broad physical base. Tissue capacity, aerobic foundation, movement quality.</td>
+        <td><div class="vol-bar-wrap"><div class="vol-bar v4"></div><span>High</span></div></td>
+        <td><div class="vol-bar-wrap"><div class="vol-bar v2"></div><span>Low–Mod</span></div></td>
+        <td>Rehab · Bridge · Submaximal</td>
+      </tr>
+      <tr>
+        <td>SPP</td>
+        <td>4–8 weeks</td>
+        <td>Convert base into event-specific qualities. Speed, power, event mechanics.</td>
+        <td><div class="vol-bar-wrap"><div class="vol-bar v3"></div><span>Moderate</span></div></td>
+        <td><div class="vol-bar-wrap"><div class="vol-bar v4"></div><span>High</span></div></td>
+        <td>Bridge · Performance · Submaximal · Maximal</td>
+      </tr>
+      <tr>
+        <td>Competition</td>
+        <td>Ongoing season</td>
+        <td>Maintain sharpness, manage fatigue between competitions.</td>
+        <td><div class="vol-bar-wrap"><div class="vol-bar v2"></div><span>Low</span></div></td>
+        <td><div class="vol-bar-wrap"><div class="vol-bar v5"></div><span>Very High</span></div></td>
+        <td>Performance · Maximal</td>
+      </tr>
+      <tr>
+        <td>Transition</td>
+        <td>2–4 weeks</td>
+        <td>Active recovery post-season. Unstructured movement. Mental reset.</td>
+        <td><div class="vol-bar-wrap"><div class="vol-bar v1"></div><span>Very Low</span></div></td>
+        <td><div class="vol-bar-wrap"><div class="vol-bar v1"></div><span>Very Low</span></div></td>
+        <td>Rehab · Submaximal only</td>
+      </tr>
+      <tr>
+        <td>Maintenance</td>
+        <td>Variable</td>
+        <td>Hold acquired qualities with minimum effective dose. Used during injury or travel.</td>
+        <td><div class="vol-bar-wrap"><div class="vol-bar v2"></div><span>Low</span></div></td>
+        <td><div class="vol-bar-wrap"><div class="vol-bar v3"></div><span>Moderate</span></div></td>
+        <td>Bridge · Submaximal</td>
+      </tr>
+      <tr>
+        <td>Rehab/Bridge</td>
+        <td>Until gate cleared</td>
+        <td>Tissue healing, neurological recovery, atrophy reversal. Gate-governed, not calendar.</td>
+        <td><div class="vol-bar-wrap"><div class="vol-bar v2"></div><span>Low–Mod</span></div></td>
+        <td><div class="vol-bar-wrap"><div class="vol-bar v1"></div><span>Low</span></div></td>
+        <td>Rehab · Submaximal · Spinal: Low</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ═══════════════════════════ MASTER CALENDAR ═══════════════════════════ -->
+<section id="calendar">
+  <div class="section-label">03 — Overview</div>
+  <h2>Master Calendar · March–August 2026</h2>
+
+  <p style="margin-bottom:1rem;">22 weeks mapped across three athletes. Weeks begin March 12, 2026. Key dates: <strong>Canadian Nationals</strong> (est. late June/early July), <strong>Commonwealth Games Glasgow</strong> (July 23 – August 2).</p>
+
+  <div class="gantt-wrap">
+    <div class="gantt">
+
+      <!-- HEADER ROW -->
+      <div class="gantt-header">
+        <div class="gantt-corner">Athlete</div>
+        <!-- March: W1-3, April: W4-7, May: W8-11, June: W12-15, July: W16-19, Aug: W20-22 -->
+        <div class="gantt-week month-start">W1<br><span style="font-size:0.45rem;opacity:0.6;">MAR</span></div>
+        <div class="gantt-week">W2</div>
+        <div class="gantt-week">W3</div>
+        <div class="gantt-week month-start">W4<br><span style="font-size:0.45rem;opacity:0.6;">APR</span></div>
+        <div class="gantt-week">W5</div>
+        <div class="gantt-week">W6</div>
+        <div class="gantt-week">W7</div>
+        <div class="gantt-week month-start">W8<br><span style="font-size:0.45rem;opacity:0.6;">MAY</span></div>
+        <div class="gantt-week">W9</div>
+        <div class="gantt-week">W10</div>
+        <div class="gantt-week">W11</div>
+        <div class="gantt-week month-start">W12<br><span style="font-size:0.45rem;opacity:0.6;">JUN</span></div>
+        <div class="gantt-week">W13</div>
+        <div class="gantt-week">W14</div>
+        <div class="gantt-week">W15</div>
+        <div class="gantt-week month-start">W16<br><span style="font-size:0.45rem;opacity:0.6;">JUL</span></div>
+        <div class="gantt-week">W17</div>
+        <div class="gantt-week">W18</div>
+        <div class="gantt-week">W19</div>
+        <div class="gantt-week month-start">W20<br><span style="font-size:0.45rem;opacity:0.6;">AUG</span></div>
+        <div class="gantt-week">W21</div>
+        <div class="gantt-week">W22</div>
+      </div>
+
+      <!-- SHAYLAN ROW -->
+      <div class="gantt-row">
+        <div class="gantt-label" style="color:var(--shaylan);">Shaylan</div>
+        <!-- W1: comp -->
+        <div class="gantt-cell" style="position:relative;">
+          <div class="gantt-block block-comp" style="right:-1px;">Comp</div>
+        </div>
+        <!-- W2-3: comp -->
+        <div class="gantt-cell" style="position:relative;">
+          <div class="gantt-block block-comp" style="left:-1px;right:-1px;"></div>
+        </div>
+        <div class="gantt-cell" style="position:relative;">
+          <div class="gantt-block block-comp" style="left:-1px;right:-1px;"></div>
+        </div>
+        <!-- W4-7: SPP + PFPS mgmt -->
+        <div class="gantt-cell" style="position:relative;">
+          <div class="gantt-block block-spp" style="right:-1px;">SPP</div>
+        </div>
+        <div class="gantt-cell" style="position:relative;">
+          <div class="gantt-block block-spp" style="left:-1px;right:-1px;"></div>
+        </div>
+        <div class="gantt-cell" style="position:relative;">
+          <div class="gantt-block block-spp" style="left:-1px;right:-1px;"></div>
+        </div>
+        <div class="gantt-cell" style="position:relative;">
+          <div class="gantt-block block-spp" style="left:-1px;right:-1px;"></div>
+        </div>
+        <!-- W8-11: SPP peak -->
+        <div class="gantt-cell" style="position:relative;">
+          <div class="gantt-block block-spp" style="left:-1px;right:-1px;"></div>
+        </div>
+        <div class="gantt-cell" style="position:relative;">
+          <div class="gantt-block block-spp" style="left:-1px;right:-1px;"></div>
+        </div>
+        <div class="gantt-cell" style="position:relative;">
+          <div class="gantt-block block-peak" style="left:-1px;right:-1px;">Nationals Prep</div>
+        </div>
+        <div class="gantt-cell" style="position:relative;">
+          <div class="gantt-block block-peak" style="left:-1px;right:-1px;"></div>
+        </div>
+        <!-- W12: Nationals -->
+        <div class="gantt-cell" style="position:relative;">
+          <div class="gantt-block block-taper" style="right:-1px;">Taper</div>
+        </div>
+        <!-- W13: Nationals compete -->
+        <div class="gantt-cell" style="position:relative;">
+          <div class="gantt-block block-event" style="left:-1px;right:-1px;">NATS</div>
+        </div>
+        <!-- W14-15: Transition / travel -->
+        <div class="gantt-cell" style="position:relative;">
+          <div class="gantt-block block-trans" style="left:-1px;right:-1px;">Travel</div>
+        </div>
+        <div class="gantt-cell" style="position:relative;">
+          <div class="gantt-block block-trans" style="left:-1px;right:-1px;"></div>
+        </div>
+        <!-- W16-19: GPP Berkeley prep -->
+        <div class="gantt-cell" style="position:relative;">
+          <div class="gantt-block block-gpp" style="left:-1px;right:-1px;">GPP</div>
+        </div>
+        <div class="gantt-cell" style="position:relative;">
+          <div class="gantt-block block-gpp" style="left:-1px;right:-1px;"></div>
+        </div>
+        <div class="gantt-cell" style="position:relative;">
+          <div class="gantt-block block-gpp" style="left:-1px;right:-1px;"></div>
+        </div>
+        <div class="gantt-cell" style="position:relative;">
+          <div class="gantt-block block-gpp" style="left:-1px;right:-1px;"></div>
+        </div>
+        <!-- W20-22: Berkeley starts -->
+        <div class="gantt-cell" style="position:relative;">
+          <div class="gantt-block block-spp" style="left:-1px;right:-1px;">Berkeley</div>
+        </div>
+        <div class="gantt-cell" style="position:relative;">
+          <div class="gantt-block block-spp" style="left:-1px;"></div>
+        </div>
+        <div class="gantt-cell"></div>
+      </div>
+
+      <!-- CADENCE ROW -->
+      <div class="gantt-row">
+        <div class="gantt-label" style="color:var(--cadence);">Cadence</div>
+        <!-- W1-6: Return/Base -->
+        <div class="gantt-cell" style="position:relative;">
+          <div class="gantt-block block-rehab" style="right:-1px;">Return</div>
+        </div>
+        <div class="gantt-cell" style="position:relative;">
+          <div class="gantt-block block-rehab" style="left:-1px;right:-1px;"></div>
+        </div>
+        <div class="gantt-cell" style="position:relative;">
+          <div class="gantt-block block-rehab" style="left:-1px;right:-1px;"></div>
+        </div>
+        <div class="gantt-cell" style="position:relative;">
+          <div class="gantt-block block-rehab" style="left:-1px;right:-1px;"></div>
+        </div>
+        <div class="gantt-cell" style="position:relative;">
+          <div class="gantt-block block-rehab" style="left:-1px;right:-1px;"></div>
+        </div>
+        <div class="gantt-cell" style="position:relative;">
+          <div class="gantt-block block-rehab" style="left:-1px;right:-1px;"></div>
+        </div>
+        <!-- W7-11: SPP build -->
+        <div class="gantt-cell" style="position:relative;">
+          <div class="gantt-block block-spp" style="left:-1px;right:-1px;">SPP</div>
+        </div>
+        <div class="gantt-cell" style="position:relative;">
+          <div class="gantt-block block-spp" style="left:-1px;right:-1px;"></div>
+        </div>
+        <div class="gantt-cell" style="position:relative;">
+          <div class="gantt-block block-spp" style="left:-1px;right:-1px;"></div>
+        </div>
+        <div class="gantt-cell" style="position:relative;">
+          <div class="gantt-block block-spp" style="left:-1px;right:-1px;"></div>
+        </div>
+        <div class="gantt-cell" style="position:relative;">
+          <div class="gantt-block block-spp" style="left:-1px;right:-1px;"></div>
+        </div>
+        <!-- W12-15: Nationals + Comp period -->
+        <div class="gantt-cell" style="position:relative;">
+          <div class="gantt-block block-comp" style="left:-1px;right:-1px;">Comp</div>
+        </div>
+        <div class="gantt-cell" style="position:relative;">
+          <div class="gantt-block block-event" style="left:-1px;right:-1px;">NATS</div>
+        </div>
+        <div class="gantt-cell" style="position:relative;">
+          <div class="gantt-block block-peak" style="left:-1px;right:-1px;">Peak</div>
+        </div>
+        <div class="gantt-cell" style="position:relative;">
+          <div class="gantt-block block-peak" style="left:-1px;right:-1px;"></div>
+        </div>
+        <!-- W16-17: Taper -->
+        <div class="gantt-cell" style="position:relative;">
+          <div class="gantt-block block-taper" style="left:-1px;right:-1px;">Taper</div>
+        </div>
+        <div class="gantt-cell" style="position:relative;">
+          <div class="gantt-block block-taper" style="left:-1px;right:-1px;"></div>
+        </div>
+        <!-- W18-19: Commonwealth -->
+        <div class="gantt-cell" style="position:relative;">
+          <div class="gantt-block block-event" style="left:-1px;right:-1px;">GLASGOW</div>
+        </div>
+        <div class="gantt-cell" style="position:relative;">
+          <div class="gantt-block block-event" style="left:-1px;right:-1px;"></div>
+        </div>
+        <!-- W20-22: Transition -->
+        <div class="gantt-cell" style="position:relative;">
+          <div class="gantt-block block-trans" style="left:-1px;right:-1px;">Trans</div>
+        </div>
+        <div class="gantt-cell" style="position:relative;">
+          <div class="gantt-block block-trans" style="left:-1px;right:-1px;"></div>
+        </div>
+        <div class="gantt-cell"></div>
+      </div>
+
+      <!-- PATRICK ROW -->
+      <div class="gantt-row">
+        <div class="gantt-label" style="color:var(--patrick);">Patrick</div>
+        <!-- W1-4: Bridge (pre-epidural) -->
+        <div class="gantt-cell" style="position:relative;">
+          <div class="gantt-block block-rehab" style="right:-1px;">Bridge</div>
+        </div>
+        <div class="gantt-cell" style="position:relative;">
+          <div class="gantt-block block-rehab" style="left:-1px;right:-1px;"></div>
+        </div>
+        <div class="gantt-cell" style="position:relative;">
+          <div class="gantt-block block-rehab" style="left:-1px;right:-1px;"></div>
+        </div>
+        <div class="gantt-cell" style="position:relative;">
+          <div class="gantt-block block-rehab" style="left:-1px;right:-1px;"></div>
+        </div>
+        <!-- W5: Epidural -->
+        <div class="gantt-cell" style="position:relative;">
+          <div class="gantt-block block-event" style="left:-1px;right:-1px;">ESI</div>
+        </div>
+        <!-- W6-7: Post-ESI settle -->
+        <div class="gantt-cell" style="position:relative;">
+          <div class="gantt-block block-maint" style="left:-1px;right:-1px;">Settle</div>
+        </div>
+        <div class="gantt-cell" style="position:relative;">
+          <div class="gantt-block block-maint" style="left:-1px;right:-1px;"></div>
+        </div>
+        <!-- W8-13: Unlock / GPP -->
+        <div class="gantt-cell" style="position:relative;">
+          <div class="gantt-block block-gpp" style="left:-1px;right:-1px;">Unlock</div>
+        </div>
+        <div class="gantt-cell" style="position:relative;">
+          <div class="gantt-block block-gpp" style="left:-1px;right:-1px;"></div>
+        </div>
+        <div class="gantt-cell" style="position:relative;">
+          <div class="gantt-block block-gpp" style="left:-1px;right:-1px;"></div>
+        </div>
+        <div class="gantt-cell" style="position:relative;">
+          <div class="gantt-block block-gpp" style="left:-1px;right:-1px;"></div>
+        </div>
+        <div class="gantt-cell" style="position:relative;">
+          <div class="gantt-block block-gpp" style="left:-1px;right:-1px;"></div>
+        </div>
+        <div class="gantt-cell" style="position:relative;">
+          <div class="gantt-block block-gpp" style="left:-1px;right:-1px;"></div>
+        </div>
+        <!-- W14-17: Return-to-sport SPP -->
+        <div class="gantt-cell" style="position:relative;">
+          <div class="gantt-block block-spp" style="left:-1px;right:-1px;">RTS</div>
+        </div>
+        <div class="gantt-cell" style="position:relative;">
+          <div class="gantt-block block-spp" style="left:-1px;right:-1px;"></div>
+        </div>
+        <div class="gantt-cell" style="position:relative;">
+          <div class="gantt-block block-spp" style="left:-1px;right:-1px;"></div>
+        </div>
+        <div class="gantt-cell" style="position:relative;">
+          <div class="gantt-block block-spp" style="left:-1px;right:-1px;"></div>
+        </div>
+        <!-- W18-22: King of the Court prep -->
+        <div class="gantt-cell" style="position:relative;">
+          <div class="gantt-block block-comp" style="left:-1px;right:-1px;">KotC</div>
+        </div>
+        <div class="gantt-cell" style="position:relative;">
+          <div class="gantt-block block-comp" style="left:-1px;right:-1px;"></div>
+        </div>
+        <div class="gantt-cell" style="position:relative;">
+          <div class="gantt-block block-comp" style="left:-1px;right:-1px;"></div>
+        </div>
+        <div class="gantt-cell" style="position:relative;">
+          <div class="gantt-block block-comp" style="left:-1px;right:-1px;"></div>
+        </div>
+        <div class="gantt-cell" style="position:relative;">
+          <div class="gantt-block block-event" style="left:-1px;right:-1px;">KOTC</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <p><em>ESI = Epidural Steroid Injection (estimated Week 5). KotC = King of the Court. All dates after Nationals are estimated pending confirmed meet schedule. Glasgow dates confirmed: July 23–August 2.</em></p>
+</section>
+
+<!-- ═══════════════════════════ TEMPLATES ═══════════════════════════ -->
+<section id="templates">
+  <div class="section-label">04 — Templates</div>
+  <h2>Four Universal Templates</h2>
+
+  <p>Each template is athlete-agnostic. Exercise selection draws from the Library by tag. Individual protocols specify which exercises fill each slot. The templates are the architecture — the Library is the material.</p>
+
+  <!-- GPP TEMPLATE -->
+  <div class="template">
+    <div class="template-header">
+      <span class="phase-pill ph-gpp">GPP</span>
+      <div class="template-name">General Physical Preparation</div>
+      <div class="template-duration">4–8 weeks · High Volume · Low–Moderate Intensity</div>
+      <a class="el-link el-link-gpp" href="exercise_library.html?phase=phase-gpp,phase-bridge,phase-rehab&spinal=sl-low,sl-mod&intensity=intensity-sub" target="_blank">Open in Exercise Library</a>
+    </div>
+    <div class="template-body">
+      <div class="template-col">
+        <div class="tcol-label">Weight Room</div>
+        <ul class="tcol-items">
+          <li>Bilateral hip hinge <span class="ex-ref">3×8 @65%</span></li>
+          <li>Bilateral squat variant <span class="ex-ref">3×10 @60%</span></li>
+          <li>Single-leg RDL <span class="ex-ref">3×10/side</span></li>
+          <li>Isometric hold ×2 <span class="ex-ref">5×45s</span></li>
+          <li>Core McGill Big 3 <span class="ex-ref">Daily</span></li>
+          <li>Upper push + pull <span class="ex-ref">3×10 each</span></li>
+        </ul>
+      </div>
+      <div class="template-col">
+        <div class="tcol-label">Track</div>
+        <ul class="tcol-items">
+          <li>A-March / A-Skip <span class="ex-ref">3×30m</span></li>
+          <li>Tempo runs 70% <span class="ex-ref">6–8×100m</span></li>
+          <li>Backward running <span class="ex-ref">4×40m</span></li>
+          <li>Broad jump bilateral <span class="ex-ref">3×5</span></li>
+          <li>Pogo hops <span class="ex-ref">3×15</span></li>
+        </ul>
+      </div>
+      <div class="template-col">
+        <div class="tcol-label">Tissue / Recovery</div>
+        <ul class="tcol-items">
+          <li>Collagen + Vit C <span class="ex-ref">Pre-session</span></li>
+          <li>Eccentric calf raise <span class="ex-ref">Daily</span></li>
+          <li>Nerve floss <span class="ex-ref">1–2×/day</span></li>
+          <li>Cycling / walk <span class="ex-ref">Daily</span></li>
+          <li>Sleep ≥7h <span class="ex-ref">Non-negotiable</span></li>
+        </ul>
+      </div>
+      <div class="template-col">
+        <div class="tcol-label">Weekly Structure</div>
+        <ul class="tcol-items">
+          <li>Sessions/week <span class="ex-ref">5–6</span></li>
+          <li>Hard days/week <span class="ex-ref">3</span></li>
+          <li>Recovery days <span class="ex-ref">2–3</span></li>
+          <li>Max sprint % <span class="ex-ref">70–80%</span></li>
+          <li>Deload every <span class="ex-ref">3–4 weeks</span></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- SPP TEMPLATE -->
+  <div class="template">
+    <div class="template-header">
+      <span class="phase-pill ph-spp">SPP</span>
+      <div class="template-name">Specific Physical Preparation</div>
+      <div class="template-duration">4–8 weeks · Moderate Volume · High Intensity</div>
+      <a class="el-link el-link-spp" href="exercise_library.html?phase=phase-spp,phase-perf,phase-bridge&intensity=intensity-sub,intensity-max" target="_blank">Open in Exercise Library</a>
+    </div>
+    <div class="template-body">
+      <div class="template-col">
+        <div class="tcol-label">Weight Room</div>
+        <ul class="tcol-items">
+          <li>Trap bar DL heavy <span class="ex-ref">4×5 @80–85%</span></li>
+          <li>Single-leg squat <span class="ex-ref">3×6/side</span></li>
+          <li>Hip thrust loaded <span class="ex-ref">4×8</span></li>
+          <li>Power clean hang <span class="ex-ref">4×4 @75%</span></li>
+          <li>Nordic curl <span class="ex-ref">3×6</span></li>
+          <li>Upper — maintain <span class="ex-ref">2×8</span></li>
+        </ul>
+      </div>
+      <div class="template-col">
+        <div class="tcol-label">Track</div>
+        <ul class="tcol-items">
+          <li>Acceleration sprints <span class="ex-ref">6×20–30m</span></li>
+          <li>Flying sprints <span class="ex-ref">4×30m</span></li>
+          <li>B-skip / Wickets <span class="ex-ref">4×30m</span></li>
+          <li>Penultimate drills <span class="ex-ref">6–8 reps</span></li>
+          <li>Full approach LJ <span class="ex-ref">2–3 jumps</span></li>
+          <li>Bounds <span class="ex-ref">3×5</span></li>
+        </ul>
+      </div>
+      <div class="template-col">
+        <div class="tcol-label">Tissue / Recovery</div>
+        <ul class="tcol-items">
+          <li>Collagen + Vit C <span class="ex-ref">Pre-session</span></li>
+          <li>Isometric analgesia <span class="ex-ref">Pre-session PRN</span></li>
+          <li>Contrast warmup <span class="ex-ref">Baar protocol</span></li>
+          <li>Ice bath optional <span class="ex-ref">Post-session</span></li>
+          <li>Sleep priority <span class="ex-ref">Non-negotiable</span></li>
+        </ul>
+      </div>
+      <div class="template-col">
+        <div class="tcol-label">Weekly Structure</div>
+        <ul class="tcol-items">
+          <li>Sessions/week <span class="ex-ref">5</span></li>
+          <li>Hard days/week <span class="ex-ref">3–4</span></li>
+          <li>Recovery days <span class="ex-ref">1–2</span></li>
+          <li>Max sprint % <span class="ex-ref">90–100%</span></li>
+          <li>Deload every <span class="ex-ref">3 weeks</span></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- COMPETITION TAPER TEMPLATE -->
+  <div class="template">
+    <div class="template-header">
+      <span class="phase-pill ph-comp">Taper / Competition</span>
+      <div class="template-name">Competition Peak</div>
+      <div class="template-duration">10–14 days · Low Volume · Maximum Intensity</div>
+      <a class="el-link el-link-comp" href="exercise_library.html?phase=phase-comp,phase-perf&intensity=intensity-max" target="_blank">Open in Exercise Library</a>
+    </div>
+    <div class="template-body">
+      <div class="template-col">
+        <div class="tcol-label">Weight Room</div>
+        <ul class="tcol-items">
+          <li>Heavy lift ×1/week <span class="ex-ref">3×3 @85%+</span></li>
+          <li>Single-leg maintain <span class="ex-ref">2×5/side</span></li>
+          <li>Isometric holds <span class="ex-ref">3×20s only</span></li>
+          <li>No new stimulus <span class="ex-ref">Strict</span></li>
+        </ul>
+      </div>
+      <div class="template-col">
+        <div class="tcol-label">Track</div>
+        <ul class="tcol-items">
+          <li>Short accelerations <span class="ex-ref">4×20m max</span></li>
+          <li>1–2 flying sprints <span class="ex-ref">Full recovery</span></li>
+          <li>1–2 full approaches <span class="ex-ref">Quality only</span></li>
+          <li>No volume sprinting <span class="ex-ref">Strict</span></li>
+        </ul>
+      </div>
+      <div class="template-col">
+        <div class="tcol-label">Tissue Focus</div>
+        <ul class="tcol-items">
+          <li>Collagen daily <span class="ex-ref">10g + Vit C</span></li>
+          <li>Glycine before bed <span class="ex-ref">10g</span></li>
+          <li>Massage / soft tissue <span class="ex-ref">Days 7, 3, 1</span></li>
+          <li>No new interventions <span class="ex-ref">Strict</span></li>
+        </ul>
+      </div>
+      <div class="template-col">
+        <div class="tcol-label">Weekly Structure</div>
+        <ul class="tcol-items">
+          <li>Sessions/week <span class="ex-ref">3–4</span></li>
+          <li>Hard days/week <span class="ex-ref">2</span></li>
+          <li>Volume vs SPP peak <span class="ex-ref">−50%</span></li>
+          <li>Intensity vs SPP <span class="ex-ref">Maintained</span></li>
+          <li>Day before comp <span class="ex-ref">Walk + drills only</span></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- RETURN TO SPORT TEMPLATE -->
+  <div class="template">
+    <div class="template-header">
+      <span class="phase-pill ph-rehab">Return-to-Sport</span>
+      <div class="template-name">Return-to-Sport Ramp</div>
+      <div class="template-duration">Gate-governed · Not calendar-driven</div>
+      <a class="el-link el-link-rts" href="exercise_library.html?phase=phase-rehab,phase-bridge&spinal=sl-low&intensity=intensity-sub" target="_blank">Open in Exercise Library</a>
+    </div>
+    <div class="template-body">
+      <div class="template-col">
+        <div class="tcol-label">Gate 1 — Rehab</div>
+        <ul class="tcol-items">
+          <li>McGill Big 3 <span class="ex-ref">Daily</span></li>
+          <li>Clamshell / band <span class="ex-ref">Daily</span></li>
+          <li>Glute bridge <span class="ex-ref">3×15</span></li>
+          <li>Cycling low-res <span class="ex-ref">15–20 min</span></li>
+          <li>Walking <span class="ex-ref">45–60 min</span></li>
+        </ul>
+      </div>
+      <div class="template-col">
+        <div class="tcol-label">Gate 2 — Bridge</div>
+        <ul class="tcol-items">
+          <li>Trap bar elevated <span class="ex-ref">3×8 @mod</span></li>
+          <li>Box squat <span class="ex-ref">3×10</span></li>
+          <li>Backward jog <span class="ex-ref">6×30s</span></li>
+          <li>Cycling intervals <span class="ex-ref">20–30 min</span></li>
+          <li>Isometric holds <span class="ex-ref">5×45s</span></li>
+        </ul>
+      </div>
+      <div class="template-col">
+        <div class="tcol-label">Gate 3 — GPP</div>
+        <ul class="tcol-items">
+          <li>Trap bar build <span class="ex-ref">4×6 @70%</span></li>
+          <li>Forward jog intervals <span class="ex-ref">6×1 min</span></li>
+          <li>A-march / A-skip <span class="ex-ref">4×20m</span></li>
+          <li>Tempo runs 70% <span class="ex-ref">4×100m</span></li>
+          <li>Single-leg volume <span class="ex-ref">Increase</span></li>
+        </ul>
+      </div>
+      <div class="template-col">
+        <div class="tcol-label">Gate 4 — Sport</div>
+        <ul class="tcol-items">
+          <li>Lateral deceleration <span class="ex-ref">Introduce</span></li>
+          <li>COD drills <span class="ex-ref">Low intensity</span></li>
+          <li>30 min jog continuous <span class="ex-ref">Gate test</span></li>
+          <li>Sport-specific drill <span class="ex-ref">Progress</span></li>
+          <li>Return to competition <span class="ex-ref">Gate 5</span></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════ SHAYLAN ═══════════════════════════ -->
+<section id="shaylan">
+  <div class="section-label">05 — Athlete Scenario</div>
+  <h2>Shaylan — Nationals to Berkeley GPP</h2>
+
+  <div class="scenario">
+    <div class="scenario-header">
+      <div class="scenario-athlete">Shaylan · 100m · 200m · Long Jump · MJC → UC Berkeley Fall 2026</div>
+      <div class="scenario-title">Post-Nationals Transition + Berkeley Entry GPP</div>
+      <div class="scenario-window">Now — March 12 → Berkeley start ~August 2026 · 19 weeks · ISA: Narrow · Active PFPS left knee</div>
+    </div>
+    <div class="scenario-body">
+
+      <div class="phase-row">
+        <div class="pr-label" style="color:var(--comp);">
+          <span class="phase-pill ph-comp" style="display:block;text-align:center;margin-bottom:0.4rem;">Competition</span>
+          Now → Nationals<br>~12 weeks
+        </div>
+        <div class="pr-content">
+          <strong>Stay the course with PFPS modification.</strong> Left knee is the penultimate step foot — this is the rate-limiting mechanical issue, not just a pain management problem. Continue training through with isometric analgesia pre-session (Rio protocol: 5×45s wall sit). The penultimate step mechanics work documented in her individual protocol is active training, not remedial work. Every drill session is simultaneously fixing the PFPS mechanism and improving the jump. Keep PFPS loading below 3/10 pain during activity — above that, reduce session volume, not intensity.
+        </div>
+      </div>
+
+      <div class="phase-row">
+        <div class="pr-label" style="color:var(--comp);">
+          <span class="phase-pill ph-taper" style="display:block;text-align:center;margin-bottom:0.4rem;background:rgba(200,169,110,0.25);color:#7a5a18;border:1px solid rgba(200,169,110,0.5);font-family:'DM Mono',monospace;font-size:0.58rem;letter-spacing:0.1em;text-transform:uppercase;padding:0.25rem 0.65rem;border-radius:1px;">Taper</span>
+          ~10 days pre-Nationals
+        </div>
+        <div class="pr-content">
+          Standard taper with PFPS caveat: <strong>do not unload the knee completely.</strong> The patellar tendon and retropatellar cartilage need maintained load to arrive at competition in a responsive state, not a cold state. 2×10 min isometric wall sit maintained through taper week. Volume drops 50%, intensity maintained. One full approach LJ two days before competition — no more.
+        </div>
+      </div>
+
+      <div class="phase-row">
+        <div class="pr-label" style="color:var(--trans);">
+          <span class="phase-pill ph-trans" style="display:block;text-align:center;margin-bottom:0.4rem;">Transition</span>
+          Post-Nationals<br>2–3 weeks
+        </div>
+        <div class="pr-content">
+          <strong>Decompress, not collapse.</strong> Travel window is here. Unstructured movement — swimming, walking, light cycling. No track work. PFPS tissue gets genuine rest for possibly the first time since the episode began. Collagen protocol continues — this is the window where the tissue can remodel without the competition load signal. Sleep prioritized. Mental reset from competition mode. This is not wasted time; it is the biological reason the GPP block that follows will be productive.
+        </div>
+      </div>
+
+      <div class="phase-row">
+        <div class="pr-label" style="color:var(--gpp);">
+          <span class="phase-pill ph-gpp" style="display:block;text-align:center;margin-bottom:0.4rem;">GPP</span>
+          4 weeks pre-Berkeley
+        </div>
+        <div class="pr-content">
+          <strong>Berkeley-agnostic GPP with one design constraint:</strong> establish the tissue baseline and movement quality that allows Berkeley's coaching staff to build on a solid foundation rather than inheriting an injury problem. Priorities in order: (1) PFPS resolved or stable — the Berkeley training volume will be higher than MJC, and arriving with an unresolved patellar issue into elevated load is a structural risk. (2) Dorsiflexion restored — the upstream driver of the lateral patellar tracking. (3) Penultimate mechanics consolidated — so Berkeley coaches see a mechanically sound jumper, not one with a compensation pattern baked in. GPP template applies. Max sprint intensity capped at 80%.
+        </div>
+      </div>
+
+      <div class="gate-box blue">
+        <div class="gl">Berkeley Entry Gate</div>
+        PFPS ≤1/10 on stairs for 2 consecutive weeks. Full dorsiflexion range symmetrical bilateral. Penultimate COM lowering visible on video (self-assessed). These are the conditions under which Berkeley's staff inherits a healthy athlete, not a project.
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════ CADENCE ═══════════════════════════ -->
+<section id="cadence">
+  <div class="section-label">06 — Athlete Scenario</div>
+  <h2>Cadence — Commonwealth Games Peak · Glasgow July 23</h2>
+
+  <div class="scenario">
+    <div class="scenario-header">
+      <div class="scenario-athlete">Cadence · 100m · 200m · Long Jump · Cal Poly · Week 11 PF load intolerance</div>
+      <div class="scenario-title">Return-to-Compete → Commonwealth Peak</div>
+      <div class="scenario-window">March 12 → July 23 · 19 weeks · ISA: Narrow · PF neural sensitivity active · Coach-managed</div>
+    </div>
+    <div class="scenario-body">
+
+      <div class="phase-row">
+        <div class="pr-label" style="color:var(--rehab);">
+          <span class="phase-pill ph-rehab" style="display:block;text-align:center;margin-bottom:0.4rem;">Return</span>
+          Now → Week 6<br>6 weeks
+        </div>
+        <div class="pr-content">
+          <strong>The gate that governs everything else.</strong> Neural desensitization is the primary target — not fitness, not strength, not speed. The mechanical chain (PF guarding → calcaneal restriction → subtalar locked → tib post overload → medial shin) unwinds in that order. Track A daily. Collagen window before every session. First meet in 1.5 weeks is one data point only — use it as a readiness assessment, not a performance target. Coach is managing this correctly; the role here is to support the tissue environment, not push the timeline.
+        </div>
+      </div>
+
+      <div class="phase-row">
+        <div class="pr-label" style="color:var(--spp);">
+          <span class="phase-pill ph-spp" style="display:block;text-align:center;margin-bottom:0.4rem;">SPP</span>
+          Weeks 7–15<br>9 weeks
+        </div>
+        <div class="pr-content">
+          <strong>Conditional on Week 6 gate.</strong> If PF load tolerance is established and neural sensitivity has reduced, begin SPP template with modified calf/ankle loading protocol. Sprint volume builds progressively — Schexnayder short-to-long model: acceleration work before speed endurance. LJ approach volume increases weekly. The shin activation under circuit loading at Week 11 (reported) is expected and not alarming — it will resolve as load tolerance improves. Monitor weekly: if shin pain climbs above 3/10 during session, that week is a maintenance week, not an SPP week.
+        </div>
+      </div>
+
+      <div class="phase-row">
+        <div class="pr-label" style="color:var(--comp);">
+          <span class="phase-pill ph-comp" style="display:block;text-align:center;margin-bottom:0.4rem;">Nationals</span>
+          ~Week 13<br>Compete
+        </div>
+        <div class="pr-content">
+          <strong>Nationals is a qualifying performance AND a readiness test for Glasgow.</strong> The ideal outcome is a clean, symptom-free competition that demonstrates the tissue holds under max-effort conditions. A slower time with zero symptoms is a better Glasgow signal than a personal best followed by a flare. Coach and athlete should align on this framing pre-competition.
+        </div>
+      </div>
+
+      <div class="phase-row">
+        <div class="pr-label" style="color:var(--comp);">
+          <span class="phase-pill ph-peak" style="display:block;text-align:center;margin-bottom:0.4rem;background:rgba(200,52,26,0.35);color:#8a1a08;border:1px solid rgba(200,52,26,0.6);font-family:'DM Mono',monospace;font-size:0.58rem;letter-spacing:0.1em;text-transform:uppercase;padding:0.25rem 0.65rem;border-radius:1px;font-weight:700;">Peak</span>
+          Weeks 14–15<br>Pre-taper
+        </div>
+        <div class="pr-content">
+          <strong>Highest quality sprint and jump work of the cycle.</strong> Volume begins to drop, intensity at absolute peak. Full approach LJ 3×/week maximum. Flying sprint work. Baar contrast warmup protocol on every session. This is the window where the competition peak is set — the taper preserves it, it doesn't create it.
+        </div>
+      </div>
+
+      <div class="phase-row">
+        <div class="pr-label" style="color:var(--maint);">
+          <span class="phase-pill ph-taper" style="display:block;text-align:center;margin-bottom:0.4rem;background:rgba(200,169,110,0.25);color:#7a5a18;border:1px solid rgba(200,169,110,0.5);font-family:'DM Mono',monospace;font-size:0.58rem;letter-spacing:0.1em;text-transform:uppercase;padding:0.25rem 0.65rem;border-radius:1px;">Taper</span>
+          Weeks 16–17<br>July 9–22
+        </div>
+        <div class="pr-content">
+          <strong>PF-modified taper — do not unload completely.</strong> Standard taper error: removing all load from a recovering PF athlete causes the tissue to lose the stiffness that makes it functional at competition. Maintain 2×15 single-leg calf raise daily through taper. One full approach LJ at Days 7 and 3 pre-competition. Volume −50%, intensity maintained. No new interventions — massage only from practitioners familiar with her history.
+        </div>
+      </div>
+
+      <div class="gate-box purple">
+        <div class="gl">Glasgow Honest Gate</div>
+        <strong>Week 6:</strong> Full training session (sprint + jump + weight room) with PF ≤2/10 during and ≤1/10 next morning. If not cleared by Week 6, Glasgow timeline compresses — the sharpening block shortens and peak form is harder to guarantee. Not impossible, but honest. <strong>This gate determines whether Glasgow is a target or a stretch goal.</strong>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════ PATRICK ═══════════════════════════ -->
+<section id="patrick">
+  <div class="section-label">07 — Athlete Scenario</div>
+  <h2>Patrick — Return-to-Sport Ramp · King of the Court</h2>
+
+  <div class="scenario">
+    <div class="scenario-header">
+      <div class="scenario-athlete">Patrick · 59 · L4-L5 L5 nerve root compression · Week 21 · Pre-epidural</div>
+      <div class="scenario-title">Bridge → Unlock → Return-to-Court</div>
+      <div class="scenario-window">March 12 → Summer 2026 · Gate-governed · ISA: Moderate-Wide · 6–8 weeks post-clearance for full court prep</div>
+    </div>
+    <div class="scenario-body">
+
+      <div class="phase-row">
+        <div class="pr-label" style="color:var(--rehab);">
+          <span class="phase-pill ph-rehab" style="display:block;text-align:center;margin-bottom:0.4rem;">Bridge</span>
+          Now → Epidural<br>~4 weeks
+        </div>
+        <div class="pr-content">
+          Bridge template active. Cycling added this week. Trap bar entry at elevated start. Full-depth squat replaced with box squat. The training goal here is explicit: <strong>arrive at the epidural in the best possible neuromuscular state</strong> — glutes as activated as the nerve allows, posterior chain maintained, no new provocations. See Patrick individual protocol for full detail.
+        </div>
+      </div>
+
+      <div class="phase-row">
+        <div class="pr-label" style="color:var(--maint);">
+          <span class="phase-pill ph-maint" style="display:block;text-align:center;margin-bottom:0.4rem;">Settle</span>
+          Post-ESI · 2 weeks
+        </div>
+        <div class="pr-content">
+          <strong>Two weeks of deliberate restraint.</strong> The epidural creates local inflammation at the injection site before it reduces nerve sleeve edema. Training hard in this window is counterproductive — it adds systemic inflammatory load to a tissue trying to settle. Light walking, cycling, upper body maintenance only. This is not lost time; it is the price of the unlock that follows.
+        </div>
+      </div>
+
+      <div class="phase-row">
+        <div class="pr-label" style="color:var(--gpp);">
+          <span class="phase-pill ph-gpp" style="display:block;text-align:center;margin-bottom:0.4rem;">Unlock/GPP</span>
+          Weeks 3–8<br>post-ESI
+        </div>
+        <div class="pr-content">
+          <strong>The most important training block of the year.</strong> Neurogenic inhibition of gluteus medius lifts — possibly completely, possibly partially. The muscles that have been suppressed by L5 compression suddenly become trainable. Trap bar progression accelerates. Single-leg glute bridge becomes single-leg hip thrust. Clamshells become lateral band walks under load. Cycling becomes intervals. Forward jog introduced at Gate 4 criteria. This is a GPP block in structure but feels like early SPP because the nervous system is releasing previously unavailable capacity. Exploit it systematically.
+        </div>
+      </div>
+
+      <div class="phase-row">
+        <div class="pr-label" style="color:var(--spp);">
+          <span class="phase-pill ph-spp" style="display:block;text-align:center;margin-bottom:0.4rem;">RTS SPP</span>
+          Weeks 9–14<br>post-ESI
+        </div>
+        <div class="pr-content">
+          Return-to-sport specificity. <strong>Lateral deceleration is the first true King of the Court demand.</strong> Change of direction, reactive stopping, single-leg landing from a lateral step — these are neurologically expensive patterns that require 6–8 weeks of deliberate training before they're safe at competitive intensity. A-march and A-skip introduced as movement quality work, not sprint preparation. Jogging progresses from 30s intervals to 10-minute continuous runs. Energy system work on the bike becomes genuinely cardiovascular.
+        </div>
+      </div>
+
+      <div class="phase-row">
+        <div class="pr-label" style="color:var(--comp);">
+          <span class="phase-pill ph-comp" style="display:block;text-align:center;margin-bottom:0.4rem;">KotC Prep</span>
+          Weeks 15–22<br>post-ESI
+        </div>
+        <div class="pr-content">
+          <strong>Court-specific conditioning.</strong> 30+ league volleyball has specific demands that differ from pure fitness: explosive vertical, rapid lateral shuffle, repeated deceleration, upper body power under fatigue. The 6–8 week estimate for full prep post-clearance is accurate — this is where that time is spent. Trap bar loaded meaningfully. Sprint work at 70–80% with direction changes. The goal is not peak athletic performance; it is <em>resilient participation</em> — the ability to play a full King of the Court session, recover normally, and play again the next week.
+        </div>
+      </div>
+
+      <div class="gate-box green">
+        <div class="gl">King of the Court Gate</div>
+        30 min continuous jog without symptom spike. Lateral shuffle at 75% effort pain-free. Ability to decelerate from a sprint without bracing the left side. Morning pain ≤1/10 consistently. These gates are not about fitness — they are about nervous system trust in the left leg.
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════ LOAD MANAGEMENT ═══════════════════════════ -->
+<section id="load">
+  <div class="section-label">08 — Acute:Chronic</div>
+  <h2>Load Management Across the Family</h2>
+
+  <p>The single most common cause of injury in well-intentioned athletes is a rapid spike in training load — the acute:chronic workload ratio problem. The body can absorb roughly a <strong>10% week-on-week increase</strong> in load before tissue injury risk increases meaningfully. This applies to all three athletes, scaled by current capacity.</p>
+
+  <table class="load-table">
+    <thead>
+      <tr>
+        <th>Athlete</th>
+        <th>Current Load Tolerance</th>
+        <th>Max Weekly Increase</th>
+        <th>Deload Frequency</th>
+        <th>Primary Limiter</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Shaylan</td>
+        <td>Moderate — PFPS active, competition load</td>
+        <td>10% sprint volume; 15% weight room</td>
+        <td>Every 3 weeks</td>
+        <td>Left knee patellar load</td>
+      </tr>
+      <tr>
+        <td>Cadence</td>
+        <td>Low–Moderate — return to training, Week 11</td>
+        <td>10% any load increase</td>
+        <td>Every 2–3 weeks</td>
+        <td>PF neural sensitivity</td>
+      </tr>
+      <tr>
+        <td>Patrick</td>
+        <td>Low currently — nerve compression, pre-epidural</td>
+        <td>5–10% lower body; 15% upper body</td>
+        <td>Every 3 weeks</td>
+        <td>L5 nerve root tolerance</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="gate-box">
+    <div class="gl">Universal Rule</div>
+    When any of the primary symptom indicators spike — PFPS pain above 3/10, PF pain above 3/10, calf bands or tingling above baseline — that week's load increase is cancelled and the week becomes a maintenance week. The 10% rule is a ceiling, not a target. Autoregulation beats the template every time.
+  </div>
+</section>
+
+<!-- ═══════════════════════════ NUTRITION TIMING ═══════════════════════════ -->
+<section id="collagen">
+  <div class="section-label">09 — Tissue Environment</div>
+  <h2>Nutrition Timing Across Phases</h2>
+
+  <p>Baar's collagen synthesis research is phase-sensitive — the protocol doesn't change between GPP and competition, but its importance is amplified at specific moments. Cross-reference the shared Sprint · Jump · Resilience Guide for full protocol detail.</p>
+
+  <table class="load-table">
+    <thead>
+      <tr>
+        <th>Phase</th>
+        <th>Collagen Protocol</th>
+        <th>Glycine / Sleep</th>
+        <th>NSAIDs</th>
+        <th>Notes</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>GPP</td>
+        <td>10g gelatin + Vit C, 30–60 min pre-session</td>
+        <td>10g before bed — sleep architecture + collagen precursor</td>
+        <td>Avoid</td>
+        <td>High training volume = high collagen turnover. Protocol non-negotiable.</td>
+      </tr>
+      <tr>
+        <td>SPP</td>
+        <td>Same — every session</td>
+        <td>Same</td>
+        <td>Avoid</td>
+        <td>Tendons adapting to sprint-specific loads. Baar: the window matters more at high load.</td>
+      </tr>
+      <tr>
+        <td>Taper</td>
+        <td>Same — do not stop</td>
+        <td>Same</td>
+        <td>Never in taper</td>
+        <td>Taper is the final collagen remodeling window. NSAIDs here suppress the adaptation the taper was designed to complete.</td>
+      </tr>
+      <tr>
+        <td>Transition</td>
+        <td>Maintain daily even without sessions</td>
+        <td>Same</td>
+        <td>Low risk window, still avoid</td>
+        <td>Tissue remodeling continues 48–72h post-load. The transition block is when chronic injuries quietly repair.</td>
+      </tr>
+      <tr>
+        <td>Bridge/Rehab</td>
+        <td>Same — especially important</td>
+        <td>Glycine critical for sleep quality during pain</td>
+        <td>Avoid — counterproductive to tendon healing</td>
+        <td>Injured tissue has elevated collagen synthesis demand. This is not optional during rehab.</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+</main>
+
+<footer>
+  <p>Periodization Guide · Sprint Jump Resilience · Document V · March 2026</p>
+  <p>Cross-reference: Exercise Library (tags), Individual Protocols (Patrick, Shaylan, Cadence), Shared Guide (nutrition, Track A)</p>
+  <p style="margin-top:0.4rem; color:rgba(248,246,241,0.15);">Informational only. All clinical and coaching decisions reviewed with treating physician and coaching staff.</p>
+</footer>
+
+</body>
+</html>

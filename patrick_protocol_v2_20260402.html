@@ -1,0 +1,919 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Patrick — L4-L5 Recovery Protocol</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=IBM+Plex+Mono:wght@300;400;500&family=IBM+Plex+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0f0f0e;
+    --surface: #1a1a18;
+    --surface2: #222220;
+    --border: #2e2e2a;
+    --accent: #c8a96e;
+    --accent2: #7eb8a4;
+    --accent3: #c87e7e;
+    --text: #e8e4dc;
+    --text-muted: #8a8680;
+    --text-dim: #5a5855;
+    --green: #7eb87e;
+    --yellow: #c8b46e;
+    --red: #c87e7e;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-weight: 300;
+    line-height: 1.7;
+    min-height: 100vh;
+  }
+
+  .header {
+    padding: 3rem 2rem 2rem;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .header::before {
+    content: '';
+    position: absolute;
+    top: -80px; right: -80px;
+    width: 300px; height: 300px;
+    background: radial-gradient(circle, rgba(200,169,110,0.08) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .header-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    margin-bottom: 0.75rem;
+  }
+
+  .header h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-weight: 900;
+    line-height: 1.1;
+    color: var(--text);
+    margin-bottom: 0.5rem;
+  }
+
+  .header h1 span { color: var(--accent); }
+
+  .header-sub {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    letter-spacing: 0.05em;
+  }
+
+  .status-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border);
+  }
+
+  .status-pill {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.62rem;
+    letter-spacing: 0.08em;
+    padding: 0.3rem 0.75rem;
+    border-radius: 2px;
+    text-transform: uppercase;
+  }
+
+  .pill-warn { background: rgba(200,169,110,0.12); color: var(--accent); border: 1px solid rgba(200,169,110,0.25); }
+  .pill-ok { background: rgba(126,184,126,0.12); color: var(--green); border: 1px solid rgba(126,184,126,0.25); }
+  .pill-alert { background: rgba(200,126,126,0.12); color: var(--red); border: 1px solid rgba(200,126,126,0.25); }
+
+  nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(15,15,14,0.96);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 2rem;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+
+  nav ul { list-style: none; display: inline-flex; gap: 0; }
+
+  nav a {
+    display: block;
+    padding: 0.85rem 1rem;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.62rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    text-decoration: none;
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s;
+  }
+
+  nav a:hover { color: var(--accent); border-bottom-color: var(--accent); }
+
+  main { max-width: 900px; margin: 0 auto; padding: 2rem; }
+
+  section { margin-bottom: 3.5rem; }
+
+  .section-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.58rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 0.4rem;
+  }
+
+  h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 1.25rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  h3 {
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 0.78rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin: 1.75rem 0 0.75rem;
+  }
+
+  p { color: var(--text-muted); margin-bottom: 0.75rem; font-size: 0.88rem; }
+  strong { color: var(--text); font-weight: 500; }
+
+  .clinical-box {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent);
+    padding: 1.25rem 1.5rem;
+    margin: 1rem 0;
+    border-radius: 0 2px 2px 0;
+  }
+
+  .clinical-box.green { border-left-color: var(--green); }
+  .clinical-box.red { border-left-color: var(--red); }
+  .clinical-box.blue { border-left-color: var(--accent2); }
+
+  .clinical-box .box-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.58rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 0.5rem;
+  }
+
+  .phase-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1rem;
+    margin: 1rem 0;
+  }
+
+  .phase-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 1.25rem;
+    border-radius: 2px;
+    position: relative;
+  }
+
+  .phase-card::before {
+    content: attr(data-phase);
+    position: absolute;
+    top: -1px; right: 1rem;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.58rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    padding: 0.2rem 0.5rem;
+    background: var(--bg);
+    color: var(--text-dim);
+    border: 1px solid var(--border);
+    border-top: none;
+  }
+
+  .phase-card.active { border-color: var(--accent); }
+  .phase-card.active::before { color: var(--accent); }
+
+  .phase-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.1rem;
+    color: var(--text);
+    margin-bottom: 0.4rem;
+  }
+
+  .phase-duration {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.62rem;
+    color: var(--text-dim);
+    margin-bottom: 0.75rem;
+  }
+
+  .phase-card p { font-size: 0.82rem; }
+
+  .ex-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1rem 0;
+    font-size: 0.82rem;
+  }
+
+  .ex-table th {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.58rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    text-align: left;
+    padding: 0.5rem 0.75rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .ex-table td {
+    padding: 0.65rem 0.75rem;
+    border-bottom: 1px solid rgba(46,46,42,0.5);
+    color: var(--text-muted);
+    vertical-align: top;
+  }
+
+  .ex-table tr:hover td { background: rgba(26,26,24,0.6); }
+  .ex-table td:first-child { color: var(--text); font-weight: 400; }
+
+  .flag {
+    display: inline-block;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.52rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 0.12rem 0.35rem;
+    border-radius: 2px;
+    margin-left: 0.4rem;
+    vertical-align: middle;
+  }
+
+  .flag-new { background: rgba(126,184,164,0.15); color: var(--accent2); border: 1px solid rgba(126,184,164,0.3); }
+  .flag-mod { background: rgba(200,180,110,0.15); color: var(--yellow); border: 1px solid rgba(200,180,110,0.3); }
+  .flag-hold { background: rgba(200,126,126,0.15); color: var(--red); border: 1px solid rgba(200,126,126,0.3); }
+  .flag-keep { background: rgba(126,184,126,0.1); color: var(--green); border: 1px solid rgba(126,184,126,0.25); }
+
+  .day-grid { display: grid; gap: 0.6rem; margin: 1rem 0; }
+
+  .day-row {
+    display: grid;
+    grid-template-columns: 90px 1fr;
+    gap: 1rem;
+    align-items: start;
+  }
+
+  .day-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.68rem;
+    color: var(--accent);
+    letter-spacing: 0.08em;
+    padding-top: 0.75rem;
+  }
+
+  .day-content {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 0.75rem 1rem;
+    font-size: 0.82rem;
+    color: var(--text-muted);
+    border-radius: 2px;
+    line-height: 1.6;
+  }
+
+  .highlight-box {
+    background: linear-gradient(135deg, rgba(126,184,164,0.07) 0%, rgba(126,184,164,0.02) 100%);
+    border: 1px solid rgba(126,184,164,0.22);
+    border-radius: 2px;
+    padding: 1.5rem;
+    margin: 1rem 0;
+  }
+
+  .highlight-box h3 { margin-top: 0; color: var(--accent2); }
+
+  .gate {
+    display: flex;
+    gap: 1.25rem;
+    align-items: flex-start;
+    padding: 1rem 1.25rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    margin-bottom: 0.6rem;
+    border-radius: 2px;
+  }
+
+  .gate-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem;
+    color: var(--border);
+    line-height: 1;
+    min-width: 1.8rem;
+  }
+
+  .gate-content { flex: 1; }
+  .gate-title { font-size: 0.85rem; font-weight: 500; color: var(--text); margin-bottom: 0.3rem; }
+  .gate-desc { font-size: 0.8rem; color: var(--text-muted); }
+
+  .med-row {
+    display: grid;
+    grid-template-columns: 150px 1fr 110px;
+    gap: 1rem;
+    padding: 0.85rem 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 0.82rem;
+    align-items: start;
+  }
+
+  .med-name { color: var(--text); font-weight: 500; line-height: 1.4; }
+  .med-note { color: var(--text-muted); font-size: 0.8rem; }
+  .med-status { font-family: 'IBM Plex Mono', monospace; font-size: 0.62rem; text-align: right; line-height: 1.6; }
+
+  .timeline { position: relative; padding-left: 2rem; margin: 1rem 0; }
+
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 0.4rem; top: 0.5rem; bottom: 0.5rem;
+    width: 1px;
+    background: var(--border);
+  }
+
+  .tl-item { position: relative; margin-bottom: 1.75rem; }
+
+  .tl-item::before {
+    content: '';
+    position: absolute;
+    left: -1.65rem; top: 0.42rem;
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--border);
+    border: 2px solid var(--bg);
+  }
+
+  .tl-item.current::before { background: var(--accent); }
+  .tl-item.future::before { background: var(--accent2); }
+  .tl-item.goal::before { background: var(--green); }
+
+  .tl-time {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.1em;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    margin-bottom: 0.2rem;
+  }
+
+  .tl-title { font-size: 0.9rem; font-weight: 500; color: var(--text); margin-bottom: 0.25rem; }
+  .tl-desc { font-size: 0.8rem; color: var(--text-muted); }
+
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 2rem;
+    margin-top: 3rem;
+    text-align: center;
+  }
+
+  footer p {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.08em;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    margin-bottom: 0.4rem;
+  }
+
+  ::-webkit-scrollbar { width: 4px; height: 4px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+  @media (max-width: 600px) {
+    .day-row { grid-template-columns: 1fr; gap: 0.2rem; }
+    .day-label { padding-top: 0; }
+    .med-row { grid-template-columns: 1fr; }
+    .med-status { text-align: left; }
+    main { padding: 1rem; }
+    .header { padding: 2rem 1rem 1.5rem; }
+    nav { padding: 0 0.5rem; }
+  }
+
+  /* Floating weekly button */
+  .fab-weekly {
+    position: fixed;
+    bottom: 2rem;
+    right: 1.5rem;
+    z-index: 200;
+    background: var(--accent);
+    color: var(--bg);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.68rem;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    text-decoration: none;
+    padding: 0.75rem 1.1rem;
+    border-radius: 3px;
+    box-shadow: 0 4px 20px rgba(200,169,110,0.3);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.2s;
+  }
+  .fab-weekly:hover {
+    background: #d4b87a;
+    box-shadow: 0 6px 28px rgba(200,169,110,0.45);
+    transform: translateY(-1px);
+  }
+  .fab-weekly::before {
+    content: '→';
+    font-size: 0.9rem;
+  }
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div class="header-label">Sprint · Jump · Resilience — Individual Protocol</div>
+  <h1>Patrick — <span>L4–L5</span> Recovery</h1>
+  <div class="header-sub">Week 21 · Pre-Epidural Bridge → King of the Court · Summer 2026</div>
+  <div class="status-bar">
+    <span class="status-pill pill-warn">L5 Nerve Root — Active</span>
+    <span class="status-pill pill-ok">Morning Pain: 2/10</span>
+    <span class="status-pill pill-ok">Glute Pain: Reduced</span>
+    <span class="status-pill pill-ok">Calf Bands: Improving</span>
+    <span class="status-pill pill-alert">Epidural: Not Scheduled</span>
+    <span class="status-pill pill-warn">ISA: Moderate-Wide</span>
+  </div>
+</header>
+
+<nav>
+  <ul>
+    <li><a href="#clinical">Clinical Map</a></li>
+    <li><a href="#phases">Phases</a></li>
+    <li><a href="#cycling">Cycling Rx</a></li>
+    <li><a href="#protocol">Protocol</a></li>
+    <li><a href="#daily">Daily Pattern</a></li>
+    <li><a href="#trapbar">Trap Bar</a></li>
+    <li><a href="#meds">Meds</a></li>
+    <li><a href="#gates">Gates</a></li>
+    <li><a href="#timeline">Timeline</a></li>
+  </ul>
+</nav>
+
+<main>
+
+  <section id="clinical">
+    <div class="section-label">01 — Diagnosis</div>
+    <h2>Clinical Map</h2>
+
+    <div class="clinical-box">
+      <div class="box-label">Primary Lesion</div>
+      <p><strong>L4–L5 left foraminal narrowing</strong> compressing the L5 nerve root. MRI confirmed. Left lower lumbar facet joint dysfunction and piriformis syndrome are downstream of this, not independent problems.</p>
+    </div>
+
+    <div class="clinical-box blue">
+      <div class="box-label">Why the Calf Bands &amp; Tingling Persist</div>
+      <p>L5 nerve root innervates the tibialis anterior, extensor hallucis longus, and contributes to the peroneal group. <strong>"Hair around the big toe," lateral foot tingling, and achy calf bands</strong> are all classic L5 distribution — consistent with the lesion, not a new problem. The fact that they worsen post-loading and improve with rest confirms mechanical compression as the primary driver, not central sensitization. This is good news: the epidural has a clear mechanical target.</p>
+    </div>
+
+    <div class="clinical-box green">
+      <div class="box-label">What's Actually Improving</div>
+      <p>Glute pain reduction post-piriformis injection = the piriformis was genuinely contributing, not just co-morbid. Calf band intensity declining = the nervous system is slowly decompressing. Morning pain plateau at 2/10 is not a ceiling — it reflects the remaining mechanical compression that the epidural should address directly.</p>
+    </div>
+
+    <div class="clinical-box red">
+      <div class="box-label">The One Real Flag</div>
+      <p><strong>Full-depth bodyweight squats that reproduce tingling</strong> — even transiently, even fading — means loading a sensitized nerve root at end range. Pre-epidural, this is unnecessary provocation. Modify immediately. The trap bar fills this gap cleanly.</p>
+    </div>
+
+    <h3>What the Epidural Will (and Won't) Do</h3>
+    <p>Corticosteroid at L4–L5 reduces local inflammation and nerve sleeve edema. This is what's currently suppressing full glute recruitment — L5 innervates gluteus medius, and a compressed L5 root means neurogenic inhibition regardless of how hard you try to fire it. Post-injection, expect <strong>a recruitment window of 2–6 weeks</strong> where muscles that have been neurogenically suppressed suddenly become trainable. That window is where the biggest gains happen. The epidural does not fix the structural narrowing — but it reduces the neurological noise enough that your body can compensate effectively and rebuild.</p>
+  </section>
+
+  <section id="phases">
+    <div class="section-label">02 — Framework</div>
+    <h2>Three-Phase Structure</h2>
+
+    <div class="phase-grid">
+      <div class="phase-card active" data-phase="Current">
+        <div class="phase-title">Bridge</div>
+        <div class="phase-duration">Now → Epidural</div>
+        <p>Maintain what you have. Reverse atrophy where nerve allows. Add cycling immediately. Protect the nerve from unnecessary provocation. Optimize sleep and tissue environment.</p>
+      </div>
+      <div class="phase-card" data-phase="Phase 2">
+        <div class="phase-title">Unlock</div>
+        <div class="phase-duration">Post-Epidural → 8 weeks</div>
+        <p>Exploit the recruitment window. Progressive trap bar loading. Glute med targeting. Single-leg volume increase. Introduce cycling intervals. Begin cautious forward jogging progression.</p>
+      </div>
+      <div class="phase-card" data-phase="Phase 3">
+        <div class="phase-title">Return</div>
+        <div class="phase-duration">Week 8 post-epidural → Summer</div>
+        <p>Sport-specific conditioning. Lateral deceleration. King of the Court prep. Jogging → running progression. Maintain structural changes. Pain independence from activity.</p>
+      </div>
+    </div>
+
+    <p style="margin-top:0.75rem;">Each phase has hard gates before advancement — see <a href="#gates" style="color:var(--accent);text-decoration:none;">Gates</a>. Calendar is a guide. Symptom response governs.</p>
+  </section>
+
+  <section id="cycling">
+    <div class="section-label">03 — Immediate Add</div>
+    <h2>Cycling Protocol</h2>
+
+    <div class="highlight-box">
+      <h3>Start This Week — Stationary Bike at the Gym</h3>
+      <p>This is not cardio. This is <strong>nerve decompression with a cardiovascular side effect.</strong> In hip flexion, the L4–L5 foramen opens measurably — the same reason backward jogging feels better than forward jogging. The stationary bike applies the same principle with zero joint impact and sustained duration. You have been doing this instinctively. Now formalize it.</p>
+    </div>
+
+    <table class="ex-table">
+      <thead>
+        <tr><th>Parameter</th><th>Prescription</th><th>Rationale</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Duration</td>
+          <td>15–20 min</td>
+          <td>Enough for sustained foraminal opening without fatigue-driven form loss</td>
+        </tr>
+        <tr>
+          <td>Resistance</td>
+          <td>Low — conversational pace</td>
+          <td>Training the nerve environment, not the cardiovascular system. Yet.</td>
+        </tr>
+        <tr>
+          <td>Position</td>
+          <td>Upright to slightly forward — NOT reclined</td>
+          <td>Reclined bike reduces hip flexion angle, defeats the purpose</td>
+        </tr>
+        <tr>
+          <td>Frequency</td>
+          <td>3–4x/week, on heavier lower body days</td>
+          <td>Counteracts compressive load from strength work same session</td>
+        </tr>
+        <tr>
+          <td>Timing</td>
+          <td>Post-strength OR standalone</td>
+          <td>Post-work: active decompression. Standalone: pure nerve mobility session</td>
+        </tr>
+        <tr>
+          <td>Monitor</td>
+          <td>Calf bands during and 1hr after</td>
+          <td>Should not worsen. If they do: reduce resistance and duration, not frequency</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="clinical-box">
+      <div class="box-label">Progression Gate</div>
+      <p>Once 20 min at low resistance is trivially easy AND does not aggravate calf bands: increase to 30 min OR add one resistance level. Not both simultaneously. Road bike resumes when you feel ready — same protocol applies initially.</p>
+    </div>
+  </section>
+
+  <section id="protocol">
+    <div class="section-label">04 — Movement Audit</div>
+    <h2>Current Exercise Protocol</h2>
+
+    <p>Your undulation approach is correct — don't discard it. What follows is a movement-by-movement audit with modifications where needed, not a new template imposed over your system.</p>
+
+    <h3>Core — Keep As Is</h3>
+    <table class="ex-table">
+      <thead>
+        <tr><th>Exercise</th><th>Dose</th><th>Notes</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Dead Bug <span class="flag flag-keep">Keep</span></td>
+          <td>3×10/side, slow</td>
+          <td>Ideal pre-epidural. Contralateral limb extension trains anti-rotation without spinal compression.</td>
+        </tr>
+        <tr>
+          <td>Bird Dog <span class="flag flag-keep">Keep</span></td>
+          <td>3s hold, 3×8/side</td>
+          <td>L5 stabilizer chain without compression. Keep going.</td>
+        </tr>
+        <tr>
+          <td>Side Plank from Knees <span class="flag flag-keep">Keep</span></td>
+          <td>3×25s holds</td>
+          <td>Progress to full side plank post-epidural when glute med recruitment improves — not before.</td>
+        </tr>
+        <tr>
+          <td>Clamshells <span class="flag flag-keep">Keep</span></td>
+          <td>2×20/side, light band</td>
+          <td>Gluteus medius is neurogenically inhibited right now. Volume over intensity until recruitment unlocks.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>Lower Body — Modifications</h3>
+    <table class="ex-table">
+      <thead>
+        <tr><th>Exercise</th><th>Dose</th><th>Notes</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Full Depth BW Squat <span class="flag flag-hold">Replace</span></td>
+          <td>Stop immediately</td>
+          <td>Reproduces tingling. Pre-epidural, this is gratuitous nerve provocation. Replace with box squat.</td>
+        </tr>
+        <tr>
+          <td>Box / Quarter Squat <span class="flag flag-new">New Rx</span></td>
+          <td>BW or goblet — 3×10</td>
+          <td>Box height: knee at ~90° or above. Goblet hold shifts COM forward, reduces lumbar extension. Safe range.</td>
+        </tr>
+        <tr>
+          <td>Glute Bridge 60–80% ROM <span class="flag flag-keep">Keep</span></td>
+          <td>2–3×15</td>
+          <td>Good. When single-leg version feels consistently easy, that is your Phase 2 signal — not a calendar date.</td>
+        </tr>
+        <tr>
+          <td>Eccentric Touchdown (Step) <span class="flag flag-keep">Keep</span></td>
+          <td>3×8/side, controlled</td>
+          <td>Well-chosen. Monitor left leg during descent — any left lumbar rotation is a form flag, not a stop sign yet.</td>
+        </tr>
+        <tr>
+          <td>Band Shuffles <span class="flag flag-keep">Keep</span></td>
+          <td>2×15/direction</td>
+          <td>Gluteus medius in frontal plane. Keep band light — quality of activation over burn.</td>
+        </tr>
+        <tr>
+          <td>Single-Leg Slide Lunge <span class="flag flag-mod">Monitor</span></td>
+          <td>90° cap — no deeper</td>
+          <td>If you notice left trunk lean during descent, hold a DB in the left hand to force upright position.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>Upper Body — No Changes</h3>
+    <p>Bench, rows, shoulders are earning their keep and preserving your sanity. One flag only: if any pressing movement causes hard breath-holding (Valsalva), back off the load. Intra-abdominal pressure spikes transiently increase disc pressure. Not a reason to stop pressing — a reason to keep weight in a range where you can breathe through the rep.</p>
+
+    <h3>Cardio &amp; Nerve Mobility</h3>
+    <table class="ex-table">
+      <thead>
+        <tr><th>Mode</th><th>Frequency</th><th>Notes</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Walking 45–60 min <span class="flag flag-keep">Keep</span></td>
+          <td>Daily</td>
+          <td>Axial load, proprioception, mood. Don't stop. If calf bands worsen mid-walk: shorten duration, not pace.</td>
+        </tr>
+        <tr>
+          <td>Backward Jog Intervals <span class="flag flag-keep">Keep</span></td>
+          <td>Opportunistic</td>
+          <td>Smart instinct. Flexion-biased spine, minimal joint impact. Keep intervals 20–30s, flat surface only.</td>
+        </tr>
+        <tr>
+          <td>Stationary Cycling <span class="flag flag-new">Add Now</span></td>
+          <td>3–4x/week, 15–20 min</td>
+          <td>See Cycling Protocol above. This is your most important new addition.</td>
+        </tr>
+        <tr>
+          <td>Nerve Flossing <span class="flag flag-keep">Keep</span></td>
+          <td>1–2x/day</td>
+          <td>Best timing: morning (before load accumulates) + post-cycling (nerve mobilized in flexion). Avoid when calf bands are acutely elevated.</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section id="daily">
+    <div class="section-label">05 — Structure</div>
+    <h2>Sample Daily Undulation Pattern</h2>
+    <p>Not a rigid split. A reference showing how new additions integrate with your existing approach. Adjust freely by feel — the autoregulation rule at the bottom is the one non-negotiable.</p>
+
+    <div class="day-grid">
+      <div class="day-row">
+        <div class="day-label">Day A<br><span style="color:var(--text-dim);font-size:0.6rem;letter-spacing:0.05em;">Higher Load</span></div>
+        <div class="day-content">
+          Backward jog intervals (10–15 min) → Box squat 3×10 → Eccentric touchdown 3×8/side → Glute bridge 2×15 → Bench press → Rows → <strong style="color:var(--accent2);">Stationary bike 15–20 min</strong> → Nerve floss
+        </div>
+      </div>
+      <div class="day-row">
+        <div class="day-label">Day B<br><span style="color:var(--text-dim);font-size:0.6rem;letter-spacing:0.05em;">Moderate</span></div>
+        <div class="day-content">
+          Walk 45 min → Band shuffles 2×15 → Single-leg slide lunge 3×8/side → Clamshells 2×20 → Shoulder work → Dead bug 3×10 → Bird dog 3×8 → Nerve floss (morning)
+        </div>
+      </div>
+      <div class="day-row">
+        <div class="day-label">Day C<br><span style="color:var(--text-dim);font-size:0.6rem;letter-spacing:0.05em;">Recovery</span></div>
+        <div class="day-content">
+          Walk only (45–60 min, flat) → Side plank from knees 3×25s → Light upper body or rest → <strong style="color:var(--accent2);">Stationary bike 15 min</strong> if legs feel good → Skip nerve floss if calf bands elevated
+        </div>
+      </div>
+      <div class="day-row">
+        <div class="day-label">Day D<br><span style="color:var(--text-dim);font-size:0.6rem;letter-spacing:0.05em;">Repeat A</span></div>
+        <div class="day-content">
+          As Day A — autoregulate load by morning pain score. If ≥3/10 on waking: drop lower body load 30%. Do not skip — reduce. The difference matters.
+        </div>
+      </div>
+    </div>
+
+    <div class="clinical-box" style="margin-top:1.25rem;">
+      <div class="box-label">Autoregulation Rule — Formalize This One</div>
+      <p>If calf bands are elevated at session start, that day becomes Day C regardless of what was planned. This is not backing down — it is reading the nerve signal correctly and protecting the training week that follows.</p>
+    </div>
+  </section>
+
+  <section id="trapbar">
+    <div class="section-label">06 — Untapped Asset</div>
+    <h2>Trap Bar Protocol</h2>
+
+    <p>The trap bar is your most important underused tool. It allows hip hinge loading with centered load, neutral spine, and adjustable start height — the only bilateral lower body compound movement that is genuinely safe pre-epidural when done correctly.</p>
+
+    <div class="clinical-box blue">
+      <div class="box-label">Why Trap Bar Over Conventional Deadlift</div>
+      <p>A conventional bar pulls load anterior to your center of mass, requiring lumbar extension to clear — that extension closes the posterior foramen. The trap bar centers load directly under your hips. Biomechanically it sits between a squat and a deadlift, without the full knee flexion demand of a squat. For L4–L5 foraminal compression, this is the right tool for this moment.</p>
+    </div>
+
+    <table class="ex-table">
+      <thead>
+        <tr><th>Stage</th><th>Setup</th><th>Load</th><th>Gate</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>1 — Now</td>
+          <td>Elevated start (plates/blocks, bar at mid-shin or above). High handles.</td>
+          <td>Empty bar or 25s — groove the pattern</td>
+          <td>Zero tingling during or after 3 consecutive sessions</td>
+        </tr>
+        <tr>
+          <td>2 — Bridge</td>
+          <td>Same elevated position. High handles.</td>
+          <td>Add 10–20 lbs/session until mild effort</td>
+          <td>Comfortable 5×5 at moderate load, calf bands unchanged post-session</td>
+        </tr>
+        <tr>
+          <td>3 — Post-Epidural</td>
+          <td>Begin lowering start height incrementally. Still high handles.</td>
+          <td>Reset to 70% of Stage 2 peak and rebuild</td>
+          <td>Full glute recruitment visibly improved (you'll feel the difference)</td>
+        </tr>
+        <tr>
+          <td>4 — Return Phase</td>
+          <td>Near-floor pull if symptom-free. Low handles option.</td>
+          <td>Build toward meaningful load for sport prep</td>
+          <td>60 min walk post-session with no symptom spike</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="clinical-box red">
+      <div class="box-label">Non-Negotiable Form Cues — Pre-Epidural</div>
+      <p><strong>1.</strong> Breath in before the pull, exhale through the lift — no Valsalva at this stage. <strong>2.</strong> If you feel lumbar rounding at the start position, raise the bar. The start position governs everything. <strong>3.</strong> Any left-leg tingling during the lift = stop that set. Note the load and stay below it next session. <strong>4.</strong> Push the floor away — don't think about pulling with your back.</p>
+    </div>
+  </section>
+
+  <section id="meds">
+    <div class="section-label">07 — Pharmacology</div>
+    <h2>Medication Exit Ramp</h2>
+
+    <p>Both medications are currently earning their keep — but for different reasons, and with different exit strategies.</p>
+
+    <div class="med-row" style="border-top: 1px solid var(--border);">
+      <div class="med-name">Gabapentin<br><span style="font-family:'IBM Plex Mono',monospace;font-size:0.6rem;color:var(--text-dim);font-weight:300;">200mg / sleep</span></div>
+      <div class="med-note">At 200mg this is functioning as a sleep architecture aid with minor nerve-calming benefit — not meaningful neuropathic dosing (therapeutic range is 900–3600mg/day). The sleep it's protecting is directly upstream of tissue repair and neurological recovery. <strong>Do not touch this until you're consistently hitting 3+ hours of deep sleep per night.</strong> That is the gate. Not a date.</div>
+      <div class="med-status" style="color:var(--yellow);">Hold<br>Gate:<br>Sleep ≥3h</div>
+    </div>
+
+    <div class="med-row">
+      <div class="med-name">Acetaminophen<br><span style="font-family:'IBM Plex Mono',monospace;font-size:0.6rem;color:var(--text-dim);font-weight:300;">1000mg / day</span></div>
+      <div class="med-note">At 2/10 morning pain, this may be running on habit more than necessity. <strong>Three-day experiment:</strong> on any morning where pain is ≤2/10, skip it and track whether the day degrades — pain climbs, or activity is affected. If the day holds, it's no longer earning its keep. If the day degrades, it is. Three data points before drawing conclusions.</div>
+      <div class="med-status" style="color:var(--accent2);">Test<br>3-day<br>trial</div>
+    </div>
+
+    <div class="med-row">
+      <div class="med-name">Ibuprofen<br><span style="font-family:'IBM Plex Mono',monospace;font-size:0.6rem;color:var(--text-dim);font-weight:300;">~discontinued</span></div>
+      <div class="med-note">Correct call. Chronic NSAIDs suppress prostaglandin signaling that drives tendon and connective tissue remodeling — directly counterproductive to the collagen synthesis goals in the shared guide. Good riddance.</div>
+      <div class="med-status" style="color:var(--green);">Done<br>Keep off</div>
+    </div>
+
+    <div class="clinical-box" style="margin-top:1.25rem;">
+      <div class="box-label">On Sleep Specifically</div>
+      <p>1–1.5 hrs deep sleep is improved but still below the threshold where tissue repair and glial clearance run optimally (~1.5–2hrs is the functional floor for an active 59-year-old). The gabapentin is helping but not solving it. <strong>Worth adding:</strong> consistent wake time anchors circadian rhythm more powerfully than bedtime management. Room temperature drop. And — if not already doing it — <strong>10g glycine before bed</strong> has evidence for improving deep sleep architecture, and it's also a collagen precursor. Two-for-one, with zero drug interaction risk at that dose.</p>
+    </div>
+  </section>
+
+  <section id="gates">
+    <div class="section-label">08 — Progression</div>
+    <h2>Advancement Gates</h2>
+
+    <p>These govern phase transitions. The calendar is a suggestion. These are the actual rules.</p>
+
+    <div class="gate">
+      <div class="gate-num">1</div>
+      <div class="gate-content">
+        <div class="gate-title">Trap Bar Entry</div>
+        <div class="gate-desc">Begin at elevated height, light load. Gate to progress: zero tingling during or within 1hr of 3 consecutive sessions. If triggered, raise start height and reduce load — don't stop.</div>
+      </div>
+    </div>
+
+    <div class="gate">
+      <div class="gate-num">2</div>
+      <div class="gate-content">
+        <div class="gate-title">Cycling Progression</div>
+        <div class="gate-desc">20 min at low resistance without calf band aggravation for 2 weeks. Then: add 10 min OR one resistance level. Not both simultaneously.</div>
+      </div>
+    </div>
+
+    <div class="gate">
+      <div class="gate-num">3</div>
+      <div class="gate-content">
+        <div class="gate-title">Post-Epidural Unlock</div>
+        <div class="gate-desc">2 weeks post-injection before meaningful load increase. The injection itself creates local inflammation that needs to settle. Light walking, cycling, upper body only for 2 weeks. Then exploit the window aggressively.</div>
+      </div>
+    </div>
+
+    <div class="gate">
+      <div class="gate-num">4</div>
+      <div class="gate-content">
+        <div class="gate-title">Forward Jogging</div>
+        <div class="gate-desc">Morning pain consistently ≤1/10 for 2 weeks. Walking 60 min with zero symptom spike. Post-epidural glute recruitment visibly improved. Start with 30s forward jog intervals — not a run.</div>
+      </div>
+    </div>
+
+    <div class="gate">
+      <div class="gate-num">5</div>
+      <div class="gate-content">
+        <div class="gate-title">King of the Court</div>
+        <div class="gate-desc">30 min continuous jogging without symptom spike. Lateral shuffle at 75% effort pain-free. Ability to decelerate from sprint without bracing. This is the gate — not a date, not a season.</div>
+      </div>
+    </div>
+  </section>
+
+  <section id="timeline">
+    <div class="section-label">09 — Horizon</div>
+    <h2>Realistic Timeline</h2>
+
+    <p style="margin-bottom:1.5rem;">Built on your actual progression rate, not optimism. Every milestone is contingent on the gate before it — and on getting the epidural scheduled.</p>
+
+    <div class="timeline">
+      <div class="tl-item current">
+        <div class="tl-time">Now — Week 21</div>
+        <div class="tl-title">Bridge Phase</div>
+        <div class="tl-desc">Add cycling this week. Replace full-depth squat with box squat. Start trap bar at elevated height. Acetaminophen 3-day experiment. Get epidural scheduled — this is the rate-limiting step.</div>
+      </div>
+      <div class="tl-item future">
+        <div class="tl-time">Weeks 22–26 (estimated)</div>
+        <div class="tl-title">Epidural + 2-Week Settle</div>
+        <div class="tl-desc">Don't train hard immediately post-injection. Let the procedure's local inflammation resolve. Light walking, cycling, upper body only. Two weeks of patience buys six weeks of unlock.</div>
+      </div>
+      <div class="tl-item future">
+        <div class="tl-time">Weeks 28–34</div>
+        <div class="tl-title">Recruitment Window — Use It</div>
+        <div class="tl-desc">Glute med, trap bar progression, single-leg volume increase, cycling intervals. Six-week window of neurological unlock where the biggest structural gains happen. Don't miss it.</div>
+      </div>
+      <div class="tl-item future">
+        <div class="tl-time">Weeks 34–40</div>
+        <div class="tl-title">Jogging Progression</div>
+        <div class="tl-desc">Backward intervals extend in duration. Forward jog intervals introduced at Gate 4 criteria. Cycling becomes genuine cardiovascular conditioning, not just decompression.</div>
+      </div>
+      <div class="tl-item goal">
+        <div class="tl-time">Summer 2026</div>
+        <div class="tl-title">King of the Court</div>
+        <div class="tl-desc">Realistic if the epidural happens within 4–6 weeks and the recruitment window is worked well. Not guaranteed — but this is the path. The bridge you're building right now is what gets you there.</div>
+      </div>
+    </div>
+
+    <div class="clinical-box" style="margin-top:1.5rem;">
+      <div class="box-label">The Honest Variable</div>
+      <p>Epidural timing is the rate-limiting step for everything at Gate 3 and beyond. Every week of delay compresses the back end of the timeline. The bridge protocol is good work — but it has a ceiling that only the epidural lifts. <strong>Get it scheduled.</strong></p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <p>Patrick — Individual Protocol · Sprint Jump Resilience · March 2026</p>
+  <p>Cross-reference: Sprint_Jump_Resilience_Guide for Track A, collagen window, and nutrition protocols · Weekly Guide v5 · Exercise Library · Periodization Guide</p>
+  <p style="color: rgba(200,126,126,0.5); margin-top:0.5rem;">Informational only. All clinical decisions should be reviewed with your treating physician.</p>
+</footer>
+
+
+<a class="fab-weekly" href="SJR_WeeklyGuide_Patrick_v5_20260402.html">
+  This Week
+</a>
+</body>
+</html>
