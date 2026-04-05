@@ -292,7 +292,7 @@ main { padding:1.25rem 1.5rem; max-width:1100px; margin:0 auto; }
   </div>
   <div class="hdr-right">
     <span class="last-refresh" id="last-refresh">—</span>
-    <button class="refresh-btn" onclick="loadAll()">↻ Refresh</button>
+    <button class="refresh-btn" id="refresh-btn-el" onclick="loadAll()">↻ Refresh</button>
   </div>
 </header>
 
@@ -425,6 +425,8 @@ let athleteStates = {}; // { patrick: { current_week, current_phase }, ... }
 // LOAD
 // ─────────────────────────────────────────
 async function loadAll(){
+  const btn = document.getElementById('refresh-btn-el');
+  if(btn){ btn.textContent = '↻ Loading…'; btn.disabled = true; }
   document.getElementById('athletes-grid').innerHTML =
     '<div class="loading-state"><span class="spinner"></span>Fetching from Supabase…</div>';
 
@@ -451,6 +453,8 @@ async function loadAll(){
     const now = new Date();
     document.getElementById('last-refresh').textContent =
       'Updated ' + now.toLocaleTimeString('en-US', {hour:'2-digit', minute:'2-digit'});
+    const btn2 = document.getElementById('refresh-btn-el');
+    if(btn2){ btn2.textContent = '↻ Refresh'; btn2.disabled = false; }
 
   } catch(e){
     document.getElementById('athletes-grid').innerHTML =
@@ -478,14 +482,21 @@ function renderAthletes(){
     const breaches = [];
     const metricRows = athlete.metrics.map(m => {
       const recent = logs.filter(l => l.metric === m.key)
-        .sort((a,b) => new Date(b.created_at) - new Date(a.created_at));
+        .sort((a,b) => {
+          // Sort by date desc, then created_at desc
+          if(b.date !== a.date) return b.date > a.date ? 1 : -1;
+          return new Date(b.created_at) - new Date(a.created_at);
+        });
       const latest = recent[0];
       const score  = latest ? latest.score : null;
-      const ts     = latest ? new Date(latest.created_at).getTime() : 0;
-      const isRecent = ts > cutoff24h;
+      // isRecent: logged today or yesterday (use date string — timezone safe)
+      const today2  = todayStr();
+      const yest = (()=>{ const d=new Date(); d.setDate(d.getDate()-1);
+        return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); })();
+      const isRecent = latest && (latest.date === today2 || latest.date === yest);
 
-      // Trend: compare latest vs 3 days ago
-      const older = recent.filter(l => new Date(l.created_at).getTime() < ts - 86400000);
+      // Trend: compare latest vs previous entry
+      const older = recent.slice(1).filter(l => l.date !== latest?.date);
       const olderScore = older.length ? older[0].score : null;
       let trendCls = '', trendTxt = '';
       if(score !== null && olderScore !== null){
@@ -606,6 +617,8 @@ async function saveInjury(){
     document.getElementById('inj-location').value = '';
     document.getElementById('inj-desc').value = '';
     await loadAll();
+// Auto-refresh every 60 seconds
+setInterval(loadAll, 60000);
   } catch(e){
     alert('Save failed: ' + e.message);
   }
