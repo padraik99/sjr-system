@@ -108,7 +108,7 @@ header{
   transition:all .15s;text-align:center;
   display:flex;flex-direction:column;align-items:center;gap:.1rem;
 }
-.day-btn .day-initial{font-size:.72rem;font-weight:500}
+.day-btn .day-initial{font-size:.62rem;font-weight:500;letter-spacing:-.02em}
 .day-btn .day-dot{width:4px;height:4px;border-radius:50%;background:transparent;transition:background .15s}
 .day-btn.today{border-color:var(--accent2);color:var(--accent2)}
 .day-btn.today .day-dot{background:var(--accent2)}
@@ -504,10 +504,10 @@ main{padding:1.25rem}
   <button class="day-btn" data-day="0" onclick="selectDay(0)"><span class="day-initial">M</span><span class="day-dot"></span></button>
   <button class="day-btn" data-day="1" onclick="selectDay(1)"><span class="day-initial">T</span><span class="day-dot"></span></button>
   <button class="day-btn" data-day="2" onclick="selectDay(2)"><span class="day-initial">W</span><span class="day-dot"></span></button>
-  <button class="day-btn" data-day="3" onclick="selectDay(3)"><span class="day-initial">T</span><span class="day-dot"></span></button>
+  <button class="day-btn" data-day="3" onclick="selectDay(3)"><span class="day-initial">Th</span><span class="day-dot"></span></button>
   <button class="day-btn" data-day="4" onclick="selectDay(4)"><span class="day-initial">F</span><span class="day-dot"></span></button>
-  <button class="day-btn" data-day="5" onclick="selectDay(5)"><span class="day-initial">S</span><span class="day-dot"></span></button>
-  <button class="day-btn" data-day="6" onclick="selectDay(6)"><span class="day-initial">S</span><span class="day-dot"></span></button>
+  <button class="day-btn" data-day="5" onclick="selectDay(5)"><span class="day-initial">Sa</span><span class="day-dot"></span></button>
+  <button class="day-btn" data-day="6" onclick="selectDay(6)"><span class="day-initial">Su</span><span class="day-dot"></span></button>
 </div>
 
 <!-- MAIN -->
@@ -1402,7 +1402,7 @@ function renderContrastWarmup(cwPhase){
     const med = inferMED(intent);
     return '<div class="framework-bar">' +
       '<div class="framework-med">' + med + '</div>' +
-      '<a class="browse-btn" href="' + url + '" target="_blank">Browse exercises</a>' +
+      '<a class="browse-btn" href="' + url + '">Browse exercises</a>' +
       '</div>';
   }
 

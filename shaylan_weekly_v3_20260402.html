@@ -110,7 +110,7 @@ header{
   transition:all .15s;text-align:center;
   display:flex;flex-direction:column;align-items:center;gap:.1rem;
 }
-.day-btn .day-initial{font-size:.72rem;font-weight:600}
+.day-btn .day-initial{font-size:.62rem;font-weight:600;letter-spacing:-.02em}
 .day-btn .day-date{font-size:.58rem;color:var(--muted);line-height:1;margin-top:.05rem}
 .day-btn.today .day-date{color:var(--gold)}
 .day-btn.active .day-date{color:var(--bg)}
@@ -1542,7 +1542,7 @@ const MEETS = [
 function initDaySelector(){
   const todayStr = todayStr_sh();
   const weekStart = getWeekStart(currentWeek);
-  const DAY_INITIALS = ['M','T','W','T','F','S','S'];
+  const DAY_INITIALS = ['M','T','W','Th','F','Sa','Su'];
   let selectIdx = 0;
 
   document.querySelectorAll('.day-btn').forEach((btn, i) => {
@@ -1803,7 +1803,7 @@ function renderDay(idx){
     const med = inferMED(intent);
     return '<div class="framework-bar">' +
       '<div class="framework-med">' + med + '</div>' +
-      '<a class="browse-btn" href="' + url + '" target="_blank">Browse exercises</a>' +
+      '<a class="browse-btn" href="' + url + '">Browse exercises</a>' +
       '</div>';
   }
 
