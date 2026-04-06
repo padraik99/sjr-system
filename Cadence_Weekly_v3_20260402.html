@@ -411,6 +411,54 @@ main{padding:1.25rem}
   .day-btn .day-initial{font-size:.62rem}
   .cw-num{font-size:1.1rem}
 }
+
+  /* ── FRAMEWORK SKELETON ── */
+  .framework-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.6rem 0.85rem;
+    margin: 0.75rem 0 0.25rem;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--gold);
+    border-radius: 0 4px 4px 0;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  .framework-med {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.58rem;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+  .framework-med strong {
+    color: var(--gold);
+    font-weight: 500;
+  }
+  .browse-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.35rem 0.75rem;
+    background: none;
+    border: 1px solid rgba(255,209,102,0.35);
+    border-radius: 3px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--gold);
+    text-decoration: none;
+    white-space: nowrap;
+    transition: all 0.15s;
+  }
+  .browse-btn:hover {
+    background: rgba(255,209,102,0.08);
+    border-color: var(--gold);
+  }
+  .browse-btn::after { content: ' →'; }
 </style>
 </head>
 <body>
@@ -1307,6 +1355,57 @@ function renderContrastWarmup(cwPhase){
 // ─────────────────────────────────────────────────────────────────────────────
 // RENDER DAY
 // ─────────────────────────────────────────────────────────────────────────────
+
+  // ─────────────────────────────────────────
+  // FRAMEWORK — quality + phase inference
+  // ─────────────────────────────────────────
+  const LIBRARY_FILE = 'SJR_Library_Master_v4_20260402.html';
+
+  function inferQualityTags(intent){
+    const i = (intent || '').toLowerCase();
+    if(/strength|single.leg load|single.leg integ/.test(i)) return 'quality-strength,quality-hypertrophy';
+    if(/speed.end/.test(i))                                  return 'quality-velocity,quality-hypertrophy';
+    if(/speed|compete|sharp|pre.meet|pre.big|pre.ncal|pre.state|loading/.test(i)) return 'quality-velocity,quality-power';
+    if(/rehab|prehab|easy|walk.through/.test(i))             return 'quality-gpp,quality-isometric';
+    if(/recovery|rest|active rec|core|taper/.test(i))        return 'quality-gpp,quality-isometric';
+    return 'quality-gpp';
+  }
+
+  function inferMED(intent){
+    const tags = inferQualityTags(intent);
+    if(tags.includes('strength'))    return '<strong>Strength</strong> · 3–5 sets · diminishing returns beyond this (Zourdos et al.)';
+    if(tags.includes('velocity'))    return '<strong>Speed / Power</strong> · low volume, maximal intent · full recovery between reps';
+    if(tags.includes('hypertrophy')) return '<strong>Hypertrophy</strong> · 4 fractional sets MED · more sets rarely adds proportional gain';
+    if(tags.includes('isometric'))   return '<strong>Isometric</strong> · 5×45s · analgesic window is the target, not fatigue';
+    return '<strong>GPP</strong> · volume over intensity · tissue tolerance is the goal';
+  }
+
+  function buildLibraryURL(weekPhase, intent){
+    const quality = inferQualityTags(intent);
+    let phaseTag = 'phase-bridge';
+    if(typeof weekPhase === 'number'){
+      if(weekPhase === 1) phaseTag = 'phase-bridge';
+      else if(weekPhase === 2) phaseTag = 'phase-gpp';
+      else if(weekPhase >= 3) phaseTag = 'phase-spp,phase-comp';
+    } else {
+      const p = (weekPhase || '').toLowerCase();
+      if(/phase 1/.test(p))                           phaseTag = 'phase-bridge,phase-gpp';
+      if(/phase 1.+2|phase 2/.test(p))                phaseTag = 'phase-gpp,phase-spp';
+      if(/phase 3|peak|taper|state|comp/.test(p))     phaseTag = 'phase-spp,phase-comp';
+    }
+    return LIBRARY_FILE + '?phase=' + phaseTag + '&quality=' + quality + '&hidespinal=1';
+  }
+
+  function buildFrameworkBar(weekPhase, intent){
+    if(!intent || /rest/i.test(intent)) return '';
+    const url = buildLibraryURL(weekPhase, intent);
+    const med = inferMED(intent);
+    return '<div class="framework-bar">' +
+      '<div class="framework-med">' + med + '</div>' +
+      '<a class="browse-btn" href="' + url + '" target="_blank">Browse exercises</a>' +
+      '</div>';
+  }
+
 function renderDay(idx){
   const week = WEEKS[currentWeek];
   const day  = week.days[idx];
@@ -1391,6 +1490,9 @@ function renderDay(idx){
     });
     html += `</div>`;
   });
+
+  // Framework bar
+  html += buildFrameworkBar(week.phase, day.intent);
 
   // Gate log history
   const weekStart = getWeekStart(currentWeek);
