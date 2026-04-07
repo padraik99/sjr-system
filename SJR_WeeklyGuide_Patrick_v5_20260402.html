@@ -397,13 +397,13 @@ main { padding:1.25rem; max-width:700px; margin:0 auto; }
   <div class="hdr-top">
     <div>
       <div class="hdr-name">Patrick</div>
-      <div class="hdr-sub">L4–L5 Bridge → King of the Court · v5.1</div>
+      <div class="hdr-sub">L4–L5 Bridge → King of the Court · v5.3</div>
     </div>
     <div class="phase-badge" id="phase-badge">Bridge · W1<span>Mar 24–30</span></div>
   </div>
   <div class="metric-strip" id="metric-strip">
     <div class="metric-item">
-      <div class="metric-label">Morning Pain</div>
+      <div class="metric-label">Back Pain</div>
       <div class="metric-name">AM Score</div>
       <div class="metric-val none" id="val-morning">—</div>
     </div>
@@ -458,21 +458,21 @@ main { padding:1.25rem; max-width:700px; margin:0 auto; }
       padding:0.6rem 0.85rem;">
       <div style="font-family:'IBM Plex Mono',monospace;font-size:0.58rem;
         letter-spacing:0.14em;text-transform:uppercase;color:var(--dim);margin-bottom:0.4rem;">
-        Staged — will save all at once
+        Queued — tap Save all to commit
       </div>
       <div id="pending-list" style="font-family:'IBM Plex Mono',monospace;
         font-size:0.72rem;color:var(--accent2);line-height:1.8;"></div>
     </div>
 
     <div class="metric-toggle">
-      <button class="metric-btn active" id="mbtn-morning" onclick="selectMetric('morning')">🌅 Morning</button>
+      <button class="metric-btn active" id="mbtn-morning" onclick="selectMetric('morning')">🔴 Back</button>
       <button class="metric-btn" id="mbtn-nerve" onclick="selectMetric('nerve')">⚡ Nerve</button>
       <button class="metric-btn" id="mbtn-glute" onclick="selectMetric('glute')">🟠 Glute</button>
       <button class="metric-btn" id="mbtn-ankle" onclick="selectMetric('ankle')">📍 Ankle</button>
     </div>
 
     <div id="score-section-morning">
-      <div class="score-label">Morning Back Pain — Gate ≤ 2/10</div>
+      <div class="score-label">Back Pain — Gate ≤ 2/10</div>
       <div class="score-grid">
         <button class="score-btn" data-v="0" onclick="selectScore(0)">0</button>
         <button class="score-btn" data-v="1" onclick="selectScore(1)">1</button>
@@ -532,12 +532,8 @@ main { padding:1.25rem; max-width:700px; margin:0 auto; }
 
     <div class="gate-status" id="gate-status"></div>
 
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;margin-bottom:0.45rem;">
-      <button class="modal-save" style="background:var(--surface2);color:var(--accent2);
-        border:1px solid rgba(126,184,164,0.3);" onclick="stageMetric()">
-        + Add another metric
-      </button>
-      <button class="modal-save" onclick="saveLog()">Save all</button>
+    <div style="margin-bottom:0.45rem;">
+      <button class="modal-save" style="width:100%;" onclick="saveLog()">Save all</button>
     </div>
     <button class="modal-cancel" onclick="closeModal()">Cancel</button>
   </div>
@@ -1515,7 +1511,7 @@ let currentWeek = parseInt(localStorage.getItem('pt_week') || '0');
 let selectedDay = 0;
 let activeMetric = 'morning';
 let selectedScore = null;
-let selectedTiming = 'before';
+let selectedTiming = 'am';
 
 // In-memory log cache — populated from Supabase on load, updated on save
 let logs = JSON.parse(localStorage.getItem('pt_logs') || '[]');
@@ -1883,7 +1879,7 @@ function renderDay(idx){
       const limits = {morning:2, nerve:2, glute:99, ankle:99};
       const limit = limits[l.metric] || 2;
       const sc = l.score === 0 ? 'ok' : l.score <= limit ? 'warn' : 'bad';
-      const mLabel = {morning:'Morning', nerve:'Nerve', glute:'Glute', ankle:'Ankle'}[l.metric] || l.metric;
+      const mLabel = {morning:'Back', nerve:'Nerve', glute:'Glute', ankle:'Ankle'}[l.metric] || l.metric;
       const tLabel = {am:'AM', pre:'Pre-Session', post:'Post-Session',
                       before:'Pre-Session', after:'Post/AM'}[l.timing] || l.timing;
       html += `<div class="log-row">
@@ -1986,21 +1982,23 @@ function syncTimingButtons(){
 }
 
 function selectMetric(m){
+  // Auto-stage current metric if a score is selected before switching
+  if(selectedScore !== null && activeMetric !== m){
+    pendingScores[activeMetric] = { score: selectedScore, timing: selectedTiming };
+    updatePendingSummary();
+  }
+
   activeMetric = m;
   selectedScore = null;
   document.querySelectorAll('.score-btn').forEach(b => b.classList.remove('selected'));
 
   // If this metric was already staged, pre-fill its score
-  // but DO NOT change timing — timing persists from last selection
   if(pendingScores[m] !== undefined){
     const staged = pendingScores[m].score;
     document.querySelectorAll('#score-section-' + m + ' .score-btn').forEach(b => {
       b.classList.toggle('selected', parseInt(b.dataset.v) === staged);
     });
     selectedScore = staged;
-    // Only restore timing from staged if user hadn't changed it since staging
-    // — we leave selectedTiming as-is (last user choice) unless staged timing differs
-    // This gives the "remember last state" behaviour across switches
   }
 
   METRICS.forEach(k => {
@@ -2035,7 +2033,7 @@ function updateGateStatus(){
   el.style.display = 'block';
   const s = selectedScore;
   if(activeMetric === 'morning'){
-    if(s <= 1){ el.className = 'gate-status pass'; el.textContent = '✓ Full Day A — proceed normally'; }
+    if(s <= 1){ el.className = 'gate-status pass'; el.textContent = '✓ Back gate clear — proceed normally'; }
     else if(s === 2){ el.className = 'gate-status reduce'; el.textContent = '⚠ Day A with 30% load reduction'; }
     else if(s >= 3){ el.className = 'gate-status hold'; el.textContent = '🛑 Day C override — lower body cancelled'; }
   } else if(activeMetric === 'nerve'){
@@ -2052,26 +2050,7 @@ function updateGateStatus(){
   }
 }
 
-function stageMetric(){
-  // Stage current metric — timing does NOT reset on advance (fix for issue #4)
-  if(selectedScore === null) return;
-  pendingScores[activeMetric] = { score: selectedScore, timing: selectedTiming };
-  updatePendingSummary();
-  // Auto-advance to next unscored metric — timing carries over
-  const next = METRICS.find(m => pendingScores[m] === undefined && m !== activeMetric);
-  if(next){
-    // Advance without touching selectedTiming
-    activeMetric = next;
-    selectedScore = null;
-    document.querySelectorAll('.score-btn').forEach(b => b.classList.remove('selected'));
-    METRICS.forEach(k => {
-      document.getElementById('mbtn-'+k).classList.toggle('active', k===next);
-      document.getElementById('score-section-'+k).style.display = k===next ? 'block' : 'none';
-    });
-    document.getElementById('gate-status').style.display = 'none';
-    // timing buttons stay as-is — no syncTimingButtons() call needed, state is correct
-  }
-}
+
 
 function updatePendingSummary(){
   const keys = Object.keys(pendingScores);
