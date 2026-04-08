@@ -1,0 +1,1646 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Yari — ACL Performance & Rehab Guide · Sprint · Jump · Resilience</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#080d0a;
+  --surface:#0f1812;
+  --surface2:#182212;
+  --border:#1e2e1e;
+  --accent:#00e58a;
+  --accent2:#ff6b35;
+  --gold:#ffd166;
+  --text:#e0ece4;
+  --muted:#7a9a84;
+  --success:#06d6a0;
+  --warn:#ff6b35;
+  --red:#ef233c;
+  --purple:#b388ff;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'IBM Plex Sans',sans-serif;background:var(--bg);color:var(--text);font-size:15px;line-height:1.7;min-height:100vh}
+
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");pointer-events:none;z-index:0;opacity:.35}
+
+/* NAV */
+nav{position:sticky;top:0;z-index:100;background:rgba(8,13,10,0.96);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:0 1.5rem;height:56px;display:flex;align-items:center;justify-content:space-between}
+.nav-brand{font-family:'Bebas Neue',sans-serif;font-size:1.4rem;letter-spacing:.12em;color:var(--accent)}
+.nav-brand span{color:var(--muted);font-size:1rem}
+.nav-links{display:flex;gap:1.5rem;list-style:none;font-family:'IBM Plex Mono',monospace;font-size:.68rem;letter-spacing:.1em;text-transform:uppercase}
+.nav-links a{color:var(--muted);text-decoration:none;transition:color .2s}
+.nav-links a:hover{color:var(--accent)}
+.nav-toggle{display:none;background:none;border:1px solid var(--border);color:var(--text);padding:.3rem .6rem;cursor:pointer;font-size:1rem;border-radius:3px}
+
+/* HERO */
+.hero{position:relative;padding:5rem 2rem 4rem;overflow:hidden;border-bottom:1px solid var(--border)}
+.hero-grid{position:absolute;inset:0;background-image:linear-gradient(var(--border) 1px,transparent 1px),linear-gradient(90deg,var(--border) 1px,transparent 1px);background-size:40px 40px;opacity:.25}
+.hero-glow{position:absolute;top:-100px;right:-100px;width:500px;height:500px;background:radial-gradient(circle,rgba(0,229,138,.07) 0%,transparent 70%);pointer-events:none}
+.hero-content{position:relative;max-width:860px;margin:0 auto}
+.athlete-tag{font-family:'IBM Plex Mono',monospace;font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);margin-bottom:.75rem;display:flex;align-items:center;gap:.5rem}
+.athlete-tag::before{content:'';width:24px;height:1px;background:var(--accent)}
+.hero h1{font-family:'Bebas Neue',sans-serif;font-size:clamp(3.5rem,10vw,7rem);line-height:.95;letter-spacing:.04em;margin-bottom:1rem}
+.hero h1 .name{color:var(--accent);display:block}
+.hero h1 .sub{color:var(--text);font-size:clamp(1.5rem,4vw,2.8rem);letter-spacing:.08em}
+.hero-meta{display:flex;gap:1.5rem;flex-wrap:wrap;margin-top:1.5rem}
+.meta-item{border:1px solid var(--border);padding:.5rem 1rem;border-radius:2px;font-family:'IBM Plex Mono',monospace;font-size:.72rem;color:var(--muted)}
+.meta-item strong{color:var(--text);display:block;font-size:.85rem;font-family:'IBM Plex Sans',sans-serif}
+
+/* LAYOUT */
+.container{max-width:860px;margin:0 auto;padding:0 1.5rem;position:relative;z-index:1}
+section{padding:4rem 0 2rem;border-bottom:1px solid var(--border)}
+section:last-child{border-bottom:none}
+
+.section-eyebrow{font-family:'IBM Plex Mono',monospace;font-size:.68rem;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);margin-bottom:.6rem;display:flex;align-items:center;gap:.5rem}
+.section-eyebrow::before{content:'';width:16px;height:1px;background:var(--accent)}
+
+h2{font-family:'Bebas Neue',sans-serif;font-size:clamp(2rem,5vw,3rem);letter-spacing:.06em;line-height:1;margin-bottom:1.5rem;color:var(--text)}
+h3{font-family:'Libre Baskerville',serif;font-size:1.2rem;margin:2rem 0 .6rem;color:var(--text)}
+h4{font-family:'IBM Plex Mono',monospace;font-size:.75rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin:1.25rem 0 .4rem}
+p{color:#b8d4c0;margin-bottom:1rem;font-size:.95rem}
+
+/* CALLOUTS */
+.callout{border:1px solid var(--border);border-left:3px solid var(--accent);background:var(--surface);padding:1.25rem 1.5rem;margin:1.5rem 0;border-radius:0 4px 4px 0}
+.callout.warn{border-left-color:var(--warn);background:rgba(255,107,53,.06)}
+.callout.success{border-left-color:var(--success);background:rgba(6,214,160,.06)}
+.callout.critical{border-left-color:var(--red);background:rgba(239,35,60,.06)}
+.callout.gold{border-left-color:var(--gold);background:rgba(255,209,102,.06)}
+.callout.purple{border-left-color:var(--purple);background:rgba(179,136,255,.06)}
+.callout-label{font-family:'IBM Plex Mono',monospace;font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;margin-bottom:.5rem}
+.callout .callout-label{color:var(--accent)}
+.callout.warn .callout-label{color:var(--warn)}
+.callout.success .callout-label{color:var(--success)}
+.callout.critical .callout-label{color:var(--red)}
+.callout.gold .callout-label{color:var(--gold)}
+.callout.purple .callout-label{color:var(--purple)}
+.callout>p:last-child{margin-bottom:0}
+
+/* MECHANICS CHAIN */
+.mech-chain{display:flex;align-items:center;gap:.4rem;flex-wrap:wrap;padding:1.25rem;background:var(--surface);border:1px solid var(--border);border-radius:4px;margin:1.25rem 0}
+.mech-node{font-family:'IBM Plex Mono',monospace;font-size:.68rem;padding:.35rem .75rem;border-radius:2px;white-space:nowrap;letter-spacing:.04em}
+.mech-node.root{background:var(--red);color:#fff}
+.mech-node.mid{background:var(--surface2);border:1px solid var(--border);color:var(--muted)}
+.mech-node.end{background:var(--accent);color:var(--bg)}
+.mech-node.warn{background:var(--warn);color:#fff}
+.mech-arrow{color:var(--border);font-size:1.1rem}
+
+/* FINDINGS GRID */
+.findings-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1rem;margin:1.25rem 0}
+.finding-card{background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:1.25rem;position:relative;overflow:hidden}
+.finding-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px}
+.finding-card.flag::before{background:var(--red)}
+.finding-card.note::before{background:var(--gold)}
+.finding-card.positive::before{background:var(--success)}
+.finding-card.purple::before{background:var(--purple)}
+.finding-num{font-family:'Bebas Neue',sans-serif;font-size:3rem;color:var(--border);line-height:1;position:absolute;top:.5rem;right:.75rem;letter-spacing:.05em}
+.finding-card h4{color:var(--text);margin:0 0 .5rem;font-size:.8rem}
+.finding-card p{font-size:.83rem;color:var(--muted);margin:0}
+
+/* BIODEX TABLE */
+.biodex-table{width:100%;border-collapse:collapse;margin:1.25rem 0;font-size:.85rem}
+.biodex-table th{background:var(--surface2);color:var(--muted);padding:.6rem 1rem;text-align:left;font-family:'IBM Plex Mono',monospace;font-size:.66rem;letter-spacing:.1em;text-transform:uppercase;border-bottom:1px solid var(--border)}
+.biodex-table td{padding:.7rem 1rem;border-bottom:1px solid var(--border);color:#b8d4c0;vertical-align:middle}
+.biodex-table td:first-child{color:var(--muted);font-family:'IBM Plex Mono',monospace;font-size:.72rem}
+.biodex-table tr.flag-row td{background:rgba(239,35,60,.05)}
+.biodex-table tr.flag-row td:first-child{color:var(--red)}
+.biodex-table tr.good-row td{background:rgba(6,214,160,.04)}
+.biodex-table tr.amber-row td{background:rgba(255,209,102,.04)}
+.vbadge{display:inline-block;padding:.15rem .5rem;border-radius:2px;font-family:'IBM Plex Mono',monospace;font-size:.62rem;text-transform:uppercase;letter-spacing:.06em}
+.vbadge.good{background:rgba(6,214,160,.2);color:var(--success);border:1px solid rgba(6,214,160,.3)}
+.vbadge.flag{background:rgba(239,35,60,.2);color:#ff6b81;border:1px solid rgba(239,35,60,.3)}
+.vbadge.amber{background:rgba(255,209,102,.15);color:var(--gold);border:1px solid rgba(255,209,102,.3)}
+
+/* PHASE PROTOCOL */
+.phase-stack{display:grid;gap:.75rem;margin:1.25rem 0}
+.phase-item{background:var(--surface);border:1px solid var(--border);border-radius:4px;overflow:hidden;display:grid;grid-template-columns:140px 1fr}
+.phase-label{background:var(--surface2);padding:1rem;display:flex;flex-direction:column;justify-content:center;border-right:1px solid var(--border)}
+.phase-label .phase-name{font-family:'Bebas Neue',sans-serif;font-size:1.1rem;letter-spacing:.08em;color:var(--accent);line-height:1}
+.phase-label .phase-when{font-family:'IBM Plex Mono',monospace;font-size:.65rem;color:var(--muted);margin-top:.3rem}
+.phase-label.gate .phase-name{color:var(--success)}
+.phase-label.warn .phase-name{color:var(--warn)}
+.phase-content{padding:1rem 1.25rem}
+.phase-content ul{list-style:none}
+.phase-content li{padding:.2rem 0 .2rem 1.1rem;position:relative;font-size:.85rem;color:#b8d4c0}
+.phase-content li::before{content:'→';position:absolute;left:0;color:var(--accent);font-size:.75rem;top:.25rem}
+
+/* EXERCISE LIBRARY */
+.track-head{background:var(--surface2);border:1px solid var(--border);border-bottom:none;padding:1rem 1.5rem;display:flex;align-items:center;gap:1rem;margin-top:2rem;border-radius:4px 4px 0 0}
+.track-letter{font-family:'Bebas Neue',sans-serif;font-size:2.5rem;color:var(--accent);line-height:1;width:40px;flex-shrink:0}
+.track-meta h3{margin:0;font-family:'IBM Plex Sans',sans-serif;font-size:.95rem;font-weight:600;color:var(--text)}
+.track-meta p{margin:0;font-size:.78rem;color:var(--muted)}
+.ex-list{border:1px solid var(--border);border-top:none;border-radius:0 0 4px 4px;overflow:hidden}
+.ex-item{border-bottom:1px solid var(--border)}
+.ex-item:last-child{border-bottom:none}
+.ex-btn{width:100%;background:var(--surface);border:none;padding:.9rem 1.5rem;text-align:left;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:1rem;transition:background .15s;color:var(--text)}
+.ex-btn:hover{background:var(--surface2)}
+.ex-name{font-weight:600;font-size:.9rem;color:var(--text)}
+.ex-tags{display:flex;gap:.4rem;align-items:center;flex-shrink:0;flex-wrap:wrap}
+.tag{font-family:'IBM Plex Mono',monospace;font-size:.6rem;padding:.15rem .45rem;border-radius:2px;text-transform:uppercase;letter-spacing:.06em;border:1px solid}
+.tag.acl{border-color:var(--accent);color:var(--accent)}
+.tag.perf{border-color:var(--success);color:var(--success)}
+.tag.tendon{border-color:#64b5f6;color:#64b5f6}
+.tag.bfr{border-color:var(--purple);color:var(--purple)}
+.tag.sled{border-color:var(--gold);color:var(--gold)}
+.tag.ball{border-color:var(--warn);color:var(--warn)}
+.tag.nmc{border-color:#80cbc4;color:#80cbc4}
+.tag.daily{border-color:var(--accent);color:var(--accent)}
+.chev{font-size:.75rem;color:var(--muted);transition:transform .2s;flex-shrink:0}
+.ex-body{display:none;padding:1.25rem 1.5rem;background:rgba(15,24,18,.8);border-top:1px solid var(--border);font-size:.88rem}
+.ex-body.open{display:block}
+.ex-body strong{display:block;font-family:'IBM Plex Mono',monospace;font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-top:.85rem;margin-bottom:.25rem}
+.ex-body strong:first-child{margin-top:0}
+.ex-body p{font-size:.85rem;color:#9abaa6;margin-bottom:.3rem}
+.demo-link{display:inline-flex;align-items:center;gap:.35rem;margin-top:.75rem;font-family:'IBM Plex Mono',monospace;font-size:.7rem;color:var(--accent);text-decoration:none;border-bottom:1px solid rgba(0,229,138,.3);padding-bottom:1px;transition:border-color .2s}
+.demo-link:hover{border-color:var(--accent)}
+
+/* ESTROGEN TABLE */
+.cycle-table{width:100%;border-collapse:collapse;margin:1.25rem 0;font-size:.85rem}
+.cycle-table th{background:var(--surface2);color:var(--muted);padding:.6rem 1rem;text-align:left;font-family:'IBM Plex Mono',monospace;font-size:.66rem;letter-spacing:.1em;text-transform:uppercase;border-bottom:1px solid var(--border)}
+.cycle-table td{padding:.7rem 1rem;border-bottom:1px solid var(--border);color:#b8d4c0;vertical-align:top}
+.cycle-table tr.risk-row td{background:rgba(239,35,60,.05)}
+.rbadge{display:inline-block;padding:.15rem .5rem;border-radius:2px;font-family:'IBM Plex Mono',monospace;font-size:.62rem;text-transform:uppercase;letter-spacing:.06em}
+.rbadge.high{background:rgba(239,35,60,.2);color:#ff6b81;border:1px solid rgba(239,35,60,.3)}
+.rbadge.mod{background:rgba(255,209,102,.15);color:var(--gold);border:1px solid rgba(255,209,102,.3)}
+.rbadge.low{background:rgba(6,214,160,.15);color:var(--success);border:1px solid rgba(6,214,160,.3)}
+
+/* NUTRITION */
+.nutrition-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:.75rem;margin:1.25rem 0}
+.nut-card{background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:1.1rem;border-top:2px solid var(--gold)}
+.nut-card h4{color:var(--gold);margin:0 0 .3rem;font-size:.72rem}
+.nut-card .dose{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;color:var(--text);letter-spacing:.05em;line-height:1;margin-bottom:.3rem}
+.nut-card p{font-size:.78rem;color:var(--muted);margin:0}
+
+/* WEEK GRID */
+.week{display:grid;grid-template-columns:repeat(7,1fr);gap:.35rem;margin:1.25rem 0}
+.day{background:var(--surface);border:1px solid var(--border);border-radius:3px;padding:.6rem .4rem;text-align:center}
+.day-n{font-family:'IBM Plex Mono',monospace;font-size:.6rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:.35rem}
+.day-f{font-size:.72rem;font-weight:600;color:var(--text);margin-bottom:.25rem;line-height:1.2}
+.day-d{font-size:.62rem;color:var(--muted)}
+.day.hi{border-top:2px solid var(--red)}
+.day.med{border-top:2px solid var(--gold)}
+.day.lo{border-top:2px solid var(--success)}
+.day.off{opacity:.5}
+
+/* OVERLAP TABLE */
+.overlap-table{width:100%;border-collapse:collapse;margin:1.25rem 0;font-size:.85rem}
+.overlap-table th{background:var(--surface2);color:var(--muted);padding:.6rem 1rem;text-align:left;font-family:'IBM Plex Mono',monospace;font-size:.66rem;letter-spacing:.1em;text-transform:uppercase;border-bottom:1px solid var(--border)}
+.overlap-table td{padding:.65rem 1rem;border-bottom:1px solid var(--border);color:#b8d4c0;vertical-align:top;line-height:1.5}
+.overlap-table td:first-child{color:var(--muted);font-family:'IBM Plex Mono',monospace;font-size:.7rem;white-space:nowrap}
+.owned-physio{color:#64b5f6;font-weight:500}
+.owned-us{color:var(--success);font-weight:500}
+.owned-shared{color:var(--gold);font-weight:500}
+
+/* GATE BOX */
+.gate-box{background:var(--bg);border:1px solid var(--border);border-left:3px solid var(--success);padding:1rem 1.25rem;margin:1rem 0;font-size:.88rem;color:var(--muted)}
+.gate-box .gl{font-family:'IBM Plex Mono',monospace;font-size:.55rem;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-bottom:.4rem}
+.gate-box.warn{border-left-color:var(--warn)}
+.gate-box.red{border-left-color:var(--red)}
+
+/* TIMELINE */
+.timeline-item{display:grid;grid-template-columns:140px 1fr;gap:1.25rem;padding:.85rem 0;border-bottom:1px solid var(--border);align-items:start}
+.timeline-item:last-child{border-bottom:none}
+.tl-label{font-family:'IBM Plex Mono',monospace;font-size:.65rem;letter-spacing:.08em;text-transform:uppercase}
+.tl-body{font-size:.88rem;color:#b8d4c0;line-height:1.55}
+.tl-body strong{color:var(--text)}
+
+/* REFS */
+.ref-list{list-style:none}
+.ref-list li{padding:.6rem 0 .6rem 2rem;border-bottom:1px solid var(--border);font-size:.82rem;color:var(--muted);position:relative;line-height:1.5}
+.ref-list li::before{content:attr(data-n);position:absolute;left:0;font-family:'IBM Plex Mono',monospace;font-size:.68rem;color:var(--accent)}
+.ref-list li:last-child{border-bottom:none}
+.ref-list em{font-style:italic;color:#9abaa6}
+
+/* FOOTER */
+footer{background:var(--surface);border-top:1px solid var(--border);padding:2rem;text-align:center;font-family:'IBM Plex Mono',monospace;font-size:.72rem;color:var(--muted);letter-spacing:.06em}
+footer .accent{color:var(--accent)}
+
+/* MOBILE */
+@media(max-width:640px){
+  .nav-links{display:none}
+  .nav-links.open{display:flex;flex-direction:column;position:absolute;top:56px;left:0;right:0;background:var(--bg);padding:1rem 1.5rem;gap:1rem;border-bottom:1px solid var(--border);z-index:99}
+  .nav-toggle{display:block}
+  .phase-item{grid-template-columns:1fr}
+  .phase-label{border-right:none;border-bottom:1px solid var(--border);padding:.75rem 1rem}
+  .week{grid-template-columns:repeat(4,1fr)}
+  .mech-chain{flex-direction:column;align-items:flex-start}
+  .mech-arrow{transform:rotate(90deg)}
+  .timeline-item{grid-template-columns:1fr;gap:.3rem}
+  h2{font-size:2.2rem}
+}
+@media print{
+  nav{position:static}
+  .ex-body{display:block!important}
+  .chev{display:none}
+  body::before{display:none}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-brand">YARI <span>/ FIELD GUIDE</span></div>
+  <button class="nav-toggle" onclick="document.getElementById('nl').classList.toggle('open')">☰</button>
+  <ul class="nav-links" id="nl">
+    <li><a href="#profile">Profile</a></li>
+    <li><a href="#testdata">Test Data</a></li>
+    <li><a href="#acl">The ACL</a></li>
+    <li><a href="#dual">Dual Exposure</a></li>
+    <li><a href="#estrogen">Estrogen</a></li>
+    <li><a href="#overlap">Physio Overlap</a></li>
+    <li><a href="#exercises">Exercises</a></li>
+    <li><a href="#bfr">BFR</a></li>
+    <li><a href="#nutrition">Nutrition</a></li>
+    <li><a href="#ramp">Phase Ramp</a></li>
+    <li><a href="#timeline">Timeline</a></li>
+    <li><a href="#rsi">ACL-RSI</a></li>
+    <li><a href="#refs">Research</a></li>
+  </ul>
+</nav>
+
+<div class="hero">
+  <div class="hero-grid"></div>
+  <div class="hero-glow"></div>
+  <div class="hero-content">
+    <div class="athlete-tag">Individual Performance & Rehab Guide</div>
+    <h1>
+      <span class="name">Yari</span>
+      <span class="sub">Midfielder · ACL Return</span>
+    </h1>
+    <div class="hero-meta">
+      <div class="meta-item"><strong>Pro · Mexico / Nicaragua NT</strong>Attacking & Holding Mid · CB</div>
+      <div class="meta-item"><strong>Injury</strong>Right ACL Sprain · Nov 20, 2025</div>
+      <div class="meta-item"><strong>Management</strong>Conservative · Both Ends Intact</div>
+      <div class="meta-item"><strong>Week 16</strong>Post-Injury</div>
+      <div class="meta-item"><strong>Target</strong>May 2026 · June Hard Gate</div>
+      <div class="meta-item"><strong>Weight</strong>113 lb · 5–8 lb deficit</div>
+      <button onclick="document.getElementById('week-overlay').classList.add('open')" style="background:var(--accent);color:var(--bg);border:none;border-radius:3px;padding:.5rem 1.1rem;font-family:'IBM Plex Mono',monospace;font-size:.75rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;align-self:center">▶ THIS WEEK</button>
+    </div>
+  </div>
+</div>
+
+<!-- PROFILE -->
+<section id="profile">
+<div class="container">
+  <div class="section-eyebrow">Athlete Overview</div>
+  <h2>The Clinical Picture</h2>
+
+  <p>Yari is a 29-year-old pro midfielder — Mexico league, Nicaraguan National Team — presenting at Week 16 post right ACL sprain. Both ligament ends confirmed intact on MRI. Conservative management was chosen over surgery; a US second opinion confirmed this as clinically defensible. <strong>She is not post-surgical. She is post-strain with intact tissue that needs remodeling, neuromuscular re-education, and a systematic return-to-load program.</strong> These are meaningfully different clinical scenarios with different timelines and different training responses.</p>
+
+  <p>The right leg is both her kicking foot and primary plant foot — dual exposure that doubles the loading profile relative to a contralateral injury. A new club has an opening. <strong>May 2026 is the preseason target; June 2026 is the non-negotiable full clearance deadline.</strong> That window is achievable — but only if the program is built to serve the tissue, not the timeline.</p>
+
+  <div class="findings-grid">
+    <div class="finding-card positive">
+      <div class="finding-num">01</div>
+      <h4>Intact Ligament</h4>
+      <p>Both ACL ends attached on MRI. Conservative management is evidence-based and appropriate for this profile. Filbay & Grindem 2019: equivalent outcomes to surgery in copers with good neuromuscular function. Her hop data supports coper status.</p>
+    </div>
+    <div class="finding-card flag">
+      <div class="finding-num">02</div>
+      <h4>9.1° ROM Deficit</h4>
+      <p>Right knee 92.8° vs left 101.9° on Biodex. Most actionable clinical finding. Likely driver of anterior ache under load — patellofemoral compression at restricted end range, not tendon reactivity. ROM restoration is the daily priority.</p>
+    </div>
+    <div class="finding-card flag">
+      <div class="finding-num">03</div>
+      <h4>NMC Acceleration Lag</h4>
+      <p>Right quad extension acceleration time 60ms vs left 50ms — 20% slower initiation. This is the proprioceptive fingerprint of the ACL strain: tissue intact, signal quality lagging. Directly targeted by reactive perturbation work under fatigue.</p>
+    </div>
+    <div class="finding-card positive">
+      <div class="finding-num">04</div>
+      <h4>Excellent Hop Data</h4>
+      <p>101% composite LSI on both distance and speed hop batteries. Right leg equal or superior on triple and crossover hops. Clinician: "No hesitation, stable, control 10/10." Natural coper pattern — the most positive prognostic sign in the dataset.</p>
+    </div>
+    <div class="finding-card note">
+      <div class="finding-num">05</div>
+      <h4>Bilateral Strength Gap</h4>
+      <p>Agonist/antagonist ratio 70% both legs vs goal of 76%. Not an injury asymmetry — a bilateral training deficit. Nordic eccentric program addresses both legs. Hamstring is actually 5.4% stronger on the right — favorable for ACL protection.</p>
+    </div>
+    <div class="finding-card note">
+      <div class="finding-num">06</div>
+      <h4>Mass Deficit</h4>
+      <p>5–8 lb below playing weight. Primarily lean mass. Muscle is the first line of ACL mechanical protection — co-contraction under dynamic load requires tissue to contract. BFR with occlusion cuffs drives mass rebuild without stressing the anterior knee.</p>
+    </div>
+  </div>
+
+  <div class="callout gold">
+    <div class="callout-label">⚡ The Signing Window</div>
+    <p>A 29-year-old pro with a club opening creates exactly the psychological pressure that produces second ACL injuries. The training program's job is to absorb that pressure so it doesn't appear in the loading decisions. <strong>Every conservative, well-executed session is a deposit. The signing window needs a positive balance.</strong> Clinician noted "no hesitation" at the hop test — that confidence is an asset to protect, not exploit.</p>
+  </div>
+</div>
+</section>
+
+<!-- TEST DATA -->
+<section id="testdata">
+<div class="container">
+  <div class="section-eyebrow">Sierra Pacific Orthopaedic Center · March 17, 2026 · Clinician: Caleb</div>
+  <h2>Test Data — Full Analysis</h2>
+
+  <p>Isokinetic bilateral testing at 180°/sec, CON/CON, no gravity correction. Followed by full knee functional hop test battery. This is the most important data in the document — every phase decision gates from it.</p>
+
+  <h3>Biodex Isokinetic Results</h3>
+  <table class="biodex-table">
+    <thead><tr><th>Metric</th><th>Left (Uninvolved)</th><th>Right (Involved)</th><th>Deficit / Δ</th><th>Status</th></tr></thead>
+    <tbody>
+      <tr class="good-row">
+        <td>Peak Torque Extension (ft-lbs)</td><td>54.7</td><td>54.0</td><td>1.3%</td><td><span class="vbadge good">Symmetric</span></td>
+      </tr>
+      <tr class="good-row">
+        <td>Peak TQ/BW Extension (%)</td><td>48.4</td><td>47.8</td><td>—</td><td><span class="vbadge good">Symmetric</span></td>
+      </tr>
+      <tr class="good-row">
+        <td>Peak Torque Flexion (ft-lbs)</td><td>37.2</td><td>39.2</td><td>+5.4%</td><td><span class="vbadge good">R Stronger</span></td>
+      </tr>
+      <tr class="amber-row">
+        <td>Agonist/Antag Ratio (%)</td><td>68.1</td><td>72.7</td><td>Goal: 76%</td><td><span class="vbadge amber">Both Below Goal</span></td>
+      </tr>
+      <tr class="flag-row">
+        <td>ROM (degrees)</td><td>101.9°</td><td>92.8°</td><td>−9.1°</td><td><span class="vbadge flag">Priority Flag</span></td>
+      </tr>
+      <tr class="amber-row">
+        <td>Accel Time Extension (msec)</td><td>50</td><td>60</td><td>+20%</td><td><span class="vbadge amber">NMC Lag</span></td>
+      </tr>
+      <tr class="good-row">
+        <td>Accel Time Flexion (msec)</td><td>120</td><td>80</td><td>—</td><td><span class="vbadge good">R Faster</span></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>Hop Test Battery</h3>
+  <table class="biodex-table">
+    <thead><tr><th>Test</th><th>Left (cm or sec)</th><th>Right (cm or sec)</th><th>LSI</th><th>Goal</th><th>Status</th></tr></thead>
+    <tbody>
+      <tr class="good-row"><td>Single Hop for Distance</td><td>128 cm</td><td>122 cm</td><td>95%</td><td>≥90%</td><td><span class="vbadge good">Pass</span></td></tr>
+      <tr class="good-row"><td>Triple Hop for Distance</td><td>406 cm</td><td>410 cm</td><td>101%</td><td>≥90%</td><td><span class="vbadge good">Superior</span></td></tr>
+      <tr class="good-row"><td>Crossover Hop for Distance</td><td>374 cm</td><td>382 cm</td><td>102%</td><td>≥90%</td><td><span class="vbadge good">Superior</span></td></tr>
+      <tr class="good-row"><td>Distance Composite</td><td>908 cm</td><td>914 cm</td><td>101%</td><td>≥90%</td><td><span class="vbadge good">Excellent</span></td></tr>
+      <tr class="good-row"><td>Forward Hop (speed)</td><td>1.86 sec</td><td>1.96 sec</td><td>~95%</td><td>≤110%</td><td><span class="vbadge good">Pass</span></td></tr>
+      <tr class="good-row"><td>Crossover Hop (speed)</td><td>2.81 sec</td><td>2.91 sec</td><td>~97%</td><td>≤110%</td><td><span class="vbadge good">Pass</span></td></tr>
+      <tr class="good-row"><td>Figure 8 Hop (speed)</td><td>11.61 sec</td><td>11.66 sec</td><td>~100%</td><td>≤110%</td><td><span class="vbadge good">Excellent</span></td></tr>
+      <tr class="good-row"><td>Side Hop (speed)</td><td>5.78 sec</td><td>5.66 sec</td><td>~102%</td><td>≤110%</td><td><span class="vbadge good">Superior</span></td></tr>
+      <tr class="good-row"><td>Speed Composite</td><td>22.06 sec</td><td>22.19 sec</td><td>101%</td><td>≤110%</td><td><span class="vbadge good">Excellent</span></td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout success">
+    <div class="callout-label">✓ Coper Profile</div>
+    <p>The hop test data pattern — symmetric or superior on all distance hops, with minimal speed lag — combined with the clinician's behavioral observation ("no hesitation, control 10/10") is the hallmark of a natural coper. <strong>Copers demonstrate adapted neuromuscular strategies that compensate for ACL laxity under dynamic loading.</strong> Filbay & Grindem 2019 show this profile has equivalent return-to-sport outcomes with conservative management. This is not reassurance language — it is a direct clinical rationale for the program approach.</p>
+  </div>
+
+  <div class="callout warn">
+    <div class="callout-label">⚠ Grindem Threshold — The Fine Print</div>
+    <p>Grindem et al. 2016 established that >90% LSI is insufficient for return to cutting sports — >95% is the recommended threshold, and many current protocols target >98% before full clearance. <strong>She's at 101% today at Week 16 on a structured test.</strong> That's excellent. But the May gate requires repeating this battery under aerobic fatigue, after a full training block, with the full program load on the tissue. 101% fresh is not the same as 101% tired. The repeat test at the gate validates the number.</p>
+  </div>
+</div>
+</section>
+
+<!-- THE ACL -->
+<section id="acl">
+<div class="container">
+  <div class="section-eyebrow">Ligament Biology · Conservative Management · Tissue Remodeling</div>
+  <h2>The ACL — What We're Working With</h2>
+
+  <p>The anterior cruciate ligament is a dense band of collagen fibers — primarily type I — organized in two functional bundles: the anteromedial (taut in flexion, provides rotational control) and the posterolateral (taut in extension, provides anterior tibial restraint). The ACL has extremely limited intrinsic blood supply and historically poor healing capacity, which is why surgical reconstruction became the standard for complete tears. <strong>But her MRI shows both ends attached. This is not a complete rupture — it is a sprain with intact structural continuity.</strong></p>
+
+  <h3>Why Conservative Management Works Here</h3>
+  <p>Filbay & Grindem's 2019 systematic review compared conservative management to ACL reconstruction across multiple studies. In athletes with intact tissue, adequate neuromuscular compensation (coper status), and a structured rehabilitation program, conservative management produced equivalent functional outcomes at 2 and 5 years. The key predictors of success were exactly what she presents: favorable hop test symmetry, absent giving-way episodes, strong hamstring function, and willingness to commit to structured progressive loading.</p>
+
+  <div class="callout purple">
+    <div class="callout-label">Baar — The Collagen Remodeling Window</div>
+    <p>Keith Baar's work on tissue engineering and collagen synthesis is directly applicable here. The ACL, like all dense connective tissue, remodels under load — but the remodeling window is narrow and load-dependent. <strong>The collagen window protocol (15g hydrolyzed collagen + Vitamin C, 30–60 min before targeted loading) was validated for tendon in Shaw et al. 2017 — the same mechanistic pathway applies to ligament.</strong> The daily progressive loading program is not just neuromuscular re-education; it is driving collagen cross-linking and fiber reorganization in the ACL tissue itself. This is the biological argument for why the program must be consistent and progressive rather than intermittent.</p>
+  </div>
+
+  <h3>The Dietz Triphasic Sequence</h3>
+  <p>Cal Dietz's triphasic training model — eccentric phase first, then isometric, then concentric — maps directly onto ACL return-to-sport loading. This isn't coincidence. Connective tissue adapts to eccentric load first (the tissue lengthening under tension phase), then isometric co-contraction, then concentric expression. <strong>The program architecture follows this sequencing exactly:</strong></p>
+
+  <div class="mech-chain">
+    <div class="mech-node root">Phase 1 — Eccentric Priority</div>
+    <div class="mech-arrow">→</div>
+    <div class="mech-node mid">ROM work · Nordic eccentrics · Slow eccentric calf · Step-down</div>
+    <div class="mech-arrow">→</div>
+    <div class="mech-node mid">Phase 2 — Isometric Integration</div>
+    <div class="mech-arrow">→</div>
+    <div class="mech-node mid">Wall sit · Spanish squat · Single-leg hold under perturbation</div>
+    <div class="mech-arrow">→</div>
+    <div class="mech-node end">Phase 3 — Concentric Expression</div>
+  </div>
+
+  <h3>The Bosch Coordination Argument</h3>
+  <p>Frans Bosch's framing of return-to-sport as a coordination problem rather than a strength deficit is particularly relevant here. <strong>The Biodex confirms her quad strength is essentially symmetric. The problem is not force production — it is the speed and quality of neuromuscular initiation under unpredictable load.</strong> The 20% acceleration time lag on right quad extension is exactly what Bosch describes: the tissue is there, the coordination pattern is lagging. The reactive perturbation work in Session B isn't supplemental — it is the primary training adaptation we're chasing.</p>
+
+  <div class="callout success">
+    <div class="callout-label">✓ Grey & Ward — Joint-First Loading</div>
+    <p>David Grey's joint-first principle governs phase sequencing: restore joint mobility and sensory quality before imposing mechanical load. This is why the ROM block (addressing the 9.1° flexion deficit) and Daily Layer 1 (sensory maintenance) precede and govern all loading decisions. A joint that can't move through its full range under light load cannot be safely loaded under heavy load — the tissue hits compression before the movement ends. <strong>ROM gates load. Not the calendar.</strong></p>
+  </div>
+</div>
+</section>
+
+<!-- DUAL EXPOSURE -->
+<section id="dual">
+<div class="container">
+  <div class="section-eyebrow">Right Leg · Kicking Foot + Primary Plant Foot</div>
+  <h2>The Dual Exposure Problem</h2>
+
+  <p>Most ACL return-to-sport programs are designed around a single exposure profile — either the plant leg or the kicking leg. Yari's right leg is both. This doubles the ACL loading demand relative to a contralateral injury and requires deliberate sequencing of when each loading pattern is introduced.</p>
+
+  <h3>Two Distinct Mechanical Demands</h3>
+
+  <div class="findings-grid">
+    <div class="finding-card note">
+      <div class="finding-num">K</div>
+      <h4>Kicking Demand</h4>
+      <p>The right leg as kicking foot: high-velocity hip flexion, rapid quad contraction, follow-through requiring hamstring deceleration. Anterior tibial shear is significant during the follow-through phase. The hamstring-quad co-contraction at ball contact is the primary ACL protection mechanism. Introduced in Phase 2 (straight approach only) → Phase 3 (angled approach).</p>
+    </div>
+    <div class="finding-card note">
+      <div class="finding-num">P</div>
+      <h4>Plant Leg Demand</h4>
+      <p>The right leg as plant leg during a kick or direction change: single-leg deceleration, rotation of the trunk and ipsilateral hip over a planted foot, rapid loading of the ACL in its most vulnerable position. The highest-risk pattern for ACL re-injury. Introduced in Phase 3 only — after hop test re-run confirms maintained symmetry under fatigue.</p>
+    </div>
+  </div>
+
+  <div class="mech-chain">
+    <div class="mech-node mid">Phase 1–2</div>
+    <div class="mech-arrow">→</div>
+    <div class="mech-node mid">Kicking introduced (straight approach) — low plant stress</div>
+    <div class="mech-arrow">→</div>
+    <div class="mech-node warn">Phase 3</div>
+    <div class="mech-arrow">→</div>
+    <div class="mech-node mid">Angled approach — plant stress enters</div>
+    <div class="mech-arrow">→</div>
+    <div class="mech-node end">June Gate</div>
+    <div class="mech-arrow">→</div>
+    <div class="mech-node end">Full 1v1 contact cleared</div>
+  </div>
+
+  <div class="callout warn">
+    <div class="callout-label">⚠ The Inside Hook Turn</div>
+    <p>The inside hook turn on the right foot — receive, plant right, rotate left — is the single highest-risk movement pattern in her soccer context. It places the right ACL in combined flexion, valgus, and internal rotation under load: the classic injury mechanism. <strong>This movement is introduced last, at reduced speed, with deliberate monitoring of knee mechanics during every rep.</strong> It does not appear in the program until Session C Phase 3, and only with trainer assessment of each turn.</p>
+  </div>
+
+  <h3>Natera — Position-Specific Isometric Loading</h3>
+  <p>Alex Natera's work on sprint-specific isometric loading applies directly to Yari's dual exposure. The ACL-protective co-contraction pattern — hamstring and quad contracting simultaneously to prevent anterior tibial translation — must be trained at the joint angles specific to kicking and planting. <strong>Isometric holds at 60°, 70°, and 90° of knee flexion train the co-contraction at the exact angles where the ACL is most mechanically loaded during match play.</strong> Spanish squat and wall sit are not generic isometric work — they are position-specific ACL protection training.</p>
+</div>
+</section>
+
+<!-- ESTROGEN -->
+<section id="estrogen">
+<div class="container">
+  <div class="section-eyebrow">Female-Specific Physiology · ACL Risk · Baar / Lee / Hewett</div>
+  <h2>Estrogen, LOX & Ligament Risk</h2>
+
+  <p>The estrogen-LOX interaction is the most underappreciated risk factor in female ACL management. It is not theoretical. It is mechanistic, replicated, and directly actionable. <strong>Every female athlete with an ACL history should understand this before returning to full training.</strong></p>
+
+  <h3>The Mechanism</h3>
+  <p>Estrogen suppresses lysyl oxidase (LOX) — the enzyme responsible for cross-linking collagen fibers in ligament and tendon. Lee et al. 2015 (Baar lab): estrogen suppression of LOX reduces engineered ligament stiffness and ultimate failure load. At peak estrogen around ovulation (days 10–14), LOX is suppressed by up to 60–77%. The ligament is structurally less stiff. The ACL — already in a remodeling state — is at its most mechanically vulnerable.</p>
+
+  <table class="cycle-table">
+    <thead><tr><th>Phase</th><th>Days</th><th>Estrogen</th><th>LOX Activity</th><th>ACL Risk</th></tr></thead>
+    <tbody>
+      <tr><td>Early Follicular</td><td>1–7</td><td>Low</td><td>Normal</td><td><span class="rbadge low">Low</span></td></tr>
+      <tr class="risk-row"><td>Late Follicular / Peri-Ovulatory</td><td>10–14</td><td>Peak ~500 pg/mL</td><td>Suppressed 60–77%</td><td><span class="rbadge high">High — 4–5× (Hewett 2007)</span></td></tr>
+      <tr><td>Early Luteal</td><td>15–21</td><td>Moderate</td><td>Partial recovery</td><td><span class="rbadge mod">Moderate</span></td></tr>
+      <tr><td>Late Luteal</td><td>22–28</td><td>Declining</td><td>Recovering</td><td><span class="rbadge low">Lower</span></td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout critical">
+    <div class="callout-label">⚠ Hewett et al. 2007 — ACL-Specific</div>
+    <p>Hewett's data specifically examined ACL injury rates across the menstrual cycle. Injury risk is <strong>4–5× higher in the peri-ovulatory window (days 10–14)</strong> compared to the follicular phase. For an athlete in active ACL return-to-sport training, this is not a background statistic — it is a session-planning variable. High-intensity reactive cutting, 1v1 contact, and angled approach shooting should not be introduced for the first time during days 10–14.</p>
+  </div>
+
+  <h3>Countermeasures — What We Can Do</h3>
+  <p>The contrast warmup protocol (collagen + Vit C → 60 min → 6–10 min targeted loading) upregulates LOX via mechanical stimulus regardless of hormonal state. This is Baar's primary countermeasure and it works through a different pathway than hormonal LOX suppression. It does not fully replace LOX function during the peri-ovulatory window, but it provides meaningful partial rescue.</p>
+
+  <h4>Cycle-Adjusted Training Modifications (Days 10–14)</h4>
+  <ul style="list-style:none;margin-bottom:1rem">
+    <li style="padding:.4rem 0 .4rem 1.25rem;position:relative;border-bottom:1px solid var(--border);font-size:.88rem;color:#b8d4c0"><span style="position:absolute;left:0;color:var(--accent)">→</span> Contrast warmup mandatory — not optional</li>
+    <li style="padding:.4rem 0 .4rem 1.25rem;position:relative;border-bottom:1px solid var(--border);font-size:.88rem;color:#b8d4c0"><span style="position:absolute;left:0;color:var(--accent)">→</span> No new reactive cutting patterns introduced this week</li>
+    <li style="padding:.4rem 0 .4rem 1.25rem;position:relative;border-bottom:1px solid var(--border);font-size:.88rem;color:#b8d4c0"><span style="position:absolute;left:0;color:var(--accent)">→</span> 1v1 contact work delayed if scheduled for this window</li>
+    <li style="padding:.4rem 0 .4rem 1.25rem;position:relative;border-bottom:1px solid var(--border);font-size:.88rem;color:#b8d4c0"><span style="position:absolute;left:0;color:var(--accent)">→</span> Reduce inside hook turn volume on right foot 20–30%</li>
+    <li style="padding:.4rem 0 .4rem 1.25rem;position:relative;font-size:.88rem;color:#b8d4c0"><span style="position:absolute;left:0;color:var(--accent)">→</span> MSM 3g/day throughout cycle — partial LOX rescue (Baar preliminary data)</li>
+  </ul>
+</div>
+</section>
+
+<!-- PHYSIO OVERLAP -->
+<section id="overlap">
+<div class="container">
+  <div class="section-eyebrow">Coordination of Care · No Duplication · Gap-Filling Only</div>
+  <h2>Physio Program — Overlap Map</h2>
+
+  <p>The physio program is further along than typical Week 16 conservative ACL. She's already executing inverted BOSU squats, jump squats, lateral jump squats, and multi-directional single-leg hops including figure-8. <strong>Our program adds what physio hasn't covered. Not what physio is already doing.</strong></p>
+
+  <table class="overlap-table">
+    <thead><tr><th>Category</th><th>Physio (Already Doing)</th><th>Our Addition</th><th>Owner</th></tr></thead>
+    <tbody>
+      <tr><td>Warm-Up</td><td>10 min bike</td><td>ROM block, backward sled drag, canal walks, aerobic sessions</td><td><span class="owned-shared">Shared</span></td></tr>
+      <tr><td>Hip Abductor</td><td>Band lateral steps, monster walks</td><td>Lateral sled drag (dynamic), hip thrust loaded, lateral sled — replaces clamshell as primary driver Phase 2+</td><td><span class="owned-shared">Shared — escalate</span></td></tr>
+      <tr><td>Single-Leg Stability</td><td>Single-leg squat touchdown, BOSU squats (inverted), sit-to-stand lunge</td><td>Perturbation under aerobic fatigue, reactive med ball catch, eyes-closed progression</td><td><span class="owned-us">We add: reactive + fatigue layer</span></td></tr>
+      <tr><td>Plyometrics / Hops</td><td>Jump squats, lateral jump squats, multi-directional hops (forward, figure-8, side-to-side)</td><td>Hurdle hop quality under fatigue — mechanics assessment each rep, not just completion</td><td><span class="owned-us">We add: fatigue context + quality standard</span></td></tr>
+      <tr><td>Posterior Chain</td><td>Step-ups (2×10), leg press (2×25)</td><td>Trap bar deadlift, Nordic eccentrics, hip thrust barbell, single-leg RDL, Bulgarian split squat (Phase 3)</td><td><span class="owned-us">We own: all heavy loading</span></td></tr>
+      <tr><td>Knee Isometrics</td><td>Leg extension machine — 5 min, 15 sec alternating holds</td><td>Wall sit (Rio protocol), Spanish squat (pole anchor) — varied angles, higher hold duration</td><td><span class="owned-us">We reinforce with different modalities</span></td></tr>
+      <tr><td>ROM Restoration</td><td>Mobility work (unspecified)</td><td>Heel slides, prone knee hang, TRX squat, wall slide — daily specific protocol for 9.1° deficit</td><td><span class="owned-us">We own: specific ROM protocol</span></td></tr>
+      <tr><td>Aerobic Engine</td><td>10 min bike warm-up only</td><td>Full midfielder aerobic/lactic/alactic rebuild across 11 weeks</td><td><span class="owned-us">We own: complete engine rebuild</span></td></tr>
+      <tr><td>Ball Work</td><td>None</td><td>All ball reintroduction — stationary to 1v0 patterns to opposed play</td><td><span class="owned-us">We own: complete sport return</span></td></tr>
+      <tr><td>Mass Rebuild / Nutrition</td><td>None</td><td>Protein targets, collagen window, BFR, creatine, energy availability</td><td><span class="owned-us">We own: complete nutrition + BFR</span></td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout">
+    <div class="callout-label">📋 Handoff Conversation</div>
+    <p><em>"My trainer is taking over my program. Can you give him your current restrictions, your interpretation of the ROM deficit, whether the anterior ache is patellofemoral or tendon-based in your assessment, what home exercise continues, and any concerns about May/June return?"</em> Ask for verbal clearance or a note for trainer-led return-to-sport programming.</p>
+  </div>
+</div>
+</section>
+
+<!-- EXERCISE LIBRARY -->
+<section id="exercises">
+<div class="container">
+  <div class="section-eyebrow">Exercise Library</div>
+  <h2>Yari's Protocol</h2>
+  <p>Four tracks. Track A daily. Track B is the joint protection and NMC foundation. Track C is the sled and aerobic engine. Track D is performance and ball. Every track has a phase — nothing in Track D until Track B criteria are met.</p>
+
+  <!-- TRACK A -->
+  <div class="track-head">
+    <div class="track-letter">A</div>
+    <div class="track-meta">
+      <h3>ROM Restoration + Daily Layer 1</h3>
+      <p>Every day — before every session and on rest days. ~18 min total. ROM block first (8–10 min), then Layer 1 (8 min). Grey / Ward / Barr — sensory quality before mechanical load.</p>
+    </div>
+  </div>
+  <div class="ex-list">
+
+    <div class="ex-item">
+      <button class="ex-btn" onclick="toggleEx(this)">
+        <span class="ex-name">Heel Slide — Active Assisted</span>
+        <div class="ex-tags"><span class="tag daily">ROM Daily</span><span class="tag acl">Phase 1+</span><span class="chev">▼</span></div>
+      </button>
+      <div class="ex-body">
+        <strong>Why</strong><p>9.1° ROM deficit on Biodex is the primary clinical flag and likely driver of anterior knee ache. This is the first ROM restoration exercise — most direct way to drive knee flexion range in a supine, unloaded position. Grey: restore passive range before active loading.</p>
+        <strong>Dose</strong><p>3 × 15 reps right leg. 2-sec hold at end range. Towel or socked foot on smooth surface.</p>
+        <strong>Cue</strong><p>"Pull the heel in — not down. You're bending the knee, not pressing the heel into the floor." Gentle overpressure with hand at end range is acceptable if tolerated — not forced. Track progress: can the right heel reach the glute, matching the left?</p>
+        <a class="demo-link" href="https://www.youtube.com/results?search_query=heel+slide+knee+flexion+ROM+ACL+rehab" target="_blank">▶ Search Demo</a>
+      </div>
+    </div>
+
+    <div class="ex-item">
+      <button class="ex-btn" onclick="toggleEx(this)">
+        <span class="ex-name">Prone Knee Hang</span>
+        <div class="ex-tags"><span class="tag daily">ROM Daily</span><span class="tag acl">Phase 1+</span><span class="chev">▼</span></div>
+      </button>
+      <div class="ex-body">
+        <strong>Why</strong><p>Sustained passive flexion load via gravity. Targets posterior capsule stiffness which is a common contributor to knee flexion deficits. A deceptively effective ROM tool — the sustained load is more effective than short repetitions for capsular restriction.</p>
+        <strong>Dose</strong><p>2 × 2 min right leg. Off bench edge. Light ankle weight (1–2 lb) as gentle overpressure optional.</p>
+        <strong>Cue</strong><p>"Let the weight do the work. Breathe into the stretch. Don't fight it." Should feel like a comfortable sustained pull — not a sharp pain.</p>
+        <a class="demo-link" href="https://www.youtube.com/results?search_query=prone+knee+hang+ROM+restoration+ACL" target="_blank">▶ Search Demo</a>
+      </div>
+    </div>
+
+    <div class="ex-item">
+      <button class="ex-btn" onclick="toggleEx(this)">
+        <span class="ex-name">TRX Strap-Assisted Squat — ROM Goal</span>
+        <div class="ex-tags"><span class="tag daily">ROM Daily</span><span class="tag acl">Phase 1+</span><span class="chev">▼</span></div>
+      </button>
+      <div class="ex-body">
+        <strong>Why</strong><p>Active ROM work under mild load — the nylon straps in the garage provide the counterbalance so she can focus entirely on achieving maximum depth without balance demand. Converts passive ROM from the prone hang into active loaded range.</p>
+        <strong>Dose</strong><p>2 × 10 slow reps. Hold at deepest point 2 sec. Right knee is the target — don't allow compensatory hip shift to the left.</p>
+        <strong>Cue</strong><p>"Sit into the bottom. Right knee tracks over second toe. Hold the deepest point — don't bounce out." Watch for early right heel lift which indicates continuing ankle or knee restriction.</p>
+        <a class="demo-link" href="https://www.youtube.com/results?search_query=TRX+squat+knee+ROM+active+stretching" target="_blank">▶ Search Demo</a>
+      </div>
+    </div>
+
+    <div class="ex-item">
+      <button class="ex-btn" onclick="toggleEx(this)">
+        <span class="ex-name">Single-Leg Stance — Eyes Closed</span>
+        <div class="ex-tags"><span class="tag daily">L1 Daily</span><span class="tag nmc">NMC</span><span class="chev">▼</span></div>
+      </button>
+      <div class="ex-body">
+        <strong>Why</strong><p>Targets the NMC acceleration lag directly. Eyes closed removes visual compensation and forces somatosensory input from the joint. This is the Layer 1 exercise that most directly addresses the 20% quad initiation lag on Biodex. Barr: sensory quality at the foot-ankle-knee chain governs everything above it.</p>
+        <strong>Dose</strong><p>3 × 30–45 sec each leg. Daily. Canal terrain version (eyes open, uneven surface) counts on walk days.</p>
+        <strong>Cue</strong><p>"Soft knee. Find stillness from the ankle up. Let the small corrections happen — don't brace against them." If she can't keep the right leg stable for 20 sec with eyes closed, that's the training signal — not failure.</p>
+        <a class="demo-link" href="https://www.youtube.com/results?search_query=single+leg+stance+eyes+closed+proprioception+ACL" target="_blank">▶ Search Demo</a>
+      </div>
+    </div>
+
+    <div class="ex-item">
+      <button class="ex-btn" onclick="toggleEx(this)">
+        <span class="ex-name">Short Foot + Toe Yoga</span>
+        <div class="ex-tags"><span class="tag daily">L1 Daily</span><span class="tag nmc">NMC</span><span class="chev">▼</span></div>
+      </button>
+      <div class="ex-body">
+        <strong>Why</strong><p>Ward Flow Motion: the foot is the first relay in the proprioceptive chain. If the intrinsic foot muscles aren't awake, every layer above compensates. Short foot activates abductor hallucis and flexor digitorum brevis — the primary arch stabilizers that feed ground reaction force quality up the chain.</p>
+        <strong>Dose</strong><p>Short foot: 2 × 12 each foot. Toe separation: 2 × 10 each foot. Barefoot. 5 minutes total.</p>
+        <strong>Cue</strong><p>Short foot: "Draw ball of foot toward heel without curling toes — if toes curl, the intrinsics aren't firing." Toe yoga: "Big toe up, four toes down — then reverse." Both feet, both patterns.</p>
+        <a class="demo-link" href="https://www.youtube.com/results?search_query=short+foot+exercise+intrinsic+arch+proprioception" target="_blank">▶ Search Demo</a>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- TRACK B -->
+  <div class="track-head">
+    <div class="track-letter">B</div>
+    <div class="track-meta">
+      <h3>Joint Protection + Isometrics + NMC</h3>
+      <p>Session A foundation. Dietz eccentric-first then isometric sequencing. Rio analgesia protocol for anterior ache management. Phase 1 daily; Phase 2 session-only.</p>
+    </div>
+  </div>
+  <div class="ex-list">
+
+    <div class="ex-item">
+      <button class="ex-btn" onclick="toggleEx(this)">
+        <span class="ex-name">Wall Sit — Isometric (Rio Protocol)</span>
+        <div class="ex-tags"><span class="tag acl">Phase 1+</span><span class="tag nmc">Isometric</span><span class="chev">▼</span></div>
+      </button>
+      <div class="ex-body">
+        <strong>Why</strong><p>Rio et al. 2015: isometric contractions at 70% MVC suppress cortical inhibition and reduce knee pain by >40% for up to 45 minutes. Mechanism: heavy isometrics at mid-range stimulate corticospinal pathways that reduce pain gating. <strong>For the anterior ache with load, run this before every Session A</strong> — it removes the pain signal that would otherwise degrade movement quality during the session. Also drives quad-ham co-contraction at ACL-protective angles.</p>
+        <strong>Dose</strong><p>Phase 1: 3 × 30 sec at 70° knee. Phase 2+: 5 × 45 sec at 70% effort. 2-min rest. Always at session end also — consolidates analgesia.</p>
+        <strong>Cue</strong><p>"Even weight through both feet. Focus on pushing the floor away — think extension, not just holding." Pain during is acceptable (0–4/10); it should reduce across sets. If pain increases across sets, reduce depth.</p>
+        <a class="demo-link" href="https://www.youtube.com/results?search_query=isometric+wall+sit+patellar+tendon+Rio+protocol" target="_blank">▶ Search Demo</a>
+      </div>
+    </div>
+
+    <div class="ex-item">
+      <button class="ex-btn" onclick="toggleEx(this)">
+        <span class="ex-name">Spanish Squat — Pole Anchor Isometric</span>
+        <div class="ex-tags"><span class="tag acl">Phase 1+</span><span class="tag nmc">Isometric</span><span class="chev">▼</span></div>
+      </button>
+      <div class="ex-body">
+        <strong>Why</strong><p>Full-length band anchored around pole forces vertical tibia — eliminates anterior tibial shear at the knee. High quad-ham co-contraction at fixed joint angle. Unlike the wall sit, the band creates a forward pull that the athlete resists — slightly different joint recruitment pattern. Varies the ACL-protective isometric stimulus. Valid on any knee reactivity level.</p>
+        <strong>Dose</strong><p>4 × 30–40 sec. Rotate knee angles (60°, 70°, 80°) across sets. Lean back into band — heels into floor.</p>
+        <strong>Cue</strong><p>"Lean back into the band. Hold the shin angle — don't let the tibia drift forward. The tension between the band pull and your body weight is the load."</p>
+        <a class="demo-link" href="https://www.youtube.com/results?search_query=Spanish+squat+isometric+band+pole+ACL+knee" target="_blank">▶ Search Demo</a>
+      </div>
+    </div>
+
+    <div class="ex-item">
+      <button class="ex-btn" onclick="toggleEx(this)">
+        <span class="ex-name">Nordic Curl — Eccentric (Both Legs)</span>
+        <div class="ex-tags"><span class="tag acl">Phase 2+</span><span class="tag tendon">Eccentric</span><span class="chev">▼</span></div>
+      </button>
+      <div class="ex-body">
+        <strong>Why</strong><p>Petersen et al. 2011: 51% hamstring injury reduction. For ACL specifically: the hamstring is the primary muscular restraint against anterior tibial translation — the same movement the ACL resists. A strong eccentric hamstring is a mechanical ACL guard. <strong>The agonist/antagonist ratio deficit exists on both legs (70% vs 76% goal) — this is bilateral priority, not just right leg rehab.</strong> Feet anchored under barbell on floor. Band assist from pull-up bar in Phase 2.</p>
+        <strong>Dose</strong><p>Phase 2: 3 × 4 reps · 5 sec descent · Band assist. Phase 3: 3 × 5–6 · Reduce band assist progressively. 5-second descent is non-negotiable — that's the stimulus.</p>
+        <strong>Cue</strong><p>"Five seconds down — count it out loud. The descent is the work; the concentric is just getting back to start. Catch yourself with hands at the bottom."</p>
+        <a class="demo-link" href="https://www.youtube.com/results?search_query=Nordic+curl+eccentric+ACL+hamstring+protection" target="_blank">▶ Search Demo</a>
+      </div>
+    </div>
+
+    <div class="ex-item">
+      <button class="ex-btn" onclick="toggleEx(this)">
+        <span class="ex-name">Partner Band Perturbation — Single Leg</span>
+        <div class="ex-tags"><span class="tag nmc">Reactive NMC</span><span class="tag acl">Phase 2+</span><span class="chev">▼</span></div>
+      </button>
+      <div class="ex-body">
+        <strong>Why</strong><p>Directly targets the 20% acceleration time lag on Biodex. Unpredictable band pulls at hip level force rapid motor unit recruitment — the exact quality that's lagging. Bosch: the coordination pattern must be trained under surprise conditions, not just structured loading. Run at the end of Session B when mildly fatigued. That's match state.</p>
+        <strong>Dose</strong><p>3 × 8–10 perturbations each leg. Full-length band at hip level. Random direction, random timing. 60 sec rest between legs.</p>
+        <strong>Cue</strong><p>"React — don't anticipate. Let the pull happen first, then find the ground." If she's visibly bracing before the pull, the pattern isn't random enough — vary timing further.</p>
+        <a class="demo-link" href="https://www.youtube.com/results?search_query=single+leg+band+perturbation+reactive+ACL+NMC" target="_blank">▶ Search Demo</a>
+      </div>
+    </div>
+
+    <div class="ex-item">
+      <button class="ex-btn" onclick="toggleEx(this)">
+        <span class="ex-name">Med Ball Reactive Catch — Single Leg</span>
+        <div class="ex-tags"><span class="tag nmc">Reactive NMC</span><span class="tag acl">Phase 2+</span><span class="chev">▼</span></div>
+      </button>
+      <div class="ex-body">
+        <strong>Why</strong><p>Dual-task NMC demand — single-leg stance with unpredictable upper body disturbance. The catch creates a reactive load through the shoulder and trunk that destabilizes the single-leg base exactly as an aerial ball or shoulder challenge would during match play. 6 lb med ball. This is the sport-specific version of band perturbation.</p>
+        <strong>Dose</strong><p>3 × 8 catches each leg. Trainer throws at unpredictable timing and location — not a rhythm, not an arc. Return each ball.</p>
+        <strong>Cue</strong><p>"Eyes on the ball, not the ground. Trust the foot. Absorb the catch through the whole chain — don't just catch with the arms."</p>
+        <a class="demo-link" href="https://www.youtube.com/results?search_query=single+leg+med+ball+reactive+catch+ACL+return" target="_blank">▶ Search Demo</a>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- TRACK C -->
+  <div class="track-head">
+    <div class="track-letter">C</div>
+    <div class="track-meta">
+      <h3>Strength + Sled Complex</h3>
+      <p>Session A / B primary loading. Trap bar, hip thrust, single-leg RDL, sled variants. Dietz eccentric → isometric → concentric sequencing across phases. Sled: backward drag Phase 1+, lateral drag Phase 2+, forward drag Phase 3+.</p>
+    </div>
+  </div>
+  <div class="ex-list">
+
+    <div class="ex-item">
+      <button class="ex-btn" onclick="toggleEx(this)">
+        <span class="ex-name">Trap Bar Deadlift — High Handles (Phase 1)</span>
+        <div class="ex-tags"><span class="tag acl">Phase 1+</span><span class="tag tendon">Mass Rebuild</span><span class="chev">▼</span></div>
+      </button>
+      <div class="ex-body">
+        <strong>Why</strong><p>High handles reduce anterior knee moment — appropriate while ROM deficit persists. Primary mass rebuild tool. Escalates well beyond what physio has (step-ups, leg press) to real posterior chain loading. McGill: the trap bar's centered load is the safest bilateral hip hinge pattern for athletes with active joint issues.</p>
+        <strong>Dose</strong><p>Phase 1: 3 × 6 · RPE 6–7. Phase 2: 4 × 5 · Standard handles · RPE 7–8. Phase 3: 4 × 4–5 · RPE 8.</p>
+        <strong>Cue</strong><p>"Push the floor away — don't think pull. Hips and shoulders rise together." Wedge under heels optional Phase 1 if anterior ache present at lockout.</p>
+        <a class="demo-link" href="https://www.youtube.com/results?search_query=trap+bar+deadlift+high+handles+knee+rehabilitation" target="_blank">▶ Search Demo</a>
+      </div>
+    </div>
+
+    <div class="ex-item">
+      <button class="ex-btn" onclick="toggleEx(this)">
+        <span class="ex-name">Hip Thrust — Bilateral to Single Leg (Barbell)</span>
+        <div class="ex-tags"><span class="tag acl">Phase 1+</span><span class="tag tendon">Glute Priority</span><span class="chev">▼</span></div>
+      </button>
+      <div class="ex-body">
+        <strong>Why</strong><p>Glute max is the upstream governor of knee frontal-plane control. Hip thrust achieves maximal glute activation at end-range hip extension — a position not achievable in deadlift or squat. For ACL return: strong glute max reduces femoral adduction and internal rotation under load, which is the valgus collapse that places the ACL at risk. Minimal knee joint stress — appropriate at all phases.</p>
+        <strong>Dose</strong><p>Phase 1: 3 × 12 bilateral. Phase 2: 3 × 8 single-leg each. Right leg = extra set if tolerated. 1-sec isometric hold at full extension every rep.</p>
+        <strong>Cue</strong><p>"Drive through the heel. Full hip extension — squeeze and hold at the top. Ribs down — don't hyperextend the lower back." Bench + barbell available in garage.</p>
+        <a class="demo-link" href="https://www.youtube.com/results?search_query=hip+thrust+barbell+glute+ACL+protection+single+leg" target="_blank">▶ Search Demo</a>
+      </div>
+    </div>
+
+    <div class="ex-item">
+      <button class="ex-btn" onclick="toggleEx(this)">
+        <span class="ex-name">Backward Sled Drag</span>
+        <div class="ex-tags"><span class="tag sled">Sled · Phase 1+</span><span class="tag acl">Zero Shear</span><span class="chev">▼</span></div>
+      </button>
+      <div class="ex-body">
+        <strong>Why</strong><p>Uthoff: backward running and dragging eliminates anterior tibial shear force — the exact force that strains the ACL. Athlete faces the sled and walks or jogs backward while dragging. High quad NMC stimulus. Available immediately without sled modification. Best early aerobic and NMC combination tool in the inventory.</p>
+        <strong>Dose</strong><p>Phase 1: 5 × 25–30m · Moderate load. Phase 2: 6 × 30m · Progress load. Used in Session B Phase 1 as aerobic + NMC combined.</p>
+        <strong>Cue</strong><p>"Push the ground away behind you. Stay tall. Drive through each step — don't shuffle." Lean slightly forward as speed increases.</p>
+        <a class="demo-link" href="https://www.youtube.com/results?search_query=backward+sled+drag+ACL+rehab+quad+NMC" target="_blank">▶ Search Demo</a>
+      </div>
+    </div>
+
+    <div class="ex-item">
+      <button class="ex-btn" onclick="toggleEx(this)">
+        <span class="ex-name">Lateral Sled Drag</span>
+        <div class="ex-tags"><span class="tag sled">Sled · Phase 2+</span><span class="tag acl">Hip Abductor</span><span class="chev">▼</span></div>
+      </button>
+      <div class="ex-body">
+        <strong>Why</strong><p>Athlete side-steps laterally while dragging the sled. Dynamic hip abductor loading that significantly outperforms clamshells and banded lateral walks for ground reaction force. Ward Flow Motion: frontal plane loading quality governs sagittal plane efficiency. Strong hip abductors reduce knee valgus during single-leg landing — the primary mechanical ACL protection pattern. Phase 2 replacement for clamshell as primary hip abductor driver.</p>
+        <strong>Dose</strong><p>Phase 2+: 3 × 15m each direction. Moderate load — enough that the last 5m is effortful. Both directions each set.</p>
+        <strong>Cue</strong><p>"Lead with the hip — not the foot. Drive each step, don't shuffle." Watch for trunk lean toward the sled — that's compensation for insufficient abductor strength.</p>
+        <a class="demo-link" href="https://www.youtube.com/results?search_query=lateral+sled+drag+hip+abductor+ACL+training" target="_blank">▶ Search Demo</a>
+      </div>
+    </div>
+
+    <div class="ex-item">
+      <button class="ex-btn" onclick="toggleEx(this)">
+        <span class="ex-name">Forward Sled Drag — Resisted Acceleration</span>
+        <div class="ex-tags"><span class="tag sled">Sled · Phase 3</span><span class="tag perf">Sprint Primer</span><span class="chev">▼</span></div>
+      </button>
+      <div class="ex-body">
+        <strong>Why</strong><p>Athlete faces away from sled, straps at waist, drives forward while sled trails at ~10–15% bodyweight. Hip extension dominant — mechanically distinct from the forward push (which cannot be done without sled modification). Run before sprint sets: the resisted acceleration pattern primes hip extension mechanics that carry directly into the free sprint. Classic speed-strength tool for attacking midfielders — she's exactly the profile this was designed for.</p>
+        <strong>Dose</strong><p>Phase 3: 4–5 × 20m · ~10–15% BW on sled · 90 sec recovery · Before sprint sets.</p>
+        <strong>Cue</strong><p>"Lean forward into the straps. Drive the knee up, push the ground back. Let the sled teach you to accelerate — don't fight it."</p>
+        <a class="demo-link" href="https://www.youtube.com/results?search_query=forward+sled+drag+resisted+sprint+primer+midfielder" target="_blank">▶ Search Demo</a>
+      </div>
+    </div>
+
+    <div class="ex-item">
+      <button class="ex-btn" onclick="toggleEx(this)">
+        <span class="ex-name">Single-Leg RDL — Ipsilateral to Contralateral</span>
+        <div class="ex-tags"><span class="tag acl">Phase 2+</span><span class="tag tendon">Hamstring</span><span class="chev">▼</span></div>
+      </button>
+      <div class="ex-body">
+        <strong>Why</strong><p>Combines hamstring eccentric loading with single-leg balance and hip hinge — directly replicates the right-leg plant for kicking. Ipsilateral dumbbell (same side as stance leg) is easier — use to introduce in Phase 2. Contralateral (opposite hand) is harder and more soccer-specific — Phase 3 progression.</p>
+        <strong>Dose</strong><p>Phase 2: 3 × 8 each leg · Ipsilateral DB · 3 sec eccentric. Phase 3: 3 × 8 · Contralateral DB · Right leg priority.</p>
+        <strong>Cue</strong><p>"Hinge at the hip — not the waist. Back leg goes back without the hip opening. You're a hinge, not a fold." Watch for right hip opening — that's compensation.</p>
+        <a class="demo-link" href="https://www.youtube.com/results?search_query=single+leg+RDL+Romanian+deadlift+ACL+return+sport" target="_blank">▶ Search Demo</a>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- TRACK D -->
+  <div class="track-head">
+    <div class="track-letter">D</div>
+    <div class="track-meta">
+      <h3>Ball Reintroduction + Performance</h3>
+      <p>Phase 2+ only. Physio has zero ball work — this is entirely our lane. Stationary → moving → directional → opposed. Each phase gate governs the next.</p>
+    </div>
+  </div>
+
+  <div class="callout warn">
+    <div class="callout-label">⚠ The Inside Hook Turn — Last In, Most Monitored</div>
+    <p>The inside hook turn on the right foot (receive → plant right → rotate left over the planted leg) is the highest-risk movement in her soccer profile — combined flexion, valgus, and internal tibial rotation under load, with estrogen-mediated laxity as an additional variable. <strong>This movement is introduced last, at half-speed, with trainer evaluation of every rep.</strong> Before it enters the program, the May gate hop test must be repeated and cleared. No exceptions for signing window pressure.</p>
+  </div>
+
+  <div class="ex-list">
+
+    <div class="ex-item">
+      <button class="ex-btn" onclick="toggleEx(this)">
+        <span class="ex-name">Seated Juggling + Wall Passing</span>
+        <div class="ex-tags"><span class="tag ball">Ball Phase 1</span><span class="tag acl">Zero Load</span><span class="chev">▼</span></div>
+      </button>
+      <div class="ex-body">
+        <strong>Why</strong><p>Seated juggling: zero weight-bearing stress, maintains touch, keeps her connected to football identity. This is not trivial — the psychological continuity of contact with the ball is a component of ACL-RSI that structured rehab often neglects. Wall passing: bilateral, low velocity, both feet. Left foot emphasis while right heals — she reported good bilateral foot skill.</p>
+        <strong>Dose</strong><p>Juggling: 5–10 min seated. Wall passing: 10–15 min standing stationary. Session C Phase 1.</p>
+        <strong>Cue</strong><p>Juggling: "Both feet — equal time. Inside and instep. Don't rush." Wall passing: "First touch, then pass. Quality of touch is the only metric right now."</p>
+        <a class="demo-link" href="https://www.youtube.com/results?search_query=soccer+seated+juggling+technique+touch+ACL+return" target="_blank">▶ Search Demo</a>
+      </div>
+    </div>
+
+    <div class="ex-item">
+      <button class="ex-btn" onclick="toggleEx(this)">
+        <span class="ex-name">Straight-Line Dribbling — Pole Gates</span>
+        <div class="ex-tags"><span class="tag ball">Ball Phase 2</span><span class="tag acl">No Direction Change</span><span class="chev">▼</span></div>
+      </button>
+      <div class="ex-body">
+        <strong>Why</strong><p>Moving with ball through pole gates — forward only, no direction changes. Indoor surface preferred. This re-establishes the cognitive-motor integration of running with a ball: eye-foot-brain coordination in motion. The pole gates provide structure — not just running with a ball aimlessly. Both feet.</p>
+        <strong>Dose</strong><p>10 min · Jog pace · Both feet · Session C Phase 2. Progress to slightly increased pace across sessions.</p>
+        <strong>Cue</strong><p>"Look up — not at the ball. The poles are the target." Soft touches. Technical quality over speed.</p>
+        <a class="demo-link" href="https://www.youtube.com/results?search_query=soccer+dribbling+drills+straight+line+technique" target="_blank">▶ Search Demo</a>
+      </div>
+    </div>
+
+    <div class="ex-item">
+      <button class="ex-btn" onclick="toggleEx(this)">
+        <span class="ex-name">Receiving + Turning — Pole Markers</span>
+        <div class="ex-tags"><span class="tag ball">Ball Phase 3</span><span class="tag acl">Monitored Carefully</span><span class="chev">▼</span></div>
+      </button>
+      <div class="ex-body">
+        <strong>Why</strong><p>Inside hook turn on right, outside hook on left — introduced at half-speed with pole markers defining the receiving zone and turn target. The pole geometry controls turn angle — wide first, progressing to tighter. Trainer evaluates every right-leg plant-and-turn for knee valgus, trunk lean, and plant mechanics. The inside hook on right is the highest-risk pattern and gets extra monitoring.</p>
+        <strong>Dose</strong><p>Session C Phase 3 · 15 min · Half-speed · Outside turns first, inside turns after outside turns are clean.</p>
+        <strong>Cue</strong><p>"Control before turn. Plant, rotate, drive — not plant-and-spin." If right knee dives in during the turn, that rep doesn't count — reset and redo it.</p>
+        <a class="demo-link" href="https://www.youtube.com/results?search_query=soccer+receiving+turning+technique+pivot+inside+outside+hook" target="_blank">▶ Search Demo</a>
+      </div>
+    </div>
+
+    <div class="ex-item">
+      <button class="ex-btn" onclick="toggleEx(this)">
+        <span class="ex-name">1v0 Midfielder Pattern — Full Sequence</span>
+        <div class="ex-tags"><span class="tag ball">Ball Phase 3</span><span class="tag perf">Match Simulation</span><span class="chev">▼</span></div>
+      </button>
+      <div class="ex-body">
+        <strong>Why</strong><p>Solo match simulation: trainer plays a ball in, she receives, turns, dribbles through pole gates, shoots with a straight approach. Full cognitive-motor midfielder pattern without opponent pressure. This is the highest-intensity ball work in the program before opposed play is introduced. Indoor field. Progress to angled shooting approach only after straight-approach shooting is consistently clean.</p>
+        <strong>Dose</strong><p>Session C Phase 3 · 10 min · Trainer varies where the ball is played in each rep. 30 sec rest between reps.</p>
+        <strong>Cue</strong><p>"One touch, then decision. Move like you're in the game — not like you're in rehab." That shift in cognitive framing is the transition this exercise is designed to make.</p>
+        <a class="demo-link" href="https://www.youtube.com/results?search_query=midfielder+pattern+drill+receive+turn+shoot+solo" target="_blank">▶ Search Demo</a>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+</section>
+
+<!-- BFR -->
+<section id="bfr">
+<div class="container">
+  <div class="section-eyebrow">Blood Flow Restriction · Occlusion Cuffs · Mass Rebuild</div>
+  <h2>BFR Protocol</h2>
+
+  <p>BFR training applies partial arterial occlusion to generate a metabolic environment equivalent to high-intensity loading at 20–30% of 1RM. <strong>The result: hypertrophic stimulus without mechanical joint stress.</strong> For an athlete with anterior knee sensitivity and 5–8 lb below playing weight, this is not a peripheral addition — it is the cornerstone of the mass rebuild strategy on days when the knee is reactive.</p>
+
+  <div class="findings-grid">
+    <div class="finding-card note">
+      <div class="finding-num">↑</div>
+      <h4>Metabolic Stimulus</h4>
+      <p>Short rest periods (30 sec) + partial occlusion create lactate accumulation and cell swelling that signals anabolic pathways — mTOR, IGF-1, growth hormone. Hughes et al. 2017: BFR produces hypertrophy equivalent to 70–80% 1RM loading at 20–30% 1RM. At those loads, the anterior knee is not being compressed into its restricted ROM.</p>
+    </div>
+    <div class="finding-card positive">
+      <div class="finding-num">✓</div>
+      <h4>Rehab Validation</h4>
+      <p>Loenneke et al. 2012: BFR training in post-surgical and injured populations preserves and rebuilds lean mass without the mechanical loading that aggravates tissue injury. Directly applicable to ACL return-to-sport. Already validated in the clinical literature she came from.</p>
+    </div>
+    <div class="finding-card note">
+      <div class="finding-num">⏱</div>
+      <h4>Active Recovery BFR</h4>
+      <p>BFR walk on the canal — cuffs at upper thigh, easy walking pace — drives hypertrophic signaling with zero mechanical load. On active recovery days (Sunday) or as a post-session supplement. The mass deficit is systemic; address it systemically.</p>
+    </div>
+  </div>
+
+  <h4>Prescription</h4>
+  <ul style="list-style:none;margin-bottom:1rem">
+    <li style="padding:.4rem 0 .4rem 1.25rem;position:relative;border-bottom:1px solid var(--border);font-size:.88rem;color:#b8d4c0"><span style="position:absolute;left:0;color:var(--accent)">→</span> Cuffs: upper thigh placement · 60–80% limb occlusion pressure</li>
+    <li style="padding:.4rem 0 .4rem 1.25rem;position:relative;border-bottom:1px solid var(--border);font-size:.88rem;color:#b8d4c0"><span style="position:absolute;left:0;color:var(--accent)">→</span> Sets/reps: 1 × 30 reps then 3 × 15 reps · 20–30% 1RM · 30 sec rest between sets</li>
+    <li style="padding:.4rem 0 .4rem 1.25rem;position:relative;border-bottom:1px solid var(--border);font-size:.88rem;color:#b8d4c0"><span style="position:absolute;left:0;color:var(--accent)">→</span> Amber knee days: replaces loaded box squat with BFR box squat or seated leg extension</li>
+    <li style="padding:.4rem 0 .4rem 1.25rem;position:relative;border-bottom:1px solid var(--border);font-size:.88rem;color:#b8d4c0"><span style="position:absolute;left:0;color:var(--accent)">→</span> Supplement use: run BFR sets after main strength work — additional mass rebuild stimulus</li>
+    <li style="padding:.4rem 0 .4rem 1.25rem;position:relative;font-size:.88rem;color:#b8d4c0"><span style="position:absolute;left:0;color:var(--accent)">→</span> <strong>Safety: numbness or cold limb = cuff pressure too high — remove immediately</strong></li>
+  </ul>
+</div>
+</section>
+
+<!-- NUTRITION -->
+<section id="nutrition">
+<div class="container">
+  <div class="section-eyebrow">Structural Inputs · Collagen Window · Mass Rebuild</div>
+  <h2>Nutrition Protocol</h2>
+
+  <p>These are structural inputs, not performance supplements. The collagen window is the highest-leverage daily intervention in the document. The mass deficit is not an aesthetic issue — at 5–8 lb below playing weight, <strong>Mountjoy et al. 2018 (LEA in female athletes) tells us that low energy availability independently impairs tissue repair and hormonal function regardless of adequate protein intake.</strong> She needs to eat above her appetite signals during this rebuild phase.</p>
+
+  <div class="nutrition-row">
+    <div class="nut-card">
+      <h4>Hydrolyzed Collagen</h4>
+      <div class="dose">15g</div>
+      <p>30–60 min before every session. Drives collagen synthesis in ACL and all periarticular tissues. Shaw et al. 2017. Non-negotiable.</p>
+    </div>
+    <div class="nut-card">
+      <h4>Vitamin C</h4>
+      <div class="dose">50mg+</div>
+      <p>With collagen. Required co-factor for prolyl hydroxylase — collagen cross-linking enzyme. Without it the synthesis pathway is incomplete.</p>
+    </div>
+    <div class="nut-card">
+      <h4>Daily Protein</h4>
+      <div class="dose">92–103g</div>
+      <p>1.8–2.0 g/kg · 4+ eating occasions. Leucine threshold 2.5–3g per meal to trigger MPS. Mass rebuild requires it.</p>
+    </div>
+    <div class="nut-card">
+      <h4>Creatine</h4>
+      <div class="dose">3–5g</div>
+      <p>Daily. No loading phase needed. Lean mass accretion and strength gains — often skipped in female athlete programming. Shouldn't be.</p>
+    </div>
+    <div class="nut-card">
+      <h4>Energy Availability</h4>
+      <div class="dose">&gt;45 kcal</div>
+      <p>Per kg FFM per day. Eat above appetite signals. LEA suppresses tissue repair independent of protein intake (Mountjoy 2018).</p>
+    </div>
+    <div class="nut-card">
+      <h4>D3 + K2 · Omega-3</h4>
+      <div class="dose">Adjuncts</div>
+      <p>D3 2000–4000 IU + K2 100–200mcg daily. Omega-3 2–3g EPA+DHA. Anti-inflammatory joint environment. Depleted post-illness.</p>
+    </div>
+  </div>
+
+  <div class="callout warn">
+    <div class="callout-label">⚠ Avoid — NSAIDs During Program</div>
+    <p>Ibuprofen and naproxen block the COX-2 pathway that initiates both inflammatory resolution and collagen synthesis. Baar: NSAIDs during a collagen loading protocol suppress the exact adaptation the protocol is designed to produce. Occasional acute use is acceptable. Chronic use for anterior knee pain management defeats the program. The Rio protocol (isometric wall sit) is the NSAID substitute for in-session pain management.</p>
+  </div>
+</div>
+</section>
+
+<!-- PHASE RAMP -->
+<section id="ramp">
+<div class="container">
+  <div class="section-eyebrow">Phase Progression · Gate-Governed · March 17 → June 2026</div>
+  <h2>Phase Ramp</h2>
+
+  <p>Phases advance on criteria, not weeks. The week estimates assume a cautious trajectory. <strong>If she clears criteria in Week 2, advance. If she's at Week 5 and criteria aren't met, hold.</strong> The timeline is the estimate; the gate is the rule.</p>
+
+  <div class="phase-stack">
+
+    <div class="phase-item">
+      <div class="phase-label active">
+        <div class="phase-name">Phase 1</div>
+        <div class="phase-when">Weeks 1–3<br>Eccentric Priority</div>
+      </div>
+      <div class="phase-content"><ul>
+        <li><strong>Daily: ROM block + Layer 1</strong> — 18 min. Every day. No exceptions.</li>
+        <li>Session A: Trap bar high handles, box squat wedged, hip thrust bilateral, clamshell, wall sit. BFR on amber days.</li>
+        <li>Session B: Canal walks 30 min, backward sled drag 5×25m, banded lateral walk + reactive stop, single-leg stance under fatigue.</li>
+        <li>Session C: Spanish squat, banded lateral walk, seated juggling, wall passing stationary.</li>
+        <li>Collagen window before every session. Protein and energy targets daily.</li>
+        <li>Autoregulation: amber = reduce range + wedge first, not load. Red = stop + ice.</li>
+      </ul></div>
+    </div>
+
+    <div class="phase-item">
+      <div class="phase-label">
+        <div class="phase-name">Phase 2</div>
+        <div class="phase-when">Weeks 4–6<br>Isometric Integration</div>
+      </div>
+      <div class="phase-content"><ul>
+        <li>Session A: Trap bar standard handles with progressive load, box squat lower box (wedge removing as ROM normalizes), hip thrust single-leg, Nordic eccentrics bilateral (band assist from pull-up bar), single-leg RDL ipsilateral, <strong>lateral sled drag replacing clamshell</strong>.</li>
+        <li>Session B: Forward jog introduced (grass first — monitor 3 hrs post), aerobic intervals 4–5×3 min, <strong>lateral sled drag</strong>, partner band perturbation, med ball reactive catch single-leg.</li>
+        <li>Session C: Light single-leg RDL and hip thrust maintenance, straight-line dribbling through pole gates, passing on the move with right-foot plant.</li>
+        <li>BFR continuing for mass rebuild alongside heavy loading.</li>
+      </ul></div>
+    </div>
+
+    <div class="phase-item">
+      <div class="phase-label gate">
+        <div class="phase-name">May Gate</div>
+        <div class="phase-when">Week 6–7<br>Assessment</div>
+      </div>
+      <div class="phase-content"><ul>
+        <li>Hop test battery re-run under aerobic fatigue — not just fresh.</li>
+        <li>Anterior ache status with full training load across 3 consecutive sessions.</li>
+        <li>ROM bilateral comparison — is the 9.1° deficit resolved or resolving?</li>
+        <li>ACL-RSI administered and scored — must be trending toward ≥65.</li>
+        <li>Landing mechanics under fatigue evaluated during hurdle hops.</li>
+        <li><strong>Clearance: preseason participation with contact management. June gate still required for full clearance.</strong></li>
+      </ul></div>
+    </div>
+
+    <div class="phase-item">
+      <div class="phase-label">
+        <div class="phase-name">Phase 3</div>
+        <div class="phase-when">Weeks 7–10<br>Concentric Expression</div>
+      </div>
+      <div class="phase-content"><ul>
+        <li>Session A: Match-load trap bar, Bulgarian split squat (replaces box squat when ROM symmetric), Nordic reduced assist, <strong>forward sled drag as resisted acceleration primer</strong>, contralateral single-leg RDL.</li>
+        <li>Session B: <strong>Forward sled drag before sprints</strong>, repeated sprints 6–8×25m, lactate intervals 3×5 min, hurdle hop quality under fatigue, reactive cutting trainer-cued.</li>
+        <li>Session C: Receiving and turning with pole markers (inside hook monitored every rep), straight-approach shooting, 1v0 midfielder patterns.</li>
+        <li>Estrogen monitoring: no new contact patterns introduced during days 10–14.</li>
+      </ul></div>
+    </div>
+
+    <div class="phase-item">
+      <div class="phase-label gate">
+        <div class="phase-name">June Gate</div>
+        <div class="phase-when">Week 10–11<br>Full Clearance</div>
+      </div>
+      <div class="phase-content"><ul>
+        <li>5v5 without symptom × 3 sessions — not 1, not 2. Three.</li>
+        <li>ACL-RSI ≥65.</li>
+        <li>Hop test >95% LSI bilateral — repeated after full training load, not fresh.</li>
+        <li>Playing weight within 2–3 lb of target.</li>
+        <li>ROM symmetric bilaterally.</li>
+        <li>No hesitation in 1v1 contact.</li>
+        <li>Trainer + physio sign-off.</li>
+        <li><strong>Clear all of them. Miss one — address it first.</strong></li>
+      </ul></div>
+    </div>
+
+  </div>
+</div>
+</section>
+
+<!-- TIMELINE -->
+<section id="timeline">
+<div class="container">
+  <div class="section-eyebrow">Week-by-Week · March 17 → June 2026</div>
+  <h2>Weekly Template — Phase 1 Weeks 1–3</h2>
+
+  <p>Current week structure. Adjust days for field availability and physio appointments. <strong>ROM block and Layer 1 never shift — they are the anchor around which everything else schedules.</strong></p>
+
+  <div class="week">
+    <div class="day med"><div class="day-n">Mon</div><div class="day-f">Session A</div><div class="day-d">ROM → L1 · Trap bar · Hip thrust · Wall sit · BFR</div></div>
+    <div class="day med"><div class="day-n">Tue</div><div class="day-f">Session B</div><div class="day-d">ROM → L1 · Canal walk · Backward sled drag · Reactive stop</div></div>
+    <div class="day med"><div class="day-n">Wed</div><div class="day-f">Session A</div><div class="day-d">ROM → L1 · Nordics · Single-leg RDL · Spanish squat</div></div>
+    <div class="day med"><div class="day-n">Thu</div><div class="day-f">Session B</div><div class="day-d">ROM → L1 · Canal · Sled drag · Perturbation · Med ball</div></div>
+    <div class="day med"><div class="day-n">Fri</div><div class="day-f">Session A</div><div class="day-d">ROM → L1 · Hip thrust · Trap bar · BFR supplement</div></div>
+    <div class="day lo"><div class="day-n">Sat</div><div class="day-f">Session C</div><div class="day-d">ROM → L1 · Spanish squat · Juggling · Wall passing</div></div>
+    <div class="day off"><div class="day-n">Sun</div><div class="day-f">Recovery D</div><div class="day-d">Layer 1 · Canal walk · BFR walk optional · Protein target</div></div>
+  </div>
+
+  <h3>Autoregulation — The Traffic Light</h3>
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:.75rem;margin-bottom:1.5rem">
+    <div style="background:rgba(6,214,160,.06);border:1px solid rgba(6,214,160,.2);padding:1rem;border-radius:3px">
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:.65rem;letter-spacing:.12em;text-transform:uppercase;color:var(--success);margin-bottom:.5rem">✓ Green — 0–3/10</div>
+      <p style="font-size:.83rem;margin:0;color:var(--muted)">Proceed as written. Progress load per plan. No modifications.</p>
+    </div>
+    <div style="background:rgba(255,209,102,.06);border:1px solid rgba(255,209,102,.2);padding:1rem;border-radius:3px">
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:.65rem;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);margin-bottom:.5rem">~ Amber — 3–4/10</div>
+      <p style="font-size:.83rem;margin:0;color:var(--muted)">Reduce range first (add wedge). Then BFR alternative. Complete session — modified. Not load reduction.</p>
+    </div>
+    <div style="background:rgba(239,35,60,.06);border:1px solid rgba(239,35,60,.2);padding:1rem;border-radius:3px">
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:.65rem;letter-spacing:.12em;text-transform:uppercase;color:var(--red);margin-bottom:.5rem">✗ Red — ≥4/10 or swelling</div>
+      <p style="font-size:.83rem;margin:0;color:var(--muted)">End session. Ice + elevate. No training next day. Physio if swelling or giving-way. No exceptions.</p>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ACL-RSI -->
+<section id="rsi">
+<div class="container">
+  <div class="section-eyebrow">Psychological Readiness · Ardern et al. 2013 · Threshold ≥65</div>
+  <h2>ACL-RSI Assessment</h2>
+
+  <p>Physical metrics are necessary but not sufficient for return-to-sport. Ardern et al. 2016: athletes who returned before psychological readiness reached threshold had significantly higher re-injury rates — independent of physical test results. <strong>The clinician's "no hesitation" observation at the hop test is a strong qualitative signal, but formal ACL-RSI scoring is required at each gate.</strong></p>
+
+  <p>Score = (sum of 12 items ÷ 120) × 100 = percentage. Threshold ≥65 for return clearance. Administer at baseline, May gate, June gate. Items 1, 2, 3, 4, 9, 10, 11, 12 are reverse-scored.</p>
+
+  <div style="background:var(--surface);border:1px solid var(--border);border-radius:4px;overflow:hidden;margin:1.25rem 0">
+    <div style="background:var(--surface2);padding:.75rem 1.5rem;border-bottom:1px solid var(--border);display:grid;grid-template-columns:2rem 1fr auto">
+      <span style="font-family:'IBM Plex Mono',monospace;font-size:.62rem;color:var(--muted)">#</span>
+      <span style="font-family:'IBM Plex Mono',monospace;font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)">Item</span>
+      <span style="font-family:'IBM Plex Mono',monospace;font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)">Domain</span>
+    </div>
+    <div id="rsi-items"></div>
+  </div>
+
+  <div class="gate-box">
+    <div class="gl">Scoring Reminder</div>
+    Score = (sum ÷ 120) × 100. Reverse-score items 1, 2, 3, 4, 9, 10, 11, 12 (i.e. a score of 8 becomes 2, a 3 becomes 7). Low scores on the Emotion domain with high Confidence scores = athlete is aware of risk but confident anyway — the best psychological profile for return.
+  </div>
+</div>
+</section>
+
+<!-- REFS -->
+<section id="refs">
+<div class="container">
+  <div class="section-eyebrow">Evidence Base</div>
+  <h2>Research Citations</h2>
+  <ol class="ref-list">
+    <li data-n="1">Shaw G, Lee-Barthel A, Ross ML, Wang B, Baar K. (2017). Vitamin C–enriched gelatin before intermittent activity augments collagen synthesis. <em>Am J Clin Nutr.</em> 105(1):136–143.</li>
+    <li data-n="2">Lee CA, Lee-Barthel A, Marquino L, Sandoval N, Marcotte GR, Baar K. (2015). Estrogen inhibits lysyl oxidase and decreases mechanical function in engineered ligaments. <em>J Appl Physiol.</em> 118(10):1243–1251.</li>
+    <li data-n="3">Hewett TE, Zazulak BT, Myer GD. (2007). Effects of the menstrual cycle on ACL injury risk. <em>Am J Sports Med.</em> 35(4):659–668.</li>
+    <li data-n="4">Baar K. (2018). Effect of estrogen on musculoskeletal performance and injury risk. <em>Front Physiol.</em> 9:1834.</li>
+    <li data-n="5">Petersen J, Thorborg K, Nielsen MB, et al. (2011). Preventive effect of eccentric training on acute hamstring injuries. <em>Am J Sports Med.</em> 39(11):2296–2303.</li>
+    <li data-n="6">Rio E, Kidgell D, Purdam C, et al. (2015). Isometric exercise induces analgesia and reduces inhibition in patellar tendinopathy. <em>Br J Sports Med.</em> 49(19):1277–1283.</li>
+    <li data-n="7">Filbay SR, Grindem H. (2019). Evidence-based recommendations for individuals with anterior cruciate ligament injury. <em>Br J Sports Med.</em> 53(18):1241–1250. Conservative management outcomes review.</li>
+    <li data-n="8">Grindem H, Snyder-Mackler L, Moksnes H, et al. (2016). Simple decision rules can reduce reinjury risk after ACL reconstruction — the Delaware-Oslo ACL cohort study. <em>Br J Sports Med.</em> 50(13):804–808. LSI threshold research.</li>
+    <li data-n="9">Ardern CL, Taylor NF, Feller JA, Webster KE. (2013). Return-to-sport outcomes at 2 to 7 years after ACL reconstruction surgery. <em>Am J Sports Med.</em> 41(7):1549–1558. ACL-RSI validation.</li>
+    <li data-n="10">Ardern CL, Österberg A, Tagesson S, et al. (2016). The impact of psychological readiness to return to sport and recreational activities after ACL reconstruction. <em>Br J Sports Med.</em> 48(22):1613–1619.</li>
+    <li data-n="11">Hughes L, Paton B, Rosenblatt B, et al. (2017). Blood flow restriction training in clinical musculoskeletal rehabilitation — a systematic review and meta-analysis. <em>Br J Sports Med.</em> 51(13):1003–1011.</li>
+    <li data-n="12">Loenneke JP, Wilson JM, Marín PJ, et al. (2012). Low intensity blood flow restriction training: a meta-analysis. <em>Eur J Appl Physiol.</em> 112(5):1849–1859.</li>
+    <li data-n="13">Mountjoy M, Sundgot-Borgen J, Burke L, et al. (2018). IOC consensus statement on relative energy deficiency in sport (RED-S). <em>Br J Sports Med.</em> 52(11):687–697.</li>
+    <li data-n="14">Bosch F. (2015). <em>Strength Training and Coordination: An Integrative Approach.</em> 2010Publishers. Coordination-first return to sport; bi-articular hamstring function as ACL guard.</li>
+    <li data-n="15">Dietz C, Peterson B. (2012). <em>Triphasic Training.</em> Triphasic Training. Eccentric → isometric → concentric sequencing for connective tissue loading. ACL prevention framework.</li>
+    <li data-n="16">Natera A. Just Fly Performance Podcast (Eps 86, 201). Sprint-specific isometric loading — position-matched to ACL-protective co-contraction angles.</li>
+    <li data-n="17">Uthoff A. Just Fly Performance Podcast (Ep 498). Backward running — zero anterior tibial shear, NMC training, rehab and performance.</li>
+    <li data-n="18">Grey D. Just Fly Performance Podcast (Ep 212). Joint-first loading — ROM gates load, not the calendar.</li>
+    <li data-n="19">Ward G. Just Fly Performance Podcast (Ep 261). Flow Motion Model — frontal plane loading governs sagittal efficiency. Foot-ankle-knee chain sensory quality.</li>
+  </ol>
+</div>
+</section>
+
+<footer>
+  <p>YARI — Individual ACL Return to Sport Guide · Sprint Jump Resilience · March 2026</p>
+  <p style="margin-top:.4rem">Built on research from <span class="accent">Baar · Grey · Ward · Bosch · Dietz · Natera · Uthoff · Rio · Petersen · Grindem · Ardern · Filbay · Loenneke · Mountjoy · Hewett</span></p>
+  <p style="margin-top:.4rem;color:#2a4a34">Educational reference only. All clinical decisions coordinated with physio and treating physician at phase gates.</p>
+</footer>
+
+
+<!-- FLOATING THIS WEEK BUTTON -->
+<button id="week-fab" onclick="document.getElementById('week-overlay').classList.add('open')" aria-label="This Week">
+  <span style="font-size:1.1rem">📋</span>
+  <span>This Week</span>
+</button>
+
+<!-- WEEKLY OVERLAY -->
+<div id="week-overlay">
+  <div id="week-panel">
+
+    <div id="week-header">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start">
+        <div>
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:.65rem;letter-spacing:.18em;text-transform:uppercase;color:var(--accent);margin-bottom:.25rem">Phase 2 · Week 4</div>
+          <div style="font-family:'Bebas Neue',sans-serif;font-size:1.9rem;letter-spacing:.06em;line-height:1;color:var(--text)">Apr 7 – Apr 13</div>
+          <div style="font-size:.78rem;color:var(--muted);margin-top:.2rem">Forward jog confirmed · Nordic eccentrics begin · Lateral sled drag · Aerobic intervals · Perturbation under fatigue</div>
+        </div>
+        <button onclick="document.getElementById('week-overlay').classList.remove('open')" style="background:var(--surface2);border:1px solid var(--border);color:var(--muted);width:36px;height:36px;border-radius:50%;font-size:1.1rem;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center">✕</button>
+      </div>
+
+      <!-- GATE COUNTDOWN -->
+      <div id="meet-strip">
+        <div class="meet-pill">
+          <div class="meet-label">May Gate</div>
+          <div class="meet-date">~May 15</div>
+          <div class="meet-days" id="may-days">— days</div>
+        </div>
+        <div class="meet-divider"></div>
+        <div class="meet-pill">
+          <div class="meet-label">June Gate</div>
+          <div class="meet-date">~Jun 15</div>
+          <div class="meet-days" id="june-days">— days</div>
+        </div>
+      </div>
+
+      <!-- AUTOREGULATION GATE -->
+      <div style="display:flex;align-items:center;gap:.5rem;background:rgba(239,35,60,.08);border:1px solid var(--red);border-radius:4px;padding:.5rem .75rem;margin-top:.75rem">
+        <span style="color:var(--red);font-size:.85rem">⚠</span>
+        <span style="font-family:'IBM Plex Mono',monospace;font-size:.68rem;color:var(--red)">Amber knee: reduce range first (add wedge) — not load · Red ≥4/10 or swelling: stop + ice</span>
+      </div>
+    </div>
+      <!-- BROWSE EXERCISES BUTTON -->
+      <a href="https://padraik99.github.io/sjr-system/SJR_Library_Master_v4_20260402.html?phase=phase-rehab,phase-bridge,phase-gpp&hidespinal=1"
+         target="_blank"
+         style="display:flex;align-items:center;justify-content:center;gap:.5rem;margin-top:.75rem;padding:.65rem 1rem;background:rgba(0,229,138,.08);border:1px solid rgba(0,229,138,.35);border-radius:4px;font-family:'IBM Plex Mono',monospace;font-size:.72rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);text-decoration:none;transition:background .15s"
+         onmouseover="this.style.background='rgba(0,229,138,.15)'"
+         onmouseout="this.style.background='rgba(0,229,138,.08)'">
+        <span>📚</span> Browse Phase-Appropriate Exercises
+      </a>
+
+    <!-- DAY TABS -->
+    <div id="day-tabs">
+      <button class="day-tab" data-day="0" onclick="selectDay(0)">Mon</button>
+      <button class="day-tab" data-day="1" onclick="selectDay(1)">Tue</button>
+      <button class="day-tab" data-day="2" onclick="selectDay(2)">Wed</button>
+      <button class="day-tab" data-day="3" onclick="selectDay(3)">Thu</button>
+      <button class="day-tab" data-day="4" onclick="selectDay(4)">Fri</button>
+      <button class="day-tab" data-day="5" onclick="selectDay(5)">Sat</button>
+      <button class="day-tab" data-day="6" onclick="selectDay(6)">Sun</button>
+    </div>
+
+    <!-- DAY CONTENT -->
+    <div id="day-content"></div>
+
+  </div>
+</div>
+
+<style>
+#week-fab{
+  position:fixed;bottom:1.5rem;right:1.5rem;z-index:200;
+  background:var(--accent);color:var(--bg);
+  border:none;border-radius:28px;
+  padding:.65rem 1.15rem;
+  display:flex;align-items:center;gap:.45rem;
+  font-family:'IBM Plex Sans',sans-serif;font-weight:600;font-size:.82rem;
+  cursor:pointer;
+  box-shadow:0 4px 20px rgba(0,229,138,.3);
+  transition:transform .15s,box-shadow .15s;
+}
+#week-fab:hover{transform:translateY(-2px);box-shadow:0 6px 28px rgba(0,229,138,.45)}
+
+#week-overlay{
+  display:none;position:fixed;inset:0;z-index:300;
+  background:rgba(0,0,0,.75);backdrop-filter:blur(6px);
+  align-items:flex-end;justify-content:center;
+}
+#week-overlay.open{display:flex}
+
+#week-panel{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:16px 16px 0 0;
+  width:100%;max-width:560px;
+  max-height:92vh;
+  overflow-y:auto;
+  padding-bottom:2rem;
+}
+
+#week-header{padding:1.25rem 1.25rem .75rem}
+
+#meet-strip{
+  display:flex;align-items:center;gap:.75rem;
+  margin-top:.75rem;
+  background:var(--surface2);border:1px solid var(--border);
+  border-radius:6px;padding:.65rem 1rem;
+}
+.meet-pill{flex:1;text-align:center}
+.meet-label{font-family:'IBM Plex Mono',monospace;font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.meet-date{font-family:'IBM Plex Sans',sans-serif;font-weight:600;font-size:.82rem;color:var(--text);margin:.1rem 0}
+.meet-days{font-family:'Bebas Neue',sans-serif;font-size:1.4rem;letter-spacing:.06em;color:var(--gold);line-height:1}
+.meet-divider{width:1px;height:40px;background:var(--border);flex-shrink:0}
+
+#day-tabs{
+  display:grid;grid-template-columns:repeat(7,1fr);
+  border-top:1px solid var(--border);
+  border-bottom:1px solid var(--border);
+  background:var(--surface2);
+}
+.day-tab{
+  background:none;border:none;
+  padding:.6rem 0;
+  font-family:'IBM Plex Mono',monospace;font-size:.68rem;letter-spacing:.06em;
+  color:var(--muted);cursor:pointer;
+  border-bottom:2px solid transparent;
+  transition:color .15s,border-color .15s;
+}
+.day-tab.active{color:var(--accent);border-bottom-color:var(--accent)}
+.day-tab.today{color:var(--gold)}
+.day-tab.today.active{color:var(--gold);border-bottom-color:var(--gold)}
+
+#day-content{padding:1rem 1.25rem}
+.dc-intent{font-family:'Bebas Neue',sans-serif;font-size:1.5rem;letter-spacing:.06em;color:var(--text);margin-bottom:.15rem;line-height:1}
+.dc-sub{font-size:.78rem;color:var(--muted);margin-bottom:1rem}
+
+.dc-block{margin-bottom:1.25rem}
+.dc-block-label{
+  font-family:'IBM Plex Mono',monospace;font-size:.62rem;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--accent);
+  display:flex;align-items:center;gap:.4rem;margin-bottom:.5rem;
+}
+.dc-block-label::before{content:'';width:12px;height:1px;background:var(--accent)}
+.dc-block-label.gold{color:var(--gold)}
+.dc-block-label.gold::before{background:var(--gold)}
+
+.dc-ex{
+  display:flex;justify-content:space-between;align-items:baseline;
+  padding:.45rem 0;border-bottom:1px solid var(--border);
+  font-size:.85rem;
+}
+.dc-ex:last-child{border-bottom:none}
+.dc-ex-name{color:var(--text);flex:1}
+.dc-ex-dose{font-family:'IBM Plex Mono',monospace;font-size:.72rem;color:var(--accent);white-space:nowrap;margin-left:.75rem}
+.dc-ex-dose.gold{color:var(--gold)}
+
+.dc-rest{text-align:center;padding:2rem 1rem;color:var(--muted);font-size:.9rem;font-style:italic}
+.dc-collagen{
+  background:rgba(255,209,102,.06);border:1px solid rgba(255,209,102,.3);
+  border-radius:4px;padding:.6rem .85rem;margin-bottom:1rem;
+  font-family:'IBM Plex Mono',monospace;font-size:.7rem;color:var(--gold);
+  display:flex;align-items:center;gap:.5rem
+}
+.dc-bfr{
+  background:rgba(179,136,255,.06);border:1px solid rgba(179,136,255,.25);
+  border-radius:4px;padding:.5rem .85rem;margin-bottom:.75rem;
+  font-family:'IBM Plex Mono',monospace;font-size:.68rem;color:#b388ff;
+  display:flex;align-items:center;gap:.5rem
+}
+</style>
+
+<script>
+/* ── SUPABASE ─────────────────────────────────────────────────────── */
+const SB_URL = 'https://jedsnurnnwmpcbdvtlbs.supabase.co';
+const SB_KEY = 'sb_publishable_3WGolnM5dOK88Y4WdKCFGA_Hi6wj-_z';
+
+function sbDateStr(d){
+  return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+}
+
+async function sbFetch(path, opts={}){
+  try {
+    const res = await fetch(SB_URL+path, {
+      headers:{'apikey':SB_KEY,'Content-Type':'application/json',...(opts.headers||{})},
+      ...opts
+    });
+    if(res.status===204) return [];
+    return res.json();
+  } catch(e){ return null; }
+}
+
+async function logPain(score){
+  const today = sbDateStr(new Date());
+  await sbFetch('/rest/v1/pain_logs', {
+    method:'POST',
+    headers:{'Prefer':'resolution=merge-duplicates'},
+    body: JSON.stringify({athlete_id:'yari', date:today, metric:'knee', score:score})
+  });
+  localStorage.setItem('yari_pain_'+today, score);
+  const el = document.getElementById('pain-logged');
+  if(el) el.innerHTML = `<span style="color:var(--success);font-family:'IBM Plex Mono',monospace;font-size:.7rem">✓ logged ${score}/10 for ${today}</span>`;
+  document.querySelectorAll('.pain-btn').forEach((b,i)=>{
+    b.style.background = i===score ? 'var(--accent)' : '';
+    b.style.color      = i===score ? 'var(--bg)'    : '';
+  });
+}
+
+async function loadWeekState(){
+  try {
+    const rows = await sbFetch('/rest/v1/athlete_state?athlete_id=eq.yari&select=current_week');
+    if(rows && rows.length) return rows[0].current_week;
+  } catch(e){}
+  return parseInt(localStorage.getItem('yari_week')||'3');
+}
+
+async function saveWeekState(w){
+  localStorage.setItem('yari_week', w);
+  await sbFetch('/rest/v1/athlete_state', {
+    method:'POST',
+    headers:{'Prefer':'resolution=merge-duplicates'},
+    body: JSON.stringify({athlete_id:'yari', current_week:w, last_updated:sbDateStr(new Date())})
+  });
+}
+
+/* ── UI helpers carried from first script block ─────────────────── */
+
+function toggleEx(btn){
+  const body=btn.nextElementSibling;
+  const chev=btn.querySelector('.chev');
+  const open=body.classList.contains('open');
+  body.classList.toggle('open',!open);
+  chev.style.transform=open?'':'rotate(180deg)';
+}
+document.querySelectorAll('a[href^="#"]').forEach(a=>{
+  a.addEventListener('click',e=>{
+    e.preventDefault();
+    document.getElementById('nl').classList.remove('open');
+    const t=document.querySelector(a.getAttribute('href'));
+    if(t)t.scrollIntoView({behavior:'smooth',block:'start'});
+  });
+});
+
+// ACL-RSI Items
+const RSI = [
+  {n:'1', q:'I am afraid of reinjuring my knee when I return to sport.', d:'Emotion', rev:true},
+  {n:'2', q:'I am afraid of falling or losing my balance when I return to sport.', d:'Emotion', rev:true},
+  {n:'3', q:'It frightens me to think about my knee being exposed to the same situations that caused my injury.', d:'Emotion', rev:true},
+  {n:'4', q:'I am frustrated because I have to train more carefully now than before my knee injury.', d:'Emotion', rev:true},
+  {n:'5', q:'I am confident I can perform at my previous level of sport participation.', d:'Confidence', rev:false},
+  {n:'6', q:'I think my knee will hold up to the demands of my sport.', d:'Confidence', rev:false},
+  {n:'7', q:'I feel relaxed about playing my sport.', d:'Confidence', rev:false},
+  {n:'8', q:'I feel confident about playing sport without worrying about my knee.', d:'Confidence', rev:false},
+  {n:'9', q:'I think there is a high chance that I will reinjure my knee by returning to my sport.', d:'Risk', rev:true},
+  {n:'10', q:'I think there is a high chance that another player will cause me to reinjure my knee.', d:'Risk', rev:true},
+  {n:'11', q:'I worry about reinjuring my knee even when I am just thinking about doing sport.', d:'Risk', rev:true},
+  {n:'12', q:'I am afraid of accidentally hitting my knee.', d:'Risk', rev:true},
+];
+const domColors = {Emotion:'#b388ff', Confidence:'#00e58a', Risk:'#ff6b35'};
+const el = document.getElementById('rsi-items');
+RSI.forEach((item,i) => {
+  el.innerHTML += `<div style="display:grid;grid-template-columns:2rem 1fr auto;padding:.7rem 1.5rem;border-bottom:${i<RSI.length-1?'1px solid var(--border)':'none'};align-items:center;gap:.75rem">
+    <span style="font-family:'IBM Plex Mono',monospace;font-size:.75rem;color:var(--muted)">${item.n}</span>
+    <span style="font-size:.85rem;color:#b8d4c0;line-height:1.5">${item.q}${item.rev?' <span style="font-family:IBM Plex Mono,monospace;font-size:.55rem;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;border:1px solid var(--border);padding:.1rem .35rem;border-radius:2px;margin-left:.35rem">Rev</span>':''}</span>
+    <span style="font-family:'IBM Plex Mono',monospace;font-size:.58rem;letter-spacing:.08em;text-transform:uppercase;padding:.2rem .5rem;border-radius:2px;background:rgba(${item.d==='Emotion'?'179,136,255':item.d==='Confidence'?'0,229,138':'255,107,53'},.1);color:${domColors[item.d]};border:1px solid ${domColors[item.d]}44;white-space:nowrap">${item.d}</span>
+  </div>`;
+});
+
+
+/* ── GATE COUNTDOWNS ────────────────────────────────────────────── */
+(function(){
+  const now  = new Date();
+  const may  = new Date(2026, 4, 15);
+  const june = new Date(2026, 5, 15);
+  function daysTo(d){ return Math.max(0,Math.ceil((d-now)/(1000*60*60*24))); }
+  document.getElementById('may-days').textContent  = daysTo(may)  + ' days';
+  document.getElementById('june-days').textContent = daysTo(june) + ' days';
+})();
+
+/* ── DAYS DATA ──────────────────────────────────────────────────── */
+const DAYS = [
+  { name:'Monday', date:'Apr 7', rest:false, intent:'Session A — Strength P2', sub:'ROM block → Layer 1 → Standard handles. Nordic eccentrics enter today — bilateral, 3×4, 5s descent, band assist. One new exercise per session rule applies.', collagen:true,
+    blocks:[
+      { label:'ROM Block', items:[
+        {name:'Heel Slide — Active Assisted', dose:'3×15 right · 2s hold'},
+        {name:'Prone Knee Hang', dose:'2×2 min · off bench edge'},
+        {name:'TRX Strap-Assisted Squat', dose:'2×10 slow · note depth vs last week'},
+        {name:'Wall Slide', dose:'2×12 right leg'},
+      ]},
+      { label:'Layer 1', items:[
+        {name:'Single-Leg Stance — Eyes Closed', dose:'3×45s each leg'},
+        {name:'Short Foot + Toe Yoga', dose:'2×12 each'},
+      ]},
+      { label:'Strength Block', items:[
+        {name:'Trap Bar DL — Standard Handles', dose:'4×5 · RPE 7 · +5% from last week'},
+        {name:'Box Squat — Lower Box (trial without wedge)', dose:'3×8 · assess — wedge back in if ache appears'},
+        {name:'Hip Thrust — Bilateral', dose:'3×12 · 1s squeeze · load progressed'},
+        {name:'Nordic Curl — Eccentric  ★ NEW', dose:'3×4 · 5s descent · band assist · BOTH LEGS'},
+        {name:'Wall Sit — Isometric', dose:'3×30s · finish session'},
+      ]},
+      { label:'Amber Day Option', gold:true, items:[
+        {name:'BFR Box Squat or Seated Extension', dose:'1×30 / 3×15 · 20–30% · 30s rest'},
+      ]},
+    ]
+  },
+  { name:'Tuesday', date:'Apr 8', rest:false, intent:'Session B — Aerobic + NMC', sub:'Forward jog target 15 min easy. Lateral sled drag enters. Perturbation and med ball after aerobic work when fatigued.', collagen:false,
+    blocks:[
+      { label:'ROM Block', items:[
+        {name:'Heel Slide', dose:'3×15 right'},
+        {name:'Prone Knee Hang', dose:'2×2 min'},
+        {name:'TRX Squat', dose:'2×10 slow'},
+      ]},
+      { label:'Layer 1', items:[
+        {name:'Single-Leg Stance — Eyes Closed', dose:'3×45s each'},
+        {name:'Short Foot + Banded Ankle Circles', dose:'2×12 each'},
+      ]},
+      { label:'Aerobic Block', items:[
+        {name:'Forward Jog — Grass or Indoor', dose:'15 min easy · assess at 0.5 mile · stop if ache ≥4'},
+        {name:'Backward Sled Drag', dose:'4×25m · moderate load'},
+      ]},
+      { label:'NMC Block — After Aerobic (Fatigued)', gold:true, items:[
+        {name:'Lateral Sled Drag  ★ NEW', dose:'3×15m each direction · moderate · side-step drive'},
+        {name:'Partner Band Perturbation — Single Leg', dose:'3×8 each · random direction + timing'},
+        {name:'Med Ball Reactive Catch — Single Leg', dose:'3×6 each · 6 lb ball · unpredictable throw'},
+      ]},
+    ]
+  },
+  { name:'Wednesday', date:'Apr 9', rest:false, intent:'Session A — Strength P2', sub:'Hip thrust goes single-leg today — the one new exercise. Nordic at Phase 2 dose. Assess box squat wedge outcome vs Monday.', collagen:true,
+    blocks:[
+      { label:'ROM Block', items:[
+        {name:'Heel Slide', dose:'3×15 right · 2s hold'},
+        {name:'Prone Knee Hang', dose:'2×2 min'},
+        {name:'TRX Squat', dose:'2×10 slow · right knee priority'},
+        {name:'Wall Slide', dose:'2×12 right'},
+      ]},
+      { label:'Layer 1', items:[
+        {name:'Single-Leg Stance — Eyes Closed', dose:'3×45s each'},
+        {name:'Short Foot + Toe Yoga', dose:'2×12 each'},
+      ]},
+      { label:'Strength Block', items:[
+        {name:'Trap Bar DL — Standard Handles', dose:'4×5 · match Mon or +2.5%'},
+        {name:'Box Squat — Lower Box', dose:'3×8 · wedge off if Monday was clean'},
+        {name:'Hip Thrust — Single-Leg  ★ NEW', dose:'3×8 each · right leg = extra set if tolerated'},
+        {name:'Nordic Curl — Eccentric', dose:'3×4 · 5s descent · band assist · both legs'},
+        {name:'Wall Sit', dose:'3×30s · finish session'},
+      ]},
+    ]
+  },
+  { name:'Thursday', date:'Apr 10', rest:false, intent:'Session B — Aerobic + NMC', sub:'Jog target 20 min. Aerobic intervals enter — 3×3 min at 75% HRmax, wide arcs only. Hop-and-stick after intervals.', collagen:false,
+    blocks:[
+      { label:'ROM Block', items:[
+        {name:'Heel Slide', dose:'3×15 right'},
+        {name:'Prone Knee Hang', dose:'2×2 min'},
+        {name:'TRX Squat', dose:'2×10'},
+      ]},
+      { label:'Layer 1', items:[
+        {name:'Single-Leg Stance — Eyes Closed', dose:'3×45s each'},
+        {name:'Short Foot + Ankle Circles', dose:'2×12 each'},
+      ]},
+      { label:'Aerobic Block', items:[
+        {name:'Forward Jog', dose:'20 min target · grass or indoor · note fatigue level'},
+        {name:'Aerobic Intervals  ★ NEW', dose:'3×3 min at ~75% HRmax · 90s rest · wide arcs — no sharp cuts'},
+      ]},
+      { label:'NMC Block — After Intervals (Fatigued)', gold:true, items:[
+        {name:'Lateral Sled Drag', dose:'3×15m each direction · match or +load vs Tuesday'},
+        {name:'Partner Band Perturbation', dose:'3×8 each · she is solid — push unpredictability'},
+        {name:'Hop and Stick — Hurdle  ★ NEW', dose:'3×5 forward hops · stick 2s · evaluate mechanics'},
+      ]},
+    ]
+  },
+  { name:'Friday', date:'Apr 11', rest:false, intent:'Session A — Strength P2', sub:'Single-leg RDL enters today — the one new exercise. All other Phase 2 exercises consolidate. 48hr response from Wednesday assessed.', collagen:true,
+    blocks:[
+      { label:'ROM Block', items:[
+        {name:'Heel Slide', dose:'3×15 right · 2s hold'},
+        {name:'Prone Knee Hang', dose:'2×2 min'},
+        {name:'TRX Squat', dose:'2×10 slow'},
+        {name:'Wall Slide', dose:'2×12 right'},
+      ]},
+      { label:'Layer 1', items:[
+        {name:'Single-Leg Stance — Eyes Closed', dose:'3×45s each'},
+        {name:'Short Foot + Toe Yoga', dose:'2×12 each'},
+      ]},
+      { label:'Strength Block', items:[
+        {name:'Trap Bar DL — Standard Handles', dose:'4×5 · RPE 7–8 · progress from Monday'},
+        {name:'Box Squat — Lower Box', dose:'3×8 · match Wednesday load'},
+        {name:'Hip Thrust — Single-Leg', dose:'3×8 each · right extra set if feeling good'},
+        {name:'Nordic Curl — Eccentric', dose:'3×4 · 5s descent · note if easier than Monday'},
+        {name:'Single-Leg RDL — Ipsilateral DB  ★ NEW', dose:'3×8 each leg · light · 3s eccentric'},
+        {name:'Wall Sit', dose:'3×30s · finish session'},
+      ]},
+      { label:'BFR Supplement', gold:true, items:[
+        {name:'BFR Box Squat or Seated Extension', dose:'1×30 / 3×15 · after main work · 30s rest'},
+      ]},
+    ]
+  },
+  { name:'Saturday', date:'Apr 12', rest:false, intent:'Session C — Hybrid + Ball P2', sub:'ROM block → light strength anchor → ball moves. Straight-line dribbling through pole gates. Passing on the move. Watch for right-foot plant compensation.', collagen:false,
+    blocks:[
+      { label:'ROM Block', items:[
+        {name:'Heel Slide', dose:'3×15 right'},
+        {name:'Prone Knee Hang', dose:'2×2 min'},
+        {name:'TRX Squat', dose:'2×10 slow'},
+      ]},
+      { label:'Layer 1', items:[
+        {name:'Single-Leg Stance — Eyes Closed', dose:'3×45s each'},
+        {name:'Short Foot + Toe Yoga', dose:'2×12 each · barefoot'},
+      ]},
+      { label:'Strength Anchor — Light', items:[
+        {name:'Single-Leg RDL — Ipsilateral DB', dose:'3×8 each · lighter than A sessions'},
+        {name:'Hip Thrust — Bilateral Maintenance', dose:'2×10 · moderate · not a loading day'},
+      ]},
+      { label:'Ball Work — Phase 2', gold:true, items:[
+        {name:'Straight-Line Dribbling — Pole Gates', dose:'10 min · jog pace · both feet · eyes up'},
+        {name:'Passing on the Move', dose:'10–15 min · jog to ball · one-touch lay-off · right-foot plant'},
+        {name:'Watch: right-foot plant', dose:'No avoidance / step-around on right plant'},
+      ]},
+    ]
+  },
+  { name:'Sunday', date:'Apr 13', rest:true, intent:'Session D — Active Recovery', sub:'Full Layer 1. Canal walk. BFR walk. She gained 0.5 lb — good. Protein and energy targets every day including rest days.', collagen:false,
+    blocks:[
+      { label:'Layer 1 — All 5 · Unhurried', items:[
+        {name:'Single-Leg Stance — Eyes Closed', dose:'3×45s each · barefoot · take your time'},
+        {name:'Short Foot', dose:'2×12 each'},
+        {name:'Banded Ankle Circles', dose:'10 each direction each ankle'},
+        {name:'Toe Yoga', dose:'2×10 each foot'},
+        {name:'Slow Eccentric Calf Raise', dose:'2×10 · 3s down · both then right only'},
+      ]},
+      { label:'Recovery', gold:true, items:[
+        {name:'Canal Walk', dose:'25–30 min · uneven terrain · intentional'},
+        {name:'Soft Tissue — Quads, Hamstrings, Calves', dose:'10 min · foam roll or bands'},
+        {name:'BFR Walk', dose:'10–15 min · cuffs at upper thigh · easy pace'},
+      ]},
+    ]
+  },
+];
+
+/* ── SELECT DAY ─────────────────────────────────────────────────── */
+function selectDay(idx){
+  document.querySelectorAll('.day-tab').forEach((t,i)=>t.classList.toggle('active',i===idx));
+  const d = DAYS[idx];
+  const today = sbDateStr(new Date());
+  const cachedPain = localStorage.getItem('yari_pain_'+today);
+
+  let html = `<div class="dc-intent">${d.intent}</div>`;
+  html += `<div style="font-family:'IBM Plex Mono',monospace;font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:.25rem">${d.date}</div>`;
+  html += `<div class="dc-sub">${d.sub}</div>`;
+
+  if(d.collagen){
+    html += `<div class="dc-collagen">⚡ Collagen window — 15g hydrolyzed collagen + Vit C · 30–60 min before this session</div>`;
+  }
+
+  if(d.rest && d.blocks.length === 0){
+    html += `<div class="dc-rest">Active recovery only.<br>No resistance, no impact, no ball.<br>This is when the tissue rebuilds — don't shortchange it.</div>`;
+  } else {
+    d.blocks.forEach(b=>{
+      const lc = b.gold ? 'dc-block-label gold' : 'dc-block-label';
+      html += `<div class="dc-block"><div class="${lc}">${b.label}</div>`;
+      b.items.forEach(ex=>{
+        const dc = b.gold ? 'dc-ex-dose gold' : 'dc-ex-dose';
+        html += `<div class="dc-ex"><span class="dc-ex-name">${ex.name}</span><span class="${dc}">${ex.dose}</span></div>`;
+      });
+      html += `</div>`;
+    });
+  }
+
+  // Pain log footer — every day
+  const painColors = ['var(--success)','#8bc34a','var(--gold)','#ff9800','var(--warn)','var(--red)'];
+  html += `<div style="margin-top:1.25rem;padding-top:1rem;border-top:1px solid var(--border)">
+    <div class="dc-block-label">Log Today's Knee</div>
+    <div style="display:flex;gap:.4rem;margin-top:.6rem;flex-wrap:wrap">
+      ${[0,1,2,3,4,5,6,7,8,9,10].map(n=>`<button class="pain-btn" onclick="logPain(${n})"
+        style="flex:1;min-width:2.2rem;padding:.45rem 0;border-radius:3px;border:1px solid var(--border);
+               background:${cachedPain!==null&&parseInt(cachedPain)===n?painColors[n]:'var(--surface2)'};
+               color:${cachedPain!==null&&parseInt(cachedPain)===n?'var(--bg)':painColors[n]};
+               font-family:'Bebas Neue',sans-serif;font-size:1.1rem;cursor:pointer;transition:all .15s">${n}</button>`).join('')}
+    </div>
+    <div id="pain-logged" style="margin-top:.5rem;min-height:1.2rem;font-size:.75rem">
+      ${cachedPain!==null?`<span style="color:var(--success);font-family:'IBM Plex Mono',monospace;font-size:.7rem">✓ logged ${cachedPain}/10 today</span>`:''}
+    </div>
+  </div>`;
+
+  document.getElementById('day-content').innerHTML = html;
+}
+
+/* ── AUTO-INIT ──────────────────────────────────────────────────── */
+(async function(){
+  const jsDay = new Date().getDay();
+  const tabIdx = jsDay === 0 ? 6 : jsDay - 1;
+  const todayTab = document.querySelector(`.day-tab[data-day="${tabIdx}"]`);
+  if(todayTab) todayTab.classList.add('today');
+
+  // Persist week state to Supabase
+  await saveWeekState(3); // Phase 2 Week 4 = index 3
+
+  selectDay(tabIdx < 7 ? tabIdx : 0);
+})();
+</script>
+</body>
+</html>
