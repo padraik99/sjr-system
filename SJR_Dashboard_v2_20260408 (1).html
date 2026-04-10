@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SJR — Coach Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=IBM+Plex+Mono:wght@300;400;500&family=IBM+Plex+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0f0f0e;
+  --surface: #1a1a18;
+  --surface2: #222220;
+  --border: #2e2e2a;
+  --text: #e8e4dc;
+  --muted: #8a8680;
+  --dim: #5a5855;
+  --accent: #c8a96e;
+  --green: #7eb87e;
+  --yellow: #c8b46e;
+  --red: #c87e7e;
+  --teal: #7eb8a4;
+  --purple: #a47eb8;
+  --blue: #7ea4b8;
+  /* athlete colors */
+  --patrick: #7ea4b8;
+  --shaylan: #c87e7e;
+  --cadence: #a47eb8;
+  --yari: #7eb8a4;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  background:var(--bg); color:var(--text);
+  font-family:'IBM Plex Sans',sans-serif;
+  font-weight:300; line-height:1.6; font-size:15px;
+  min-height:100vh; padding-bottom:2rem;
+}
+
+/* ── HEADER ── */
+header {
+  padding:1.5rem 1.5rem 1rem;
+  border-bottom:1px solid var(--border);
+  display:flex; justify-content:space-between; align-items:flex-end;
+  flex-wrap:wrap; gap:1rem;
+}
+.hdr-title {
+  font-family:'Playfair Display',serif;
+  font-size:1.8rem; font-weight:900; color:var(--accent); line-height:1;
+}
+.hdr-sub {
+  font-family:'IBM Plex Mono',monospace;
+  font-size:0.6rem; letter-spacing:0.16em; text-transform:uppercase;
+  color:var(--dim); margin-top:0.2rem;
+}
+.hdr-right { display:flex; gap:0.5rem; align-items:center; }
+.refresh-btn {
+  background:var(--surface2); border:1px solid var(--border);
+  border-radius:3px; padding:0.4rem 0.85rem;
+  font-family:'IBM Plex Mono',monospace; font-size:0.62rem;
+  letter-spacing:0.08em; text-transform:uppercase;
+  color:var(--muted); cursor:pointer; transition:all 0.15s;
+}
+.refresh-btn:hover { border-color:var(--accent); color:var(--accent); }
+.last-refresh {
+  font-family:'IBM Plex Mono',monospace; font-size:0.58rem;
+  color:var(--dim); letter-spacing:0.06em;
+}
+
+/* ── MAIN ── */
+main { padding:1.25rem 1.5rem; max-width:1100px; margin:0 auto; }
+
+/* ── ATHLETE CARDS ── */
+.athletes-grid {
+  display:grid;
+  grid-template-columns:repeat(auto-fit, minmax(300px, 1fr));
+  gap:1rem; margin-bottom:1.75rem;
+}
+
+.athlete-card {
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:4px; overflow:hidden;
+}
+.athlete-card-header {
+  padding:0.85rem 1rem 0.7rem;
+  border-bottom:1px solid var(--border);
+  display:flex; justify-content:space-between; align-items:baseline;
+}
+.athlete-name {
+  font-family:'Playfair Display',serif;
+  font-size:1.15rem; font-weight:700;
+}
+.athlete-name.patrick { color:var(--patrick); }
+.athlete-name.shaylan { color:var(--shaylan); }
+.athlete-name.cadence { color:var(--cadence); }
+.athlete-name.yari    { color:var(--yari); }
+.athlete-phase {
+  font-family:'IBM Plex Mono',monospace; font-size:0.58rem;
+  letter-spacing:0.1em; text-transform:uppercase; color:var(--dim);
+}
+
+/* METRIC ROWS */
+.metrics-block { padding:0.75rem 1rem; }
+.metric-row {
+  display:flex; justify-content:space-between; align-items:center;
+  padding:0.4rem 0; border-bottom:1px solid rgba(46,46,42,0.5);
+}
+.metric-row:last-child { border-bottom:none; }
+.metric-label {
+  font-family:'IBM Plex Mono',monospace; font-size:0.62rem;
+  letter-spacing:0.08em; text-transform:uppercase; color:var(--muted);
+  flex:1;
+}
+.metric-score {
+  font-family:'Playfair Display',serif; font-size:1.3rem;
+  line-height:1; min-width:2.5rem; text-align:right;
+}
+.metric-score.ok { color:var(--green); }
+.metric-score.warn { color:var(--yellow); }
+.metric-score.bad { color:var(--red); }
+.metric-score.none { color:var(--dim); font-size:1rem; }
+.metric-trend {
+  font-family:'IBM Plex Mono',monospace; font-size:0.62rem;
+  min-width:4rem; text-align:right; color:var(--dim);
+}
+.trend-up { color:var(--red); }
+.trend-down { color:var(--green); }
+.trend-flat { color:var(--yellow); }
+
+/* SPARK */
+.spark-row {
+  display:flex; gap:3px; align-items:flex-end;
+  padding:0.6rem 1rem 0.5rem;
+  border-top:1px solid var(--border);
+}
+.spark-bar {
+  flex:1; border-radius:1px 1px 0 0;
+  min-height:3px; transition:height 0.3s;
+}
+.spark-label {
+  font-family:'IBM Plex Mono',monospace; font-size:0.52rem;
+  color:var(--dim); padding:0 1rem 0.5rem;
+  display:flex; justify-content:space-between;
+}
+
+/* BREACH BANNER */
+.breach-banner {
+  margin:0.5rem 1rem;
+  background:rgba(200,126,126,0.08);
+  border:1px solid rgba(200,126,126,0.3);
+  border-left:3px solid var(--red);
+  border-radius:0 3px 3px 0;
+  padding:0.5rem 0.75rem;
+  font-family:'IBM Plex Mono',monospace; font-size:0.65rem;
+  color:var(--red); letter-spacing:0.04em; line-height:1.5;
+}
+.breach-banner strong { display:block; font-size:0.7rem; margin-bottom:0.1rem; }
+
+/* ── SECTION LABEL ── */
+.section-label {
+  font-family:'IBM Plex Mono',monospace; font-size:0.58rem;
+  letter-spacing:0.2em; text-transform:uppercase;
+  color:var(--dim); margin-bottom:0.65rem;
+  display:flex; align-items:center; gap:0.5rem;
+}
+.section-label::before { content:''; width:20px; height:1px; background:var(--dim); }
+
+/* ── INJURY LOG ── */
+.injury-log-section { margin-bottom:1.75rem; }
+.injury-form {
+  background:var(--surface); border:1px solid var(--border);
+  border-radius:4px; padding:1rem;
+  display:grid; grid-template-columns:1fr 1fr 1fr auto;
+  gap:0.6rem; align-items:end;
+}
+.form-field { display:flex; flex-direction:column; gap:0.3rem; }
+.form-label {
+  font-family:'IBM Plex Mono',monospace; font-size:0.58rem;
+  letter-spacing:0.1em; text-transform:uppercase; color:var(--dim);
+}
+.form-input, .form-select, .form-textarea {
+  background:var(--surface2); border:1px solid var(--border);
+  border-radius:3px; padding:0.5rem 0.65rem;
+  font-family:'IBM Plex Mono',monospace; font-size:0.72rem;
+  color:var(--text); outline:none; transition:border-color 0.15s;
+  width:100%;
+}
+.form-textarea {
+  font-family:'IBM Plex Sans',sans-serif; font-size:0.82rem;
+  resize:vertical; min-height:60px;
+  grid-column:1/-1;
+}
+.form-input:focus, .form-select:focus, .form-textarea:focus {
+  border-color:var(--accent);
+}
+.form-select option { background:var(--surface2); }
+.form-submit {
+  background:var(--accent); color:var(--bg);
+  border:none; border-radius:3px; padding:0.55rem 1rem;
+  font-family:'IBM Plex Mono',monospace; font-size:0.65rem;
+  font-weight:500; letter-spacing:0.1em; text-transform:uppercase;
+  cursor:pointer; white-space:nowrap; align-self:end;
+}
+.form-submit:hover { background:#d4b87a; }
+
+/* INJURY LOG TABLE */
+.injury-table {
+  width:100%; border-collapse:collapse; margin-top:0.85rem;
+  font-size:0.82rem;
+}
+.injury-table th {
+  font-family:'IBM Plex Mono',monospace; font-size:0.55rem;
+  letter-spacing:0.12em; text-transform:uppercase;
+  color:var(--dim); text-align:left;
+  padding:0.4rem 0.75rem; border-bottom:1px solid var(--border);
+}
+.injury-table td {
+  padding:0.55rem 0.75rem; border-bottom:1px solid rgba(46,46,42,0.4);
+  color:var(--muted); vertical-align:top;
+}
+.injury-table tr:hover td { background:rgba(26,26,24,0.5); }
+.injury-table td:first-child { color:var(--text); }
+.athlete-dot {
+  display:inline-block; width:8px; height:8px; border-radius:50%;
+  margin-right:0.4rem; vertical-align:middle;
+}
+.dot-patrick { background:var(--patrick); }
+.dot-shaylan { background:var(--shaylan); }
+.dot-cadence { background:var(--cadence); }
+.dot-yari    { background:var(--yari); }
+.no-data {
+  text-align:center; padding:1.5rem;
+  font-family:'IBM Plex Mono',monospace; font-size:0.65rem;
+  color:var(--dim); letter-spacing:0.08em;
+}
+
+/* ── CSV EXPORT ── */
+.export-row {
+  display:flex; flex-wrap:wrap; gap:0.5rem; margin-bottom:1.75rem;
+}
+.export-btn {
+  background:var(--surface); border:1px solid var(--border);
+  border-radius:3px; padding:0.4rem 0.85rem;
+  font-family:'IBM Plex Mono',monospace; font-size:0.6rem;
+  letter-spacing:0.08em; text-transform:uppercase;
+  color:var(--muted); cursor:pointer; transition:all 0.15s;
+}
+.export-btn:hover { border-color:var(--teal); color:var(--teal); }
+
+/* ── LOADING ── */
+.loading-state {
+  text-align:center; padding:3rem 1rem;
+  font-family:'IBM Plex Mono',monospace; font-size:0.65rem;
+  letter-spacing:0.1em; text-transform:uppercase; color:var(--dim);
+}
+.spinner {
+  display:inline-block; width:16px; height:16px;
+  border:2px solid var(--border); border-top-color:var(--accent);
+  border-radius:50%; animation:spin 0.8s linear infinite;
+  margin-right:0.5rem; vertical-align:middle;
+}
+@keyframes spin { to { transform:rotate(360deg); } }
+
+/* ── LINKS NAV ── */
+.nav-links {
+  display:flex; flex-wrap:wrap; gap:0.4rem;
+  padding:0.75rem 1.5rem;
+  border-bottom:1px solid var(--border);
+  background:rgba(26,26,24,0.5);
+}
+.nav-link {
+  font-family:'IBM Plex Mono',monospace; font-size:0.6rem;
+  letter-spacing:0.1em; text-transform:uppercase;
+  color:var(--dim); text-decoration:none;
+  padding:0.25rem 0.6rem; border:1px solid var(--border);
+  border-radius:2px; transition:all 0.15s;
+}
+.nav-link:hover { color:var(--accent); border-color:var(--accent); }
+
+@media(max-width:600px) {
+  main { padding:1rem; }
+  header { padding:1rem; }
+  .injury-form { grid-template-columns:1fr; }
+}
+::-webkit-scrollbar { width:4px; }
+::-webkit-scrollbar-track { background:var(--bg); }
+::-webkit-scrollbar-thumb { background:var(--border); border-radius:2px; }
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <div class="hdr-title">Coach View</div>
+    <div class="hdr-sub">Sprint · Jump · Resilience · All Athletes</div>
+  </div>
+  <div class="hdr-right">
+    <span class="last-refresh" id="last-refresh">—</span>
+    <button class="refresh-btn" id="refresh-btn-el" onclick="loadAll()">↻ Refresh</button>
+  </div>
+</header>
+
+<div class="nav-links">
+  <a class="nav-link" href="SJR_WeeklyGuide_Patrick_v5_20260402.html">Patrick →</a>
+  <a class="nav-link" href="shaylan_weekly_v2_20260402.html">Shaylan →</a>
+  <a class="nav-link" href="Cadence_Weekly_v2_20260402.html">Cadence →</a>
+  <a class="nav-link" href="SJR_Yari_Guide_v1_20260317.html">Yari →</a>
+  <a class="nav-link" href="SJR_Library_Master_v3_20260402.html">Exercise Library →</a>
+  <a class="nav-link" href="SJR_Periodization_Master_v2_20260313.html">Periodization →</a>
+</div>
+
+<main>
+
+  <!-- ATHLETE STATUS CARDS -->
+  <div class="section-label">Gate Status · Last 24 hrs</div>
+  <div class="athletes-grid" id="athletes-grid">
+    <div class="loading-state"><span class="spinner"></span>Loading athletes…</div>
+  </div>
+
+  <!-- INJURY LOG -->
+  <div class="injury-log-section">
+    <div class="section-label">Injury Log</div>
+    <div class="injury-form">
+      <div class="form-field">
+        <label class="form-label">Athlete</label>
+        <select class="form-select" id="inj-athlete">
+          <option value="patrick">Patrick</option>
+          <option value="shaylan">Shaylan</option>
+          <option value="cadence">Cadence</option>
+          <option value="yari">Yari</option>
+        </select>
+      </div>
+      <div class="form-field">
+        <label class="form-label">Date</label>
+        <input class="form-input" type="date" id="inj-date">
+      </div>
+      <div class="form-field">
+        <label class="form-label">Location</label>
+        <input class="form-input" type="text" id="inj-location" placeholder="e.g. left L5 nerve">
+      </div>
+      <button class="form-submit" onclick="saveInjury()">+ Log</button>
+      <textarea class="form-textarea" id="inj-desc" placeholder="Description — symptoms, context, session load at time of onset…"></textarea>
+    </div>
+    <table class="injury-table" id="injury-table">
+      <thead>
+        <tr>
+          <th>Athlete</th>
+          <th>Date</th>
+          <th>Location</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody id="injury-tbody">
+        <tr><td colspan="4" class="no-data">Loading…</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- CSV EXPORT -->
+  <div class="section-label">Export</div>
+  <div class="export-row">
+    <button class="export-btn" onclick="exportCSV('patrick')">Patrick — Pain Log CSV</button>
+    <button class="export-btn" onclick="exportCSV('shaylan')">Shaylan — Pain Log CSV</button>
+    <button class="export-btn" onclick="exportCSV('cadence')">Cadence — Pain Log CSV</button>
+    <button class="export-btn" onclick="exportCSV('yari')">Yari — Pain Log CSV</button>
+    <button class="export-btn" onclick="exportCSV('all')">All Athletes — Combined CSV</button>
+    <button class="export-btn" onclick="exportInjuryCSV()">Injury Log CSV</button>
+  </div>
+
+</main>
+
+<script>
+// ─────────────────────────────────────────
+// SUPABASE CONFIG
+// ─────────────────────────────────────────
+const SUPA_URL = 'https://jedsnurnnwmpcbdvtlbs.supabase.co';
+const SUPA_KEY = 'sb_publishable_3WGolnM5dOK88Y4WdKCFGA_Hi6wj-_z';
+
+async function sbFetch(path, opts = {}){
+  const headers = { 'apikey': SUPA_KEY, 'Content-Type': 'application/json' };
+  if(opts.prefer) headers['Prefer'] = opts.prefer;
+  const res = await fetch(SUPA_URL + path, {
+    method: opts.method || 'GET', headers, body: opts.body || undefined,
+  });
+  if(!res.ok){ const txt = await res.text(); throw new Error(res.status + ': ' + txt); }
+  if(res.status === 204) return [];
+  const ct = res.headers.get('content-type') || '';
+  return ct.includes('application/json') ? res.json() : [];
+}
+
+function todayStr(){
+  const t = new Date();
+  return t.getFullYear() + '-' + String(t.getMonth()+1).padStart(2,'0') + '-' + String(t.getDate()).padStart(2,'0');
+}
+
+// ─────────────────────────────────────────
+// ATHLETE CONFIG
+// ─────────────────────────────────────────
+const ATHLETES = [
+  {
+    id: 'patrick', label: 'Patrick', cls: 'patrick',
+    metrics: [
+      { key: 'morning', label: 'Morning Pain', gate: 2 },
+      { key: 'nerve',   label: 'Nerve / Calf',  gate: 2 },
+      { key: 'ankle',   label: 'Ankle Spot',     gate: 3 },
+    ],
+    weeklyFile: 'SJR_WeeklyGuide_Patrick_v5_20260402.html'
+  },
+  {
+    id: 'shaylan', label: 'Shaylan', cls: 'shaylan',
+    metrics: [
+      { key: 'knee', label: 'Knee', gate: 3 },
+      { key: 'back', label: 'Back', gate: 2 },
+    ],
+    weeklyFile: 'shaylan_weekly_v2_20260402.html'
+  },
+  {
+    id: 'cadence', label: 'Cadence', cls: 'cadence',
+    metrics: [
+      { key: 'foot_shin', label: 'Foot / Shin', gate: 3 },
+    ],
+    weeklyFile: 'Cadence_Weekly_v2_20260402.html'
+  },
+  {
+    id: 'yari', label: 'Yari', cls: 'yari',
+    metrics: [
+      { key: 'knee', label: 'Right Knee', gate: 3 },
+    ],
+    weeklyFile: 'SJR_Yari_Guide_v1_20260317.html'
+  },
+];
+
+// In-memory cache after load
+let allLogs = [];    // all pain_logs rows
+let allInjuries = []; // all injury_logs rows
+let athleteStates = {}; // { patrick: { current_week, current_phase }, ... }
+
+// ─────────────────────────────────────────
+// LOAD
+// ─────────────────────────────────────────
+async function loadAll(){
+  const btn = document.getElementById('refresh-btn-el');
+  if(btn){ btn.textContent = '↻ Loading…'; btn.disabled = true; }
+  document.getElementById('athletes-grid').innerHTML =
+    '<div class="loading-state"><span class="spinner"></span>Fetching from Supabase…</div>';
+
+  try {
+    // Fetch last 30 days of pain logs for all athletes
+    const since = new Date(); since.setDate(since.getDate() - 30);
+    const sinceStr = since.getFullYear() + '-' +
+      String(since.getMonth()+1).padStart(2,'0') + '-' +
+      String(since.getDate()).padStart(2,'0');
+
+    const [logs, injuries, states] = await Promise.all([
+      sbFetch('/rest/v1/pain_logs?date=gte.' + sinceStr + '&order=date.desc,created_at.desc&select=*'),
+      sbFetch('/rest/v1/injury_logs?order=date.desc&select=*'),
+      sbFetch('/rest/v1/athlete_state?select=*'),
+    ]);
+
+    allLogs      = logs      || [];
+    allInjuries  = injuries  || [];
+    (states || []).forEach(s => athleteStates[s.athlete_id] = s);
+
+    renderAthletes();
+    renderInjuryTable();
+
+    const now = new Date();
+    document.getElementById('last-refresh').textContent =
+      'Updated ' + now.toLocaleTimeString('en-US', {hour:'2-digit', minute:'2-digit'});
+    const btn2 = document.getElementById('refresh-btn-el');
+    if(btn2){ btn2.textContent = '↻ Refresh'; btn2.disabled = false; }
+
+  } catch(e){
+    document.getElementById('athletes-grid').innerHTML =
+      `<div class="loading-state">⚠ Load failed: ${e.message}<br><br>Make sure files are served via localhost, not file://</div>`;
+    console.error(e);
+  }
+}
+
+// ─────────────────────────────────────────
+// RENDER ATHLETE CARDS
+// ─────────────────────────────────────────
+function renderAthletes(){
+  const grid = document.getElementById('athletes-grid');
+  const cutoff24h = Date.now() - 24 * 3600000;
+  const cutoff7d  = Date.now() - 7  * 24 * 3600000;
+
+  grid.innerHTML = ATHLETES.map(athlete => {
+    const logs = allLogs.filter(l => l.athlete_id === athlete.id);
+    const state = athleteStates[athlete.id] || {};
+    const phase = state.current_phase || state.current_week !== undefined
+      ? 'Week ' + (state.current_week + 1)
+      : '—';
+
+    // Check breaches
+    const breaches = [];
+    const metricRows = athlete.metrics.map(m => {
+      const recent = logs.filter(l => l.metric === m.key)
+        .sort((a,b) => {
+          // Sort by date desc, then created_at desc
+          if(b.date !== a.date) return b.date > a.date ? 1 : -1;
+          return new Date(b.created_at) - new Date(a.created_at);
+        });
+      const latest = recent[0];
+      const score  = latest ? latest.score : null;
+      // isRecent: logged today or yesterday (use date string — timezone safe)
+      const today2  = todayStr();
+      const yest = (()=>{ const d=new Date(); d.setDate(d.getDate()-1);
+        return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); })();
+      const isRecent = latest && (latest.date === today2 || latest.date === yest);
+
+      // Trend: compare latest vs previous entry
+      const older = recent.slice(1).filter(l => l.date !== latest?.date);
+      const olderScore = older.length ? older[0].score : null;
+      let trendCls = '', trendTxt = '';
+      if(score !== null && olderScore !== null){
+        const delta = score - olderScore;
+        if(delta < -0.5){ trendCls = 'trend-down'; trendTxt = '↓ ' + Math.abs(delta).toFixed(0); }
+        else if(delta > 0.5){ trendCls = 'trend-up'; trendTxt = '↑ ' + delta.toFixed(0); }
+        else { trendCls = 'trend-flat'; trendTxt = '→'; }
+      }
+
+      let scoreCls = 'none', scoreTxt = '—';
+      if(score !== null && isRecent){
+        scoreTxt = score + '/10';
+        scoreCls = score === 0 ? 'ok' : score <= m.gate ? 'warn' : 'bad';
+        if(score > m.gate) breaches.push(m.label + ' ' + score + '/10');
+      } else if(score !== null){
+        scoreTxt = score + '/10';
+        scoreCls = 'none';
+      }
+
+      return `<div class="metric-row">
+        <span class="metric-label">${m.label}</span>
+        <span class="metric-score ${scoreCls}">${scoreTxt}</span>
+        <span class="metric-trend ${trendCls}">${trendTxt}</span>
+      </div>`;
+    }).join('');
+
+    // 7-day spark for first metric
+    const primaryMetric = athlete.metrics[0].key;
+    const sparkData = buildSparkData(logs, primaryMetric, 7);
+    const sparkHtml = buildSparkHtml(sparkData, athlete.cls);
+
+    const breachHtml = breaches.length
+      ? `<div class="breach-banner"><strong>⚠ Gate Breach</strong>${breaches.join(' · ')}</div>`
+      : '';
+
+    return `<div class="athlete-card">
+      <div class="athlete-card-header">
+        <span class="athlete-name ${athlete.cls}">${athlete.label}</span>
+        <span class="athlete-phase">${phase}</span>
+      </div>
+      ${breachHtml}
+      <div class="metrics-block">${metricRows}</div>
+      ${sparkHtml}
+      <div class="spark-label">
+        <span>7 days ago</span>
+        <span>${athlete.metrics[0].label}</span>
+        <span>today</span>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function buildSparkData(logs, metric, days){
+  const data = [];
+  for(let i = days - 1; i >= 0; i--){
+    const d = new Date(); d.setDate(d.getDate() - i);
+    const dStr = d.getFullYear() + '-' +
+      String(d.getMonth()+1).padStart(2,'0') + '-' +
+      String(d.getDate()).padStart(2,'0');
+    const dayLogs = logs.filter(l => l.metric === metric && l.date === dStr);
+    const score = dayLogs.length
+      ? Math.max(...dayLogs.map(l => l.score))
+      : null;
+    data.push(score);
+  }
+  return data;
+}
+
+function buildSparkHtml(data, athleteCls){
+  const max = 5;
+  const bars = data.map(v => {
+    if(v === null){
+      return `<div class="spark-bar" style="height:3px;background:var(--border);"></div>`;
+    }
+    const pct = Math.max(6, Math.round((v / max) * 40));
+    const col = v === 0 ? 'var(--green)' : v <= 2 ? 'var(--yellow)' : 'var(--red)';
+    return `<div class="spark-bar" style="height:${pct}px;background:${col};"></div>`;
+  }).join('');
+  return `<div class="spark-row">${bars}</div>`;
+}
+
+// ─────────────────────────────────────────
+// INJURY LOG
+// ─────────────────────────────────────────
+function renderInjuryTable(){
+  const tbody = document.getElementById('injury-tbody');
+  if(!allInjuries.length){
+    tbody.innerHTML = '<tr><td colspan="4" class="no-data">No injury logs yet</td></tr>';
+    return;
+  }
+  tbody.innerHTML = allInjuries.map(inj => {
+    const dotCls = 'dot-' + inj.athlete_id;
+    const date = inj.date || '—';
+    const loc  = inj.location || '—';
+    const desc = inj.description || '—';
+    return `<tr>
+      <td><span class="athlete-dot ${dotCls}"></span>${inj.athlete_id}</td>
+      <td style="white-space:nowrap">${date}</td>
+      <td>${loc}</td>
+      <td style="max-width:320px">${desc}</td>
+    </tr>`;
+  }).join('');
+}
+
+async function saveInjury(){
+  const athlete  = document.getElementById('inj-athlete').value;
+  const date     = document.getElementById('inj-date').value || todayStr();
+  const location = document.getElementById('inj-location').value.trim();
+  const desc     = document.getElementById('inj-desc').value.trim();
+
+  if(!location && !desc){ alert('Add a location or description.'); return; }
+
+  try {
+    await sbFetch('/rest/v1/injury_logs', {
+      method: 'POST', prefer: 'return=minimal',
+      body: JSON.stringify({ athlete_id: athlete, date, location, description: desc })
+    });
+    document.getElementById('inj-location').value = '';
+    document.getElementById('inj-desc').value = '';
+    await loadAll();
+// Auto-refresh every 60 seconds
+setInterval(loadAll, 60000);
+  } catch(e){
+    alert('Save failed: ' + e.message);
+  }
+}
+
+// ─────────────────────────────────────────
+// CSV EXPORT
+// ─────────────────────────────────────────
+function exportCSV(athleteId){
+  let rows = athleteId === 'all'
+    ? allLogs
+    : allLogs.filter(l => l.athlete_id === athleteId);
+
+  if(!rows.length){ alert('No data to export.'); return; }
+
+  const headers = ['athlete_id','date','metric','score','timing','created_at'];
+  const csv = [headers.join(',')].concat(
+    rows.map(r => headers.map(h => JSON.stringify(r[h] ?? '')).join(','))
+  ).join('\n');
+
+  download(csv, (athleteId === 'all' ? 'SJR_all' : 'SJR_' + athleteId) + '_pain_log.csv');
+}
+
+function exportInjuryCSV(){
+  if(!allInjuries.length){ alert('No injury logs to export.'); return; }
+  const headers = ['athlete_id','date','location','description','created_at'];
+  const csv = [headers.join(',')].concat(
+    allInjuries.map(r => headers.map(h => JSON.stringify(r[h] ?? '')).join(','))
+  ).join('\n');
+  download(csv, 'SJR_injury_log.csv');
+}
+
+function download(csv, filename){
+  const blob = new Blob([csv], {type:'text/csv'});
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  a.href = url; a.download = filename; a.click();
+  URL.revokeObjectURL(url);
+}
+
+// ─────────────────────────────────────────
+// INIT
+// ─────────────────────────────────────────
+// Set today's date in the injury date field
+document.getElementById('inj-date').value = todayStr();
+
+loadAll();
+</script>
+</body>
+</html>
