@@ -1,0 +1,2308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Master Exercise Library — Sprint · Jump · Resilience · v4</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f5f2ec;
+    --bg2: #ede9e0;
+    --surface: #ffffff;
+    --border: #d8d3c8;
+    --border-light: #e8e4dc;
+    --ink: #1a1814;
+    --ink-muted: #5a5650;
+    --ink-dim: #9a9690;
+    --accent: #c8341a;
+    --accent2: #1a5c8a;
+    --accent3: #2a7a4a;
+    --accent4: #8a6a1a;
+    --tag-bg: #f0ece4;
+
+    /* Tag colors — unified with Periodization Guide */
+    --spinal-low: #2a7a4a;
+    --spinal-mod: #8a6a1a;
+    --spinal-high: #c8341a;
+
+    /* Phase colors — MATCH PG exactly */
+    --phase-gpp:    #2a5c7a;
+    --phase-spp:    #5a2a7a;
+    --phase-comp:   #c8341a;
+    --phase-trans:  #2a7a4a;
+    --phase-maint:  #7a6a2a;
+    --phase-rehab:  #4a6a8a;
+    /* Legacy bridge/perf map to GPP/SPP for continuity */
+    --phase-bridge: #4a6a8a;
+    --phase-perf:   #2a7a4a;
+
+    --intensity-sub: #5a7a9a;
+    --intensity-max: #c8341a;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Crimson Pro', serif;
+    font-weight: 300;
+    line-height: 1.6;
+  }
+
+  /* HEADER */
+  .header {
+    background: var(--ink);
+    color: var(--bg);
+    padding: 3rem 2rem 2.5rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .header::after {
+    content: 'SJR';
+    position: absolute;
+    right: -1rem;
+    bottom: -2rem;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 12rem;
+    color: rgba(255,255,255,0.04);
+    line-height: 1;
+    pointer-events: none;
+    user-select: none;
+  }
+
+  .header-eyebrow {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.62rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: rgba(245,242,236,0.45);
+    margin-bottom: 0.75rem;
+  }
+
+  .header h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(2.5rem, 7vw, 5rem);
+    letter-spacing: 0.03em;
+    line-height: 0.95;
+    margin-bottom: 1rem;
+    color: var(--bg);
+  }
+
+  .header h1 em {
+    color: var(--accent);
+    font-style: normal;
+  }
+
+  .header-desc {
+    font-family: 'Crimson Pro', serif;
+    font-size: 1rem;
+    font-weight: 300;
+    color: rgba(245,242,236,0.6);
+    max-width: 600px;
+    font-style: italic;
+    line-height: 1.5;
+  }
+
+  .header-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2rem;
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid rgba(255,255,255,0.1);
+  }
+
+  .meta-item {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    color: rgba(245,242,236,0.4);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .meta-item strong {
+    display: block;
+    font-size: 1rem;
+    font-family: 'Bebas Neue', sans-serif;
+    letter-spacing: 0.05em;
+    color: rgba(245,242,236,0.85);
+    font-weight: 400;
+  }
+
+  /* LEGEND */
+  .legend {
+    background: var(--surface);
+    border-bottom: 2px solid var(--ink);
+    padding: 1.5rem 2rem;
+  }
+
+  .legend-title {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--ink-dim);
+    margin-bottom: 1rem;
+  }
+
+  .legend-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.25rem;
+  }
+
+  .legend-group { }
+
+  .legend-group-title {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.58rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--ink-dim);
+    margin-bottom: 0.5rem;
+  }
+
+  .legend-tags { display: flex; flex-wrap: wrap; gap: 0.35rem; }
+
+  /* NAV */
+  nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(245,242,236,0.97);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 2rem;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+
+  nav ul { list-style: none; display: inline-flex; }
+
+  nav a {
+    display: block;
+    padding: 0.9rem 1rem;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.62rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+    text-decoration: none;
+    border-bottom: 2px solid transparent;
+    transition: all 0.15s;
+  }
+
+  nav a:hover { color: var(--accent); border-bottom-color: var(--accent); }
+
+  /* FILTER BAR */
+  .filter-bar {
+    background: var(--bg2);
+    border-bottom: 1px solid var(--border);
+    padding: 0.85rem 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .filter-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+    align-items: center;
+  }
+
+  .filter-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.58rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--ink-dim);
+    min-width: 80px;
+  }
+
+  .filter-btn {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.58rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 0.28rem 0.7rem;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--ink-muted);
+    cursor: pointer;
+    border-radius: 2px;
+    transition: all 0.15s;
+  }
+
+  .filter-btn:hover { border-color: var(--ink-muted); color: var(--ink); }
+
+  .filter-btn.active {
+    background: var(--btn-active-bg, rgba(26,24,20,0.1));
+    color: var(--btn-active-color, var(--ink));
+    border-color: var(--btn-active-border, var(--ink));
+    font-weight: 500;
+  }
+
+  .filter-actions {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding-top: 0.35rem;
+    border-top: 1px solid var(--border-light);
+  }
+
+  .filter-summary {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.08em;
+    color: var(--ink-dim);
+  }
+
+  .clear-btn {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.58rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 0.25rem 0.65rem;
+    border: 1px solid var(--accent);
+    background: transparent;
+    color: var(--accent);
+    cursor: pointer;
+    border-radius: 2px;
+    transition: all 0.15s;
+  }
+
+  .clear-btn:hover { background: var(--accent); color: white; }
+
+  /* MAIN */
+  main { max-width: 1100px; margin: 0 auto; padding: 2rem; }
+
+  /* CATEGORY SECTION */
+  .cat-section { margin-bottom: 4rem; }
+
+  .cat-header {
+    display: flex;
+    align-items: baseline;
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 2px solid var(--ink);
+  }
+
+  .cat-number {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 3rem;
+    color: var(--border);
+    line-height: 1;
+  }
+
+  .cat-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.8rem;
+    letter-spacing: 0.04em;
+    color: var(--ink);
+    line-height: 1;
+  }
+
+  .cat-count {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.15em;
+    color: var(--ink-dim);
+    text-transform: uppercase;
+    margin-left: auto;
+  }
+
+  /* EXERCISE CARDS */
+  .ex-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+  }
+
+  .ex-card {
+    background: var(--surface);
+    padding: 1.25rem;
+    transition: background 0.15s;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .ex-card:hover { background: #fdfcfa; }
+
+  .ex-card.hidden { display: none; }
+
+  .ex-name {
+    font-family: 'Crimson Pro', serif;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--ink);
+    line-height: 1.2;
+  }
+
+  .ex-rationale {
+    font-size: 0.9rem;
+    color: var(--ink-muted);
+    font-style: italic;
+    line-height: 1.5;
+    flex: 1;
+  }
+
+  .ex-source {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.58rem;
+    letter-spacing: 0.08em;
+    color: var(--ink-dim);
+    text-transform: uppercase;
+  }
+
+  .ex-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.3rem;
+    margin-top: 0.25rem;
+  }
+
+  /* TAGS */
+  .tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.55rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 0.2rem 0.45rem;
+    border-radius: 1px;
+    white-space: nowrap;
+  }
+
+  /* Spinal Load */
+  .tag-sl-low { background: rgba(42,122,74,0.1); color: var(--spinal-low); border: 1px solid rgba(42,122,74,0.25); }
+  .tag-sl-mod { background: rgba(138,106,26,0.1); color: var(--spinal-mod); border: 1px solid rgba(138,106,26,0.25); }
+  .tag-sl-high { background: rgba(200,52,26,0.1); color: var(--spinal-high); border: 1px solid rgba(200,52,26,0.25); }
+
+  /* Joints */
+  .tag-joint { background: rgba(26,88,138,0.08); color: var(--accent2); border: 1px solid rgba(26,88,138,0.2); }
+
+  /* Phase — unified with Periodization Guide */
+  .tag-gpp   { background: rgba(42,92,122,0.12);  color: var(--phase-gpp);   border: 1px solid rgba(42,92,122,0.3); }
+  .tag-spp   { background: rgba(90,42,122,0.12);  color: var(--phase-spp);   border: 1px solid rgba(90,42,122,0.3); }
+  .tag-comp  { background: rgba(200,52,26,0.12);  color: var(--phase-comp);  border: 1px solid rgba(200,52,26,0.3); }
+  .tag-trans { background: rgba(42,122,74,0.12);  color: var(--phase-trans); border: 1px solid rgba(42,122,74,0.3); }
+  .tag-maint { background: rgba(122,106,42,0.12); color: var(--phase-maint); border: 1px solid rgba(122,106,42,0.3); }
+  .tag-rehab { background: rgba(74,106,138,0.12); color: var(--phase-rehab); border: 1px solid rgba(74,106,138,0.3); }
+  /* bridge = rehab color; perf = trans color — legacy aliases */
+  .tag-bridge { background: rgba(74,106,138,0.12); color: var(--phase-bridge); border: 1px solid rgba(74,106,138,0.3); }
+  .tag-perf   { background: rgba(42,122,74,0.12);  color: var(--phase-perf);   border: 1px solid rgba(42,122,74,0.3); }
+
+  /* Intensity */
+  .tag-sub { background: rgba(90,122,154,0.1); color: var(--intensity-sub); border: 1px solid rgba(90,122,154,0.25); }
+  .tag-max { background: rgba(200,52,26,0.1); color: var(--intensity-max); border: 1px solid rgba(200,52,26,0.25); }
+
+  .ltag { font-family: 'DM Mono', monospace; font-size: 0.58rem; letter-spacing: 0.06em; text-transform: uppercase; padding: 0.2rem 0.5rem; border-radius: 1px; }
+
+  /* REFERENCES */
+  .references {
+    background: var(--ink);
+    color: var(--bg);
+    padding: 2.5rem 2rem;
+    margin-top: 4rem;
+  }
+
+  .ref-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.8rem;
+    letter-spacing: 0.04em;
+    margin-bottom: 1.5rem;
+    color: var(--bg);
+  }
+
+  .ref-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1rem;
+  }
+
+  .ref-item {
+    border-left: 2px solid rgba(255,255,255,0.15);
+    padding-left: 1rem;
+  }
+
+  .ref-name {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: rgba(245,242,236,0.5);
+    margin-bottom: 0.25rem;
+  }
+
+  .ref-desc {
+    font-size: 0.88rem;
+    color: rgba(245,242,236,0.75);
+    font-style: italic;
+  }
+
+  /* FOOTER */
+  footer {
+    background: var(--ink);
+    border-top: 1px solid rgba(255,255,255,0.08);
+    padding: 1.5rem 2rem;
+    text-align: center;
+  }
+
+  footer p {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.58rem;
+    letter-spacing: 0.1em;
+    color: rgba(245,242,236,0.3);
+    text-transform: uppercase;
+    margin-bottom: 0.3rem;
+  }
+
+  /* COUNT BADGE */
+  .count-badge {
+    display: inline-block;
+    background: var(--accent);
+    color: white;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem;
+    padding: 0.15rem 0.5rem;
+    border-radius: 1px;
+    margin-left: 0.5rem;
+    vertical-align: middle;
+  }
+
+  #visible-count {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.62rem;
+    color: var(--ink-dim);
+    margin-left: auto;
+    letter-spacing: 0.08em;
+  }
+
+  @media (max-width: 600px) {
+    main { padding: 1rem; }
+    .header { padding: 2rem 1rem 2rem; }
+    .legend { padding: 1rem; }
+    .filter-bar { padding: 0.75rem 1rem; }
+    nav { padding: 0 0.5rem; }
+    .ex-grid { grid-template-columns: 1fr; }
+    .header::after { display: none; }
+  }
+
+
+  .ex-video-link {
+    display: inline-flex; align-items: center; gap: 0.3rem;
+    margin-top: 0.6rem;
+    font-family: 'DM Mono', monospace; font-size: 0.6rem;
+    letter-spacing: 0.06em; text-transform: uppercase;
+    color: var(--ink-dim); border: 1px solid var(--border);
+    border-radius: 2px; padding: 0.22rem 0.55rem;
+    text-decoration: none; transition: color 0.15s, border-color 0.15s;
+  }
+  .ex-video-link:hover { color: var(--accent); border-color: var(--accent); }
+  .ex-video-link::before { content: '▶  '; }
+  ::-webkit-scrollbar { width: 4px; height: 4px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--border); }
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div class="header-eyebrow">Sprint · Jump · Resilience — Master Reference</div>
+  <h1>Exercise<br><em>Library</em></h1>
+  <div class="header-desc">Gold-standard movement selection drawn from consensus across Baar, Grey, Ward, Natera, Barr, Schexnayder, Alfredson, Rio, McGill, Bosch, Dietz, and Winkelman. Every exercise tagged for spinal load, joint demand, training phase, and intensity ceiling.</div>
+  <div class="header-meta">
+    <div class="meta-item"><strong>61</strong>Exercises</div>
+    <div class="meta-item"><strong>4</strong>Tag Dimensions</div>
+    <div class="meta-item"><strong>3</strong>Categories</div>
+    <div class="meta-item"><strong>12</strong>Expert Sources</div>
+  </div>
+</header>
+
+<!-- LEGEND -->
+<div class="legend">
+  <div class="legend-title">Tag Legend</div>
+  <div class="legend-grid">
+    <div class="legend-group">
+      <div class="legend-group-title">Spinal Load</div>
+      <div class="legend-tags">
+        <span class="ltag tag-sl-low">Low</span>
+        <span class="ltag tag-sl-mod">Moderate</span>
+        <span class="ltag tag-sl-high">High</span>
+      </div>
+    </div>
+    <div class="legend-group">
+      <div class="legend-group-title">Training Phase</div>
+      <div class="legend-tags">
+        <span class="ltag tag-rehab">Rehab</span>
+        <span class="ltag tag-bridge">Bridge</span>
+        <span class="ltag tag-perf">Performance</span>
+      </div>
+    </div>
+    <div class="legend-group">
+      <div class="legend-group-title">Intensity Ceiling</div>
+      <div class="legend-tags">
+        <span class="ltag tag-sub">Submaximal</span>
+        <span class="ltag tag-max">Maximal</span>
+      </div>
+    </div>
+    <div class="legend-group">
+      <div class="legend-group-title">Primary Joints</div>
+      <div class="legend-tags">
+        <span class="ltag tag-joint">Hip / Knee / Ankle / Spine / Shoulder</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav>
+  <ul>
+    <li><a href="#posterior">Posterior Chain</a></li>
+    <li><a href="#anterior">Anterior Chain</a></li>
+    <li><a href="#singleleg">Single-Leg</a></li>
+    <li><a href="#isometric">Isometric</a></li>
+    <li><a href="#glute">Hip &amp; Glute</a></li>
+    <li><a href="#upper">Upper Body</a></li>
+    <li><a href="#sprint">Sprint Drills</a></li>
+    <li><a href="#jump">Jump &amp; Bound</a></li>
+    <li><a href="#ankle">Ankle &amp; Foot</a></li>
+    <li><a href="#mobility">Mobility</a></li>
+    <li><a href="#energy">Energy System</a></li>
+  </ul>
+</nav>
+
+<!-- FILTER BAR -->
+<div class="filter-bar" id="filter-bar">
+  <div class="filter-row">
+    <span class="filter-label">Phase</span>
+    <button class="filter-btn" data-group="phase" data-filter="phase-rehab" style="--btn-active-bg: rgba(74,106,138,0.2); --btn-active-color: #4a6a8a; --btn-active-border: rgba(74,106,138,0.5);">Rehab</button>
+    <button class="filter-btn" data-group="phase" data-filter="phase-bridge" style="--btn-active-bg: rgba(74,106,138,0.2); --btn-active-color: #4a6a8a; --btn-active-border: rgba(74,106,138,0.5);">Bridge</button>
+    <button class="filter-btn" data-group="phase" data-filter="phase-gpp" style="--btn-active-bg: rgba(42,92,122,0.2); --btn-active-color: #2a5c7a; --btn-active-border: rgba(42,92,122,0.5);">GPP</button>
+    <button class="filter-btn" data-group="phase" data-filter="phase-spp" style="--btn-active-bg: rgba(90,42,122,0.2); --btn-active-color: #5a2a7a; --btn-active-border: rgba(90,42,122,0.5);">SPP</button>
+    <button class="filter-btn" data-group="phase" data-filter="phase-comp" style="--btn-active-bg: rgba(200,52,26,0.2); --btn-active-color: #c8341a; --btn-active-border: rgba(200,52,26,0.5);">Competition</button>
+    <button class="filter-btn" data-group="phase" data-filter="phase-trans" style="--btn-active-bg: rgba(42,122,74,0.2); --btn-active-color: #2a7a4a; --btn-active-border: rgba(42,122,74,0.5);">Transition</button>
+    <button class="filter-btn" data-group="phase" data-filter="phase-maint" style="--btn-active-bg: rgba(122,106,42,0.2); --btn-active-color: #7a6a2a; --btn-active-border: rgba(122,106,42,0.5);">Maintenance</button>
+    <button class="filter-btn" data-group="phase" data-filter="phase-perf" style="--btn-active-bg: rgba(42,122,74,0.15); --btn-active-color: #2a7a4a; --btn-active-border: rgba(42,122,74,0.4);">Performance</button>
+  </div>
+  <div class="filter-row">
+    <span class="filter-label">Intensity</span>
+    <button class="filter-btn" data-group="intensity" data-filter="intensity-sub" style="--btn-active-bg: rgba(90,122,154,0.15); --btn-active-color: #5a7a9a; --btn-active-border: rgba(90,122,154,0.45);">Submaximal</button>
+    <button class="filter-btn" data-group="intensity" data-filter="intensity-max" style="--btn-active-bg: rgba(200,52,26,0.15); --btn-active-color: #c8341a; --btn-active-border: rgba(200,52,26,0.45);">Maximal</button>
+  </div>
+  <div class="filter-row">
+    <span class="filter-label">Quality</span>
+    <button class="filter-btn" data-group="quality" data-filter="quality-gpp" style="--btn-active-bg:rgba(74,138,106,0.2);--btn-active-color:#4a8a6a;--btn-active-border:rgba(74,138,106,0.5);">GPP</button>
+    <button class="filter-btn" data-group="quality" data-filter="quality-hypertrophy" style="--btn-active-bg:rgba(122,74,138,0.2);--btn-active-color:#7a4a8a;--btn-active-border:rgba(122,74,138,0.5);">Hypertrophy</button>
+    <button class="filter-btn" data-group="quality" data-filter="quality-strength" style="--btn-active-bg:rgba(74,106,138,0.2);--btn-active-color:#4a6a8a;--btn-active-border:rgba(74,106,138,0.5);">Strength</button>
+    <button class="filter-btn" data-group="quality" data-filter="quality-power" style="--btn-active-bg:rgba(138,74,74,0.2);--btn-active-color:#8a4a4a;--btn-active-border:rgba(138,74,74,0.5);">Power</button>
+    <button class="filter-btn" data-group="quality" data-filter="quality-velocity" style="--btn-active-bg:rgba(200,160,64,0.2);--btn-active-color:#c8a040;--btn-active-border:rgba(200,160,64,0.5);">Velocity</button>
+    <button class="filter-btn" data-group="quality" data-filter="quality-isometric" style="--btn-active-bg:rgba(90,122,90,0.2);--btn-active-color:#5a7a5a;--btn-active-border:rgba(90,122,90,0.5);">Isometric</button>
+  </div>
+  <div class="filter-actions">
+    <span id="filter-summary" class="filter-summary">All 80 exercises shown</span>
+    <button id="clear-filters" class="clear-btn" style="display:none;">✕ Clear filters</button>
+  </div>
+</div>
+
+<main>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- SECTION 1: POSTERIOR CHAIN -->
+<!-- ═══════════════════════════════════════ -->
+<section class="cat-section" id="posterior">
+  <div class="cat-header">
+    <div class="cat-number">01</div>
+    <div class="cat-title">Posterior Chain</div>
+    <div class="cat-count">9 exercises</div>
+  </div>
+  <div class="ex-grid">
+
+    <div class="ex-card" data-tags="intensity-sub phase-bridge phase-comp phase-gpp phase-perf phase-spp quality-hypertrophy quality-strength sl-mod">
+      <div class="ex-name">Trap Bar Deadlift — Elevated Start</div>
+      <div class="ex-rationale">Centered load under COM avoids anterior bar path and posterior foraminal compression. Elevated start removes end-range lumbar demand. The premier bilateral hip hinge for athletes with lumbar restrictions.</div>
+      <div class="ex-source">McGill · Grey</div>
+      <a class="ex-video-link" href="https://www.youtube.com/results?search_query=trap+bar+deadlift+elevated+start+lumbar+safe+McGill" target="_blank">Search Demo</a>
+      <div class="ex-tags">
+        <span class="tag tag-sl-mod">Spinal: Moderate</span>
+        <span class="tag tag-joint">Hip · Knee</span>
+        <span class="tag tag-bridge">Bridge</span>
+        <span class="tag tag-perf">Performance</span>
+        <span class="tag tag-sub">Submaximal</span>
+      
+        <span class="tag" style="background:rgba(0,0,0,0.15);color:#4a6a8a;border:1px solid #4a6a8a40;">Strength</span>
+        <span class="tag" style="background:rgba(0,0,0,0.15);color:#7a4a8a;border:1px solid #7a4a8a40;">Hypertrophy</span>
+      </div>
+    </div>
+
+    <div class="ex-card" data-tags="intensity-max phase-comp phase-gpp phase-perf phase-spp quality-power quality-strength sl-high quality-hypertrophy">
+      <div class="ex-name">Trap Bar Deadlift — Full ROM</div>
+      <div class="ex-rationale">Near-floor pull with high or low handles. Maximal posterior chain recruitment when structural clearance is achieved. Develops the force production base that sprint mechanics demand.</div>
+      <div class="ex-source">McGill · Natera</div>
+      <a class="ex-video-link" href="https://www.youtube.com/results?search_query=trap+bar+deadlift+full+ROM+form+tutorial" target="_blank">Search Demo</a>
+      <div class="ex-tags">
+        <span class="tag tag-sl-high">Spinal: High</span>
+        <span class="tag tag-joint">Hip · Knee · Ankle</span>
+        <span class="tag tag-perf">Performance</span>
+        <span class="tag tag-max">Maximal</span>
+      
+        <span class="tag" style="background:rgba(0,0,0,0.15);color:#4a6a8a;border:1px solid #4a6a8a40;">Strength</span>
+        <span class="tag" style="background:rgba(0,0,0,0.15);color:#8a4a4a;border:1px solid #8a4a4a40;">Power</span>
+      </div>
+    </div>
+
+    <div class="ex-card" data-tags="intensity-sub phase-bridge phase-comp phase-gpp phase-perf phase-spp quality-hypertrophy quality-strength sl-mod">
+      <div class="ex-name">Romanian Deadlift (RDL)</div>
+      <div class="ex-rationale">Hip-dominant hinge with eccentric hamstring load. Baar's tissue programming principle applied: controlled lengthening under tension drives collagen remodeling. Keep spine neutral throughout — not a stretch, a load.</div>
+      <div class="ex-source">Baar · McGill</div>
+      <a class="ex-video-link" href="https://www.youtube.com/results?search_query=Romanian+deadlift+RDL+hip+hinge+eccentric+hamstring" target="_blank">Search Demo</a>
+      <div class="ex-tags">
+        <span class="tag tag-sl-mod">Spinal: Moderate</span>
+        <span class="tag tag-joint">Hip · Knee</span>
+        <span class="tag tag-bridge">Bridge</span>
+        <span class="tag tag-perf">Performance</span>
+        <span class="tag tag-sub">Submaximal</span>
+      
+        <span class="tag" style="background:rgba(0,0,0,0.15);color:#7a4a8a;border:1px solid #7a4a8a40;">Hypertrophy</span>
+        <span class="tag" style="background:rgba(0,0,0,0.15);color:#4a6a8a;border:1px solid #4a6a8a40;">Strength</span>
+      </div>
+    </div>
+
+    <div class="ex-card" data-tags="intensity-sub phase-bridge phase-comp phase-gpp phase-perf phase-spp quality-gpp quality-hypertrophy sl-low">
+      <div class="ex-name">Single-Leg RDL (Dumbbell)</div>
+      <div class="ex-rationale">Unilateral hip hinge with balance demand. Exposes asymmetries, trains glute-hamstring co-contraction in the single-support phase that mirrors sprint mechanics at toe-off.</div>
+      <div class="ex-source">Grey · Natera</div>
+      <a class="ex-video-link" href="https://www.youtube.com/results?search_query=single+leg+RDL+dumbbell+balance+hamstring" target="_blank">Search Demo</a>
+      <div class="ex-tags">
+        <span class="tag tag-sl-low">Spinal: Low</span>
+        <span class="tag tag-joint">Hip · Ankle</span>
+        <span class="tag tag-bridge">Bridge</span>
+        <span class="tag tag-perf">Performance</span>
+        <span class="tag tag-sub">Submaximal</span>
+      
+        <span class="tag" style="background:rgba(0,0,0,0.15);color:#7a4a8a;border:1px solid #7a4a8a40;">Hypertrophy</span>
+        <span class="tag" style="background:rgba(0,0,0,0.15);color:#4a8a6a;border:1px solid #4a8a6a40;">GPP</span>
+      </div>
+    </div>
+
+    <div class="ex-card" data-tags="intensity-sub phase-bridge phase-gpp phase-rehab quality-hypertrophy quality-strength sl-low">
+      <div class="ex-name">Nordic Hamstring Curl</div>
+      <div class="ex-rationale">Petersen et al. 2011: 51% hamstring injury reduction — but the research pool is overwhelmingly male (13 of 15 studies). <strong>Male athletes:</strong> non-negotiable. Knee-dominant eccentric directly addresses the distal injury mechanism dominant in male sprinters. Use band-assisted entry. <strong>Female athletes (Baar / Bosch):</strong> anterior pelvic tilt in female sprinters loads the proximal hamstring via a hip-dominant mechanism the Nordic does not address. Bosch: the hamstring must function isometrically across both joints at top speed — isolated knee-dominant eccentric is insufficient alone. Prescription for female sprint athletes: Nordic as part of a paired program only — always combined with single-leg RDL, GHR, or single-leg Roman Chair to address the proximal, hip-dominant end. Never as a standalone intervention.</div>
+      <div class="ex-source">Petersen · Baar · Bosch</div>
+      <a class="ex-video-link" href="https://www.youtube.com/results?search_query=Nordic+hamstring+curl+eccentric+injury+prevention" target="_blank">Search Demo</a>
+      <div class="ex-tags">
+        <span class="tag tag-sl-low">Spinal: Low</span>
+        <span class="tag tag-joint">Knee · Hip</span>
+        <span class="tag tag-rehab">Rehab</span>
+        <span class="tag tag-bridge">Bridge</span>
+        <span class="tag tag-sub">Submaximal</span>
+      
+        <span class="tag" style="background:rgba(0,0,0,0.15);color:#7a4a8a;border:1px solid #7a4a8a40;">Hypertrophy</span>
+        <span class="tag" style="background:rgba(0,0,0,0.15);color:#4a6a8a;border:1px solid #4a6a8a40;">Strength</span>
+      </div>
+    </div>
+
+    <div class="ex-card" data-tags="intensity-sub phase-bridge phase-comp phase-gpp phase-perf phase-spp quality-hypertrophy quality-strength sl-low intensity-max">
+      <div class="ex-name">Glute-Ham Raise (GHR)</div>
+      <div class="ex-rationale">Full posterior chain integration from glute through hamstring to calf. Trains knee flexion under hip-extended position — the sprint-specific demand. Requires GHR bench or anchored feet.</div>
+      <div class="ex-source">Schexnayder · Natera</div>
+      <a class="ex-video-link" href="https://www.youtube.com/results?search_query=glute+ham+raise+GHR+posterior+chain" target="_blank">Search Demo</a>
+      <div class="ex-tags">
+        <span class="tag tag-sl-low">Spinal: Low</span>
+        <span class="tag tag-joint">Knee · Hip · Ankle</span>
+        <span class="tag tag-bridge">Bridge</span>
+        <span class="tag tag-perf">Performance</span>
+        <span class="tag tag-sub">Submaximal</span>
+      
+        <span class="tag" style="background:rgba(0,0,0,0.15);color:#4a6a8a;border:1px solid #4a6a8a40;">Strength</span>
+        <span class="tag" style="background:rgba(0,0,0,0.15);color:#7a4a8a;border:1px solid #7a4a8a40;">Hypertrophy</span>
+      </div>
+    </div>
+
+    <div class="ex-card" data-tags="intensity-sub phase-bridge phase-comp phase-gpp phase-perf phase-spp quality-isometric quality-strength sl-low">
+      <div class="ex-name">Single-Leg Roman Chair (Hip-Dominant Hamstring)</div>
+      <div class="ex-rationale">Bosch's preferred hamstring loading tool for sprint athletes — and the specific prescription for female sprinters as a Nordic curl complement. Meets four criteria simultaneously: sufficient single-leg overload; hamstring attempts to extend the hip AND prevent knee extension; load occurs at optimal muscle length; pelvis can rotate freely to find that optimal length. Trains the isometric coordination function the hamstring must perform at top-end sprint speed — not just eccentric strength at the knee. For female sprint athletes with anterior pelvic tilt, this addresses the proximal hip-dominant injury mechanism the Nordic curl cannot reach.</div>
+      <div class="ex-source">Bosch</div>
+      <a class="ex-video-link" href="https://www.youtube.com/results?search_query=single+leg+Roman+chair+hip+dominant+hamstring+Bosch" target="_blank">Search Demo</a>
+      <div class="ex-tags">
+        <span class="tag tag-sl-low">Spinal: Low</span>
+        <span class="tag tag-joint">Hip · Knee</span>
+        <span class="tag tag-bridge">Bridge</span>
+        <span class="tag tag-perf">Performance</span>
+        <span class="tag tag-sub">Submaximal</span>
+      
+        <span class="tag" style="background:rgba(0,0,0,0.15);color:#4a6a8a;border:1px solid #4a6a8a40;">Strength</span>
+        <span class="tag" style="background:rgba(0,0,0,0.15);color:#5a7a5a;border:1px solid #5a7a5a40;">Isometric</span>
+      </div>
+    </div>
+
+    <div class="ex-card" data-tags="intensity-sub phase-bridge phase-gpp phase-rehab quality-gpp quality-hypertrophy sl-low">
+      <div class="ex-name">Glute Bridge — Bilateral</div>
+      <div class="ex-rationale">McGill foundational: hip extension without lumbar compression. Entry-level posterior chain activation appropriate even with active nerve compression. Progresses to single-leg as recruitment improves.</div>
+      <div class="ex-source">McGill · Grey</div>
+      <a class="ex-video-link" href="https://www.youtube.com/results?search_query=bilateral+glute+bridge+McGill+hip+extension" target="_blank">Search Demo</a>
+      <div class="ex-tags">
+        <span class="tag tag-sl-low">Spinal: Low</span>
+        <span class="tag tag-joint">Hip · Knee</span>
+        <span class="tag tag-rehab">Rehab</span>
+        <span class="tag tag-bridge">Bridge</span>
+        <span class="tag tag-sub">Submaximal</span>
+      
+        <span class="tag" style="background:rgba(0,0,0,0.15);color:#4a8a6a;border:1px solid #4a8a6a40;">GPP</span>
+        <span class="tag" style="background:rgba(0,0,0,0.15);color:#7a4a8a;border:1px solid #7a4a8a40;">Hypertrophy</span>
+      </div>
+    </div>
+
+    <div class="ex-card" data-tags="intensity-sub phase-bridge phase-comp phase-gpp phase-perf phase-spp quality-power quality-strength sl-low">
+      <div class="ex-name">Hip Thrust — Barbell</div>
+      <div class="ex-rationale">Maximal glute activation in end-range hip extension — position not achievable in deadlift or squat. Bret Contreras research underpins this; consistent with Grey's joint-first loading principle. Load is axial through hips, not spine.</div>
+      <div class="ex-source">Grey · McGill</div>
+      <a class="ex-video-link" href="https://www.youtube.com/results?search_query=barbell+hip+thrust+glute+end+range" target="_blank">Search Demo</a>
+      <div class="ex-tags">
+        <span class="tag tag-sl-low">Spinal: Low</span>
+        <span class="tag tag-joint">Hip · Knee</span>
+        <span class="tag tag-bridge">Bridge</span>
+        <span class="tag tag-perf">Performance</span>
+        <span class="tag tag-sub">Submaximal</span>
+      
+        <span class="tag" style="background:rgba(0,0,0,0.15);color:#4a6a8a;border:1px solid #4a6a8a40;">Strength</span>
+        <span class="tag" style="background:rgba(0,0,0,0.15);color:#8a4a4a;border:1px solid #8a4a4a40;">Power</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- SECTION 2: ANTERIOR CHAIN -->
+<!-- ═══════════════════════════════════════ -->
+<section class="cat-section" id="anterior">
+  <div class="cat-header">
+    <div class="cat-number">02</div>
+    <div class="cat-title">Anterior Chain</div>
+    <div class="cat-count">6 exercises</div>
+  </div>
+  <div class="ex-grid">
+
+    <div class="ex-card" data-tags="intensity-sub phase-bridge phase-comp phase-gpp phase-perf phase-spp quality-gpp quality-hypertrophy sl-mod">
+      <div class="ex-name">Box Squat — Goblet Hold</div>
+      <div class="ex-rationale">Box sets safe depth limit. Goblet position shifts COM anteriorly, reducing lumbar extension tendency. Teaches sit-back mechanics. Pre-epidural safe variation that maintains quad and glute recruitment patterns.</div>
+      <div class="ex-source">McGill · Grey</div>
+      <a class="ex-video-link" href="https://www.youtube.com/results?search_query=box+squat+goblet+hold+COM+lumbar+safe" target="_blank">Search Demo</a>
+      <div class="ex-tags">
+        <span class="tag tag-sl-mod">Spinal: Moderate</span>
+        <span class="tag tag-joint">Knee · Hip · Ankle</span>
+        <span class="tag tag-bridge">Bridge</span>
+        <span class="tag tag-perf">Performance</span>
+        <span class="tag tag-sub">Submaximal</span>
+      
+        <span class="tag" style="background:rgba(0,0,0,0.15);color:#7a4a8a;border:1px solid #7a4a8a40;">Hypertrophy</span>
+        <span class="tag" style="background:rgba(0,0,0,0.15);color:#4a8a6a;border:1px solid #4a8a6a40;">GPP</span>
+      </div>
+    </div>
+
+    <div class="ex-card" data-tags="intensity-max phase-comp phase-gpp phase-perf phase-spp quality-power quality-strength sl-high quality-hypertrophy">
+      <div class="ex-name">Back Squat — Full Depth</div>
+      <div class="ex-rationale">The standard for bilateral lower body strength development. Requires structural clearance. ISA context: narrow ISA athletes (Shaylan, Cadence) will show natural internal rotation cue at depth — do not coach out.</div>
+      <div class="ex-source">McGill · Franzblau</div>
+      <a class="ex-video-link" href="https://www.youtube.com/results?search_query=back+squat+full+depth+form+cues" target="_blank">Search Demo</a>
+      <div class="ex-tags">
+        <span class="tag tag-sl-high">Spinal: High</span>
+        <span class="tag tag-joint">Knee · Hip · Ankle · Spine</span>
+        <span class="tag tag-perf">Performance</span>
+        <span class="tag tag-max">Maximal</span>
+      
+        <span class="tag" style="background:rgba(0,0,0,0.15);color:#4a6a8a;border:1px solid #4a6a8a40;">Strength</span>
+        <span class="tag" style="background:rgba(0,0,0,0.15);color:#8a4a4a;border:1px solid #8a4a4a40;">Power</span>
+      </div>
+    </div>
+
+    <div class="ex-card" data-tags="intensity-sub phase-comp phase-gpp phase-perf phase-spp quality-hypertrophy quality-strength sl-mod">
+      <div class="ex-name">Front Squat</div>
+      <div class="ex-rationale">Anterior load demands upright torso — reduces posterior chain dominance, increases quad recruitment. Teaches the trunk position required for penultimate step mechanics in long jump.</div>
+      <div class="ex-source">Schexnayder · McGill</div>
+      <a class="ex-video-link" href="https://www.youtube.com/results?search_query=front+squat+upright+torso+technique" target="_blank">Search Demo</a>
+      <div class="ex-tags">
+        <span class="tag tag-sl-mod">Spinal: Moderate</span>
+        <span class="tag tag-joint">Knee · Hip · Ankle</span>
+        <span class="tag tag-perf">Performance</span>
+        <span class="tag tag-sub">Submaximal</span>
+      
+        <span class="tag" style="background:rgba(0,0,0,0.15);color:#4a6a8a;border:1px solid #4a6a8a40;">Strength</span>
+        <span class="tag" style="background:rgba(0,0,0,0.15);color:#7a4a8a;border:1px solid #7a4a8a40;">Hypertrophy</span>
+      </div>
+    </div>
+
+    <div class="ex-card" data-tags="intensity-sub phase-bridge phase-comp phase-gpp phase-perf phase-spp quality-hypertrophy quality-strength sl-mod">
+      <div class="ex-name">Split Squat — Rear Foot Elevated (Bulgarian)</div>
+      <div class="ex-rationale">Unilateral anterior chain loading with reduced spinal compression versus bilateral squat. Hip flexor length challenge at rear leg. Asymmetry detection tool — left-right discrepancy reveals compensation patterns.</div>
+      <div class="ex-source">McGill · Grey</div>
+      <a class="ex-video-link" href="https://www.youtube.com/results?search_query=Bulgarian+split+squat+rear+foot+elevated" target="_blank">Search Demo</a>
+      <div class="ex-tags">
+        <span class="tag tag-sl-mod">Spinal: Moderate</span>
+        <span class="tag tag-joint">Knee · Hip · Ankle</span>
+        <span class="tag tag-bridge">Bridge</span>
+        <span class="tag tag-perf">Performance</span>
+        <span class="tag tag-sub">Submaximal</span>
+      
+        <span class="tag" style="background:rgba(0,0,0,0.15);color:#7a4a8a;border:1px solid #7a4a8a40;">Hypertrophy</span>
+        <span class="tag" style="background:rgba(0,0,0,0.15);color:#4a6a8a;border:1px solid #4a6a8a40;">Strength</span>
+      </div>
+    </div>
+
+    <div class="ex-card" data-tags="intensity-sub phase-bridge phase-comp phase-gpp phase-perf phase-spp quality-gpp quality-hypertrophy sl-low">
+      <div class="ex-name">Eccentric Step-Down (Touchdown)</div>
+      <div class="ex-rationale">Slow eccentric quad loading in single-leg stance. Controls patellar tracking via VMO engagement timing. Rio et al. eccentric loading principle applied to PFPS management. Depth governs load — 90° knee maximum pre-clearance.</div>
+      <div class="ex-source">Rio · Grey</div>
+      <a class="ex-video-link" href="https://www.youtube.com/results?search_query=eccentric+step+down+touchdown+PFPS+VMO" target="_blank">Search Demo</a>
+      <div class="ex-tags">
+        <span class="tag tag-sl-low">Spinal: Low</span>
+        <span class="tag tag-joint">Knee · Hip · Ankle</span>
+        <span class="tag tag-bridge">Bridge</span>
+        <span class="tag tag-perf">Performance</span>
+        <span class="tag tag-sub">Submaximal</span>
+      
+        <span class="tag" style="background:rgba(0,0,0,0.15);color:#7a4a8a;border:1px solid #7a4a8a40;">Hypertrophy</span>
+        <span class="tag" style="background:rgba(0,0,0,0.15);color:#4a8a6a;border:1px solid #4a8a6a40;">GPP</span>
+      </div>
+    </div>
+
+    <div class="ex-card" data-tags="intensity-sub phase-bridge phase-gpp phase-rehab quality-gpp quality-hypertrophy sl-low">
+      <div class="ex-name">Leg Press — Partial ROM</div>
+      <div class="ex-rationale">Quad loading without spinal compression. Useful bridge when bilateral squat is restricted. Foot position varies emphasis: high foot = posterior chain, low foot = quad dominant. Not a replacement for free squat long-term.</div>
+      <div class="ex-source">McGill</div>
+      <a class="ex-video-link" href="https://www.youtube.com/results?search_query=leg+press+partial+ROM+quad+posterior+chain" target="_blank">Search Demo</a>
+      <div class="ex-tags">
+        <span class="tag tag-sl-low">Spinal: Low</span>
+        <span class="tag tag-joint">Knee · Hip</span>
+        <span class="tag tag-rehab">Rehab</span>
+        <span class="tag tag-bridge">Bridge</span>
+        <span class="tag tag-sub">Submaximal</span>
+      
+        <span class="tag" style="background:rgba(0,0,0,0.15);color:#7a4a8a;border:1px solid #7a4a8a40;">Hypertrophy</span>
+        <span class="tag" style="background:rgba(0,0,0,0.15);color:#4a8a6a;border:1px solid #4a8a6a40;">GPP</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- SECTION 3: SINGLE-LEG -->
+<!-- ═══════════════════════════════════════ -->
+<section class="cat-section" id="singleleg">
+  <div class="cat-header">
+    <div class="cat-number">03</div>
+    <div class="cat-title">Single-Leg Complex</div>
+    <div class="cat-count">8 exercises</div>
+  </div>
+  <div class="ex-grid">
+
+    <div class="ex-card" data-tags="intensity-sub phase-bridge phase-gpp phase-rehab quality-gpp quality-hypertrophy sl-low">
+      <div class="ex-name">Single-Leg Glute Bridge</div>
+      <div class="ex-rationale">Unilateral hip extension progression from bilateral bridge. Reveals gluteus medius inhibition side-to-side. For neurogenically inhibited glutes (L5 compression), this is the test and the treatment simultaneously.</div>
+      <div class="ex-source">McGill · Grey</div>
+      <a class="ex-video-link" href="https://www.youtube.com/results?search_query=single+leg+glute+bridge+hip+extension+asymmetry" target="_blank">Search Demo</a>
+      <div class="ex-tags">
+        <span class="tag tag-sl-low">Spinal: Low</span>
+        <span class="tag tag-joint">Hip · Knee</span>
+        <span class="tag tag-rehab">Rehab</span>
+        <span class="tag tag-bridge">Bridge</span>
+        <span class="tag tag-sub">Submaximal</span>
+      
+        <span class="tag" style="background:rgba(0,0,0,0.15);color:#4a8a6a;border:1px solid #4a8a6a40;">GPP</span>
+        <span class="tag" style="background:rgba(0,0,0,0.15);color:#7a4a8a;border:1px solid #7a4a8a40;">Hypertrophy</span>
+      </div>
+    </div>
+
+    <div class="ex-card" data-tags="intensity-sub phase-bridge phase-comp phase-gpp phase-perf phase-spp quality-gpp quality-hypertrophy sl-low">
+      <div class="ex-name">Pistol Squat — Assisted</div>
+      <div class="ex-rationale">Single-leg full squat requiring simultaneous ankle dorsiflexion, hip flexion, and trunk control. Ankle restriction is exposed immediately — the first limiting factor in most sprinters. Use TRX or doorframe for load reduction.</div>
+      <div class="ex-source">Grey · Ward</div>
+      <a class="ex-video-link" href="https://www.youtube.com/results?search_query=assisted+pistol+squat+ankle+dorsiflexion+mobility" target="_blank">Search Demo</a>
+      <div class="ex-tags">
+        <span class="tag tag-sl-low">Spinal: Low</span>
+        <span class="tag tag-joint">Ankle · Knee · Hip</span>
+        <span class="tag tag-bridge">Bridge</span>
+        <span class="tag tag-perf">Performance</span>
+        <span class="tag tag-sub">Submaximal</span>
+      
+        <span class="tag" style="background:rgba(0,0,0,0.15);color:#4a8a6a;border:1px solid #4a8a6a40;">GPP</span>
+        <span class="tag" style="background:rgba(0,0,0,0.15);color:#7a4a8a;border:1px solid #7a4a8a40;">Hypertrophy</span>
+      </div>
+    </div>
+
+    <div class="ex-card" data-tags="intensity-sub phase-bridge phase-comp phase-gpp phase-perf phase-spp quality-gpp quality-hypertrophy sl-low">
+      <div class="ex-name">Lateral Slide Lunge</div>
+      <div class="ex-rationale">Frontal plane single-leg loading. Adductor and gluteus medius co-contraction. Sport-specific for lateral deceleration in soccer and long jump approach correction. Ward Flow Motion: frontal plane precedes sagittal plane efficiency.</div>
+      <div class="ex-source">Ward · Grey</div>
+      <a class="ex-video-link" href="https://www.youtube.com/results?search_query=lateral+slide+lunge+frontal+plane+adductor+glute+med" target="_blank">Search Demo</a>
+      <div class="ex-tags">
+        <span class="tag tag-sl-low">Spinal: Low</span>
+        <span class="tag tag-joint">Hip · Knee · Ankle</span>
+        <span class="tag tag-bridge">Bridge</span>
+        <span class="tag tag-perf">Performance</span>
+        <span class="tag tag-sub">Submaximal</span>
+      
+        <span class="tag" style="background:rgba(0,0,0,0.15);color:#4a8a6a;border:1px solid #4a8a6a40;">GPP</span>
+        <span class="tag" style="background:rgba(0,0,0,0.15);color:#7a4a8a;border:1px solid #7a4a8a40;">Hypertrophy</span>
+      </div>
+    </div>
+
+    <div class="ex-card" data-tags="intensity-sub phase-bridge phase-comp phase-gpp phase-perf phase-spp quality-hypertrophy quality-strength sl-low">
+      <div class="ex-name">Single-Leg Squat to Box</div>
+      <div class="ex-rationale">Controlled single-leg descent to seated position. Depth is box-governed — safe range can be set precisely. Trains the eccentric control phase of stance in sprint gait. Trunk position mirrors penultimate step demand.</div>
+      <div class="ex-source">Schexnayder · McGill</div>
+      <a class="ex-video-link" href="https://www.youtube.com/results?search_query=single+leg+squat+to+box+eccentric+control" target="_blank">Search Demo</a>
+      <div class="ex-tags">
+        <span class="tag tag-sl-low">Spinal: Low</span>
+        <span class="tag tag-joint">Knee · Hip · Ankle</span>
+        <span class="tag tag-bridge">Bridge</span>
+        <span class="tag tag-perf">Performance</span>
+        <span class="tag tag-sub">Submaximal</span>
+      
+        <span class="tag" style="background:rgba(0,0,0,0.15);color:#7a4a8a;border:1px solid #7a4a8a40;">Hypertrophy</span>
+        <span class="tag" style="background:rgba(0,0,0,0.15);color:#4a6a8a;border:1px solid #4a6a8a40;">Strength</span>
+      </div>
+    </div>
+
+    <div class="ex-card" data-tags="intensity-sub phase-comp phase-gpp phase-perf phase-spp quality-hypertrophy quality-strength sl-low">
+      <div class="ex-name">Step-Up — Weighted</div>
+      <div class="ex-rationale">Concentric single-leg press from deficit. Hip-dominant at higher box, quad-dominant at lower. Easily loaded with DBs. Mimics the push-off mechanics of drive phase acceleration.</div>
+      <div class="ex-source">Natera · Grey</div>
+      <a class="ex-video-link" href="https://www.youtube.com/results?search_query=weighted+step+up+single+leg+hip+drive" target="_blank">Search Demo</a>
+      <div class="ex-tags">
+        <span class="tag tag-sl-low">Spinal: Low</span>
+        <span class="tag tag-joint">Hip · Knee · Ankle</span>
+        <span class="tag tag-perf">Performance</span>
+        <span class="tag tag-sub">Submaximal</span>
+      
+        <span class="tag" style="background:rgba(0,0,0,0.15);color:#7a4a8a;border:1px solid #7a4a8a40;">Hypertrophy</span>
+        <span class="tag" style="background:rgba(0,0,0,0.15);color:#4a6a8a;border:1px solid #4a6a8a40;">Strength</span>
+      </div>
+    </div>
+
+    <div class="ex-card" data-tags="intensity-max phase-comp phase-gpp phase-perf phase-spp quality-power quality-velocity sl-low">
+      <div class="ex-name">Single-Leg Broad Jump (Stick Landing)</div>
+      <div class="ex-rationale">Horizontal force production and reactive landing control on one leg. Stick landing requirement forces active deceleration — trains the eccentric hip-knee-ankle chain for sprint deceleration and jump takeoff control.</div>
+      <div class="ex-source">Schexnayder · Barr</div>
+      <a class="ex-video-link" href="https://www.youtube.com/results?search_query=single+leg+broad+jump+stick+landing+deceleration" target="_blank">Search Demo</a>
+      <div class="ex-tags">
+        <span class="tag tag-sl-low">Spinal: Low</span>
+        <span class="tag tag-joint">Hip · Knee · Ankle</span>
+        <span class="tag tag-perf">Performance</span>
+        <span class="tag tag-max">Maximal</span>
+      
+        <span class="tag" style="background:rgba(0,0,0,0.15);color:#8a4a4a;border:1px solid #8a4a4a40;">Power</span>
+        <span class="tag" style="background:rgba(0,0,0,0.15);color:#c8a040;border:1px solid #c8a04040;">Velocity</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+    <div class="ex-card" data-tags="sl-low phase-rehab phase-bridge phase-gpp phase-spp intensity-sub quality-gpp quality-strength">
+      <div class="ex-name">Seated Psoas Hold — Half-Kneeling (Boyle)</div>
+      <div class="ex-rationale">Boyle's hip flexor isolation in half-kneeling: from a split-kneeling position, drive the front knee toward your chest and hold for 5–10s against your own hand or a band. Psoas major is the only hip flexor that originates on the lumbar spine — its weakness and inhibition affects both lumbar stability and sprint drive phase mechanics directly. Most athletes cannot activate psoas voluntarily in the kneeling position; this teaches that neural pattern. Prerequisite to meaningful hip flexor strengthening in the gym. Also relevant for Patrick's spinal rehab — psoas weakness contributes to anterior instability at L4-L5.</div>
+      <div class="ex-source">Boyle · Grey</div>
+      <a class="ex-video-link" href="https://www.youtube.com/results?search_query=seated+psoas+hold+half+kneeling+Boyle+hip+flexor+activation" target="_blank">Search Demo</a>
+      <div class="ex-tags">
+        <span class="tag tag-sl-low">Spinal: Low</span>
+        <span class="tag tag-joint">Hip · Spine</span>
+        <span class="tag tag-rehab">Rehab</span>
+        <span class="tag tag-bridge">Bridge</span>
+        <span class="tag tag-sub">Submaximal</span>
+        <span class="tag" style="background:rgba(0,0,0,0.15);color:#4a8a6a;border:1px solid #4a8a6a40;">GPP</span>
+        <span class="tag" style="background:rgba(0,0,0,0.15);color:#4a6a8a;border:1px solid #4a6a8a40;">Strength</span>
+      </div>
+    </div>
+
+    <div class="ex-card" data-tags="sl-low phase-bridge phase-gpp phase-spp phase-comp intensity-sub quality-gpp quality-hypertrophy">
+      <div class="ex-name">Skater Squat — Bodyweight to Loaded</div>
+      <div class="ex-rationale">Single-leg squat to near-floor without a box — the training bridge between assisted pistol and full pistol. Ward and Grey: the skater squat exposes combined ankle dorsiflexion, hip flexion, and contralateral hip stability demands simultaneously. It is more frontal-plane honest than a box squat and less technical than a pistol. The non-working leg extends behind rather than forward, which keeps the trunk more upright and loads the glute medius and TFL throughout the range. Direct carry-over to single-leg deceleration in sprint and jump events. Regress with counterweight (5kg plate held at chest); progress by removing it.</div>
+      <div class="ex-source">Grey · Ward</div>
+      <a class="ex-video-link" href="https://www.youtube.com/results?search_query=skater+squat+single+leg+bodyweight+frontal+plane+progression" target="_blank">Search Demo</a>
+      <div class="ex-tags">
+        <span class="tag tag-sl-low">Spinal: Low</span>
+        <span class="tag tag-joint">Knee · Hip · Ankle</span>
+        <span class="tag tag-bridge">Bridge</span>
+        <span class="tag tag-perf">Performance</span>
+        <span class="tag tag-sub">Submaximal</span>
+        <span class="tag" style="background:rgba(0,0,0,0.15);color:#4a8a6a;border:1px solid #4a8a6a40;">GPP</span>
+        <span class="tag" style="background:rgba(0,0,0,0.15);color:#7a4a8a;border:1px solid #7a4a8a40;">Hypertrophy</span>
+      </div>
+    </div>
+
+
+<!-- ═══════════════════════════════════════ -->
+<!-- SECTION 4: ISOMETRIC HOLDS -->
+<!-- ═══════════════════════════════════════ -->
+<section class="cat-section" id="isometric">
+  <div class="cat-header">
+    <div class="cat-number">04</div>
+    <div class="cat-title">Isometric Holds</div>
+    <div class="cat-count">11 exercises</div>
+  </div>
+  <div class="ex-grid">
+
+    <div class="ex-card" data-tags="intensity-sub phase-bridge phase-gpp phase-rehab quality-isometric sl-low intensity-max">
+      <div class="ex-name">Isometric Wall Sit — Mid Angle</div>
+      <div class="ex-rationale">Rio et al. 2015: isometric contractions at 70% MVC suppress cortical inhibition and provide immediate analgesia in tendinopathy and PFPS. 45-second holds at 60° knee flexion. Quad activation without joint loading.</div>
+      <div class="ex-source">Rio · Natera</div>
+      <a class="ex-video-link" href="https://www.youtube.com/results?search_query=isometric+wall+sit+Rio+analgesia+protocol" target="_blank">Search Demo</a>
+      <div class="ex-tags">
+        <span class="tag tag-sl-low">Spinal: Low</span>
+        <span class="tag tag-joint">Knee · Hip</span>
+        <span class="tag tag-rehab">Rehab</span>
+        <span class="tag tag-bridge">Bridge</span>
+        <span class="tag tag-sub">Submaximal</span>
+      
+        <span class="tag" style="background:rgba(0,0,0,0.15);color:#5a7a5a;border:1px solid #5a7a5a40;">Isometric</span>
+      </div>
+    </div>
+
+    <div class="ex-card" data-tags="intensity-sub phase-bridge phase-gpp phase-rehab quality-isometric sl-low intensity-max">
+      <div class="ex-name">Single-Leg Isometric Calf Press (Leg Press Machine)</div>
+      <div class="ex-rationale">Natera sprint-specific isometric application: load at 70–80% of estimated single-leg max, 5×45s. Soleus and gastrocnemius under joint-appropriate position. Plantar fascia load tolerance protocol entry point.</div>
+      <div class="ex-source">Natera · Baar · Rio</div>
+      <a class="ex-video-link" href="https://www.youtube.com/results?search_query=single+leg+isometric+calf+press+leg+machine+Natera" target="_blank">Search Demo</a>
+      <div class="ex-tags">
+        <span class="tag tag-sl-low">Spinal: Low</span>
+        <span class="tag tag-joint">Ankle · Knee</span>
+        <span class="tag tag-rehab">Rehab</span>
+        <span class="tag tag-bridge">Bridge</span>
+        <span class="tag tag-sub">Submaximal</span>
+      
+        <span class="tag" style="background:rgba(0,0,0,0.15);color:#5a7a5a;border:1px solid #5a7a5a40;">Isometric</span>
+      </div>
+    </div>
+
+    <div class="ex-card" data-tags="intensity-sub phase-bridge phase-gpp phase-rehab quality-isometric sl-low intensity-max">
+      <div class="ex-name">Spanish Squat — Isometric</div>
+      <div class="ex-rationale">Band around fixed point forces vertical tibia — eliminates anterior shear at the knee. Patellar tendon load at long length. Rio isometric analgesia protocol for patellar tendinopathy. 5×45s at 60° knee flexion.</div>
+      <div class="ex-source">Rio · Natera</div>
+      <a class="ex-video-link" href="https://www.youtube.com/results?search_query=Spanish+squat+isometric+patellar+tendinopathy+Rio" target="_blank">Search Demo</a>
+      <div class="ex-tags">
+        <span class="tag tag-sl-low">Spinal: Low</span>
+        <span class="tag tag-joint">Knee · Hip</span>
+        <span class="tag tag-rehab">Rehab</span>
+        <span class="tag tag-bridge">Bridge</span>
+        <span class="tag tag-sub">Submaximal</span>
+      
+        <span class="tag" style="background:rgba(0,0,0,0.15);color:#5a7a5a;border:1px solid #5a7a5a40;">Isometric</span>
+      </div>
+    </div>
+
+    <div class="ex-card" data-tags="intensity-sub phase-bridge phase-comp phase-gpp phase-perf phase-rehab phase-spp quality-gpp quality-isometric sl-low">
+      <div class="ex-name">Dead Bug — Contralateral Hold</div>
+      <div class="ex-rationale">McGill Big Three. Trains anti-extension and anti-rotation of the spine without compression. Contralateral arm-leg extension mimics the cross-pattern co-contraction of sprint gait. Appropriate from Day 1 of lumbar rehab.</div>
+      <div class="ex-source">McGill</div>
+      <a class="ex-video-link" href="https://www.youtube.com/results?search_query=dead+bug+McGill+anti+extension+lumbar+stability" target="_blank">Search Demo</a>
+      <div class="ex-tags">
+        <span class="tag tag-sl-low">Spinal: Low</span>
+        <span class="tag tag-joint">Spine · Hip · Shoulder</span>
+        <span class="tag tag-rehab">Rehab</span>
+        <span class="tag tag-bridge">Bridge</span>
+        <span class="tag tag-perf">Performance</span>
+        <span class="tag tag-sub">Submaximal</span>
+      
+        <span class="tag" style="background:rgba(0,0,0,0.15);color:#5a7a5a;border:1px solid #5a7a5a40;">Isometric</span>
+        <span class="tag" style="background:rgba(0,0,0,0.15);color:#4a8a6a;border:1px solid #4a8a6a40;">GPP</span>
+      </div>
+    </div>
+
+    <div class="ex-card" data-tags="intensity-sub phase-bridge phase-comp phase-gpp phase-perf phase-rehab phase-spp quality-gpp quality-isometric sl-low">
+      <div class="ex-name">Side Plank — Full</div>
+      <div class="ex-rationale">McGill Big Three. Lateral chain isometric — QL, gluteus medius, obliques in co-contraction. Progression from knees. Gluteus medius activation in this position directly supplements clamshell work for L5 inhibition.</div>
+      <div class="ex-source">McGill</div>
+      <a class="ex-video-link" href="https://www.youtube.com/results?search_query=side+plank+McGill+lateral+chain+glute+medius" target="_blank">Search Demo</a>
+      <div class="ex-tags">
+        <span class="tag tag-sl-low">Spinal: Low</span>
+        <span class="tag tag-joint">Spine · Hip · Shoulder</span>
+        <span class="tag tag-rehab">Rehab</span>
+        <span class="tag tag-bridge">Bridge</span>
+        <span class="tag tag-perf">Performance</span>
+        <span class="tag tag-sub">Submaximal</span>
+      
+        <span class="tag" style="background:rgba(0,0,0,0.15);color:#5a7a5a;border:1px solid #5a7a5a40;">Isometric</span>
+        <span class="tag" style="background:rgba(0,0,0,0.15);color:#4a8a6a;border:1px solid #4a8a6a40;">GPP</span>
+      </div>
+    </div>
+
+    <div class="ex-card" data-tags="intensity-sub phase-bridge phase-comp phase-gpp phase-perf phase-rehab phase-spp quality-gpp quality-isometric sl-low">
+      <div class="ex-name">Bird Dog — Extended Hold</div>
+      <div class="ex-rationale">McGill Big Three. Extensor chain isometric in quadruped. 8-second holds, not quick reps — the duration is the prescription. Trains L5 stabilizer chain without compression load. Gluteus maximus, multifidus, contralateral lat co-contract.</div>
+      <div class="ex-source">McGill</div>
+      <a class="ex-video-link" href="https://www.youtube.com/results?search_query=bird+dog+McGill+8+second+hold+extensor+chain" target="_blank">Search Demo</a>
+      <div class="ex-tags">
+        <span class="tag tag-sl-low">Spinal: Low</span>
+        <span class="tag tag-joint">Spine · Hip · Shoulder</span>
+        <span class="tag tag-rehab">Rehab</span>
+        <span class="tag tag-bridge">Bridge</span>
+        <span class="tag tag-perf">Performance</span>
+        <span class="tag tag-sub">Submaximal</span>
+      
+        <span class="tag" style="background:rgba(0,0,0,0.15);color:#5a7a5a;border:1px solid #5a7a5a40;">Isometric</span>
+        <span class="tag" style="background:rgba(0,0,0,0.15);color:#4a8a6a;border:1px solid #4a8a6a40;">GPP</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+    <div class="ex-card" data-tags="sl-low phase-bridge phase-gpp phase-spp phase-comp phase-rehab intensity-max quality-isometric quality-power quality-velocity">
+      <div class="ex-name">Overcoming Isometric — Hip Flexor Wall Drive Hold</div>
+      <div class="ex-rationale">Natera sprint-specific potentiation protocol: hands on wall, drive knee into immovable surface at 90%+ MVC for 5 seconds. Targets psoas and iliacus at the exact joint angle of sprint drive phase. Maximal isometric effort at this position drives PAP (post-activation potentiation) — muscle becomes temporarily more explosive after the hold. Use 3×5s per side immediately before sprint work for neurological priming, not as a standalone fatigue set.</div>
+      <div class="ex-source">Natera · Spina</div>
+      <a class="ex-video-link" href="https://www.youtube.com/results?search_query=hip+flexor+isometric+wall+drive+hold+sprint+potentiation+Natera" target="_blank">Search Demo</a>
+      <div class="ex-tags">
+        <span class="tag tag-sl-low">Spinal: Low</span>
+        <span class="tag tag-joint">Hip · Knee</span>
+        <span class="tag tag-bridge">Bridge</span>
+        <span class="tag tag-perf">Performance</span>
+        <span class="tag tag-max">Maximal</span>
+        <span class="tag" style="background:rgba(0,0,0,0.15);color:#5a7a5a;border:1px solid #5a7a5a40;">Isometric</span>
+        <span class="tag" style="background:rgba(0,0,0,0.15);color:#8a4a4a;border:1px solid #8a4a4a40;">Power</span>
+        <span class="tag" style="background:rgba(0,0,0,0.15);color:#c8a040;border:1px solid #c8a04040;">Velocity</span>
+      </div>
+    </div>
+
+    <div class="ex-card" data-tags="sl-low phase-bridge phase-gpp phase-spp phase-comp phase-rehab intensity-max quality-isometric quality-strength quality-power">
+      <div class="ex-name">Overcoming Isometric — Mid-Range Push Against Fixed Bar</div>
+      <div class="ex-rationale">Natera overcoming isometric: push or pull against an immovable barbell or wall peg at joint-specific sprint position (hip ~90°, knee ~110°). 5s max effort, full intent, zero movement. Unlike yielding isos, overcoming isos recruit maximal motor units without relying on load tolerance — the CNS fires fully against a fixed object. Key mechanism: the force-velocity curve shifts right after maximal isometric effort, meaning subsequent dynamic movements express more force at higher velocities. Dose: 3–5 sets of 5s, 2–3 min rest.</div>
+      <div class="ex-source">Natera · Rio</div>
+      <a class="ex-video-link" href="https://www.youtube.com/results?search_query=overcoming+isometric+barbell+mid+range+sprint+Natera" target="_blank">Search Demo</a>
+      <div class="ex-tags">
+        <span class="tag tag-sl-low">Spinal: Low</span>
+        <span class="tag tag-joint">Hip · Knee · Ankle</span>
+        <span class="tag tag-bridge">Bridge</span>
+        <span class="tag tag-perf">Performance</span>
+        <span class="tag tag-max">Maximal</span>
+        <span class="tag" style="background:rgba(0,0,0,0.15);color:#5a7a5a;border:1px solid #5a7a5a40;">Isometric</span>
+        <span class="tag" style="background:rgba(0,0,0,0.15);color:#4a6a8a;border:1px solid #4a6a8a40;">Strength</span>
+        <span class="tag" style="background:rgba(0,0,0,0.15);color:#8a4a4a;border:1px solid #8a4a4a40;">Power</span>
+      </div>
+    </div>
+
+    <div class="ex-card" data-tags="sl-low phase-rehab phase-bridge phase-gpp intensity-sub quality-isometric quality-gpp">
+      <div class="ex-name">Isometric Split Squat Hold — Baar Connective Tissue Protocol</div>
+      <div class="ex-rationale">Baar collagen synthesis protocol: hold the bottom position of a split squat at 60–70° knee flexion for 20–30 seconds at submaximal effort (~40–60% MVC). Duration is the prescription — connective tissue responds to sustained mechanical loading, not maximal force. Baar's research: tendons and ligaments up-regulate collagen synthesis with 20–30s continuous loading; shorter holds don't achieve the same stimulus. Best used post-collagen drink (gelatin + vitamin C) in the 60-min synthesis window. Distinguishes itself from the Rio 45s analgesia dose — this is building tissue, not suppressing pain.</div>
+      <div class="ex-source">Baar · Grey</div>
+      <a class="ex-video-link" href="https://www.youtube.com/results?search_query=isometric+split+squat+hold+connective+tissue+Baar+collagen" target="_blank">Search Demo</a>
+      <div class="ex-tags">
+        <span class="tag tag-sl-low">Spinal: Low</span>
+        <span class="tag tag-joint">Knee · Hip · Ankle</span>
+        <span class="tag tag-rehab">Rehab</span>
+        <span class="tag tag-bridge">Bridge</span>
+        <span class="tag tag-sub">Submaximal</span>
+        <span class="tag" style="background:rgba(0,0,0,0.15);color:#5a7a5a;border:1px solid #5a7a5a40;">Isometric</span>
+        <span class="tag" style="background:rgba(0,0,0,0.15);color:#4a8a6a;border:1px solid #4a8a6a40;">GPP</span>
+      </div>
+    </div>
+
+    <div class="ex-card" data-tags="sl-mod phase-gpp phase-spp phase-comp intensity-max quality-isometric quality-strength quality-velocity">
+      <div class="ex-name">RDL Isometric Pause — Mid-Shin Sprint Position</div>
+      <div class="ex-rationale">Natera's loaded isometric in the sprint-relevant hamstring position: perform an RDL to the mid-shin position and hold for 5s at maximum effort against the load. The hip angle at mid-shin in an RDL directly mirrors the hamstring loading position at late swing phase in sprinting. This is why it transfers — you are training the hamstring isometrically at the exact length and position where it must produce force in top-end sprint gait. Unlike standard RDLs, the pause forces maximal recruitment at that specific joint angle. 3–5 sets of 5s each side.</div>
+      <div class="ex-source">Natera · Bosch</div>
+      <a class="ex-video-link" href="https://www.youtube.com/results?search_query=RDL+isometric+pause+hamstring+sprint+position+Natera" target="_blank">Search Demo</a>
+      <div class="ex-tags">
+        <span class="tag tag-sl-mod">Spinal: Moderate</span>
+        <span class="tag tag-joint">Hip · Knee</span>
+        <span class="tag tag-perf">Performance</span>
+        <span class="tag tag-max">Maximal</span>
+        <span class="tag" style="background:rgba(0,0,0,0.15);color:#5a7a5a;border:1px solid #5a7a5a40;">Isometric</span>
+        <span class="tag" style="background:rgba(0,0,0,0.15);color:#4a6a8a;border:1px solid #4a6a8a40;">Strength</span>
+        <span class="tag" style="background:rgba(0,0,0,0.15);color:#c8a040;border:1px solid #c8a04040;">Velocity</span>
+      </div>
+    </div>
+
+
+
+    <div class="ex-card" data-tags="sl-low phase-bridge phase-gpp phase-spp phase-comp intensity-max quality-isometric quality-strength quality-gpp">
+      <div class="ex-name">Pallof Press — Anti-Rotation Isometric</div>
+      <div class="ex-rationale">McGill/Boyle's anti-rotation standard: cable or band anchored at shoulder height, press straight out and hold for 3–5s while the load attempts to rotate your trunk. The training stimulus is the resistance to rotation — not the pressing movement itself. This directly mirrors the anti-rotation demand of sprint arm drive (contralateral arm and leg force the trunk to resist rotation at every ground contact). Unlike rotation exercises that train through range, the Pallof trains the stiffness that protects the spine and transfers force efficiently. Sprint relevance: Bosch identifies trunk stiffness at ground contact as a key differentiator between elite and sub-elite sprint mechanics. Progress by increasing band tension or extending hold duration.</div>
+      <div class="ex-source">McGill · Boyle · Bosch</div>
+      <a class="ex-video-link" href="https://www.youtube.com/results?search_query=Pallof+press+anti+rotation+isometric+core+McGill" target="_blank">Search Demo</a>
+      <div class="ex-tags">
+        <span class="tag tag-sl-low">Spinal: Low</span>
+        <span class="tag tag-joint">Spine · Hip · Shoulder</span>
+        <span class="tag tag-bridge">Bridge</span>
+        <span class="tag tag-perf">Performance</span>
+        <span class="tag tag-max">Maximal</span>
+        <span class="tag" style="background:rgba(0,0,0,0.15);color:#5a7a5a;border:1px solid #5a7a5a40;">Isometric</span>
+        <span class="tag" style="background:rgba(0,0,0,0.15);color:#4a6a8a;border:1px solid #4a6a8a40;">Strength</span>
+        <span class="tag" style="background:rgba(0,0,0,0.15);color:#4a8a6a;border:1px solid #4a8a6a40;">GPP</span>
+      </div>
+    </div>
+
+
+<!-- ═══════════════════════════════════════ -->
+<!-- SECTION 5: HIP & GLUTE -->
+<!-- ═══════════════════════════════════════ -->
+<section class="cat-section" id="glute">
+  <div class="cat-header">
+    <div class="cat-number">05</div>
+    <div class="cat-title">Hip &amp; Glute Complex</div>
+    <div class="cat-count">6 exercises</div>
+  </div>
+  <div class="ex-grid">
+
+    <div class="ex-card" data-tags="intensity-sub phase-bridge phase-gpp phase-rehab quality-gpp sl-low">
+      <div class="ex-name">Clamshell — Banded</div>
+      <div class="ex-rationale">Gluteus medius isolation in sidelying. L5 innervates glute med — this is the diagnostic and the treatment for neurogenic inhibition. Volume over intensity: 20–25 reps, light band. Quality of burn matters more than load.</div>
+      <div class="ex-source">McGill · Grey</div>
+      <a class="ex-video-link" href="https://www.youtube.com/results?search_query=banded+clamshell+gluteus+medius+hip+abduction" target="_blank">Search Demo</a>
+      <div class="ex-tags">
+        <span class="tag tag-sl-low">Spinal: Low</span>
+        <span class="tag tag-joint">Hip</span>
+        <span class="tag tag-rehab">Rehab</span>
+        <span class="tag tag-bridge">Bridge</span>
+        <span class="tag tag-sub">Submaximal</span>
+      
+        <span class="tag" style="background:rgba(0,0,0,0.15);color:#4a8a6a;border:1px solid #4a8a6a40;">GPP</span>
+      </div>
+    </div>
+
+    <div class="ex-card" data-tags="intensity-sub phase-bridge phase-gpp phase-rehab quality-gpp sl-low">
+      <div class="ex-name">Band Lateral Shuffle</div>
+      <div class="ex-rationale">Gluteus medius in frontal plane locomotion. Ward Flow Motion: lateral loading unlocks sagittal efficiency. Hip-width stance, knees soft, band above knees. Sport-specific for court and field deceleration.</div>
+      <div class="ex-source">Ward · Grey</div>
+      <a class="ex-video-link" href="https://www.youtube.com/results?search_query=band+lateral+shuffle+glute+medius+frontal+plane" target="_blank">Search Demo</a>
+      <div class="ex-tags">
+        <span class="tag tag-sl-low">Spinal: Low</span>
+        <span class="tag tag-joint">Hip · Knee · Ankle</span>
+        <span class="tag tag-rehab">Rehab</span>
+        <span class="tag tag-bridge">Bridge</span>
+        <span class="tag tag-sub">Submaximal</span>
+      
+        <span class="tag" style="background:rgba(0,0,0,0.15);color:#4a8a6a;border:1px solid #4a8a6a40;">GPP</span>
+      </div>
+    </div>
+
+    <div class="ex-card" data-tags="intensity-sub phase-bridge phase-comp phase-gpp phase-perf phase-spp quality-gpp quality-hypertrophy sl-low">
+      <div class="ex-name">Cable Pull-Through</div>
+      <div class="ex-rationale">Hip hinge with anterior load (cable between legs) — teaches hip-drive dissociation from lumbar extension. Excellent for athletes who default to back extension during deadlift. Grey joint sequencing: hip first, spine neutral.</div>
+      <div class="ex-source">Grey · McGill</div>
+      <a class="ex-video-link" href="https://www.youtube.com/results?search_query=cable+pull+through+hip+hinge+glute+drive" target="_blank">Search Demo</a>
+      <div class="ex-tags">
+        <span class="tag tag-sl-low">Spinal: Low</span>
+        <span class="tag tag-joint">Hip · Knee</span>
+        <span class="tag tag-bridge">Bridge</span>
+        <span class="tag tag-perf">Performance</span>
+        <span class="tag tag-sub">Submaximal</span>
+      
+        <span class="tag" style="background:rgba(0,0,0,0.15);color:#7a4a8a;border:1px solid #7a4a8a40;">Hypertrophy</span>
+        <span class="tag" style="background:rgba(0,0,0,0.15);color:#4a8a6a;border:1px solid #4a8a6a40;">GPP</span>
+      </div>
+    </div>
+
+    <div class="ex-card" data-tags="intensity-sub phase-bridge phase-comp phase-gpp phase-perf phase-spp quality-gpp sl-low">
+      <div class="ex-name">Monster Walk — Banded Forward/Backward</div>
+      <div class="ex-rationale">Continuous tension glute med and TFL activation through gait cycle. Band above knees, slight hip flexion maintained throughout. Uthoff backward running principle applied to resistance band: flexion-biased hip activation.</div>
+      <div class="ex-source">Ward · Uthoff</div>
+      <a class="ex-video-link" href="https://www.youtube.com/results?search_query=monster+walk+banded+glute+med+TFL+activation" target="_blank">Search Demo</a>
+      <div class="ex-tags">
+        <span class="tag tag-sl-low">Spinal: Low</span>
+        <span class="tag tag-joint">Hip · Knee · Ankle</span>
+        <span class="tag tag-bridge">Bridge</span>
+        <span class="tag tag-perf">Performance</span>
+        <span class="tag tag-sub">Submaximal</span>
+      
+        <span class="tag" style="background:rgba(0,0,0,0.15);color:#4a8a6a;border:1px solid #4a8a6a40;">GPP</span>
+      </div>
+    </div>
+
+    <div class="ex-card" data-tags="intensity-sub phase-comp phase-gpp phase-perf phase-spp quality-hypertrophy quality-strength sl-low">
+      <div class="ex-name">45° Back Extension — Weighted</div>
+      <div class="ex-rationale">Posterior chain integration from glute through erector in hip-extended position. Load held at chest. End-range hip extension strength is the force production limit in top-end sprint velocity. Not a spine exercise — a glute exercise.</div>
+      <div class="ex-source">Schexnayder · McGill</div>
+      <a class="ex-video-link" href="https://www.youtube.com/results?search_query=45+degree+back+extension+weighted+glute+erector" target="_blank">Search Demo</a>
+      <div class="ex-tags">
+        <span class="tag tag-sl-low">Spinal: Low</span>
+        <span class="tag tag-joint">Hip · Spine</span>
+        <span class="tag tag-perf">Performance</span>
+        <span class="tag tag-sub">Submaximal</span>
+      
+        <span class="tag" style="background:rgba(0,0,0,0.15);color:#4a6a8a;border:1px solid #4a6a8a40;">Strength</span>
+        <span class="tag" style="background:rgba(0,0,0,0.15);color:#7a4a8a;border:1px solid #7a4a8a40;">Hypertrophy</span>
+      </div>
+    </div>
+
+    <div class="ex-card" data-tags="intensity-sub phase-bridge phase-comp phase-gpp phase-perf phase-spp quality-hypertrophy quality-isometric sl-low intensity-max">
+      <div class="ex-name">Copenhagen Adductor Hold</div>
+      <div class="ex-rationale">Adductor longus isometric in sidelying with elevated ankle support. Adductor strength is the most underprogrammed variable in sprint and jump athletes. Lateral stability in single-leg stance depends on adductor-abductor balance.</div>
+      <div class="ex-source">Ward · Grey</div>
+      <a class="ex-video-link" href="https://www.youtube.com/results?search_query=Copenhagen+adductor+hold+plank+groin+strength" target="_blank">Search Demo</a>
+      <div class="ex-tags">
+        <span class="tag tag-sl-low">Spinal: Low</span>
+        <span class="tag tag-joint">Hip · Knee</span>
+        <span class="tag tag-bridge">Bridge</span>
+        <span class="tag tag-perf">Performance</span>
+        <span class="tag tag-sub">Submaximal</span>
+      
+        <span class="tag" style="background:rgba(0,0,0,0.15);color:#5a7a5a;border:1px solid #5a7a5a40;">Isometric</span>
+        <span class="tag" style="background:rgba(0,0,0,0.15);color:#7a4a8a;border:1px solid #7a4a8a40;">Hypertrophy</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- SECTION 6: UPPER BODY -->
+<!-- ═══════════════════════════════════════ -->
+<section class="cat-section" id="upper">
+  <div class="cat-header">
+    <div class="cat-number">06</div>
+    <div class="cat-title">Upper Body</div>
+    <div class="cat-count">7 exercises</div>
+  </div>
+  <div class="ex-grid">
+
+    <div class="ex-card" data-tags="intensity-sub phase-bridge phase-comp phase-gpp phase-perf phase-rehab phase-spp quality-hypertrophy quality-strength sl-low">
+      <div class="ex-name">Bench Press — Controlled</div>
+      <div class="ex-rationale">Horizontal push maintaining upper body mass and pressing strength through lower body rehabilitation. Avoid Valsalva at heavy loads — intra-abdominal pressure spikes increase disc pressure. Breathe through the rep.</div>
+      <div class="ex-source">McGill</div>
+      <a class="ex-video-link" href="https://www.youtube.com/results?search_query=bench+press+controlled+tempo+breathing+form" target="_blank">Search Demo</a>
+      <div class="ex-tags">
+        <span class="tag tag-sl-low">Spinal: Low</span>
+        <span class="tag tag-joint">Shoulder · Elbow</span>
+        <span class="tag tag-rehab">Rehab</span>
+        <span class="tag tag-bridge">Bridge</span>
+        <span class="tag tag-perf">Performance</span>
+        <span class="tag tag-sub">Submaximal</span>
+      
+        <span class="tag" style="background:rgba(0,0,0,0.15);color:#7a4a8a;border:1px solid #7a4a8a40;">Hypertrophy</span>
+        <span class="tag" style="background:rgba(0,0,0,0.15);color:#4a6a8a;border:1px solid #4a6a8a40;">Strength</span>
+      </div>
+    </div>
+
+    <div class="ex-card" data-tags="intensity-sub phase-bridge phase-comp phase-gpp phase-perf phase-rehab phase-spp quality-gpp quality-hypertrophy sl-low">
+      <div class="ex-name">Cable / Banded Row — Seated</div>
+      <div class="ex-rationale">Horizontal pull maintains posterior shoulder and thoracic erector balance against pressing volume. Seated position removes lumbar demand. Sprint arm mechanics require scapular retraction and depression — this is direct preparation.</div>
+      <div class="ex-source">McGill · Natera</div>
+      <a class="ex-video-link" href="https://www.youtube.com/results?search_query=seated+cable+banded+row+scapular+retraction+depression" target="_blank">Search Demo</a>
+      <div class="ex-tags">
+        <span class="tag tag-sl-low">Spinal: Low</span>
+        <span class="tag tag-joint">Shoulder · Elbow · Spine</span>
+        <span class="tag tag-rehab">Rehab</span>
+        <span class="tag tag-bridge">Bridge</span>
+        <span class="tag tag-perf">Performance</span>
+        <span class="tag tag-sub">Submaximal</span>
+      
+        <span class="tag" style="background:rgba(0,0,0,0.15);color:#7a4a8a;border:1px solid #7a4a8a40;">Hypertrophy</span>
+        <span class="tag" style="background:rgba(0,0,0,0.15);color:#4a8a6a;border:1px solid #4a8a6a40;">GPP</span>
+      </div>
+    </div>
+
+    <div class="ex-card" data-tags="intensity-sub phase-bridge phase-comp phase-gpp phase-perf phase-spp quality-gpp quality-hypertrophy sl-mod">
+      <div class="ex-name">Landmine Press</div>
+      <div class="ex-rationale">Angled pressing vector reduces rotator cuff impingement risk versus overhead pressing. Unilateral option adds anti-rotation core demand. Standing position integrates lower body stability. Better shoulder longevity profile than strict overhead press.</div>
+      <div class="ex-source">McGill · Grey</div>
+      <a class="ex-video-link" href="https://www.youtube.com/results?search_query=landmine+press+shoulder+angled+press+core" target="_blank">Search Demo</a>
+      <div class="ex-tags">
+        <span class="tag tag-sl-mod">Spinal: Moderate</span>
+        <span class="tag tag-joint">Shoulder · Elbow · Spine</span>
+        <span class="tag tag-bridge">Bridge</span>
+        <span class="tag tag-perf">Performance</span>
+        <span class="tag tag-sub">Submaximal</span>
+      
+        <span class="tag" style="background:rgba(0,0,0,0.15);color:#7a4a8a;border:1px solid #7a4a8a40;">Hypertrophy</span>
+        <span class="tag" style="background:rgba(0,0,0,0.15);color:#4a8a6a;border:1px solid #4a8a6a40;">GPP</span>
+      </div>
+    </div>
+
+    <div class="ex-card" data-tags="intensity-sub phase-bridge phase-comp phase-gpp phase-perf phase-spp quality-hypertrophy quality-strength sl-low">
+      <div class="ex-name">Pull-Up / Lat Pulldown</div>
+      <div class="ex-rationale">Vertical pull develops lat strength critical for sprint arm drive and trunk stiffness at ground contact. Lat connects to thoracolumbar fascia — direct spinal stability contributor. Decompress the spine as a bonus.</div>
+      <div class="ex-source">McGill · Natera</div>
+      <a class="ex-video-link" href="https://www.youtube.com/results?search_query=pull+up+lat+pulldown+vertical+pull+form" target="_blank">Search Demo</a>
+      <div class="ex-tags">
+        <span class="tag tag-sl-low">Spinal: Low</span>
+        <span class="tag tag-joint">Shoulder · Elbow</span>
+        <span class="tag tag-bridge">Bridge</span>
+        <span class="tag tag-perf">Performance</span>
+        <span class="tag tag-sub">Submaximal</span>
+      
+        <span class="tag" style="background:rgba(0,0,0,0.15);color:#7a4a8a;border:1px solid #7a4a8a40;">Hypertrophy</span>
+        <span class="tag" style="background:rgba(0,0,0,0.15);color:#4a6a8a;border:1px solid #4a6a8a40;">Strength</span>
+      </div>
+    </div>
+
+    <div class="ex-card" data-tags="intensity-sub phase-bridge phase-comp phase-gpp phase-perf phase-spp quality-gpp sl-low">
+      <div class="ex-name">Dumbbell Shoulder Complex (Y-T-W)</div>
+      <div class="ex-rationale">Prone scapular stability work targeting lower trap and serratus. Corrects the forward shoulder position common in athletes with heavy pressing history. Protects rotator cuff under sprint arm drive demands. Low load, high intent.</div>
+      <div class="ex-source">Grey · McGill</div>
+      <a class="ex-video-link" href="https://www.youtube.com/results?search_query=dumbbell+Y+T+W+scapular+stability+lower+trap" target="_blank">Search Demo</a>
+      <div class="ex-tags">
+        <span class="tag tag-sl-low">Spinal: Low</span>
+        <span class="tag tag-joint">Shoulder · Spine</span>
+        <span class="tag tag-bridge">Bridge</span>
+        <span class="tag tag-perf">Performance</span>
+        <span class="tag tag-sub">Submaximal</span>
+      
+        <span class="tag" style="background:rgba(0,0,0,0.15);color:#4a8a6a;border:1px solid #4a8a6a40;">GPP</span>
+      </div>
+    </div>
+
+    <div class="ex-card" data-tags="intensity-max phase-comp phase-gpp phase-perf phase-spp quality-power quality-velocity sl-high quality-hypertrophy">
+      <div class="ex-name">Power Clean — Hang Position</div>
+      <div class="ex-rationale">Triple extension (hip, knee, ankle) under rapid neural demand. Bridges strength training to sprint and jump mechanics. Hang position reduces lumbar demand versus floor pull. Rate of force development more important than load.</div>
+      <div class="ex-source">Schexnayder · Natera</div>
+      <a class="ex-video-link" href="https://www.youtube.com/results?search_query=hang+power+clean+triple+extension+RFD" target="_blank">Search Demo</a>
+      <div class="ex-tags">
+        <span class="tag tag-sl-high">Spinal: High</span>
+        <span class="tag tag-joint">Hip · Knee · Ankle · Shoulder</span>
+        <span class="tag tag-perf">Performance</span>
+        <span class="tag tag-max">Maximal</span>
+      
+        <span class="tag" style="background:rgba(0,0,0,0.15);color:#8a4a4a;border:1px solid #8a4a4a40;">Power</span>
+        <span class="tag" style="background:rgba(0,0,0,0.15);color:#c8a040;border:1px solid #c8a04040;">Velocity</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+    <div class="ex-card" data-tags="sl-low phase-rehab phase-bridge phase-gpp phase-spp phase-comp intensity-sub quality-gpp">
+      <div class="ex-name">Scapular Wall Slide — Serratus/Lower Trap Activation</div>
+      <div class="ex-rationale">McGill/Mack scapular motor control prerequisite: stand with back against wall, forearms on wall at 90°, slide arms overhead while maintaining forearm and lower back contact. Activates serratus anterior and lower trapezius — the muscles that anchor the scapula against the ribcage and control overhead arm movement. Failure of this pattern (the scapula wings off the thorax) is the root of suboccipital tension, neck tightness with pulling movements, and rotator cuff vulnerability under sprint arm drive loads. Ian Mack's movement quality baseline: no overhead loading until wall slide pattern is clean. For Patrick: resolves the neck tension pattern identified with vertical pulling work.</div>
+      <div class="ex-source">McGill · Mack · Grey</div>
+      <a class="ex-video-link" href="https://www.youtube.com/results?search_query=scapular+wall+slide+serratus+lower+trap+activation" target="_blank">Search Demo</a>
+      <div class="ex-tags">
+        <span class="tag tag-sl-low">Spinal: Low</span>
+        <span class="tag tag-joint">Shoulder · Spine</span>
+        <span class="tag tag-rehab">Rehab</span>
+        <span class="tag tag-bridge">Bridge</span>
+        <span class="tag tag-sub">Submaximal</span>
+        <span class="tag" style="background:rgba(0,0,0,0.15);color:#4a8a6a;border:1px solid #4a8a6a40;">GPP</span>
+      </div>
+    </div>
+
+
+<!-- ═══════════════════════════════════════ -->
+<!-- SECTION 7: SPRINT DRILLS -->
+<!-- ═══════════════════════════════════════ -->
+<section class="cat-section" id="sprint">
+  <div class="cat-header">
+    <div class="cat-number">07</div>
+    <div class="cat-title">Sprint Drills</div>
+    <div class="cat-count">9 exercises</div>
+  </div>
+  <div class="ex-grid">
+
+    <div class="ex-card" data-tags="intensity-sub phase-bridge phase-comp phase-gpp phase-perf phase-spp quality-gpp quality-velocity sl-low">
+      <div class="ex-name">A-March</div>
+      <div class="ex-rationale">Barr ground impulse foundation: teaches vertical force application, hip cycle mechanics, and dorsiflexed foot position at ground contact. Slow tempo makes the mechanics trainable. Every sprint drill starts here.</div>
+      <div class="ex-source">Barr · Schexnayder</div>
+      <a class="ex-video-link" href="https://www.youtube.com/results?search_query=A+march+sprint+drill+ground+impulse+hip+cycle" target="_blank">Search Demo</a>
+      <div class="ex-tags">
+        <span class="tag tag-sl-low">Spinal: Low</span>
+        <span class="tag tag-joint">Hip · Knee · Ankle</span>
+        <span class="tag tag-bridge">Bridge</span>
+        <span class="tag tag-perf">Performance</span>
+        <span class="tag tag-sub">Submaximal</span>
+      
+        <span class="tag" style="background:rgba(0,0,0,0.15);color:#4a8a6a;border:1px solid #4a8a6a40;">GPP</span>
+        <span class="tag" style="background:rgba(0,0,0,0.15);color:#c8a040;border:1px solid #c8a04040;">Velocity</span>
+      </div>
+    </div>
+
+    <div class="ex-card" data-tags="intensity-sub phase-bridge phase-comp phase-gpp phase-perf phase-spp quality-gpp quality-velocity sl-low">
+      <div class="ex-name">A-Skip</div>
+      <div class="ex-rationale">A-March with elastic energy component — teaches reactive ground contact rhythm. Barr: the skip phase trains the foot-ankle to behave as a spring, not a brake. Rhythm before speed.</div>
+      <div class="ex-source">Barr · Schexnayder</div>
+      <a class="ex-video-link" href="https://www.youtube.com/results?search_query=A+skip+sprint+drill+elastic+energy+rhythm" target="_blank">Search Demo</a>
+      <div class="ex-tags">
+        <span class="tag tag-sl-low">Spinal: Low</span>
+        <span class="tag tag-joint">Hip · Knee · Ankle</span>
+        <span class="tag tag-bridge">Bridge</span>
+        <span class="tag tag-perf">Performance</span>
+        <span class="tag tag-sub">Submaximal</span>
+      
+        <span class="tag" style="background:rgba(0,0,0,0.15);color:#4a8a6a;border:1px solid #4a8a6a40;">GPP</span>
+        <span class="tag" style="background:rgba(0,0,0,0.15);color:#c8a040;border:1px solid #c8a04040;">Velocity</span>
+      </div>
+    </div>
+
+    <div class="ex-card" data-tags="intensity-sub phase-comp phase-gpp phase-perf phase-spp quality-power quality-velocity sl-low">
+      <div class="ex-name">B-Skip</div>
+      <div class="ex-rationale">A-skip plus extension of the swing leg before ground contact. Trains the front-side mechanic critical for top-end speed: leg must be moving backward relative to the body at contact. Schexnayder: most coached drill in elite LJ preparation.</div>
+      <div class="ex-source">Schexnayder · Barr</div>
+      <a class="ex-video-link" href="https://www.youtube.com/results?search_query=B+skip+sprint+drill+front+side+mechanics" target="_blank">Search Demo</a>
+      <div class="ex-tags">
+        <span class="tag tag-sl-low">Spinal: Low</span>
+        <span class="tag tag-joint">Hip · Knee · Ankle</span>
+        <span class="tag tag-perf">Performance</span>
+        <span class="tag tag-sub">Submaximal</span>
+      
+        <span class="tag" style="background:rgba(0,0,0,0.15);color:#c8a040;border:1px solid #c8a04040;">Velocity</span>
+        <span class="tag" style="background:rgba(0,0,0,0.15);color:#8a4a4a;border:1px solid #8a4a4a40;">Power</span>
+      </div>
+    </div>
+
+    <div class="ex-card" data-tags="intensity-sub phase-bridge phase-comp phase-gpp phase-perf phase-spp quality-gpp quality-velocity sl-low">
+      <div class="ex-name">Wall Drive Drill — Alternating</div>
+      <div class="ex-rationale">Hands on wall, drive alternating knees at sprint cadence. Isolates hip flexor mechanics without locomotion variables. Natera sprint-specific application: teaches the acceleration posture (forward lean, high knee drive) in a controlled environment.</div>
+      <div class="ex-source">Natera · Barr</div>
+      <a class="ex-video-link" href="https://www.youtube.com/results?search_query=wall+drive+drill+alternating+sprint+acceleration+posture" target="_blank">Search Demo</a>
+      <div class="ex-tags">
+        <span class="tag tag-sl-low">Spinal: Low</span>
+        <span class="tag tag-joint">Hip · Knee · Ankle</span>
+        <span class="tag tag-bridge">Bridge</span>
+        <span class="tag tag-perf">Performance</span>
+        <span class="tag tag-sub">Submaximal</span>
+      
+        <span class="tag" style="background:rgba(0,0,0,0.15);color:#4a8a6a;border:1px solid #4a8a6a40;">GPP</span>
+        <span class="tag" style="background:rgba(0,0,0,0.15);color:#c8a040;border:1px solid #c8a04040;">Velocity</span>
+      </div>
+    </div>
+
+    <div class="ex-card" data-tags="intensity-max phase-comp phase-gpp phase-perf phase-spp quality-power quality-velocity sl-low">
+      <div class="ex-name">Wicket Runs</div>
+      <div class="ex-rationale">Hurdles or sticks at set intervals constrain stride length and force optimal mechanics. Schexnayder: wickets are the most efficient tool for encoding front-side sprint mechanics under speed. Spacing determines training emphasis.</div>
+      <div class="ex-source">Schexnayder · Barr</div>
+      <a class="ex-video-link" href="https://www.youtube.com/results?search_query=wicket+runs+hurdle+sprint+mechanics+Schexnayder" target="_blank">Search Demo</a>
+      <div class="ex-tags">
+        <span class="tag tag-sl-low">Spinal: Low</span>
+        <span class="tag tag-joint">Hip · Knee · Ankle</span>
+        <span class="tag tag-perf">Performance</span>
+        <span class="tag tag-max">Maximal</span>
+      
+        <span class="tag" style="background:rgba(0,0,0,0.15);color:#c8a040;border:1px solid #c8a04040;">Velocity</span>
+        <span class="tag" style="background:rgba(0,0,0,0.15);color:#8a4a4a;border:1px solid #8a4a4a40;">Power</span>
+      </div>
+    </div>
+
+    <div class="ex-card" data-tags="intensity-sub phase-bridge phase-comp phase-gpp phase-perf phase-spp quality-gpp quality-velocity sl-low">
+      <div class="ex-name">Backward Running</div>
+      <div class="ex-rationale">Uthoff Ep. 498: backward running eliminates heel strike, loads forefoot-calf complex, and reduces spinal compressive load versus forward running. Rehab and performance application simultaneously. Flexion-biased spine opens L4–L5 foramen. Genuine performance tool, not just rehab.</div>
+      <div class="ex-source">Uthoff · Natera</div>
+      <a class="ex-video-link" href="https://www.youtube.com/results?search_query=backward+running+Uthoff+rehab+performance+calf+complex" target="_blank">Search Demo</a>
+      <div class="ex-tags">
+        <span class="tag tag-sl-low">Spinal: Low</span>
+        <span class="tag tag-joint">Ankle · Knee · Hip</span>
+        <span class="tag tag-bridge">Bridge</span>
+        <span class="tag tag-perf">Performance</span>
+        <span class="tag tag-sub">Submaximal</span>
+      
+        <span class="tag" style="background:rgba(0,0,0,0.15);color:#4a8a6a;border:1px solid #4a8a6a40;">GPP</span>
+        <span class="tag" style="background:rgba(0,0,0,0.15);color:#c8a040;border:1px solid #c8a04040;">Velocity</span>
+      </div>
+    </div>
+
+    <div class="ex-card" data-tags="intensity-max phase-comp phase-gpp phase-perf phase-spp quality-velocity sl-low">
+      <div class="ex-name">Flying Sprint (30m)</div>
+      <div class="ex-rationale">Max velocity sprint with running start — eliminates acceleration demand. Trains absolute top-end speed mechanics. Barr: ground contact at max velocity is 80–100ms — the nervous system, not the muscle, is the limiter. Full recovery between reps is non-negotiable.</div>
+      <div class="ex-source">Barr · Schexnayder</div>
+      <a class="ex-video-link" href="https://www.youtube.com/results?search_query=flying+sprint+30m+max+velocity+mechanics" target="_blank">Search Demo</a>
+      <div class="ex-tags">
+        <span class="tag tag-sl-low">Spinal: Low</span>
+        <span class="tag tag-joint">Hip · Knee · Ankle</span>
+        <span class="tag tag-perf">Performance</span>
+        <span class="tag tag-max">Maximal</span>
+      
+        <span class="tag" style="background:rgba(0,0,0,0.15);color:#c8a040;border:1px solid #c8a04040;">Velocity</span>
+      </div>
+    </div>
+
+    <div class="ex-card" data-tags="intensity-max phase-comp phase-gpp phase-perf phase-spp quality-power quality-velocity sl-low">
+      <div class="ex-name">Acceleration Sprint (10–30m)</div>
+      <div class="ex-rationale">Drive phase mechanics from static or 3-point start. First 10m is force production; 10–30m is transition to upright. Natera: the first 3 steps encode the entire acceleration pattern — start mechanics training here before extending distance.</div>
+      <div class="ex-source">Natera · Schexnayder</div>
+      <a class="ex-video-link" href="https://www.youtube.com/results?search_query=acceleration+sprint+drive+phase+10+30m+start+mechanics" target="_blank">Search Demo</a>
+      <div class="ex-tags">
+        <span class="tag tag-sl-low">Spinal: Low</span>
+        <span class="tag tag-joint">Hip · Knee · Ankle</span>
+        <span class="tag tag-perf">Performance</span>
+        <span class="tag tag-max">Maximal</span>
+      
+        <span class="tag" style="background:rgba(0,0,0,0.15);color:#c8a040;border:1px solid #c8a04040;">Velocity</span>
+        <span class="tag" style="background:rgba(0,0,0,0.15);color:#8a4a4a;border:1px solid #8a4a4a40;">Power</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+    <div class="ex-card" data-tags="sl-low phase-gpp phase-spp phase-comp intensity-max quality-velocity quality-power quality-strength">
+      <div class="ex-name">Resisted Sprint — Sled or Band (10–20m)</div>
+      <div class="ex-rationale">Schexnayder/Shepherd's primary acceleration development tool: sprint with horizontal resistance (sled at 20–30% bodyweight, or elastic band) over 10–20m. The resistance forces an exaggerated forward lean and extended ground contact — encoding the acceleration posture (shin angle, arm drive, triple extension) under overload. Shepherd: 20–30% bodyweight is the optimal sled load — enough to create mechanical demand without degrading sprint mechanics. Beyond 30%, technique breaks down and the transfer to free sprinting diminishes. CNS demand is high — treat as a maximal quality set. 4–6 reps, full recovery. Distinguish from sled pulls (backward, foraminal decompression for Patrick) — this is forward, acceleration-specific, for the girls.</div>
+      <div class="ex-source">Schexnayder · Shepherd · Natera</div>
+      <a class="ex-video-link" href="https://www.youtube.com/results?search_query=resisted+sprint+sled+acceleration+mechanics+20+percent+bodyweight" target="_blank">Search Demo</a>
+      <div class="ex-tags">
+        <span class="tag tag-sl-low">Spinal: Low</span>
+        <span class="tag tag-joint">Hip · Knee · Ankle</span>
+        <span class="tag tag-perf">Performance</span>
+        <span class="tag tag-max">Maximal</span>
+        <span class="tag" style="background:rgba(0,0,0,0.15);color:#c8a040;border:1px solid #c8a04040;">Velocity</span>
+        <span class="tag" style="background:rgba(0,0,0,0.15);color:#8a4a4a;border:1px solid #8a4a4a40;">Power</span>
+        <span class="tag" style="background:rgba(0,0,0,0.15);color:#4a6a8a;border:1px solid #4a6a8a40;">Strength</span>
+      </div>
+    </div>
+
+
+
+
+<!-- ═══════════════════════════════════════ -->
+<!-- SECTION 8b: MOBILITY & JOINT PREP -->
+<!-- ═══════════════════════════════════════ -->
+<section class="cat-section" id="mobility">
+  <div class="cat-header">
+    <div class="cat-number">08b</div>
+    <div class="cat-title">Mobility &amp; Joint Prep</div>
+    <div class="cat-count">3 exercises</div>
+  </div>
+  <div class="ex-grid">
+    <div class="ex-card" data-tags="sl-low phase-rehab phase-bridge phase-gpp phase-spp phase-comp intensity-sub quality-gpp quality-isometric">
+      <div class="ex-name">Hip CAR — Controlled Articular Rotation (Spina/FRC)</div>
+      <div class="ex-rationale">Spina's foundational joint health protocol: in standing or quadruped, draw the largest possible circle with the femur head within the hip socket under full muscular control. CARs are not passive stretches — the working hip is maximally contracted throughout its full active range. The key distinction: CAR reveals the gap between passive ROM (flexibility) and active ROM (mobility) — and closes it. Spina: we have 10–15° more passive range than the CNS will allow active access to; that gap is where injuries happen. For sprint athletes, hip CARs are the daily joint maintenance that sustains the ranges built in training. 2–3 reps per side per day. Pair with ankle CARs as a warm-up sequence.</div>
+      <div class="ex-source">Spina · Grey</div>
+      <a class="ex-video-link" href="https://www.youtube.com/results?search_query=hip+CAR+controlled+articular+rotation+FRC+Spina+joint+health" target="_blank">Search Demo</a>
+      <div class="ex-tags">
+        <span class="tag tag-sl-low">Spinal: Low</span>
+        <span class="tag tag-joint">Hip</span>
+        <span class="tag tag-rehab">Rehab</span>
+        <span class="tag tag-bridge">Bridge</span>
+        <span class="tag tag-sub">Submaximal</span>
+        <span class="tag" style="background:rgba(0,0,0,0.15);color:#4a8a6a;border:1px solid #4a8a6a40;">GPP</span>
+        <span class="tag" style="background:rgba(0,0,0,0.15);color:#5a7a5a;border:1px solid #5a7a5a40;">Isometric</span>
+      </div>
+    </div>
+
+    <div class="ex-card" data-tags="sl-low phase-rehab phase-bridge phase-gpp phase-spp phase-comp intensity-sub quality-gpp quality-isometric">
+      <div class="ex-name">Ankle CAR — Controlled Articular Rotation (Spina/FRC)</div>
+      <div class="ex-rationale">Spina's ankle joint health protocol: seated or standing, draw the maximum circle through the full ankle range under active muscular control — not a passive dangle. Ankle CARs address the subtalar and talocrural joints simultaneously. Ward Flow Motion: restricted ankle mobility is upstream of knee valgus, patellar tracking issues, and shin pain in sprint athletes. CARs preserve and expand the active range that eccentric calf work and dorsiflexion mobs create structurally. Cadence and Shaylan application: daily maintenance for the plantar fascia and shin load tolerance protocols. 2–3 reps per ankle per day, non-negotiable warm-up item.</div>
+      <div class="ex-source">Spina · Ward</div>
+      <a class="ex-video-link" href="https://www.youtube.com/results?search_query=ankle+CAR+controlled+articular+rotation+FRC+mobility" target="_blank">Search Demo</a>
+      <div class="ex-tags">
+        <span class="tag tag-sl-low">Spinal: Low</span>
+        <span class="tag tag-joint">Ankle</span>
+        <span class="tag tag-rehab">Rehab</span>
+        <span class="tag tag-bridge">Bridge</span>
+        <span class="tag tag-sub">Submaximal</span>
+        <span class="tag" style="background:rgba(0,0,0,0.15);color:#4a8a6a;border:1px solid #4a8a6a40;">GPP</span>
+        <span class="tag" style="background:rgba(0,0,0,0.15);color:#5a7a5a;border:1px solid #5a7a5a40;">Isometric</span>
+      </div>
+    </div>
+
+    <div class="ex-card" data-tags="sl-low phase-rehab phase-bridge phase-gpp phase-spp intensity-sub quality-gpp quality-hypertrophy">
+      <div class="ex-name">90/90 Hip Transition — Internal/External Rotation</div>
+      <div class="ex-rationale">Spina/Cressey hip mobility drill: seated with both knees bent at 90° in front and to the side, rotate through the hip to switch between internal rotation (back leg) and external rotation (front leg) positions. Addresses the combined hip IR/ER range that sprint mechanics require — the hip must externally rotate at initial contact and internally rotate through swing phase. Restricted hip IR is the most common bottleneck in sprint athletes with anterior pelvic tilt. The 90/90 position is the most efficient way to load both ends of the rotational range simultaneously. Active transitions (not passive slumping) are the prescription. 5–8 slow reps per side.</div>
+      <div class="ex-source">Spina · Cressey · Ward</div>
+      <a class="ex-video-link" href="https://www.youtube.com/results?search_query=90+90+hip+mobility+internal+external+rotation+Cressey" target="_blank">Search Demo</a>
+      <div class="ex-tags">
+        <span class="tag tag-sl-low">Spinal: Low</span>
+        <span class="tag tag-joint">Hip</span>
+        <span class="tag tag-rehab">Rehab</span>
+        <span class="tag tag-bridge">Bridge</span>
+        <span class="tag tag-sub">Submaximal</span>
+        <span class="tag" style="background:rgba(0,0,0,0.15);color:#4a8a6a;border:1px solid #4a8a6a40;">GPP</span>
+        <span class="tag" style="background:rgba(0,0,0,0.15);color:#7a4a8a;border:1px solid #7a4a8a40;">Hypertrophy</span>
+      </div>
+    </div>
+
+
+
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- SECTION 8: JUMP & BOUND -->
+<!-- ═══════════════════════════════════════ -->
+<section class="cat-section" id="jump">
+  <div class="cat-header">
+    <div class="cat-number">08</div>
+    <div class="cat-title">Jump &amp; Bound</div>
+    <div class="cat-count">8 exercises</div>
+  </div>
+  <div class="ex-grid">
+
+    <div class="ex-card" data-tags="intensity-sub phase-bridge phase-comp phase-gpp phase-perf phase-spp quality-gpp quality-power sl-low">
+      <div class="ex-name">Penultimate Step Drill — Walkthrough</div>
+      <div class="ex-rationale">Schexnayder: the penultimate step is the most technically complex moment in long jump. Walkthrough at 50% speed encodes the COM lowering pattern without impact stress. Key cue: hips drop behind the foot, not over it. The mechanic that separates flat jumps from explosive ones.</div>
+      <div class="ex-source">Schexnayder</div>
+      <a class="ex-video-link" href="https://www.youtube.com/results?search_query=penultimate+step+drill+long+jump+COM+lowering+Schexnayder" target="_blank">Search Demo</a>
+      <div class="ex-tags">
+        <span class="tag tag-sl-low">Spinal: Low</span>
+        <span class="tag tag-joint">Hip · Knee · Ankle</span>
+        <span class="tag tag-bridge">Bridge</span>
+        <span class="tag tag-perf">Performance</span>
+        <span class="tag tag-sub">Submaximal</span>
+      
+        <span class="tag" style="background:rgba(0,0,0,0.15);color:#4a8a6a;border:1px solid #4a8a6a40;">GPP</span>
+        <span class="tag" style="background:rgba(0,0,0,0.15);color:#8a4a4a;border:1px solid #8a4a4a40;">Power</span>
+      </div>
+    </div>
+
+    <div class="ex-card" data-tags="intensity-max phase-comp phase-gpp phase-perf phase-spp quality-power quality-velocity sl-low">
+      <div class="ex-name">Full Approach Long Jump</div>
+      <div class="ex-rationale">The event itself. Schexnayder: full approach is only trained when all sub-components are consolidated — penultimate mechanics, board contact, takeoff position, flight technique. High CNS demand; 2–3 quality reps per session maximum. More is not better.</div>
+      <div class="ex-source">Schexnayder · Barr</div>
+      <a class="ex-video-link" href="https://www.youtube.com/results?search_query=full+approach+long+jump+technique+takeoff" target="_blank">Search Demo</a>
+      <div class="ex-tags">
+        <span class="tag tag-sl-low">Spinal: Low</span>
+        <span class="tag tag-joint">Hip · Knee · Ankle</span>
+        <span class="tag tag-perf">Performance</span>
+        <span class="tag tag-max">Maximal</span>
+      
+        <span class="tag" style="background:rgba(0,0,0,0.15);color:#c8a040;border:1px solid #c8a04040;">Velocity</span>
+        <span class="tag" style="background:rgba(0,0,0,0.15);color:#8a4a4a;border:1px solid #8a4a4a40;">Power</span>
+      </div>
+    </div>
+
+    <div class="ex-card" data-tags="intensity-sub phase-bridge phase-comp phase-gpp phase-perf phase-spp quality-power quality-velocity sl-low">
+      <div class="ex-name">Broad Jump — Bilateral</div>
+      <div class="ex-rationale">Horizontal force production from bilateral stance. Teaches triple extension (hip-knee-ankle) with forward projection. Stick landing requirement encodes deceleration. Entry-level jump training appropriate early in return-to-power progressions.</div>
+      <div class="ex-source">Barr · Schexnayder</div>
+      <a class="ex-video-link" href="https://www.youtube.com/results?search_query=bilateral+broad+jump+triple+extension+stick+landing" target="_blank">Search Demo</a>
+      <div class="ex-tags">
+        <span class="tag tag-sl-low">Spinal: Low</span>
+        <span class="tag tag-joint">Hip · Knee · Ankle</span>
+        <span class="tag tag-bridge">Bridge</span>
+        <span class="tag tag-perf">Performance</span>
+        <span class="tag tag-sub">Submaximal</span>
+      
+        <span class="tag" style="background:rgba(0,0,0,0.15);color:#8a4a4a;border:1px solid #8a4a4a40;">Power</span>
+        <span class="tag" style="background:rgba(0,0,0,0.15);color:#c8a040;border:1px solid #c8a04040;">Velocity</span>
+      </div>
+    </div>
+
+    <div class="ex-card" data-tags="intensity-max phase-comp phase-gpp phase-perf phase-spp quality-power quality-velocity sl-low">
+      <div class="ex-name">Box Jump — Bilateral</div>
+      <div class="ex-rationale">Vertical force expression onto elevated surface eliminates landing impact. Focus: the jump, not the box height. Step down, don't jump down. Schexnayder: box height is irrelevant — maximal intent on takeoff is the training stimulus.</div>
+      <div class="ex-source">Schexnayder · Natera</div>
+      <a class="ex-video-link" href="https://www.youtube.com/results?search_query=bilateral+box+jump+maximal+intent+Schexnayder" target="_blank">Search Demo</a>
+      <div class="ex-tags">
+        <span class="tag tag-sl-low">Spinal: Low</span>
+        <span class="tag tag-joint">Hip · Knee · Ankle</span>
+        <span class="tag tag-perf">Performance</span>
+        <span class="tag tag-max">Maximal</span>
+      
+        <span class="tag" style="background:rgba(0,0,0,0.15);color:#8a4a4a;border:1px solid #8a4a4a40;">Power</span>
+        <span class="tag" style="background:rgba(0,0,0,0.15);color:#c8a040;border:1px solid #c8a04040;">Velocity</span>
+      </div>
+    </div>
+
+    <div class="ex-card" data-tags="intensity-max phase-comp phase-gpp phase-perf phase-spp quality-power quality-velocity sl-low">
+      <div class="ex-name">Depth Jump — Reactive</div>
+      <div class="ex-rationale">Step off box, minimal ground contact, immediate maximal jump. Trains the stretch-shortening cycle at high velocity. Barr: contact time is the variable — not jump height. Only appropriate with established landing mechanics. Highest CNS demand in plyometric hierarchy.</div>
+      <div class="ex-source">Barr · Schexnayder</div>
+      <a class="ex-video-link" href="https://www.youtube.com/results?search_query=depth+jump+reactive+stretch+shortening+cycle+Barr" target="_blank">Search Demo</a>
+      <div class="ex-tags">
+        <span class="tag tag-sl-low">Spinal: Low</span>
+        <span class="tag tag-joint">Ankle · Knee · Hip</span>
+        <span class="tag tag-perf">Performance</span>
+        <span class="tag tag-max">Maximal</span>
+      
+        <span class="tag" style="background:rgba(0,0,0,0.15);color:#c8a040;border:1px solid #c8a04040;">Velocity</span>
+        <span class="tag" style="background:rgba(0,0,0,0.15);color:#8a4a4a;border:1px solid #8a4a4a40;">Power</span>
+      </div>
+    </div>
+
+    <div class="ex-card" data-tags="intensity-max phase-comp phase-gpp phase-perf phase-spp quality-power quality-velocity sl-low">
+      <div class="ex-name">Alternate-Leg Bounds</div>
+      <div class="ex-rationale">Horizontal bounding emphasizing long ground contact and maximal push-off. Trains the transition between sprint mechanics and jump takeoff. Schexnayder: bounds should feel like running in slow motion — same mechanics, exaggerated expression.</div>
+      <div class="ex-source">Schexnayder · Barr</div>
+      <a class="ex-video-link" href="https://www.youtube.com/results?search_query=alternate+leg+bounds+horizontal+sprint+mechanics" target="_blank">Search Demo</a>
+      <div class="ex-tags">
+        <span class="tag tag-sl-low">Spinal: Low</span>
+        <span class="tag tag-joint">Hip · Knee · Ankle</span>
+        <span class="tag tag-perf">Performance</span>
+        <span class="tag tag-max">Maximal</span>
+      
+        <span class="tag" style="background:rgba(0,0,0,0.15);color:#8a4a4a;border:1px solid #8a4a4a40;">Power</span>
+        <span class="tag" style="background:rgba(0,0,0,0.15);color:#c8a040;border:1px solid #c8a04040;">Velocity</span>
+      </div>
+    </div>
+
+    <div class="ex-card" data-tags="intensity-max phase-comp phase-gpp phase-perf phase-spp quality-power quality-velocity sl-low">
+      <div class="ex-name">Single-Leg Hop Series (3-hop)</div>
+      <div class="ex-rationale">Three consecutive single-leg hops for maximum distance. Limb symmetry index benchmark: injured or inhibited limb should reach ≥90% of dominant side distance before return to sprint. Functional readiness test and training tool simultaneously.</div>
+      <div class="ex-source">Barr · Natera</div>
+      <a class="ex-video-link" href="https://www.youtube.com/results?search_query=single+leg+hop+series+3+hop+limb+symmetry+index" target="_blank">Search Demo</a>
+      <div class="ex-tags">
+        <span class="tag tag-sl-low">Spinal: Low</span>
+        <span class="tag tag-joint">Ankle · Knee · Hip</span>
+        <span class="tag tag-perf">Performance</span>
+        <span class="tag tag-max">Maximal</span>
+      
+        <span class="tag" style="background:rgba(0,0,0,0.15);color:#8a4a4a;border:1px solid #8a4a4a40;">Power</span>
+        <span class="tag" style="background:rgba(0,0,0,0.15);color:#c8a040;border:1px solid #c8a04040;">Velocity</span>
+      </div>
+    </div>
+
+    <div class="ex-card" data-tags="intensity-sub phase-bridge phase-comp phase-gpp phase-perf phase-spp quality-power quality-velocity sl-low">
+      <div class="ex-name">Vertical Jump — Countermovement</div>
+      <div class="ex-rationale">The countermovement (dip before jump) tests elastic energy utilization — the same mechanism as the penultimate step. Measuring CMJ vs static jump height reveals SSC contribution. A shrinking gap indicates stiffness or neural inhibition.</div>
+      <div class="ex-source">Barr · Schexnayder</div>
+      <a class="ex-video-link" href="https://www.youtube.com/results?search_query=countermovement+vertical+jump+CMJ+elastic+energy" target="_blank">Search Demo</a>
+      <div class="ex-tags">
+        <span class="tag tag-sl-low">Spinal: Low</span>
+        <span class="tag tag-joint">Hip · Knee · Ankle</span>
+        <span class="tag tag-bridge">Bridge</span>
+        <span class="tag tag-perf">Performance</span>
+        <span class="tag tag-sub">Submaximal</span>
+      
+        <span class="tag" style="background:rgba(0,0,0,0.15);color:#8a4a4a;border:1px solid #8a4a4a40;">Power</span>
+        <span class="tag" style="background:rgba(0,0,0,0.15);color:#c8a040;border:1px solid #c8a04040;">Velocity</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- SECTION 9: ANKLE & FOOT -->
+<!-- ═══════════════════════════════════════ -->
+<section class="cat-section" id="ankle">
+  <div class="cat-header">
+    <div class="cat-number">09</div>
+    <div class="cat-title">Ankle &amp; Foot</div>
+    <div class="cat-count">6 exercises</div>
+  </div>
+  <div class="ex-grid">
+
+    <div class="ex-card" data-tags="intensity-sub phase-bridge phase-gpp phase-rehab quality-gpp quality-hypertrophy sl-low">
+      <div class="ex-name">Eccentric Heel Raise — Single Leg (Alfredson)</div>
+      <div class="ex-rationale">Alfredson et al. 1998: 3×15 single-leg eccentric heel drops off step edge, twice daily, 12 weeks. Still the strongest evidence base for Achilles tendinopathy. Baar: the slow eccentric phase is where collagen is synthesized. Pain during is acceptable; pain the next day is the monitoring variable.</div>
+      <div class="ex-source">Alfredson · Baar</div>
+      <a class="ex-video-link" href="https://www.youtube.com/results?search_query=eccentric+heel+raise+Alfredson+Achilles+tendinopathy" target="_blank">Search Demo</a>
+      <div class="ex-tags">
+        <span class="tag tag-sl-low">Spinal: Low</span>
+        <span class="tag tag-joint">Ankle · Knee</span>
+        <span class="tag tag-rehab">Rehab</span>
+        <span class="tag tag-bridge">Bridge</span>
+        <span class="tag tag-sub">Submaximal</span>
+      
+        <span class="tag" style="background:rgba(0,0,0,0.15);color:#7a4a8a;border:1px solid #7a4a8a40;">Hypertrophy</span>
+        <span class="tag" style="background:rgba(0,0,0,0.15);color:#4a8a6a;border:1px solid #4a8a6a40;">GPP</span>
+      </div>
+    </div>
+
+    <div class="ex-card" data-tags="intensity-sub phase-bridge phase-gpp phase-rehab quality-gpp sl-low">
+      <div class="ex-name">Plantar Fascia Intrinsic Loading — Towel Scrunches / Marble Pickup</div>
+      <div class="ex-rationale">Baar collagen window: intrinsic foot muscle loading drives plantar fascial tissue adaptation. Not glamorous — but the plantar fascia responds to progressive load the same way tendons do. Prerequisite to single-leg calf loading in return-to-sprint.</div>
+      <div class="ex-source">Baar · Grey</div>
+      <a class="ex-video-link" href="https://www.youtube.com/results?search_query=plantar+fascia+intrinsic+loading+towel+scrunches+marble+pickup" target="_blank">Search Demo</a>
+      <div class="ex-tags">
+        <span class="tag tag-sl-low">Spinal: Low</span>
+        <span class="tag tag-joint">Ankle</span>
+        <span class="tag tag-rehab">Rehab</span>
+        <span class="tag tag-bridge">Bridge</span>
+        <span class="tag tag-sub">Submaximal</span>
+      
+        <span class="tag" style="background:rgba(0,0,0,0.15);color:#4a8a6a;border:1px solid #4a8a6a40;">GPP</span>
+      </div>
+    </div>
+
+    <div class="ex-card" data-tags="intensity-sub phase-bridge phase-gpp phase-rehab quality-gpp sl-low">
+      <div class="ex-name">Ankle Dorsiflexion Mob — Weight-Bearing</div>
+      <div class="ex-rationale">Ward Flow Motion: restricted ankle dorsiflexion is upstream of knee valgus, patellar tracking dysfunction, and hamstring over-reliance in sprint gait. Weight-bearing against wall tests and trains simultaneously. 10cm gap target before progressing sprint load.</div>
+      <div class="ex-source">Ward · Grey</div>
+      <a class="ex-video-link" href="https://www.youtube.com/results?search_query=ankle+dorsiflexion+mobilization+weight+bearing+wall+test" target="_blank">Search Demo</a>
+      <div class="ex-tags">
+        <span class="tag tag-sl-low">Spinal: Low</span>
+        <span class="tag tag-joint">Ankle</span>
+        <span class="tag tag-rehab">Rehab</span>
+        <span class="tag tag-bridge">Bridge</span>
+        <span class="tag tag-sub">Submaximal</span>
+      
+        <span class="tag" style="background:rgba(0,0,0,0.15);color:#4a8a6a;border:1px solid #4a8a6a40;">GPP</span>
+      </div>
+    </div>
+
+    <div class="ex-card" data-tags="intensity-sub phase-bridge phase-comp phase-gpp phase-perf phase-spp quality-hypertrophy quality-strength sl-low">
+      <div class="ex-name">Single-Leg Calf Raise — Loaded</div>
+      <div class="ex-rationale">Progressive loading of soleus and gastrocnemius under body weight plus external load. Baar programming principle: begin at 3×10, progress to 3×15, then add load. Soleus is the primary plantar fascia tensioner — this is load tolerance training, not stretching.</div>
+      <div class="ex-source">Baar · Alfredson</div>
+      <a class="ex-video-link" href="https://www.youtube.com/results?search_query=single+leg+calf+raise+loaded+progressive+Baar" target="_blank">Search Demo</a>
+      <div class="ex-tags">
+        <span class="tag tag-sl-low">Spinal: Low</span>
+        <span class="tag tag-joint">Ankle · Knee</span>
+        <span class="tag tag-bridge">Bridge</span>
+        <span class="tag tag-perf">Performance</span>
+        <span class="tag tag-sub">Submaximal</span>
+      
+        <span class="tag" style="background:rgba(0,0,0,0.15);color:#7a4a8a;border:1px solid #7a4a8a40;">Hypertrophy</span>
+        <span class="tag" style="background:rgba(0,0,0,0.15);color:#4a6a8a;border:1px solid #4a6a8a40;">Strength</span>
+      </div>
+    </div>
+
+    <div class="ex-card" data-tags="intensity-sub phase-bridge phase-comp phase-gpp phase-perf phase-spp quality-power quality-velocity sl-low">
+      <div class="ex-name">Pogo Hops — Bilateral</div>
+      <div class="ex-rationale">Rapid bilateral ankle spring — minimal knee bend, maximum ankle stiffness. Barr: this is the mechanically cleanest way to train the foot-ankle spring that distinguishes elite sprinters. Start 2×10 at low height; build contact stiffness before height.</div>
+      <div class="ex-source">Barr · Ward</div>
+      <a class="ex-video-link" href="https://www.youtube.com/results?search_query=bilateral+pogo+hops+ankle+stiffness+spring+Barr" target="_blank">Search Demo</a>
+      <div class="ex-tags">
+        <span class="tag tag-sl-low">Spinal: Low</span>
+        <span class="tag tag-joint">Ankle · Knee</span>
+        <span class="tag tag-bridge">Bridge</span>
+        <span class="tag tag-perf">Performance</span>
+        <span class="tag tag-sub">Submaximal</span>
+      
+        <span class="tag" style="background:rgba(0,0,0,0.15);color:#8a4a4a;border:1px solid #8a4a4a40;">Power</span>
+        <span class="tag" style="background:rgba(0,0,0,0.15);color:#c8a040;border:1px solid #c8a04040;">Velocity</span>
+      </div>
+    </div>
+
+    <div class="ex-card" data-tags="intensity-max phase-comp phase-gpp phase-perf phase-spp quality-power quality-velocity sl-low">
+      <div class="ex-name">Single-Leg Pogo — Reactive</div>
+      <div class="ex-rationale">Maximal single-leg ankle stiffness under repeated reactive demand. The closest gym analog to sprint ground contact mechanics. Barr: contact time under 100ms at single-leg pogo is the target that transfers to top-end sprint mechanics. Build bilateral version first.</div>
+      <div class="ex-source">Barr · Natera</div>
+      <a class="ex-video-link" href="https://www.youtube.com/results?search_query=single+leg+pogo+reactive+ankle+stiffness+sprint" target="_blank">Search Demo</a>
+      <div class="ex-tags">
+        <span class="tag tag-sl-low">Spinal: Low</span>
+        <span class="tag tag-joint">Ankle · Knee</span>
+        <span class="tag tag-perf">Performance</span>
+        <span class="tag tag-max">Maximal</span>
+      
+        <span class="tag" style="background:rgba(0,0,0,0.15);color:#c8a040;border:1px solid #c8a04040;">Velocity</span>
+        <span class="tag" style="background:rgba(0,0,0,0.15);color:#8a4a4a;border:1px solid #8a4a4a40;">Power</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- SECTION 10: ENERGY SYSTEM -->
+<!-- ═══════════════════════════════════════ -->
+<section class="cat-section" id="energy">
+  <div class="cat-header">
+    <div class="cat-number">10</div>
+    <div class="cat-title">Energy System Work</div>
+    <div class="cat-count">7 exercises</div>
+  </div>
+  <div class="ex-grid">
+
+    <div class="ex-card" data-tags="intensity-sub phase-bridge phase-comp phase-gpp phase-perf phase-spp quality-gpp sl-low">
+      <div class="ex-name">Stationary Bike — Low Resistance Steady State</div>
+      <div class="ex-rationale">Hip flexion opens L4–L5 foramen measurably — nerve decompression with cardiovascular side effect. Upright-to-forward position. 15–30 min. Entry point for all athletes with lumbar or lower limb restrictions. Uthoff principle: non-impact cardio preserves training capacity during structural rehab.</div>
+      <div class="ex-source">Uthoff · McGill</div>
+      <a class="ex-video-link" href="https://www.youtube.com/results?search_query=stationary+bike+steady+state+nerve+decompression" target="_blank">Search Demo</a>
+      <div class="ex-tags">
+        <span class="tag tag-sl-low">Spinal: Low</span>
+        <span class="tag tag-joint">Hip · Knee · Ankle</span>
+        <span class="tag tag-bridge">Bridge</span>
+        <span class="tag tag-perf">Performance</span>
+        <span class="tag tag-sub">Submaximal</span>
+      
+        <span class="tag" style="background:rgba(0,0,0,0.15);color:#4a8a6a;border:1px solid #4a8a6a40;">GPP</span>
+      </div>
+    </div>
+
+    <div class="ex-card" data-tags="intensity-max phase-comp phase-gpp phase-perf phase-spp quality-power quality-velocity sl-low">
+      <div class="ex-name">Bike Intervals — Sprint Protocol</div>
+      <div class="ex-rationale">10–15s max effort, 2–3 min full recovery. Trains alactic power system without skeletal loading. Schexnayder: sprint athletes need the same energy system trained regardless of modality. On a bike, CNS recruits similarly to track sprints without impact accumulation.</div>
+      <div class="ex-source">Schexnayder · Uthoff</div>
+      <a class="ex-video-link" href="https://www.youtube.com/results?search_query=bike+intervals+sprint+protocol+alactic+power+BFR" target="_blank">Search Demo</a>
+      <div class="ex-tags">
+        <span class="tag tag-sl-low">Spinal: Low</span>
+        <span class="tag tag-joint">Hip · Knee · Ankle</span>
+        <span class="tag tag-perf">Performance</span>
+        <span class="tag tag-max">Maximal</span>
+      
+        <span class="tag" style="background:rgba(0,0,0,0.15);color:#c8a040;border:1px solid #c8a04040;">Velocity</span>
+        <span class="tag" style="background:rgba(0,0,0,0.15);color:#8a4a4a;border:1px solid #8a4a4a40;">Power</span>
+      </div>
+    </div>
+
+    <div class="ex-card" data-tags="intensity-sub phase-bridge phase-comp phase-gpp phase-perf phase-spp quality-gpp sl-low">
+      <div class="ex-name">Walking — Extended Duration</div>
+      <div class="ex-rationale">Underrated aerobic base builder with genuine spinal loading benefit. 45–60 min daily maintains metabolic base, proprioceptive input, and mood. McGill: walking is the most spine-appropriate cardiovascular exercise — axial load in functional range with no impact spikes.</div>
+      <div class="ex-source">McGill · Uthoff</div>
+      <a class="ex-video-link" href="https://www.youtube.com/results?search_query=walking+extended+duration+aerobic+base+McGill+spine" target="_blank">Search Demo</a>
+      <div class="ex-tags">
+        <span class="tag tag-sl-low">Spinal: Low</span>
+        <span class="tag tag-joint">Hip · Knee · Ankle</span>
+        <span class="tag tag-bridge">Bridge</span>
+        <span class="tag tag-perf">Performance</span>
+        <span class="tag tag-sub">Submaximal</span>
+      
+        <span class="tag" style="background:rgba(0,0,0,0.15);color:#4a8a6a;border:1px solid #4a8a6a40;">GPP</span>
+      </div>
+    </div>
+
+    <div class="ex-card" data-tags="intensity-sub phase-bridge phase-comp phase-gpp phase-perf phase-spp quality-gpp sl-low">
+      <div class="ex-name">Tempo Runs — 70% Effort</div>
+      <div class="ex-rationale">Schexnayder: tempo runs at 70% develop aerobic capacity without CNS fatigue. 100–200m repeats with short rest (30–60s walk). Volume replaces intensity. Builds the aerobic base that supports sprint recovery between maximal efforts. Technique holds at this speed.</div>
+      <div class="ex-source">Schexnayder · Natera</div>
+      <a class="ex-video-link" href="https://www.youtube.com/results?search_query=tempo+runs+70+percent+aerobic+capacity+Schexnayder" target="_blank">Search Demo</a>
+      <div class="ex-tags">
+        <span class="tag tag-sl-low">Spinal: Low</span>
+        <span class="tag tag-joint">Hip · Knee · Ankle</span>
+        <span class="tag tag-bridge">Bridge</span>
+        <span class="tag tag-perf">Performance</span>
+        <span class="tag tag-sub">Submaximal</span>
+      
+        <span class="tag" style="background:rgba(0,0,0,0.15);color:#4a8a6a;border:1px solid #4a8a6a40;">GPP</span>
+      </div>
+    </div>
+
+    <div class="ex-card" data-tags="intensity-max phase-comp phase-gpp phase-perf phase-spp quality-power quality-velocity sl-low">
+      <div class="ex-name">Short-to-Long Sprint Series</div>
+      <div class="ex-rationale">Progressive distance sprints building from 20m to 60m in a session. Schexnayder periodization: early season trains short acceleration; late season extends to full speed endurance. Maintains mechanical quality across fatigue accumulation. The sport-prep energy system standard.</div>
+      <div class="ex-source">Schexnayder</div>
+      <a class="ex-video-link" href="https://www.youtube.com/results?search_query=short+to+long+sprint+series+periodization+Schexnayder" target="_blank">Search Demo</a>
+      <div class="ex-tags">
+        <span class="tag tag-sl-low">Spinal: Low</span>
+        <span class="tag tag-joint">Hip · Knee · Ankle</span>
+        <span class="tag tag-perf">Performance</span>
+        <span class="tag tag-max">Maximal</span>
+      
+        <span class="tag" style="background:rgba(0,0,0,0.15);color:#c8a040;border:1px solid #c8a04040;">Velocity</span>
+        <span class="tag" style="background:rgba(0,0,0,0.15);color:#8a4a4a;border:1px solid #8a4a4a40;">Power</span>
+      </div>
+    </div>
+
+    <div class="ex-card" data-tags="intensity-sub phase-comp phase-gpp phase-perf phase-spp quality-power quality-velocity sl-low">
+      <div class="ex-name">Medicine Ball Rotational Throw — Side Wall</div>
+      <div class="ex-rationale">Rotational power expression linking hip drive to upper body. Ward: the transverse plane is undertrained in linear athletes — lateral power transfer is what separates soccer and court athletes from pure track athletes. Use 3–4kg ball; speed of release is the training variable, not load.</div>
+      <div class="ex-source">Ward · Schexnayder</div>
+      <a class="ex-video-link" href="https://www.youtube.com/results?search_query=medicine+ball+rotational+throw+side+wall+transverse+power" target="_blank">Search Demo</a>
+      <div class="ex-tags">
+        <span class="tag tag-sl-mod">Spinal: Moderate</span>
+        <span class="tag tag-joint">Hip · Spine · Shoulder</span>
+        <span class="tag tag-perf">Performance</span>
+        <span class="tag tag-sub">Submaximal</span>
+      
+        <span class="tag" style="background:rgba(0,0,0,0.15);color:#8a4a4a;border:1px solid #8a4a4a40;">Power</span>
+        <span class="tag" style="background:rgba(0,0,0,0.15);color:#c8a040;border:1px solid #c8a04040;">Velocity</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+    <div class="ex-card" data-tags="sl-low phase-rehab phase-bridge phase-gpp intensity-sub quality-gpp quality-isometric">
+      <div class="ex-name">Tibialis Anterior Raise — Wall-Seated or Standing</div>
+      <div class="ex-rationale">Baar/Alfredson anterior shin loading protocol: seated with legs extended, dorsiflex both feet as high as possible and hold 2–3s. Or standing with heels against wall, raise toes as high as possible for reps. Tibialis anterior is the primary decelerator of foot slap at ground contact — its weakness is directly implicated in medial shin pain (shin splints) in sprint athletes. Baar: the same progressive loading principle that applies to Achilles tendinopathy applies here — eccentric and isometric tibialis loading drives tendon adaptation. For Shaylan and Cadence: direct prescription for shin load tolerance. Begin with 3×15 bodyweight; progress to loaded version with ankle weight or resistance band.</div>
+      <div class="ex-source">Baar · Alfredson · Ward</div>
+      <a class="ex-video-link" href="https://www.youtube.com/results?search_query=tibialis+anterior+raise+shin+splints+loading+protocol" target="_blank">Search Demo</a>
+      <div class="ex-tags">
+        <span class="tag tag-sl-low">Spinal: Low</span>
+        <span class="tag tag-joint">Ankle</span>
+        <span class="tag tag-rehab">Rehab</span>
+        <span class="tag tag-bridge">Bridge</span>
+        <span class="tag tag-sub">Submaximal</span>
+        <span class="tag" style="background:rgba(0,0,0,0.15);color:#4a8a6a;border:1px solid #4a8a6a40;">GPP</span>
+        <span class="tag" style="background:rgba(0,0,0,0.15);color:#5a7a5a;border:1px solid #5a7a5a40;">Isometric</span>
+      </div>
+    </div>
+
+
+<!-- REFERENCES -->
+<div class="references">
+  <div class="ref-title">Expert Consensus Sources</div>
+  <div class="ref-grid">
+    <div class="ref-item">
+      <div class="ref-name">Keith Baar — UC Davis</div>
+      <div class="ref-desc">Tendon/ligament programming, collagen synthesis, isometric loading, estrogen-LOX interaction. JF Ep. 156, 392.</div>
+    </div>
+    <div class="ref-item">
+      <div class="ref-name">David Grey</div>
+      <div class="ref-desc">Joint-first biomechanics, movement sequencing, load tolerance development. JF Ep. 212.</div>
+    </div>
+    <div class="ref-item">
+      <div class="ref-name">Gary Ward — Flow Motion Model</div>
+      <div class="ref-desc">Triplanar movement, frontal plane loading, foot-to-spine chain. JF Ep. 261.</div>
+    </div>
+    <div class="ref-item">
+      <div class="ref-name">Alex Natera</div>
+      <div class="ref-desc">Sprint-specific isometric prescription, gait phase loading, transfer to track. JF Ep. 86, 201.</div>
+    </div>
+    <div class="ref-item">
+      <div class="ref-name">Adarian Barr</div>
+      <div class="ref-desc">Ground impulse mechanics, foot-ankle spring, joint-level sprint analysis. JF Ep. 64, 132.</div>
+    </div>
+    <div class="ref-item">
+      <div class="ref-name">Boo Schexnayder</div>
+      <div class="ref-desc">LJ periodization, penultimate mechanics, CNS load management, 26 NCAA champions. JF Ep. 14, 205.</div>
+    </div>
+    <div class="ref-item">
+      <div class="ref-name">Stuart McGill — Waterloo</div>
+      <div class="ref-desc">Spinal load classification, Big Three core, neutral spine lifting, disc mechanics.</div>
+    </div>
+    <div class="ref-item">
+      <div class="ref-name">Håkan Alfredson</div>
+      <div class="ref-desc">Eccentric heel raise protocol (1998). The benchmark for Achilles tendinopathy loading.</div>
+    </div>
+    <div class="ref-item">
+      <div class="ref-name">Ebonie Rio — La Trobe</div>
+      <div class="ref-desc">Isometric analgesia (2015), patellar tendinopathy, cortical inhibition mechanisms.</div>
+    </div>
+    <div class="ref-item">
+      <div class="ref-name">Aaron Uthoff</div>
+      <div class="ref-desc">Backward running — rehab and performance, non-impact load management. JF Ep. 498.</div>
+    </div>
+    <div class="ref-item">
+      <div class="ref-name">Frans Bosch</div>
+      <div class="ref-desc">Sprint biomechanics as a coordination problem, not merely a strength deficit. Bi-articular hamstring function, isometric demands at top speed, single-leg Roman Chair prescription for female sprinters. Author: <em>Strength Training and Coordination</em>.</div>
+    </div>
+    <div class="ref-item">
+      <div class="ref-name">Cal Dietz — Minnesota</div>
+      <div class="ref-desc">Triphasic training model (eccentric-isometric-concentric sequencing). ACL prevention framework for female athletes. Head Sport Scientist, US Women's Olympic Hockey. Scope here: tissue loading sequencing and ACL risk reduction (Yari protocol).</div>
+    </div>
+    <div class="ref-item">
+      <div class="ref-name">Nick Winkelman</div>
+      <div class="ref-desc">Motor learning and attentional focus in coaching. Internal vs. external cue research — external cues produce measurably superior motor learning outcomes for technical corrections under competition stress. Direct application: Shaylan's penultimate step mechanics.</div>
+    </div>    <div class="ref-item">
+      <div class="ref-name">Andreo Spina — Functional Anatomy Seminars</div>
+      <div class="ref-desc">FRC system: Controlled Articular Rotations (CARs), PAILs/RAILs, end-range isometric loading. DC + B.Kin McMaster, CMCC summa cum laude, Sports Sciences fellowship. NASA consultant. Core principle: gap between passive and active ROM is neurological — isometrics at end range close it.</div>
+    </div>
+    <div class="ref-item">
+      <div class="ref-name">Michael Boyle — MBSC</div>
+      <div class="ref-desc">Functional strength and movement. Psoas activation, Pallof press anti-rotation, joint-by-joint movement model. NHL, NBA, MLB consultant. Author: Advances in Functional Training.</div>
+    </div>
+    <div class="ref-item">
+      <div class="ref-name">Eric Cressey — Cressey Sports Performance</div>
+      <div class="ref-desc">Hip mobility, shoulder health, 90/90 hip transition. MA Kinesiology. Strength coach to hundreds of MLB players. Evidence-informed joint mobility and athletic longevity.</div>
+    </div>
+    <div class="ref-item">
+      <div class="ref-name">John Shepherd — England Athletics</div>
+      <div class="ref-desc">Former international LJ, England Team coach, England/Ireland Athletics coach mentor. European Junior Champion (7.86m), World Para-athletics Junior World Champion. Resisted sprint methodology, LJ run-up mechanics, drop jump progressions.</div>
+    </div>
+    <div class="ref-item">
+      <div class="ref-name">Ian Mack — Tomahawk Science, Chicago</div>
+      <div class="ref-desc">Sports scientist, exercise physiology and biomechanics. Works with NHL (Kane, Toews, Matthews) and NBA (Murray). Movement elasticity, joint stabilisation, scapular motor control as prerequisite for overhead loading.</div>
+    </div>
+
+
+</main>
+
+<footer>
+  <p>Master Exercise Library · Sprint Jump Resilience · v4.1 · April 2026</p>
+  <p>Cross-reference: Individual athlete protocols for phase-specific exercise selection</p>
+  <p style="margin-top:0.4rem; color: rgba(245,242,236,0.18);">Informational only. Clinical decisions should be reviewed with treating physician.</p>
+</footer>
+
+<script>
+  const cards = document.querySelectorAll('.ex-card');
+  const filterBtns = document.querySelectorAll('.filter-btn');
+  const clearBtn = document.getElementById('clear-filters');
+  const summaryEl = document.getElementById('filter-summary');
+  const totalCards = cards.length;
+
+  // Active filters per group — AND logic across groups, OR within group
+  // (selecting Bridge OR GPP will show cards tagged with either;
+  //  but if you also select Spinal:Low, card must match BOTH the phase AND spinal requirement)
+  const activeFilters = { phase: new Set(), spinal: new Set(), intensity: new Set(), quality: new Set() };
+
+  function applyFilters() {
+    const hasPhase     = activeFilters.phase.size > 0;
+    const hasSpinal    = activeFilters.spinal.size > 0;
+    const hasIntensity = activeFilters.intensity.size > 0;
+    const hasQuality   = activeFilters.quality.size > 0;
+    const anyActive    = hasPhase || hasSpinal || hasIntensity || hasQuality;
+
+    let visible = 0;
+
+    cards.forEach(card => {
+      const tags = (card.dataset.tags || '').split(' ');
+
+      const phaseOK     = !hasPhase    || [...activeFilters.phase].some(f => tags.includes(f));
+      const spinalOK    = !hasSpinal   || [...activeFilters.spinal].some(f => tags.includes(f));
+      const intensityOK = !hasIntensity|| [...activeFilters.intensity].some(f => tags.includes(f));
+      const qualityOK   = !hasQuality  || [...activeFilters.quality].some(f => tags.includes(f));
+
+      if (phaseOK && spinalOK && intensityOK && qualityOK) {
+        card.classList.remove('hidden');
+        visible++;
+      } else {
+        card.classList.add('hidden');
+      }
+    });
+
+    // Update summary
+    if (!anyActive) {
+      summaryEl.textContent = `All ${totalCards} exercises shown`;
+    } else {
+      const parts = [];
+      if (hasPhase)     parts.push([...activeFilters.phase].map(f => f.replace('phase-','')).join(' or '));
+      if (hasSpinal)    parts.push([...activeFilters.spinal].map(f => f.replace('sl-','')).join(' or ') + ' spinal');
+      if (hasIntensity) parts.push([...activeFilters.intensity].map(f => f.replace('intensity-','')).join(' or '));
+      if (hasQuality)   parts.push([...activeFilters.quality].map(f => f.replace('quality-','')).join(' or '));
+      summaryEl.textContent = `${visible} of ${totalCards} · ${parts.join(' + ')}`;
+    }
+
+    clearBtn.style.display = anyActive ? 'inline-block' : 'none';
+
+    // Sync URL params for deep-linking from Periodization Guide
+    const params = new URLSearchParams();
+    if (hasPhase)     params.set('phase',     [...activeFilters.phase].join(','));
+    if (hasSpinal)    params.set('spinal',    [...activeFilters.spinal].join(','));
+    if (hasIntensity) params.set('intensity', [...activeFilters.intensity].join(','));
+    if (hasQuality)   params.set('quality',   [...activeFilters.quality].join(','));
+    const newUrl = params.toString()
+      ? `${location.pathname}?${params.toString()}`
+      : location.pathname;
+    try {
+      history.replaceState(null, '', newUrl);
+    } catch(e) { /* sandboxed preview — URL sync unavailable, filters still work */ }
+  }
+
+  filterBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const group  = btn.dataset.group;
+      const filter = btn.dataset.filter;
+      if (!group || !filter) return;
+
+      if (activeFilters[group].has(filter)) {
+        activeFilters[group].delete(filter);
+        btn.classList.remove('active');
+      } else {
+        activeFilters[group].add(filter);
+        btn.classList.add('active');
+      }
+      applyFilters();
+    });
+  });
+
+  clearBtn.addEventListener('click', () => {
+    Object.keys(activeFilters).forEach(g => activeFilters[g].clear());
+    filterBtns.forEach(b => b.classList.remove('active'));
+    applyFilters();
+  });
+
+  // ── URL parameter support ──────────────────────────────────────────────────
+  // Allows Periodization Guide to link directly:
+  // exercise_library.html?phase=phase-bridge,phase-gpp&spinal=sl-low&intensity=intensity-sub
+  function loadFromURL() {
+    const params = new URLSearchParams(location.search);
+    const map = { phase: 'phase', spinal: 'spinal', intensity: 'intensity', quality: 'quality' };
+
+    Object.entries(map).forEach(([param, group]) => {
+      const val = params.get(param);
+      if (!val) return;
+      val.split(',').forEach(filter => {
+        filter = filter.trim();
+        if (!filter) return;
+        activeFilters[group].add(filter);
+        // Activate matching button
+        const btn = document.querySelector(`[data-group="${group}"][data-filter="${filter}"]`);
+        if (btn) btn.classList.add('active');
+      });
+    });
+
+    applyFilters();
+  }
+
+  loadFromURL();
+</script>
+
+
+</body>
+</html>
