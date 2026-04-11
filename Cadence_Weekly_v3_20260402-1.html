@@ -1,0 +1,1642 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>Cadence — This Week</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Outfit:wght@300;400;500;600&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#faf7f2;
+  --surface:#ffffff;
+  --surface2:#f2ede4;
+  --border:#e0d8cc;
+  --ink:#1a1612;
+  --accent:#2d6a4f;
+  --accent2:#d4a017;
+  --rust:#c0392b;
+  --muted:#7a6f62;
+  --light-accent:#e8f4ef;
+  --light-warn:#fef9e7;
+  --light-red:#fdf0ef;
+  --light-gold:rgba(212,160,23,.08);
+  --radius:10px;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Outfit',sans-serif;
+  background:var(--bg);color:var(--ink);
+  font-size:15px;line-height:1.7;
+  padding-bottom:6rem;
+}
+
+/* ── HEADER ── */
+header{
+  background:var(--ink);
+  border-bottom:3px solid var(--accent2);
+  padding:1rem 1.25rem .85rem;
+  position:sticky;top:0;z-index:50;
+}
+.hdr-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:.75rem}
+.hdr-name{
+  font-family:'Playfair Display',serif;
+  font-size:1.9rem;font-style:italic;
+  color:#fff;line-height:1
+}
+.hdr-name strong{color:var(--accent2);font-style:normal}
+.hdr-sub{
+  font-family:'Fira Code',monospace;
+  font-size:.62rem;letter-spacing:.16em;text-transform:uppercase;
+  color:rgba(255,255,255,.4);margin-top:.2rem
+}
+.phase-badge{
+  background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.15);
+  border-radius:4px;padding:.35rem .65rem;
+  font-family:'Fira Code',monospace;font-size:.65rem;
+  letter-spacing:.08em;text-transform:uppercase;
+  color:var(--accent2);text-align:right;line-height:1.5
+}
+.phase-badge span{display:block;color:rgba(255,255,255,.35);font-size:.58rem}
+
+/* MEET STRIP */
+.meet-strip{
+  display:grid;grid-template-columns:1fr 1px 1fr;
+  gap:.5rem;align-items:center;
+  background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);
+  border-radius:6px;padding:.6rem .85rem;
+}
+.meet-item{text-align:center}
+.meet-label{font-family:'Fira Code',monospace;font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.35)}
+.meet-name{font-weight:500;font-size:.82rem;color:rgba(255,255,255,.75);margin:.1rem 0}
+.meet-count{font-family:'Playfair Display',serif;font-size:1.6rem;color:var(--accent2);line-height:1}
+.meet-divider{width:1px;height:36px;background:rgba(255,255,255,.1)}
+
+/* ── GATE BANNER ── */
+.gate-banner{
+  margin:1rem 1.25rem 0;
+  border:1px solid var(--border);border-left:3px solid var(--rust);
+  background:var(--light-red);border-radius:0 6px 6px 0;
+  padding:.7rem 1rem;
+  display:flex;align-items:center;gap:.65rem;
+}
+.gate-banner-text{font-family:'Fira Code',monospace;font-size:.7rem;color:var(--rust);letter-spacing:.04em;flex:1}
+.gate-banner-text strong{display:block;font-size:.75rem;margin-bottom:.1rem}
+.gate-log-btn{
+  background:var(--surface2);border:1px solid var(--border);
+  border-radius:4px;padding:.35rem .65rem;
+  font-family:'Fira Code',monospace;font-size:.65rem;
+  color:var(--accent);cursor:pointer;white-space:nowrap;letter-spacing:.06em;
+  text-transform:uppercase;
+}
+
+/* ── DAY SELECTOR ── */
+.day-selector{
+  display:grid;grid-template-columns:repeat(7,1fr);
+  gap:.3rem;padding:.85rem 1.25rem .5rem;
+  position:sticky;top:113px;z-index:40;
+  background:var(--bg);
+  border-bottom:1px solid var(--border);
+}
+.day-btn{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:6px;padding:.45rem 0;
+  font-family:'Fira Code',monospace;font-size:.65rem;
+  letter-spacing:.04em;color:var(--muted);cursor:pointer;
+  transition:all .15s;text-align:center;
+  display:flex;flex-direction:column;align-items:center;gap:.1rem;
+}
+.day-btn .day-initial{font-size:.62rem;font-weight:500;letter-spacing:-.02em}
+.day-btn .day-dot{width:4px;height:4px;border-radius:50%;background:transparent;transition:background .15s}
+.day-btn.today{border-color:var(--accent2);color:var(--accent2)}
+.day-btn.today .day-dot{background:var(--accent2)}
+.day-btn.active{background:var(--ink);border-color:var(--ink);color:#fff}
+.day-btn.today.active{background:var(--accent2);border-color:var(--accent2);color:var(--ink)}
+.day-btn.logged .day-dot{background:var(--accent)}
+
+/* ── MAIN ── */
+main{padding:1.25rem}
+
+.day-intent{
+  font-family:'Playfair Display',serif;
+  font-size:1.9rem;line-height:1.1;
+  color:var(--ink);margin-bottom:.2rem;font-style:italic;
+}
+.day-sub{font-size:.82rem;color:var(--muted);margin-bottom:1.25rem;font-family:'Fira Code',monospace;font-size:.7rem;letter-spacing:.04em}
+
+/* ── COLLAGEN WINDOW ALERT ── */
+.collagen-alert{
+  background:var(--light-warn);
+  border:1px solid rgba(212,160,23,.4);
+  border-left:3px solid var(--accent2);
+  border-radius:0 6px 6px 0;
+  padding:.85rem 1rem;margin-bottom:1.25rem;
+  display:flex;gap:.65rem;align-items:flex-start;
+}
+.collagen-icon{font-size:1.1rem;flex-shrink:0;margin-top:.05rem}
+.collagen-text{font-family:'Fira Code',monospace;font-size:.72rem;color:#8a6800;line-height:1.5}
+.collagen-text strong{display:block;font-size:.78rem;margin-bottom:.1rem;color:var(--accent2)}
+
+/* ── CONTRAST WARMUP BLOCK ── */
+.contrast-block{
+  background:var(--ink);
+  border-radius:var(--radius);
+  padding:1.1rem 1.25rem;
+  margin-bottom:1.25rem;
+  position:relative;overflow:hidden;
+}
+.contrast-block::before{
+  content:'';position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--accent2)
+}
+.contrast-header{
+  display:flex;align-items:center;gap:.6rem;margin-bottom:.85rem;padding-left:.5rem
+}
+.contrast-eyebrow{
+  font-family:'Fira Code',monospace;font-size:.62rem;letter-spacing:.18em;
+  text-transform:uppercase;color:var(--accent2)
+}
+.contrast-title{
+  font-family:'Playfair Display',serif;color:#fff;font-size:1rem;margin-left:auto;
+  font-style:italic;
+}
+.contrast-phase-badge{
+  font-family:'Fira Code',monospace;font-size:.55rem;letter-spacing:.1em;
+  text-transform:uppercase;padding:.2rem .5rem;border-radius:2px;
+  background:rgba(212,160,23,.15);color:var(--accent2);border:1px solid rgba(212,160,23,.3);
+  margin-left:.5rem;
+}
+.cw-step{
+  display:flex;align-items:flex-start;gap:.65rem;
+  padding:.6rem 0;border-bottom:1px solid rgba(255,255,255,.07);
+  cursor:pointer;
+}
+.cw-step:last-child{border-bottom:none}
+.cw-num{
+  font-family:'Playfair Display',serif;
+  font-size:1.4rem;color:var(--accent2);line-height:1;
+  width:24px;flex-shrink:0;font-style:italic
+}
+.cw-body{flex:1}
+.cw-name{font-size:.9rem;font-weight:600;color:#fff;margin-bottom:.1rem}
+.cw-dose{font-family:'Fira Code',monospace;font-size:.68rem;color:var(--accent2);margin-bottom:.15rem}
+.cw-note{font-size:.78rem;color:rgba(255,255,255,.5);line-height:1.4}
+.cw-chevron{font-size:.65rem;color:rgba(255,255,255,.3);flex-shrink:0;margin-top:.3rem;transition:transform .2s}
+.cw-step.open .cw-chevron{transform:rotate(180deg)}
+.cw-detail{
+  display:none;
+  padding:.75rem .85rem .8rem;
+  background:rgba(255,255,255,.04);
+  border-radius:0 0 6px 6px;
+  border:1px solid rgba(255,255,255,.08);
+  border-top:none;
+  margin:.0rem 0 .5rem 2.4rem;
+}
+.cw-detail.open{display:block}
+.cw-detail-label{
+  font-family:'Fira Code',monospace;font-size:.6rem;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--accent2);margin-bottom:.25rem
+}
+.cw-detail-text{font-size:.82rem;color:rgba(255,255,255,.65);line-height:1.55;margin-bottom:.4rem}
+.cw-video-link{
+  display:inline-flex;align-items:center;gap:.35rem;
+  font-family:'Fira Code',monospace;font-size:.65rem;
+  color:rgba(255,255,255,.35);border:1px solid rgba(255,255,255,.12);
+  border-radius:3px;padding:.25rem .6rem;
+  text-decoration:none;letter-spacing:.06em;
+  transition:color .15s,border-color .15s;
+}
+.cw-video-link:hover{color:var(--accent2);border-color:var(--accent2)}
+.cw-locked{
+  display:flex;align-items:center;gap:.5rem;
+  padding:.5rem .75rem;margin-top:.5rem;
+  background:rgba(192,57,43,.08);border:1px solid rgba(192,57,43,.2);
+  border-radius:4px;font-family:'Fira Code',monospace;font-size:.65rem;
+  color:rgba(192,57,43,.7);letter-spacing:.04em;
+}
+
+/* ── EXERCISE BLOCKS ── */
+.ex-block{margin-bottom:1.25rem}
+.block-label{
+  font-family:'Fira Code',monospace;font-size:.62rem;
+  letter-spacing:.16em;text-transform:uppercase;
+  color:var(--accent);
+  display:flex;align-items:center;gap:.4rem;
+  margin-bottom:.6rem;padding-bottom:.4rem;
+  border-bottom:1px solid var(--border);
+}
+.block-label::before{content:'';width:10px;height:1px;background:var(--accent)}
+.block-label.gold{color:var(--accent2)}
+.block-label.gold::before{background:var(--accent2)}
+
+.ex-row{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:.6rem 0;border-bottom:1px solid rgba(224,216,204,.5);
+  gap:.5rem;cursor:pointer;
+}
+.ex-row:last-child{border-bottom:none}
+.ex-row:active{background:rgba(0,0,0,.02)}
+.ex-name{font-size:.88rem;color:var(--ink);flex:1;line-height:1.4;font-weight:500}
+.ex-name small{display:block;font-size:.75rem;color:var(--muted);margin-top:.1rem;font-weight:400}
+.ex-tags-row{display:flex;align-items:center;gap:.4rem;flex-shrink:0}
+.ex-dose{
+  font-family:'Fira Code',monospace;font-size:.72rem;
+  color:var(--accent);white-space:nowrap;
+  background:var(--light-accent);border:1px solid rgba(45,106,79,.2);
+  border-radius:3px;padding:.2rem .45rem;
+}
+.ex-dose.gold{color:var(--accent2);background:var(--light-gold);border-color:rgba(212,160,23,.25)}
+.ex-chevron{font-size:.65rem;color:var(--muted);flex-shrink:0;transition:transform .2s;margin-left:.3rem}
+.ex-row.open .ex-chevron{transform:rotate(180deg)}
+
+.ex-detail{
+  display:none;
+  padding:.75rem .85rem .85rem;
+  background:var(--surface2);
+  border-radius:0 0 6px 6px;
+  border:1px solid var(--border);
+  border-top:none;
+  margin-top:-2px;
+  margin-bottom:.5rem;
+}
+.ex-detail.open{display:block}
+.ex-detail-section{margin-bottom:.65rem}
+.ex-detail-section:last-child{margin-bottom:0}
+.ex-detail-label{
+  font-family:'Fira Code',monospace;font-size:.6rem;
+  letter-spacing:.14em;text-transform:uppercase;
+  color:var(--accent);margin-bottom:.2rem
+}
+.ex-detail-label.gold{color:var(--accent2)}
+.ex-detail-text{font-size:.82rem;color:#3d3530;line-height:1.55}
+.ex-video-link{
+  display:inline-flex;align-items:center;gap:.35rem;
+  margin-top:.6rem;
+  font-family:'Fira Code',monospace;font-size:.67rem;
+  color:var(--accent);text-decoration:none;border-bottom:1px solid rgba(45,106,79,.3);
+  padding-bottom:1px;letter-spacing:.04em;
+}
+.ex-video-link:hover{color:var(--ink)}
+
+/* REST DAY */
+.rest-card{
+  text-align:center;padding:3rem 1.5rem;
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--radius);
+}
+.rest-icon{font-size:2.5rem;margin-bottom:.75rem}
+.rest-title{font-family:'Playfair Display',serif;font-size:1.8rem;color:var(--muted);margin-bottom:.5rem;font-style:italic}
+.rest-text{font-size:.85rem;color:var(--muted);max-width:220px;margin:0 auto}
+
+/* ── GATE LOG MODAL ── */
+.modal-bg{
+  display:none;position:fixed;inset:0;z-index:100;
+  background:rgba(26,22,18,.75);backdrop-filter:blur(6px);
+  align-items:flex-end;justify-content:center;
+}
+.modal-bg.open{display:flex}
+.modal{
+  background:var(--surface);
+  border:1px solid var(--border);border-top:3px solid var(--accent2);
+  border-radius:12px 12px 0 0;
+  width:100%;max-width:480px;
+  padding:1.5rem 1.5rem 2.5rem;
+}
+.modal-title{
+  font-family:'Playfair Display',serif;font-size:1.5rem;font-style:italic;
+  color:var(--ink);margin-bottom:.25rem
+}
+.modal-sub{font-size:.8rem;color:var(--muted);margin-bottom:1.5rem;font-family:'Fira Code',monospace;font-size:.68rem;letter-spacing:.06em}
+.score-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:.5rem;margin-bottom:1.25rem}
+.score-btn{
+  background:var(--surface2);border:2px solid var(--border);
+  border-radius:6px;padding:.75rem 0;
+  font-family:'Playfair Display',serif;font-size:1.4rem;
+  cursor:pointer;transition:all .15s;color:var(--muted);
+  text-align:center;
+}
+.score-btn[data-score="0"]{border-color:var(--accent);color:var(--accent)}
+.score-btn[data-score="1"]{border-color:#4a9b6f;color:#4a9b6f}
+.score-btn[data-score="2"]{border-color:var(--accent2);color:var(--accent2)}
+.score-btn[data-score="3"]{border-color:#e07b00;color:#e07b00}
+.score-btn[data-score="4"]{border-color:var(--rust);color:var(--rust)}
+.score-btn[data-score="5"]{border-color:var(--rust);color:var(--rust)}
+.score-btn.selected{transform:scale(1.08);box-shadow:0 0 14px currentColor}
+.score-legend{
+  display:flex;justify-content:space-between;
+  font-family:'Fira Code',monospace;font-size:.6rem;
+  color:var(--muted);margin-bottom:1.5rem
+}
+.timing-toggle{display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin-bottom:1.5rem}
+.timing-btn{
+  background:var(--surface2);border:1px solid var(--border);
+  border-radius:6px;padding:.65rem;
+  font-family:'Fira Code',monospace;font-size:.7rem;
+  letter-spacing:.06em;text-transform:uppercase;
+  cursor:pointer;color:var(--muted);text-align:center;transition:all .15s;
+}
+.timing-btn.active{background:var(--light-accent);border-color:var(--accent);color:var(--accent)}
+.gate-status{
+  border-radius:6px;padding:.85rem 1rem;margin-bottom:1.25rem;
+  font-family:'Fira Code',monospace;font-size:.72rem;
+  text-align:center;letter-spacing:.06em;display:none;
+}
+.gate-status.pass{background:var(--light-accent);border:1px solid var(--accent);color:var(--accent)}
+.gate-status.hold{background:var(--light-red);border:1px solid var(--rust);color:var(--rust)}
+.modal-save{
+  width:100%;background:var(--ink);color:#fff;
+  border:none;border-radius:8px;padding:1rem;
+  font-family:'Fira Code',monospace;font-size:.82rem;
+  font-weight:500;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;
+}
+.modal-cancel{
+  width:100%;background:none;border:1px solid var(--border);
+  color:var(--muted);border-radius:8px;padding:.75rem;
+  font-family:'Fira Code',monospace;font-size:.72rem;
+  letter-spacing:.08em;text-transform:uppercase;cursor:pointer;margin-top:.5rem;
+}
+
+/* ── HISTORY ── */
+.history-section{margin-top:2rem}
+.history-label{
+  font-family:'Fira Code',monospace;font-size:.62rem;
+  letter-spacing:.16em;text-transform:uppercase;color:var(--muted);
+  margin-bottom:.75rem;display:flex;align-items:center;gap:.4rem
+}
+.history-label::before{content:'';width:10px;height:1px;background:var(--muted)}
+.log-row{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:.55rem 0;border-bottom:1px solid rgba(224,216,204,.5);font-size:.82rem;
+}
+.log-row:last-child{border-bottom:none}
+.log-date{color:var(--muted);font-family:'Fira Code',monospace;font-size:.7rem}
+.log-score{font-family:'Playfair Display',serif;font-size:1.2rem}
+.log-score.ok{color:var(--accent)}
+.log-score.warn{color:var(--accent2)}
+.log-score.bad{color:var(--rust)}
+.log-timing{font-family:'Fira Code',monospace;font-size:.6rem;color:var(--muted)}
+
+/* HOLD BANNER */
+.hold-banner{
+  background:var(--light-red);border:1px solid var(--rust);
+  border-radius:var(--radius);padding:1rem 1.1rem;
+  margin-bottom:1.25rem;display:flex;gap:.65rem;align-items:flex-start;
+}
+.hold-icon{font-size:1.1rem;flex-shrink:0}
+.hold-text{font-size:.82rem;color:var(--rust);line-height:1.5}
+.hold-text strong{display:block;font-weight:600;margin-bottom:.1rem}
+
+/* ── WEEK NAV ── */
+.week-nav{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:.75rem 1.25rem;
+  border-top:2px solid var(--border);
+  position:fixed;bottom:0;left:0;right:0;
+  background:rgba(250,247,242,.97);backdrop-filter:blur(12px);z-index:50;
+}
+.week-nav-info{text-align:center}
+.week-nav-label{font-family:'Fira Code',monospace;font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.week-nav-week{font-family:'Playfair Display',serif;font-size:1.1rem;color:var(--ink);line-height:1;font-style:italic}
+.nav-arrow{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:6px;width:40px;height:40px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:.9rem;cursor:pointer;color:var(--muted);transition:all .15s;
+}
+.nav-arrow:hover{border-color:var(--accent);color:var(--accent)}
+.nav-arrow:disabled{opacity:.3;cursor:default}
+
+@media(max-width:360px){
+  .day-btn .day-initial{font-size:.62rem}
+  .cw-num{font-size:1.1rem}
+}
+
+  /* ── FRAMEWORK SKELETON ── */
+  .framework-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.6rem 0.85rem;
+    margin: 0.75rem 0 0.25rem;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--gold);
+    border-radius: 0 4px 4px 0;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  .framework-med {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.58rem;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+  .framework-med strong {
+    color: var(--gold);
+    font-weight: 500;
+  }
+  .browse-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.35rem 0.75rem;
+    background: none;
+    border: 1px solid rgba(255,209,102,0.35);
+    border-radius: 3px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--gold);
+    text-decoration: none;
+    white-space: nowrap;
+    transition: all 0.15s;
+  }
+  .browse-btn:hover {
+    background: rgba(255,209,102,0.08);
+    border-color: var(--gold);
+  }
+  .browse-btn::after { content: ' →'; }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="hdr-top">
+    <div>
+      <div class="hdr-name"><strong>Cadence</strong> — Back.</div>
+      <div class="hdr-sub">100 · 200 · Long Jump · Cal Poly</div>
+    </div>
+    <div class="phase-badge" id="phase-badge">
+      Phase 1 · W1<span>Return to Compete</span>
+    </div>
+  </div>
+  <div class="meet-strip">
+    <div class="meet-item">
+      <div class="meet-label">Next Meet</div>
+      <div class="meet-name" id="next-meet-name">First Exposure</div>
+      <div class="meet-count" id="next-meet-count">—</div>
+    </div>
+    <div class="meet-divider"></div>
+    <div class="meet-item">
+      <div class="meet-label">Conference</div>
+      <div class="meet-name">Target</div>
+      <div class="meet-count" id="conf-count">—</div>
+    </div>
+  </div>
+</header>
+
+<!-- GATE BANNER -->
+<div class="gate-banner" id="gate-banner">
+  <div style="font-size:1rem;flex-shrink:0">🌿</div>
+  <div class="gate-banner-text">
+    <strong>Morning Check — Daily</strong>
+    Rate foot/shin pain 0–10 before getting out of bed
+  </div>
+  <button class="gate-log-btn" onclick="openGateModal()">Log</button>
+</div>
+
+<!-- DAY SELECTOR -->
+<div class="day-selector" id="day-selector">
+  <button class="day-btn" data-day="0" onclick="selectDay(0)"><span class="day-initial">M</span><span class="day-dot"></span></button>
+  <button class="day-btn" data-day="1" onclick="selectDay(1)"><span class="day-initial">T</span><span class="day-dot"></span></button>
+  <button class="day-btn" data-day="2" onclick="selectDay(2)"><span class="day-initial">W</span><span class="day-dot"></span></button>
+  <button class="day-btn" data-day="3" onclick="selectDay(3)"><span class="day-initial">Th</span><span class="day-dot"></span></button>
+  <button class="day-btn" data-day="4" onclick="selectDay(4)"><span class="day-initial">F</span><span class="day-dot"></span></button>
+  <button class="day-btn" data-day="5" onclick="selectDay(5)"><span class="day-initial">Sa</span><span class="day-dot"></span></button>
+  <button class="day-btn" data-day="6" onclick="selectDay(6)"><span class="day-initial">Su</span><span class="day-dot"></span></button>
+</div>
+
+<!-- MAIN -->
+<main id="main-content"></main>
+
+<!-- GATE LOG MODAL -->
+<div class="modal-bg" id="gate-modal">
+  <div class="modal">
+    <div class="modal-title">Morning Gate Check</div>
+    <div class="modal-sub" id="modal-date-label">Logging for today</div>
+    <div class="score-grid" id="score-grid">
+      <button class="score-btn" data-score="0" onclick="selectScore(0)">0</button>
+      <button class="score-btn" data-score="1" onclick="selectScore(1)">1</button>
+      <button class="score-btn" data-score="2" onclick="selectScore(2)">2</button>
+      <button class="score-btn" data-score="3" onclick="selectScore(3)">3</button>
+      <button class="score-btn" data-score="4" onclick="selectScore(4)">4</button>
+      <button class="score-btn" data-score="5" onclick="selectScore(5)">5</button>
+    </div>
+    <div class="score-legend">
+      <span>0 = None</span><span>3 = Loading limit</span><span>5 = Stop</span>
+    </div>
+    <div class="timing-toggle">
+      <button class="timing-btn active" id="timing-morning" onclick="selectTiming('morning')">Morning (before rising)</button>
+      <button class="timing-btn" id="timing-session" onclick="selectTiming('session')">During session</button>
+    </div>
+    <div class="gate-status" id="gate-status"></div>
+    <button class="modal-save" onclick="saveGate()">Save</button>
+    <button class="modal-cancel" onclick="closeGateModal()">Cancel</button>
+  </div>
+</div>
+
+<!-- WEEK NAV -->
+<div class="week-nav">
+  <button class="nav-arrow" id="prev-week" onclick="changeWeek(-1)" disabled>←</button>
+  <div class="week-nav-info">
+    <div class="week-nav-label">Return to Compete</div>
+    <div class="week-nav-week" id="nav-week-label">Week 1 of 7</div>
+  </div>
+  <button class="nav-arrow" id="next-week" onclick="changeWeek(1)">→</button>
+</div>
+
+<script>
+// ─────────────────────────────────────────
+// SUPABASE CONFIG
+// ─────────────────────────────────────────
+const SUPA_URL = 'https://jedsnurnnwmpcbdvtlbs.supabase.co';
+const SUPA_KEY = 'sb_publishable_3WGolnM5dOK88Y4WdKCFGA_Hi6wj-_z';
+
+async function sbFetch(path, opts = {}){
+  const headers = { 'apikey': SUPA_KEY, 'Content-Type': 'application/json' };
+  if(opts.prefer) headers['Prefer'] = opts.prefer;
+  const res = await fetch(SUPA_URL + path, {
+    method: opts.method || 'GET', headers, body: opts.body || undefined,
+  });
+  if(!res.ok){ const txt = await res.text(); throw new Error('Supabase ' + res.status + ': ' + txt); }
+  if(res.status === 204) return [];
+  const ct = res.headers.get('content-type') || '';
+  return ct.includes('application/json') ? res.json() : [];
+}
+
+function sbDateStr(d){
+  return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+}
+function todayStr(){ return sbDateStr(new Date()); }
+
+async function loadGateLogs(athleteId, logsArray){
+  try {
+    const since = new Date(); since.setDate(since.getDate() - 60);
+    const rows = await sbFetch(
+      '/rest/v1/pain_logs?athlete_id=eq.' + athleteId +
+      '&date=gte.' + sbDateStr(since) + '&order=created_at.desc&select=*'
+    );
+    if(rows && rows.length){
+      const remote = rows.map(r => ({
+        date: r.date, metric: r.metric || 'foot', score: r.score,
+        timing: r.timing, ts: new Date(r.created_at).getTime(), sb_id: r.id
+      }));
+      const remoteKeys = new Set(remote.map(r => r.date+'|'+r.score+'|'+r.timing));
+      const localOnly = logsArray.filter(l => !l.sb_id && !remoteKeys.has(l.date+'|'+l.score+'|'+l.timing));
+      logsArray.length = 0;
+      remote.forEach(r => logsArray.push(r));
+      localOnly.forEach(r => logsArray.push(r));
+    }
+    showSyncBadge('ok');
+  } catch(e){ console.warn('Supabase load failed — using local:', e.message); showSyncBadge('offline'); }
+}
+
+async function saveGateLog(athleteId, entry){
+  try {
+    const row = { athlete_id: athleteId, date: entry.date, metric: 'foot_shin',
+                  score: entry.score, timing: entry.timing || 'morning' };
+    const result = await sbFetch('/rest/v1/pain_logs', {
+      method: 'POST', prefer: 'return=representation', body: JSON.stringify(row)
+    });
+    if(result && result[0]) entry.sb_id = result[0].id;
+    showSyncBadge('ok');
+  } catch(e){ console.warn('Supabase save failed:', e.message); showSyncBadge('offline'); }
+}
+
+async function loadWeekState(athleteId, defaultWeek){
+  try {
+    const rows = await sbFetch('/rest/v1/athlete_state?athlete_id=eq.' + athleteId + '&select=current_week');
+    if(rows && rows[0] && rows[0].current_week !== undefined) return rows[0].current_week;
+  } catch(e){ console.warn('Week state load failed:', e.message); }
+  return defaultWeek;
+}
+
+async function saveWeekState(athleteId, weekIdx){
+  try {
+    await sbFetch('/rest/v1/athlete_state', {
+      method: 'POST', prefer: 'resolution=merge-duplicates,return=minimal',
+      body: JSON.stringify({ athlete_id: athleteId, current_week: weekIdx, updated_at: new Date().toISOString() })
+    });
+  } catch(e){ console.warn('Week state save failed:', e.message); }
+}
+
+function showSyncBadge(state){
+  let el = document.getElementById('supa-sync');
+  if(!el){
+    el = document.createElement('div'); el.id = 'supa-sync';
+    el.style.cssText = 'position:fixed;bottom:5.5rem;right:1rem;z-index:200;' +
+      'font-family:monospace;font-size:0.58rem;letter-spacing:0.1em;text-transform:uppercase;' +
+      'padding:0.25rem 0.55rem;border-radius:3px;pointer-events:none;transition:opacity 0.4s;';
+    document.body.appendChild(el);
+  }
+  if(state === 'ok'){
+    el.textContent = '✓ synced'; el.style.opacity = '1';
+    el.style.background = 'rgba(45,106,79,0.15)'; el.style.color = '#2d6a4f';
+    el.style.border = '1px solid rgba(45,106,79,0.3)';
+    setTimeout(() => el.style.opacity = '0', 2500);
+  } else {
+    el.textContent = '⚡ offline'; el.style.opacity = '1';
+    el.style.background = 'rgba(192,57,43,0.1)'; el.style.color = '#c0392b';
+    el.style.border = '1px solid rgba(192,57,43,0.25)';
+    setTimeout(() => el.style.opacity = '0', 3500);
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// EXERCISE DICTIONARY
+// ─────────────────────────────────────────────────────────────────────────────
+const EX_INFO = {
+  'Medial Plantar Nerve Glide': {
+    setup: '2×10 reps each foot. Every morning and before every session.',
+    cue: 'Seated, foot relaxed. Dorsiflex ankle (foot toward shin) while extending the big toe. Hold 2–3 sec, release fully. A gentle tug in the arch is correct. Sharp pain = reduce range immediately.',
+    url: 'https://www.youtube.com/results?search_query=medial+plantar+nerve+glide+neural+mobilization'
+  },
+  'Tibial Nerve Floss': {
+    setup: '2×15 oscillations each side. Daily.',
+    cue: 'Seated, knee extended. Dorsiflex foot while tilting head forward — both simultaneously. Then relax both together. Rhythmic oscillation, not a held stretch. Gentle pulling sensation is correct.',
+    url: 'https://www.youtube.com/results?search_query=tibial+nerve+floss+neural+mobilization+plantar+fascia'
+  },
+  'Heel Rock — Calcaneal Mobility': {
+    setup: '2×10 each foot. Slow and deliberate. Barefoot on firm surface.',
+    cue: 'Shift weight forward over ball of foot — feel the calcaneus evert (inner ankle tilts toward floor). Then shift back. Goal is to feel the bone move, not just the ankle. Not a balance exercise.',
+    url: 'https://www.youtube.com/results?search_query=calcaneal+heel+rock+subtalar+mobility+anatomy+in+motion'
+  },
+  'Short Foot Exercise': {
+    setup: '3×10-sec holds each foot. Seated progressing to standing.',
+    cue: '"Draw the ball of the foot toward the heel without curling the toes." Arch rises slightly. Toes curling = extrinsics compensating — reduce effort and reset. Progress to standing when seated is easy.',
+    url: 'https://www.youtube.com/results?search_query=short+foot+exercise+intrinsic+arch+plantar+fascia'
+  },
+  'Big Toe Lift — Windlass Activation': {
+    setup: '2×12 reps. Slow, controlled. Pain 0–2/10 only.',
+    cue: 'Lift big toe only, hold 2 sec at top, lower under control. Keep small toes pressed down. The windlass mechanism is what drives PF tension at push-off — this is direct preparation for board contact.',
+    url: 'https://www.youtube.com/results?search_query=big+toe+lift+windlass+mechanism+plantar+fascia+sprint'
+  },
+  'PF Isometric — Seated (Towel)': {
+    setup: '3×45-sec holds. Folded towel under toes. Pain 0–3/10 only.',
+    cue: 'Seated, foot flat. Towel under toes — press toes into towel and hold without movement. Loads the plantar fascia via windlass mechanism at zero bodyweight. No bouncing. This is the collagen window target exercise.',
+    url: 'https://www.youtube.com/results?search_query=plantar+fascia+isometric+seated+toe+flexion+tendon+loading'
+  },
+  'Soleus Isometric — Seated Knee-Bent': {
+    setup: '4×45-sec holds. Weight plate or partner resistance on thigh. Pain 0–3/10.',
+    cue: 'Seated, knee at ~90°. Resistance on thigh. Press ball of foot into floor and hold. Feel the deep calf (not gastrocnemius). Breathe normally throughout.',
+    url: 'https://www.youtube.com/results?search_query=soleus+isometric+seated+knee+bent+calf+loading'
+  },
+  'Grey Glute Bridge — Incomplete Extension': {
+    setup: '3×10-sec holds at ~80% bridge height. Progress to single-leg.',
+    cue: 'Stop at 80% of full bridge height. At this position, "screw" the foot into the floor (external rotation intention, no movement). Feel the glute from deep inside — not the superficial squeeze of full lockout. Correct ISA loading pattern.',
+    url: 'https://www.youtube.com/results?search_query=David+Grey+glute+bridge+incomplete+extension+rotation'
+  },
+  'Single-Leg Calcaneal Mobility Squat': {
+    setup: '3×6 each leg. 3-sec descent, pause at bottom. Phase 2 only.',
+    cue: 'Single leg, allow knee to track over 2nd toe. Actively feel the calcaneus evert on descent. Controlled eversion only — not a collapse. Pain 0–3/10.',
+    url: 'https://www.youtube.com/results?search_query=single+leg+squat+calcaneal+eversion+foot+control+rehab'
+  },
+  'Single-Leg RDL — Bodyweight': {
+    setup: '3×8 each leg. 3-sec eccentric. Bodyweight only.',
+    cue: 'Hip hinge, not a squat. "Push the floor away with your heel." Pelvis stays square — rotation is compensation. Feel hamstring load all the way down.',
+    url: 'https://www.youtube.com/results?search_query=single+leg+RDL+Romanian+deadlift+hamstring+sprint'
+  },
+  'Hip Extension Isometric — Proximal Hamstring': {
+    setup: '4×30-sec holds at 70% effort. Hip at neutral or slight extension.',
+    cue: 'Prone, drive heel toward ceiling against band resistance. Hip must be at or behind neutral — NOT flexed. Feeling this at the sit bone with hip flexed = stop and reset hip position.',
+    url: 'https://www.youtube.com/results?search_query=proximal+hamstring+isometric+prone+hip+extension+sprint'
+  },
+  'Rotational Bound — Narrow ISA': {
+    setup: '4×6 contacts. Max intent. Full recovery 2–3 min. Phase 3+ only.',
+    cue: 'Drive off push-off leg with rotational hip swing. Pelvis and ribcage counter-rotate through the air. Land absorbing through pronation-to-supination. Cue: "rotate through" — never "stand tall."',
+    url: 'https://www.youtube.com/results?search_query=rotational+bounding+narrow+ISA+sprint+long+jump'
+  },
+  'Penultimate Step Drill — Short Approach': {
+    setup: '6–8 reps. 4-step approach. Focus on contact mechanics, not distance.',
+    cue: 'Penultimate foot strikes slightly heel-first, long flat shin. Do NOT try to jump off it — let the gathering happen from the shin angle. Takeoff foot strikes full-foot driving free knee up. Allow natural counter-rotation through the penultimate.',
+    url: 'https://www.youtube.com/results?search_query=long+jump+penultimate+step+drill+short+approach+mechanics'
+  },
+  'Ankle Stiffness Hops — Bilateral Pogo': {
+    setup: 'Phase 3+: 4×20 contacts. Max height, minimal contact time. Any plantar pain = stop immediately.',
+    cue: 'Pogo stick — ankles are the spring, not the knee. Minimal knee bend on landing. "Hot coals." Target <200ms ground contact if measuring.',
+    url: 'https://www.youtube.com/results?search_query=ankle+stiffness+pogo+hops+Achilles+sprint+elastic+energy'
+  },
+  'Jump Rope — Stiff Ankle': {
+    setup: 'Phase 2: 2 min. Phase 3: 3×2 min with 1-min rest. Always within collagen window.',
+    cue: 'Minimal ground contact. Ankles stiff. Arms drive rhythm. Any heel contact or plantar pain = stop for that session. This is the Shaw et al. (2017) stimulus — 6 min doubled collagen synthesis markers.',
+    url: 'https://www.youtube.com/results?search_query=stiff+ankle+jump+rope+Achilles+tendon+collagen+window+Shaw'
+  },
+  'Decline Slow Eccentric Heel Raise': {
+    setup: 'Phase 3+ only. 3×15. 3-sec eccentric on 15–25° decline. Any plantar pain = return to Phase 2.',
+    cue: 'Rise on both feet, lower on single leg (eccentric only). Control every millimeter of descent. Add load via vest when 15 reps is easy. Pain 0–4/10 in calf only.',
+    url: 'https://www.youtube.com/results?search_query=decline+eccentric+heel+raise+Alfredson+Achilles+tendinopathy'
+  },
+  // CONTRAST WARMUP EXERCISES
+  'CW: Seated PF Isometric — Towel Hold': {
+    setup: '2×45s. Towel under toes. 70% effort. Pain 0–3/10.',
+    cue: 'Seated. Towel folded under toes. Press toes down into towel and hold — no movement. This directly loads the plantar fascia at zero bodyweight. Baar protocol: this is your collagen synthesis primer. The tissue you load in the next 6–10 min will have elevated cross-linking activity.',
+    url: 'https://www.youtube.com/results?search_query=plantar+fascia+isometric+seated+tendon+loading+collagen'
+  },
+  'CW: Split Lunge ISO — Rear Foot Up (Soleus/Achilles)': {
+    setup: '2×45s each leg. Rear foot on toes, low lunge position. 70% effort.',
+    cue: 'Split stance. Rear foot on ball of foot / toes — heel elevated. Sink into a low lunge and HOLD. This loads the soleus and Achilles under partial bodyweight in plantarflexion. The rear foot is the target. Front knee stays soft — you\'re not doing a stretch, you\'re doing an isometric contraction of the calf complex.',
+    url: 'https://www.youtube.com/results?search_query=split+lunge+hold+soleus+isometric+Achilles+tendon+loading'
+  },
+  'CW: Split Lunge ISO — Front Foot (PF/Windlass/Tib Post)': {
+    setup: '2×45s each leg. Front foot with toes extended off a wedge or step edge. 70% effort.',
+    cue: 'Split stance. Front foot with toes dorsiflexed over a step edge or 16-degree wedge — this extends the toes and tensions the windlass mechanism while you hold a lunge. This simultaneously loads the plantar fascia, the tibialis posterior, and the windlass mechanism. The exact chain that\'s been driving her shin symptoms. Hold without bouncing.',
+    url: 'https://www.youtube.com/results?search_query=lunge+hold+toes+elevated+windlass+plantar+fascia+tibialis+posterior'
+  },
+  'CW: Bilateral Pogo Hops — Stiff Ankle': {
+    setup: 'Phase 2+: 2×20 contacts. Phase 3+: 3×20 contacts. Minimal knee bend.',
+    cue: '"Hot coals." Ankles are the spring — minimal knee bend. Arms help with rhythm. This is the elastic expression of the stiffness built in the ISO steps above. Shaw et al: 6 min of rapid tendon loading within the collagen window doubled synthesis markers. You\'re in that window right now. Any plantar pain = stop immediately.',
+    url: 'https://www.youtube.com/results?search_query=bilateral+pogo+hops+stiff+ankle+Achilles+collagen+window+Shaw'
+  },
+  'CW: Single-Leg Pogo — Takeoff Foot Only': {
+    setup: 'Phase 3+: 3×10 contacts. Takeoff foot only. Full recovery between sets.',
+    cue: 'Single-leg pogo on the takeoff foot. Same cues — minimal knee bend, ankle spring. This is the closest gym analog to the board contact in LJ. Build bilateral version first across phases. Any PF pain = back to bilateral.',
+    url: 'https://www.youtube.com/results?search_query=single+leg+pogo+hop+reactive+ankle+sprint+LJ+takeoff'
+  },
+};
+
+// ─────────────────────────────────────────────────────────────────────────────
+// CONTRAST WARMUP PROTOCOL — phased
+// Phase 1 (W1–2): ISO only (steps 1–3)
+// Phase 2 (W3–4): ISO + bilateral pogos (steps 1–4)
+// Phase 3 (W5+): Full sequence including single-leg pogo (steps 1–5)
+// ─────────────────────────────────────────────────────────────────────────────
+const CONTRAST_WARMUP = {
+  preamble: 'Collagen taken 60 min ago. 6–10 min total. Stop at 10 min. Separate from main training by 6+ hours where possible. Shaw et al. (2017): this exact sequence doubled collagen synthesis markers.',
+  steps: [
+    {
+      num: '1',
+      name: 'Seated PF Isometric — Towel Hold',
+      dose: '2×45s',
+      note: 'Plantar fascia primer. All phases.',
+      minPhase: 1,
+      key: 'CW: Seated PF Isometric — Towel Hold'
+    },
+    {
+      num: '2',
+      name: 'Split Lunge ISO — Rear Foot Up',
+      dose: '2×45s each leg',
+      note: 'Soleus / Achilles unit. All phases.',
+      minPhase: 1,
+      key: 'CW: Split Lunge ISO — Rear Foot Up (Soleus/Achilles)'
+    },
+    {
+      num: '3',
+      name: 'Split Lunge ISO — Front Foot',
+      dose: '2×45s each leg',
+      note: 'PF / windlass / tib post. All phases.',
+      minPhase: 1,
+      key: 'CW: Split Lunge ISO — Front Foot (PF/Windlass/Tib Post)'
+    },
+    {
+      num: '4',
+      name: 'Bilateral Pogo Hops — Stiff Ankle',
+      dose: '2–3×20 contacts',
+      note: 'Elastic expression of ISO work. Phase 2+ only.',
+      minPhase: 2,
+      key: 'CW: Bilateral Pogo Hops — Stiff Ankle'
+    },
+    {
+      num: '5',
+      name: 'Single-Leg Pogo — Takeoff Foot',
+      dose: '3×10 contacts',
+      note: 'LJ board specificity. Phase 3+ only.',
+      minPhase: 3,
+      key: 'CW: Single-Leg Pogo — Takeoff Foot Only'
+    }
+  ]
+};
+
+// ─────────────────────────────────────────────────────────────────────────────
+// WEEK DATA
+// ─────────────────────────────────────────────────────────────────────────────
+const WEEKS = [
+  // ══════════════════════════════════════════════════════════════
+  // WEEK 1 — Phase 1: Neural desensitization + PF ISO only
+  // ══════════════════════════════════════════════════════════════
+  {
+    label:'Phase 1 · W1', dates:'Mar 20–27', phase:1,
+    focus:'Neural desensitization first. ISO warmup only. Sub-threshold everything.',
+    days:[
+      { name:'Monday', intent:'Light Speed', sub:'Track A + neural work. Contrast warmup pre-session. Run-ins 60%.', collagen:true, cwPhase:1,
+        blocks:[
+          { label:'Track A — Neural & Foot (Daily)', items:[
+            {name:'Medial Plantar Nerve Glide', dose:'2×10 ea'},
+            {name:'Tibial Nerve Floss', dose:'2×15 ea'},
+            {name:'Heel Rock — Calcaneal Mobility', dose:'2×10 ea'},
+            {name:'Short Foot Exercise', dose:'3×10s ea'},
+            {name:'Big Toe Lift — Windlass Activation', dose:'2×12'},
+          ]},
+          { label:'Rehab Block B', items:[
+            {name:'PF Isometric — Seated (Towel)', dose:'3×45s'},
+            {name:'Soleus Isometric — Seated Knee-Bent', dose:'4×45s'},
+            {name:'Grey Glute Bridge — Incomplete Extension', dose:'3×10s ea'},
+          ]},
+        ]
+      },
+      { name:'Tuesday', intent:'Rehab', sub:'Track A + full Block B. Collagen window.', collagen:true, cwPhase:1,
+        blocks:[
+          { label:'Track A — Neural & Foot', items:[
+            {name:'Medial Plantar Nerve Glide', dose:'2×10 ea'},
+            {name:'Tibial Nerve Floss', dose:'2×15 ea'},
+            {name:'Heel Rock — Calcaneal Mobility', dose:'2×10 ea'},
+            {name:'Short Foot Exercise', dose:'3×10s ea'},
+            {name:'Big Toe Lift — Windlass Activation', dose:'2×12'},
+          ]},
+          { label:'Rehab Block B', items:[
+            {name:'PF Isometric — Seated (Towel)', dose:'3×45s'},
+            {name:'Soleus Isometric — Seated Knee-Bent', dose:'4×45s'},
+            {name:'Grey Glute Bridge — Incomplete Extension', dose:'3×10s ea'},
+          ]},
+        ]
+      },
+      { name:'Wednesday', intent:'Recovery', sub:'Neural AM + Track A only. Walk. No loading.', collagen:false, cwPhase:null,
+        blocks:[
+          { label:'Track A — Recovery', items:[
+            {name:'Medial Plantar Nerve Glide', dose:'2×10 ea'},
+            {name:'Tibial Nerve Floss', dose:'2×15 ea'},
+            {name:'Heel Rock — Calcaneal Mobility', dose:'2×10 ea'},
+            {name:'Short Foot Exercise', dose:'2×10s ea'},
+          ]},
+        ]
+      },
+      { name:'Thursday', intent:'Loading', sub:'Track A + Block B + contrast warmup.', collagen:true, cwPhase:1,
+        blocks:[
+          { label:'Track A — Neural & Foot', items:[
+            {name:'Medial Plantar Nerve Glide', dose:'2×10 ea'},
+            {name:'Tibial Nerve Floss', dose:'2×15 ea'},
+            {name:'Heel Rock — Calcaneal Mobility', dose:'2×10 ea'},
+            {name:'Short Foot Exercise', dose:'3×10s ea'},
+            {name:'Big Toe Lift — Windlass Activation', dose:'2×12'},
+          ]},
+          { label:'Rehab Block B', items:[
+            {name:'PF Isometric — Seated (Towel)', dose:'3×45s'},
+            {name:'Soleus Isometric — Seated Knee-Bent', dose:'4×45s'},
+            {name:'Grey Glute Bridge — Incomplete Extension', dose:'3×10s ea'},
+          ]},
+        ]
+      },
+      { name:'Friday', intent:'Light', sub:'Track A + neural. Coach session support.', collagen:false, cwPhase:null,
+        blocks:[
+          { label:'Track A — Neural & Foot', items:[
+            {name:'Medial Plantar Nerve Glide', dose:'2×10 ea'},
+            {name:'Tibial Nerve Floss', dose:'2×15 ea'},
+            {name:'Heel Rock — Calcaneal Mobility', dose:'2×10 ea'},
+            {name:'Short Foot Exercise', dose:'2×10s ea'},
+            {name:'Big Toe Lift — Windlass Activation', dose:'2×12'},
+          ]},
+        ]
+      },
+      { name:'Saturday', intent:'Mark Conover Classic ✓', sub:'Done. First exposure complete. LJ — board misses but rhythm was there. Smart scratches.', collagen:false, cwPhase:null,
+        blocks:[
+          { label:'Post-Meet Recovery', items:[
+            {name:'Medial Plantar Nerve Glide', dose:'2×10 ea'},
+            {name:'Tibial Nerve Floss', dose:'2×15 ea'},
+            {name:'Heel Rock — Calcaneal Mobility', dose:'2×10 ea'},
+          ]},
+          { label:'Log These — Data Point', gold:true, items:[
+            {name:'Rate foot/shin pain during meet', dose:'0–10 — Log it'},
+            {name:'Rate pain Sunday morning', dose:'0–10 — Log it'},
+          ]},
+        ]
+      },
+      { name:'Sunday', intent:'Recovery', sub:'Walk only. How does the foot feel this morning? Log it — that score determines this week\'s load.', collagen:false, cwPhase:null, rest:true, blocks:[] },
+    ]
+  },
+  // ══════════════════════════════════════════════════════════════
+  // WEEK 2 — Meet week: West Coast Relays Mar 27–28
+  // Tue/Wed = light maintenance. Thu = pre-meet sharpener.
+  // Fri = travel/rest. Sat = WCR meet day (100 + possible 4x100)
+  // ══════════════════════════════════════════════════════════════
+  {
+    label:'Meet Week · W2', dates:'Mar 24–28', phase:1,
+    focus:'Meet week. No new loading. Tissue management only. Everything serves Saturday.',
+    days:[
+      { name:'Monday', intent:'Post-Meet Recovery', sub:'Yesterday was a meet. Neural work only. Check morning gate score.', collagen:false, cwPhase:null,
+        blocks:[
+          { label:'Track A — Recovery Only', items:[
+            {name:'Medial Plantar Nerve Glide', dose:'2×10 ea'},
+            {name:'Tibial Nerve Floss', dose:'2×15 ea'},
+            {name:'Heel Rock — Calcaneal Mobility', dose:'2×10 ea'},
+            {name:'Short Foot Exercise', dose:'2×10s ea'},
+          ]},
+        ]
+      },
+      { name:'Tuesday', intent:'Light Maintenance', sub:'Track A + light Block B. Meet week — no progression, no new stimulus.', collagen:true, cwPhase:1,
+        blocks:[
+          { label:'Track A — Neural & Foot', items:[
+            {name:'Medial Plantar Nerve Glide', dose:'2×10 ea'},
+            {name:'Tibial Nerve Floss', dose:'2×15 ea'},
+            {name:'Heel Rock — Calcaneal Mobility', dose:'2×10 ea'},
+            {name:'Short Foot Exercise', dose:'2×10s ea'},
+            {name:'Big Toe Lift — Windlass Activation', dose:'2×12'},
+          ]},
+          { label:'Block B — Maintenance Dose Only', items:[
+            {name:'PF Isometric — Seated (Towel)', dose:'2×45s'},
+            {name:'Soleus Isometric — Seated Knee-Bent', dose:'2×45s'},
+            {name:'Grey Glute Bridge — Incomplete Extension', dose:'2×10s ea'},
+          ]},
+        ]
+      },
+      { name:'Wednesday', intent:'Recovery', sub:'Neural AM only. Walk. Feet up. Meet is in 3 days.', collagen:false, cwPhase:null,
+        blocks:[
+          { label:'Track A — Minimal', items:[
+            {name:'Medial Plantar Nerve Glide', dose:'2×10 ea'},
+            {name:'Tibial Nerve Floss', dose:'2×15 ea'},
+            {name:'Heel Rock — Calcaneal Mobility', dose:'2×10 ea'},
+          ]},
+        ]
+      },
+      { name:'Thursday', intent:'Pre-Meet Sharpener', sub:'Short acceleration runs. Contrast warmup ISO only. Leave feeling fast, not tired.', collagen:true, cwPhase:1,
+        blocks:[
+          { label:'Track A — Pre-Meet', items:[
+            {name:'Medial Plantar Nerve Glide', dose:'2×10 ea'},
+            {name:'Tibial Nerve Floss', dose:'2×15 ea'},
+            {name:'Heel Rock — Calcaneal Mobility', dose:'2×10 ea'},
+            {name:'Short Foot Exercise', dose:'2×10s ea'},
+            {name:'Big Toe Lift — Windlass Activation', dose:'2×12'},
+          ]},
+          { label:'Block B — Light Touch', items:[
+            {name:'PF Isometric — Seated (Towel)', dose:'2×45s'},
+            {name:'Soleus Isometric — Seated Knee-Bent', dose:'2×45s'},
+          ]},
+        ]
+      },
+      { name:'Friday', intent:'Travel / Rest', sub:'Get to Fresno. Track A only — no loading. Early night.', collagen:false, cwPhase:null,
+        blocks:[
+          { label:'Track A — Travel Day', items:[
+            {name:'Medial Plantar Nerve Glide', dose:'2×10 ea'},
+            {name:'Tibial Nerve Floss', dose:'2×15 ea'},
+            {name:'Heel Rock — Calcaneal Mobility', dose:'2×10 ea'},
+          ]},
+        ]
+      },
+      { name:'Saturday', intent:'West Coast Relays', sub:'100m + possible 4x100. Max training effort. Test the arch under sprint load.', collagen:true, cwPhase:1, isMeetDay:true,
+        meetNote:'⚡ Collagen 60 min before warmup begins — not before gun time. The 100 is a sprint, not a jump: PF stress profile is lower than LJ board contact. Run with full intent. If selected for the 4x100, same framing applies: this is a max training rep in a relay bib, not a personal record attempt. The team\'s school record belongs to the team that set it. Your job today is to run your leg as well as you can and walk away healthy.',
+        blocks:[
+          { label:'Pre-Warmup — At Hotel or Before Track', items:[
+            {name:'Medial Plantar Nerve Glide', dose:'2×10 ea'},
+            {name:'Tibial Nerve Floss', dose:'2×15 ea'},
+            {name:'Heel Rock — Calcaneal Mobility', dose:'2×10 ea'},
+            {name:'Short Foot Exercise', dose:'2×10s ea'},
+            {name:'Big Toe Lift — Windlass Activation', dose:'2×12'},
+          ]},
+          { label:'Post-Meet — Log These', gold:true, items:[
+            {name:'Rate foot/shin pain during 100', dose:'0–10 — Log it'},
+            {name:'Rate pain Sunday morning', dose:'0–10 — Log it'},
+          ]},
+        ]
+      },
+      { name:'Sunday', intent:'Rest', sub:'Recovery. Morning gate score is the key data point from this meet.', collagen:false, cwPhase:null, rest:true, blocks:[] },
+    ]
+  },
+  // ══════════════════════════════════════════════════════════════
+  // WEEK 3 — Phase 2: ISO + bilateral pogos enter. Sprint load builds.
+  // ══════════════════════════════════════════════════════════════
+  {
+    label:'Phase 2 · W3', dates:'Apr 4–10', phase:2,
+    focus:'Pogos enter the warmup. Jump rope 2 min. Sprint intervals progress.',
+    days:[
+      { name:'Monday', intent:'Speed Build', sub:'Track A + Block B/C. Contrast warmup Phase 2. Sprint run-ins 70%.', collagen:true, cwPhase:2,
+        blocks:[
+          { label:'Track A — Neural & Foot', items:[
+            {name:'Medial Plantar Nerve Glide', dose:'2×10 ea'},
+            {name:'Tibial Nerve Floss', dose:'2×15 ea'},
+            {name:'Heel Rock — Calcaneal Mobility', dose:'2×10 ea'},
+            {name:'Short Foot Exercise', dose:'3×10s ea'},
+            {name:'Big Toe Lift — Windlass Activation', dose:'2×12'},
+          ]},
+          { label:'Rehab Block B+C', items:[
+            {name:'PF Isometric — Seated (Towel)', dose:'4×45s'},
+            {name:'Soleus Isometric — Seated Knee-Bent', dose:'4×45s'},
+            {name:'Grey Glute Bridge — Incomplete Extension', dose:'3×12s ea'},
+            {name:'Single-Leg Calcaneal Mobility Squat', dose:'3×6 ea'},
+            {name:'Jump Rope — Stiff Ankle', dose:'2 min'},
+          ]},
+        ]
+      },
+      { name:'Tuesday', intent:'Rehab + Hamstring', sub:'Block B/C + proximal hamstring ISO.', collagen:true, cwPhase:2,
+        blocks:[
+          { label:'Track A — Neural & Foot', items:[
+            {name:'Medial Plantar Nerve Glide', dose:'2×10 ea'},
+            {name:'Tibial Nerve Floss', dose:'2×15 ea'},
+            {name:'Heel Rock — Calcaneal Mobility', dose:'2×10 ea'},
+            {name:'Short Foot Exercise', dose:'3×10s ea'},
+          ]},
+          { label:'Block B+C + Hamstring', items:[
+            {name:'PF Isometric — Seated (Towel)', dose:'4×45s'},
+            {name:'Soleus Isometric — Seated Knee-Bent', dose:'4×45s'},
+            {name:'Hip Extension Isometric — Proximal Hamstring', dose:'4×30s ea'},
+            {name:'Grey Glute Bridge — Incomplete Extension', dose:'3×12s ea'},
+            {name:'Single-Leg RDL — Bodyweight', dose:'3×8 ea'},
+            {name:'Jump Rope — Stiff Ankle', dose:'2 min'},
+          ]},
+        ]
+      },
+      { name:'Wednesday', intent:'Recovery', sub:'Neural only. Walk. No loading.', collagen:false, cwPhase:null,
+        blocks:[
+          { label:'Track A — Recovery', items:[
+            {name:'Medial Plantar Nerve Glide', dose:'2×10 ea'},
+            {name:'Tibial Nerve Floss', dose:'2×15 ea'},
+            {name:'Heel Rock — Calcaneal Mobility', dose:'2×10 ea'},
+            {name:'Short Foot Exercise', dose:'2×10s ea'},
+          ]},
+        ]
+      },
+      { name:'Thursday', intent:'Speed + Loading', sub:'Contrast warmup Phase 2. Sprint run-ins 70–75%.', collagen:true, cwPhase:2,
+        blocks:[
+          { label:'Track A — Neural & Foot', items:[
+            {name:'Medial Plantar Nerve Glide', dose:'2×10 ea'},
+            {name:'Tibial Nerve Floss', dose:'2×15 ea'},
+            {name:'Heel Rock — Calcaneal Mobility', dose:'2×10 ea'},
+            {name:'Short Foot Exercise', dose:'3×10s ea'},
+            {name:'Big Toe Lift — Windlass Activation', dose:'2×12'},
+          ]},
+          { label:'Block B+C', items:[
+            {name:'PF Isometric — Seated (Towel)', dose:'4×45s'},
+            {name:'Soleus Isometric — Seated Knee-Bent', dose:'4×45s'},
+            {name:'Grey Glute Bridge — Incomplete Extension', dose:'3×12s ea'},
+            {name:'Jump Rope — Stiff Ankle', dose:'2 min'},
+          ]},
+        ]
+      },
+      { name:'Friday', intent:'Light', sub:'Track A only. Neural. Rest prep.', collagen:false, cwPhase:null,
+        blocks:[
+          { label:'Track A — Neural & Foot', items:[
+            {name:'Medial Plantar Nerve Glide', dose:'2×10 ea'},
+            {name:'Tibial Nerve Floss', dose:'2×15 ea'},
+            {name:'Heel Rock — Calcaneal Mobility', dose:'2×10 ea'},
+            {name:'Short Foot Exercise', dose:'2×10s ea'},
+          ]},
+        ]
+      },
+      { name:'Saturday', intent:'Coach Led', sub:'Track A + Phase 2 contrast warmup. Coach directs.', collagen:true, cwPhase:2,
+        blocks:[
+          { label:'Track A — Pre-Session', items:[
+            {name:'Medial Plantar Nerve Glide', dose:'2×10 ea'},
+            {name:'Tibial Nerve Floss', dose:'2×15 ea'},
+            {name:'Heel Rock — Calcaneal Mobility', dose:'2×10 ea'},
+            {name:'Short Foot Exercise', dose:'2×10s ea'},
+            {name:'Big Toe Lift — Windlass Activation', dose:'2×12'},
+          ]},
+        ]
+      },
+      { name:'Sunday', intent:'Rest', sub:'Recovery. Morning gate logged?', collagen:false, cwPhase:null, rest:true, blocks:[] },
+    ]
+  },
+  // ══════════════════════════════════════════════════════════════
+  // WEEK 4 — Phase 2 continued: load progression
+  // ══════════════════════════════════════════════════════════════
+  {
+    label:'Phase 2 · W4', dates:'Apr 11–17', phase:2,
+    focus:'Rope progresses to 3×2 min. Approach runs enter (short). Eccentric heel raise.',
+    days:[
+      { name:'Monday', intent:'Speed + Approach', sub:'Short approach LJ runs enter. Contrast warmup Phase 2.', collagen:true, cwPhase:2,
+        blocks:[
+          { label:'Track A — Neural & Foot', items:[
+            {name:'Medial Plantar Nerve Glide', dose:'2×10 ea'},
+            {name:'Tibial Nerve Floss', dose:'2×15 ea'},
+            {name:'Heel Rock — Calcaneal Mobility', dose:'2×10 ea'},
+            {name:'Short Foot Exercise', dose:'3×10s ea'},
+            {name:'Big Toe Lift — Windlass Activation', dose:'2×12'},
+          ]},
+          { label:'Block B+C — Load Progression', items:[
+            {name:'PF Isometric — Seated (Towel)', dose:'4×45s'},
+            {name:'Soleus Isometric — Seated Knee-Bent', dose:'4×45s'},
+            {name:'Hip Extension Isometric — Proximal Hamstring', dose:'4×30s ea'},
+            {name:'Grey Glute Bridge — Incomplete Extension', dose:'3×12s ea'},
+            {name:'Single-Leg RDL — Bodyweight', dose:'3×8 ea'},
+            {name:'Jump Rope — Stiff Ankle', dose:'3×2 min, 1-min rest'},
+          ]},
+        ]
+      },
+      { name:'Tuesday', intent:'Rehab + Eccentric', sub:'Eccentric heel raise enters (Phase 3 prep).', collagen:true, cwPhase:2,
+        blocks:[
+          { label:'Track A — Neural & Foot', items:[
+            {name:'Medial Plantar Nerve Glide', dose:'2×10 ea'},
+            {name:'Tibial Nerve Floss', dose:'2×15 ea'},
+            {name:'Heel Rock — Calcaneal Mobility', dose:'2×10 ea'},
+            {name:'Short Foot Exercise', dose:'3×10s ea'},
+          ]},
+          { label:'Block B+C + Eccentric', items:[
+            {name:'PF Isometric — Seated (Towel)', dose:'4×45s'},
+            {name:'Soleus Isometric — Seated Knee-Bent', dose:'4×45s'},
+            {name:'Grey Glute Bridge — Incomplete Extension', dose:'3×12s ea'},
+            {name:'Single-Leg Calcaneal Mobility Squat', dose:'3×8 ea'},
+            {name:'Decline Slow Eccentric Heel Raise', dose:'3×15'},
+            {name:'Jump Rope — Stiff Ankle', dose:'3×2 min'},
+          ]},
+        ]
+      },
+      { name:'Wednesday', intent:'Recovery', sub:'Neural only. Walk.', collagen:false, cwPhase:null,
+        blocks:[
+          { label:'Track A — Recovery', items:[
+            {name:'Medial Plantar Nerve Glide', dose:'2×10 ea'},
+            {name:'Tibial Nerve Floss', dose:'2×15 ea'},
+            {name:'Heel Rock — Calcaneal Mobility', dose:'2×10 ea'},
+          ]},
+        ]
+      },
+      { name:'Thursday', intent:'Speed', sub:'Sprint run-ins 75–80%. Contrast warmup Phase 2.', collagen:true, cwPhase:2,
+        blocks:[
+          { label:'Track A — Neural & Foot', items:[
+            {name:'Medial Plantar Nerve Glide', dose:'2×10 ea'},
+            {name:'Tibial Nerve Floss', dose:'2×15 ea'},
+            {name:'Heel Rock — Calcaneal Mobility', dose:'2×10 ea'},
+            {name:'Short Foot Exercise', dose:'3×10s ea'},
+            {name:'Big Toe Lift — Windlass Activation', dose:'2×12'},
+          ]},
+          { label:'Block B+C', items:[
+            {name:'PF Isometric — Seated (Towel)', dose:'4×45s'},
+            {name:'Soleus Isometric — Seated Knee-Bent', dose:'4×45s'},
+            {name:'Hip Extension Isometric — Proximal Hamstring', dose:'4×30s ea'},
+            {name:'Jump Rope — Stiff Ankle', dose:'3×2 min'},
+          ]},
+        ]
+      },
+      { name:'Friday', intent:'Light', sub:'Track A + neural. Tomorrow is coach led.', collagen:false, cwPhase:null,
+        blocks:[
+          { label:'Track A', items:[
+            {name:'Medial Plantar Nerve Glide', dose:'2×10 ea'},
+            {name:'Tibial Nerve Floss', dose:'2×15 ea'},
+            {name:'Heel Rock — Calcaneal Mobility', dose:'2×10 ea'},
+            {name:'Short Foot Exercise', dose:'2×10s ea'},
+          ]},
+        ]
+      },
+      { name:'Saturday', intent:'Coach Led', sub:'Track A + Phase 2 contrast warmup. Coach directs.', collagen:true, cwPhase:2,
+        blocks:[
+          { label:'Track A — Pre-Session', items:[
+            {name:'Medial Plantar Nerve Glide', dose:'2×10 ea'},
+            {name:'Tibial Nerve Floss', dose:'2×15 ea'},
+            {name:'Heel Rock — Calcaneal Mobility', dose:'2×10 ea'},
+            {name:'Short Foot Exercise', dose:'2×10s ea'},
+            {name:'Big Toe Lift — Windlass Activation', dose:'2×12'},
+          ]},
+        ]
+      },
+      { name:'Sunday', intent:'Rest', sub:'Recovery. Morning gate logged?', collagen:false, cwPhase:null, rest:true, blocks:[] },
+    ]
+  },
+  // ══════════════════════════════════════════════════════════════
+  // WEEK 5–7 — Phase 3: Conference build. Single-leg pogos enter.
+  // ══════════════════════════════════════════════════════════════
+];
+
+// Weeks 5–7 placeholder
+const phase3Labels = ['Phase 3 · W5','Phase 3 · W6','Conference Prep · W7'];
+const phase3Dates  = ['Apr 18–24','Apr 25–May 1','May 2–8'];
+const phase3Focus  = [
+  'Single-leg pogo enters warmup. Rotational bounds. Sprint 85–90%.',
+  'Full Track D performance work. LJ approach series. Sprint 90–95%.',
+  'Competition prep peak. Low volume, max quality. Taper begins.',
+];
+
+function detectCurrentWeek(){
+  const today = todayStr();
+  for(let w = 0; w < WEEKS.length; w++){
+    const ws = getWeekStart(w);
+    for(let d = 0; d < 7; d++){
+      const sd = new Date(ws.getFullYear(), ws.getMonth(), ws.getDate() + d);
+      if(sbDateStr(sd) === today) return { week: w, day: d };
+    }
+  }
+  return null;
+}
+
+phase3Labels.forEach((label, i) => {
+  WEEKS.push({
+    label, dates: phase3Dates[i], phase: 3,
+    focus: phase3Focus[i], placeholder: true,
+    days: ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'].map(n => ({
+      name: n, intent: 'Coming Soon',
+      sub: 'Phase 3 content loads before this week begins. Gate must be clear for 2 consecutive weeks.',
+      collagen: false, cwPhase: null, placeholder: true, blocks: []
+    }))
+  });
+});
+
+// ─────────────────────────────────────────────────────────────────────────────
+// STATE
+// ─────────────────────────────────────────────────────────────────────────────
+let currentWeek = parseInt(localStorage.getItem('cad_week') || '1');
+let selectedDay  = 0;
+let selectedScore = null;
+let selectedTiming = 'morning';
+const gateLogs = JSON.parse(localStorage.getItem('cad_gate') || '[]');
+
+// MEET DATES — Cal Poly 2026 schedule
+const MEET_DATES = {
+  next: '2026-03-21',
+  nextName: 'Mark Conover Classic',
+  conf: '2026-05-15',  // Big West Championships
+  // Upcoming after first meet:
+  schedule: [
+    { date:'2026-03-21', name:'Mark Conover Classic ✓', home:true },
+    { date:'2026-03-27', name:'West Coast Relays' },
+    { date:'2026-04-03', name:'Stanford Invitational' },
+    { date:'2026-04-16', name:'Bryan Clay / Mt. SAC' },
+    { date:'2026-04-26', name:'UCSB Invite' },
+    { date:'2026-05-01', name:'Fresno State Invite' },
+    { date:'2026-05-08', name:'Franson Last Chance' },
+    { date:'2026-05-15', name:'Big West Championships ★', conf:true },
+    { date:'2026-05-27', name:'NCAA West Prelims' },
+    { date:'2026-06-10', name:'NCAA Outdoors' },
+  ]
+};
+
+// ─────────────────────────────────────────────────────────────────────────────
+// MEET COUNTDOWN
+// ─────────────────────────────────────────────────────────────────────────────
+(function(){
+  const now = new Date();
+  now.setHours(0,0,0,0);
+  function daysTo(d){
+    if(!d) return '—';
+    const target = new Date(d);
+    target.setHours(0,0,0,0);
+    const diff = Math.round((target - now) / 86400000);
+    if(diff === 0) return 'Today!';
+    if(diff === 1) return 'Tomorrow!';
+    return diff > 0 ? diff + 'd' : '—';
+  }
+  // Find next upcoming meet
+  const upcoming = MEET_DATES.schedule.find(m => {
+    const d = new Date(m.date);
+    d.setHours(0,0,0,0);
+    return d >= now;
+  });
+  if(upcoming){
+    document.getElementById('next-meet-name').textContent = upcoming.name;
+    document.getElementById('next-meet-count').textContent = daysTo(upcoming.date);
+  }
+  document.getElementById('conf-count').textContent = daysTo(MEET_DATES.conf);
+})();
+
+// ─────────────────────────────────────────────────────────────────────────────
+// DAY SELECTOR
+// ─────────────────────────────────────────────────────────────────────────────
+function getWeekStart(weekIdx){
+  const base = new Date(2026, 2, 16); // Mon Mar 16 2026 — local constructor avoids UTC offset
+  base.setDate(base.getDate() + weekIdx * 7);
+  return base;
+}
+
+function initDaySelector(){
+  const jsDay = new Date().getDay();
+  const todayIdx = jsDay === 0 ? 6 : jsDay - 1;
+  document.querySelectorAll('.day-btn').forEach((btn, i) => {
+    btn.classList.remove('today','active','logged');
+    if(i === todayIdx) btn.classList.add('today');
+    const weekStart = getWeekStart(currentWeek);
+    const dayDate = new Date(weekStart.getFullYear(), weekStart.getMonth(), weekStart.getDate() + i);
+    const dateStr = sbDateStr(dayDate);
+    if(gateLogs.some(l => l.date === dateStr)) btn.classList.add('logged');
+  });
+  selectDay(todayIdx);
+}
+
+function selectDay(idx){
+  selectedDay = idx;
+  document.querySelectorAll('.day-btn').forEach((b,i) => b.classList.toggle('active', i===idx));
+  renderDay(idx);
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// RENDER CONTRAST WARMUP
+// ─────────────────────────────────────────────────────────────────────────────
+function renderContrastWarmup(cwPhase){
+  if(!cwPhase) return '';
+  const cw = CONTRAST_WARMUP;
+  let html = `<div class="contrast-block">
+    <div class="contrast-header">
+      <div class="contrast-eyebrow">⚡ Baar Protocol — Collagen Window Active</div>
+    </div>
+    <div style="font-family:'Fira Code',monospace;font-size:.65rem;color:rgba(255,255,255,.4);letter-spacing:.04em;margin-bottom:.85rem;padding-left:.5rem;line-height:1.5;">${cw.preamble}</div>`;
+
+  cw.steps.forEach((step, si) => {
+    const locked = step.minPhase > cwPhase;
+    const uid = 'cw-' + si;
+    if(locked){
+      html += `<div class="cw-step" style="opacity:.4;cursor:default;">
+        <div class="cw-num">${step.num}</div>
+        <div class="cw-body">
+          <div class="cw-name">${step.name}</div>
+          <div class="cw-locked">🔒 Unlocks Phase ${step.minPhase}</div>
+        </div>
+      </div>`;
+    } else {
+      html += `<div class="cw-step" id="cw-row-${uid}" onclick="toggleCwDetail('${uid}')">
+        <div class="cw-num">${step.num}</div>
+        <div class="cw-body">
+          <div class="cw-name">${step.name}</div>
+          <div class="cw-dose">${step.dose}</div>
+          <div class="cw-note">${step.note}</div>
+        </div>
+        <span class="cw-chevron">▼</span>
+      </div>
+      <div class="cw-detail" id="${uid}">`;
+      const info = EX_INFO[step.key];
+      if(info){
+        html += `<div class="ex-detail-section"><div class="cw-detail-label">Setup & Dose</div><div class="cw-detail-text">${info.setup}</div></div>
+        <div class="ex-detail-section"><div class="cw-detail-label" style="color:var(--accent2)">Coaching Cue</div><div class="cw-detail-text">${info.cue}</div></div>
+        ${info.url ? `<a class="cw-video-link" href="${info.url}" target="_blank">▶ Search Demo</a>` : ''}`;
+      }
+      html += `</div>`;
+    }
+  });
+  html += `</div>`;
+  return html;
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// RENDER DAY
+// ─────────────────────────────────────────────────────────────────────────────
+
+  // ─────────────────────────────────────────
+  // FRAMEWORK — quality + phase inference
+  // ─────────────────────────────────────────
+  const LIBRARY_FILE = 'https://padraik99.github.io/sjr-system/SJR_Library_Master_v4_20260402.html';
+
+  function inferQualityTags(intent){
+    const i = (intent || '').toLowerCase();
+    if(/strength|single.leg load|single.leg integ/.test(i)) return 'quality-strength,quality-hypertrophy';
+    if(/speed.end/.test(i))                                  return 'quality-velocity,quality-hypertrophy';
+    if(/speed|compete|sharp|pre.meet|pre.big|pre.ncal|pre.state|loading/.test(i)) return 'quality-velocity,quality-power';
+    if(/rehab|prehab|easy|walk.through/.test(i))             return 'quality-gpp,quality-isometric';
+    if(/recovery|rest|active rec|core|taper/.test(i))        return 'quality-gpp,quality-isometric';
+    return 'quality-gpp';
+  }
+
+  function inferMED(intent){
+    const tags = inferQualityTags(intent);
+    if(tags.includes('strength'))    return '<strong>Strength</strong> · 3–5 sets · diminishing returns beyond this (Zourdos et al.)';
+    if(tags.includes('velocity'))    return '<strong>Speed / Power</strong> · low volume, maximal intent · full recovery between reps';
+    if(tags.includes('hypertrophy')) return '<strong>Hypertrophy</strong> · 4 fractional sets MED · more sets rarely adds proportional gain';
+    if(tags.includes('isometric'))   return '<strong>Isometric</strong> · 5×45s · analgesic window is the target, not fatigue';
+    return '<strong>GPP</strong> · volume over intensity · tissue tolerance is the goal';
+  }
+
+  function buildLibraryURL(weekPhase, intent){
+    const quality = inferQualityTags(intent);
+    let phaseTag = 'phase-bridge';
+    if(typeof weekPhase === 'number'){
+      if(weekPhase === 1) phaseTag = 'phase-bridge';
+      else if(weekPhase === 2) phaseTag = 'phase-gpp';
+      else if(weekPhase >= 3) phaseTag = 'phase-spp,phase-comp';
+    } else {
+      const p = (weekPhase || '').toLowerCase();
+      if(/phase 1/.test(p))                           phaseTag = 'phase-bridge,phase-gpp';
+      if(/phase 1.+2|phase 2/.test(p))                phaseTag = 'phase-gpp,phase-spp';
+      if(/phase 3|peak|taper|state|comp/.test(p))     phaseTag = 'phase-spp,phase-comp';
+    }
+    return LIBRARY_FILE + '?phase=' + phaseTag + '&quality=' + quality + '&hidespinal=1';
+  }
+
+  function buildFrameworkBar(weekPhase, intent){
+    if(!intent || /rest/i.test(intent)) return '';
+    const url = buildLibraryURL(weekPhase, intent);
+    const med = inferMED(intent);
+    return '<div class="framework-bar">' +
+      '<div class="framework-med">' + med + '</div>' +
+      '<a class="browse-btn" href="' + url + '">Browse exercises</a>' +
+      '</div>';
+  }
+
+function renderDay(idx){
+  const week = WEEKS[currentWeek];
+  const day  = week.days[idx];
+  let html = '';
+
+  if(isGateBreached()){
+    html += `<div class="hold-banner"><div class="hold-icon">⚠️</div><div class="hold-text"><strong>Morning Check Elevated — Reduce Load</strong>Recent gate score above 3/10. Hold progression. Reduce session volume 25–30%. Do not advance phase until morning score trends back to baseline for 2 consecutive days.</div></div>`;
+  }
+
+  if(day.placeholder){
+    html += `<div class="day-intent">${week.phase === 3 ? 'Phase 3' : week.label}</div><div class="day-sub">${day.sub}</div>`;
+    html += `<div class="rest-card"><div class="rest-icon">📋</div><div class="rest-title">Week ${currentWeek+1} Content</div><div class="rest-text">Phase 3 prescription loads before this week begins. Gate must show clear for 2 weeks running.</div></div>`;
+    document.getElementById('main-content').innerHTML = html;
+    return;
+  }
+
+  if(day.rest){
+    html += `<div class="day-intent">${day.intent}</div><div class="day-sub">${day.sub}</div>`;
+    html += `<div class="rest-card"><div class="rest-icon">🌿</div><div class="rest-title">Rest & Recover</div><div class="rest-text">Walk. Sleep. Eat well. No prehab load today — the adaptation is happening right now.</div></div>`;
+    document.getElementById('main-content').innerHTML = html;
+    return;
+  }
+
+  html += `<div class="day-intent">${day.intent}</div><div class="day-sub">${day.sub}</div>`;
+
+  // Meet-day special banner
+  if(day.isMeetDay){
+    html += `<div style="background:var(--ink);border-radius:var(--radius);padding:1rem 1.25rem;margin-bottom:1.25rem;border-left:4px solid var(--accent2);">
+      <div style="font-family:'Fira Code',monospace;font-size:.62rem;letter-spacing:.18em;text-transform:uppercase;color:var(--accent2);margin-bottom:.5rem;">Competition Day Protocol</div>
+      <div style="font-size:.82rem;color:rgba(255,255,255,.75);line-height:1.6;margin-bottom:.75rem;">${day.meetNote}</div>
+      <div style="font-family:'Fira Code',monospace;font-size:.68rem;color:rgba(255,255,255,.45);margin-bottom:.3rem;letter-spacing:.08em;text-transform:uppercase;">Stop & scratch if:</div>
+      <div style="font-size:.8rem;color:rgba(255,255,255,.6);line-height:1.8;">
+        ⚠ Point tenderness on tibial bone itself during warmup<br>
+        ⚠ Foot/shin pain above 5/10 at any point<br>
+        ⚠ Plantar pain that worsens rather than warms up<br>
+        <span style="color:var(--accent2);">✓ Discomfort that settles within 10 min of warmup = green light to compete</span>
+      </div>
+    </div>`;
+  }
+
+  // Collagen alert
+  if(day.collagen){
+    html += `<div class="collagen-alert"><div class="collagen-icon">⚡</div><div class="collagen-text"><strong>Collagen Window — Take 60 min before this session</strong>15g hydrolyzed collagen + 200mg Vitamin C. Shaw et al. (2017) — this protocol doubled collagen synthesis markers vs. exercise alone.</div></div>`;
+  }
+
+  // Contrast warmup block
+  if(day.cwPhase){
+    html += renderContrastWarmup(day.cwPhase);
+  }
+
+  // Exercise blocks
+  day.blocks.forEach(block => {
+    const lClass = block.gold ? 'block-label gold' : 'block-label';
+    html += `<div class="ex-block"><div class="${lClass}">${block.label}</div>`;
+    block.items.forEach((ex, ei) => {
+      const dClass = block.gold ? 'ex-dose gold' : 'ex-dose';
+      const info = EX_INFO[ex.name];
+      const uid = 'ex-' + Date.now() + '-' + ei + '-' + Math.random().toString(36).slice(2,5);
+      if(info){
+        html += `
+        <div class="ex-row" onclick="toggleExDetail('${uid}')" id="row-${uid}">
+          <div class="ex-name">${ex.name}${ex.note ? `<small>${ex.note}</small>` : ''}</div>
+          <div class="ex-tags-row">
+            <div class="${dClass}">${ex.dose}</div>
+            <span class="ex-chevron">▼</span>
+          </div>
+        </div>
+        <div class="ex-detail" id="${uid}">
+          <div class="ex-detail-section">
+            <div class="ex-detail-label">Setup & Dose</div>
+            <div class="ex-detail-text">${info.setup}</div>
+          </div>
+          <div class="ex-detail-section">
+            <div class="ex-detail-label gold">Coaching Cue</div>
+            <div class="ex-detail-text">${info.cue}</div>
+          </div>
+          ${info.url ? `<a class="ex-video-link" href="${info.url}" target="_blank">▶ Search Demo</a>` : ''}
+        </div>`;
+      } else {
+        html += `<div class="ex-row"><div class="ex-name">${ex.name}${ex.note ? `<small>${ex.note}</small>` : ''}</div><div class="ex-tags-row"><div class="${dClass}">${ex.dose}</div></div></div>`;
+      }
+    });
+    html += `</div>`;
+  });
+
+  // Framework bar
+  html += buildFrameworkBar(week.phase, day.intent);
+
+  // Gate log history
+  const weekStart = getWeekStart(currentWeek);
+  const dayDate = new Date(weekStart.getFullYear(), weekStart.getMonth(), weekStart.getDate() + idx);
+  const dateStr = sbDateStr(dayDate);
+  const dayLogs = gateLogs.filter(l => l.date === dateStr);
+  if(dayLogs.length){
+    html += `<div class="history-section"><div class="history-label">Gate Log</div>`;
+    dayLogs.forEach(l => {
+      const sc = l.score <= 2 ? 'ok' : l.score === 3 ? 'warn' : 'bad';
+      html += `<div class="log-row"><span class="log-date">${l.timing === 'morning' ? 'Morning' : 'During session'}</span><span class="log-score ${sc}">${l.score}/10</span><span class="log-timing">${l.score <= 3 ? '✓ Gate held' : '⚠ Elevated'}</span></div>`;
+    });
+    html += `</div>`;
+  }
+
+  document.getElementById('main-content').innerHTML = html;
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// WEEK NAVIGATION
+// ─────────────────────────────────────────────────────────────────────────────
+function changeWeek(dir){
+  const nw = currentWeek + dir;
+  if(nw < 0 || nw >= WEEKS.length) return;
+  currentWeek = nw;
+  localStorage.setItem('cad_week', currentWeek);
+  saveWeekState('cadence', currentWeek);
+  updateWeekUI();
+  initDaySelector();
+}
+
+function updateWeekUI(){
+  const week = WEEKS[currentWeek];
+  document.getElementById('phase-badge').innerHTML = `${week.label}<span>${week.dates}</span>`;
+  document.getElementById('nav-week-label').textContent = `Week ${currentWeek+1} of ${WEEKS.length}`;
+  document.getElementById('prev-week').disabled = currentWeek === 0;
+  document.getElementById('next-week').disabled = currentWeek === WEEKS.length-1;
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// EXPAND TOGGLES
+// ─────────────────────────────────────────────────────────────────────────────
+function toggleExDetail(uid){
+  const detail = document.getElementById(uid);
+  const row = document.getElementById('row-' + uid);
+  if(!detail) return;
+  const open = detail.classList.contains('open');
+  detail.classList.toggle('open', !open);
+  if(row) row.classList.toggle('open', !open);
+}
+
+function toggleCwDetail(uid){
+  const detail = document.getElementById(uid);
+  const row = document.getElementById('cw-row-' + uid);
+  if(!detail) return;
+  const open = detail.classList.contains('open');
+  detail.classList.toggle('open', !open);
+  if(row) row.classList.toggle('open', !open);
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// GATE MODAL
+// ─────────────────────────────────────────────────────────────────────────────
+function openGateModal(){
+  selectedScore = null;
+  selectedTiming = 'morning';
+  document.querySelectorAll('.score-btn').forEach(b => b.classList.remove('selected'));
+  document.getElementById('timing-morning').classList.add('active');
+  document.getElementById('timing-session').classList.remove('active');
+  document.getElementById('gate-status').style.display = 'none';
+  const today = new Date().toLocaleDateString('en-US',{weekday:'long',month:'short',day:'numeric'});
+  document.getElementById('modal-date-label').textContent = `Logging for ${today}`;
+  document.getElementById('gate-modal').classList.add('open');
+}
+
+function closeGateModal(){
+  document.getElementById('gate-modal').classList.remove('open');
+}
+
+function selectScore(n){
+  selectedScore = n;
+  document.querySelectorAll('.score-btn').forEach(b => b.classList.toggle('selected', parseInt(b.dataset.score) === n));
+  updateGateStatus();
+}
+
+function selectTiming(t){
+  selectedTiming = t;
+  document.getElementById('timing-morning').classList.toggle('active', t === 'morning');
+  document.getElementById('timing-session').classList.toggle('active', t === 'session');
+}
+
+function updateGateStatus(){
+  const el = document.getElementById('gate-status');
+  if(selectedScore === null){ el.style.display = 'none'; return; }
+  el.style.display = 'block';
+  if(selectedScore <= 2){
+    el.className = 'gate-status pass';
+    el.textContent = '✓ Gate held — green light';
+  } else if(selectedScore === 3){
+    el.className = 'gate-status pass';
+    el.textContent = '⚡ At threshold — hold current load, monitor closely';
+  } else {
+    el.className = 'gate-status hold';
+    el.textContent = '⚠ Elevated — reduce volume 25–30%, do not progress phase';
+  }
+}
+
+function saveGate(){
+  if(selectedScore === null) return;
+  const today = todayStr();
+  gateLogs.push({ date: today, score: selectedScore, timing: selectedTiming, ts: Date.now() });
+  localStorage.setItem('cad_gate', JSON.stringify(gateLogs));
+  saveGateLog('cadence', gateLogs[gateLogs.length-1]);
+  closeGateModal();
+  initDaySelector();
+  renderDay(selectedDay);
+}
+
+function isGateBreached(){
+  const cutoff = Date.now() - 48 * 3600000;
+  return gateLogs.some(l => l.score > 3 && l.ts > cutoff);
+}
+
+document.getElementById('gate-modal').addEventListener('click', function(e){
+  if(e.target === this) closeGateModal();
+});
+
+// ─────────────────────────────────────────────────────────────────────────────
+// INIT
+// ─────────────────────────────────────────────────────────────────────────────
+async function initApp(){
+  const det = detectCurrentWeek();
+  if(det !== null){
+    currentWeek = det.week;
+    localStorage.setItem('cad_week', currentWeek);
+  } else {
+    currentWeek = await loadWeekState('cadence', currentWeek);
+  }
+  await loadGateLogs('cadence', gateLogs);
+  updateWeekUI();
+  initDaySelector();
+  if(det !== null) selectDay(det.day);
+}
+initApp();
+</script>
+</body>
+</html>
