@@ -1,123 +1,101 @@
-# CLAUDE.md — Sprint · Jump · Resilience (SJR)
-**Project type:** Multi-athlete sports rehab + performance system
-**Stack:** Static HTML/CSS/JS · Supabase cloud backend · GitHub Pages hosting
-**Repo:** `padraik99/sjr-system` (public) · `https://padraik99.github.io/sjr-system/`
-**Last updated:** April 10, 2026
+# SJR System — Claude Context
 
----
+## Project
+**Sprint · Jump · Resilience (SJR)** — family athletic performance and rehabilitation system.
+Built as interconnected HTML files with a Supabase cloud backend.
+Hosted at: `https://padraik99.github.io/sjr-system/`
+GitHub repo: `padraik99/sjr-system` (public, GitHub Pages)
+Workflow: GitHub Desktop — drag new file into local folder (overwrites existing), commit, push. Never delete-then-add (creates duplicate with `(1)` suffix). Never upload via GitHub website on mobile.
 
-## What This Project Is
+## Coach / Coordinator
+**Patrick** — architect, coach, and athlete. Managing L4-L5 spinal rehab (foraminal stenosis).
+Return-to-volleyball target: King of the Court, summer 2026.
+Pain clinic pending: ESI vs radiofrequency ablation — decision gate for Phase 3+.
+Weekly schedule: Mon/Wed/Fri gym · Tue canal + bands + occlusion with Yari · Thu canal + sled · Sat/Sun rest/recovery.
 
-SJR is a family + athlete performance and rehabilitation system built and managed by Patrick (coach, architect, and athlete himself). It consists of interconnected HTML files — individual athlete weekly guides, a shared exercise library, a periodization reference, and a coach dashboard — all backed by Supabase for live pain/gate logging and session state. Files are authored in Claude conversations and deployed via GitHub Desktop to GitHub Pages.
-
-Each athlete has:
-- A **weekly guide** — the primary working document. Contains the 7-day overlay (FAB button), day-by-day session blocks with doses, Supabase pain logging, and a Browse Exercises button deep-linking to the Library.
-- A **protocol/reference guide** (some athletes) — clinical rationale, exercise library with accordion cards, test data, research citations. The reference guide for the athlete's silo.
-- Entries in the **coach dashboard** — card with live pain metrics, 7-day spark, gate breach alerts.
-
----
-
-## Athlete Roster
-
-| Athlete | Sport / Event | Injury / Focus | Return Target | Status |
-|---------|--------------|----------------|---------------|--------|
-| **Patrick** | Volleyball (King of the Court) | L4-L5 foraminal stenosis, L5 nerve root | Summer 2026 | Active — v5.3 guide · 4 metrics (Back/Nerve/Glute/Ankle) · 3 timings |
-| **Shaylan** | Sprint / LJ (MJC → Berkeley) | PFPS left knee + penultimate mechanics | Conference + State | Active — competing, mechanical fix underway |
-| **Cadence** | Sprint / LJ (Cal Poly) | Plantar fascia + medial shin | Commonwealth Games Glasgow, Jul 2026 | Active — modified return, Conference horizon |
-| **Yari** | Pro soccer (Mexico / Nicaragua NT) | Right ACL sprain, conservative mgmt | May 2026 (preseason) · Jun 2026 (gate) | Active — Phase 2 Week 4 (Apr 7–13) · forward jog 1 mile confirmed · Nordics + lateral sled entered · 0s/1s pain logs |
-
-### Yari Clinical Summary (quick reference)
-- Right ACL sprain Nov 20 2025 · both ends intact on MRI · conservative management
-- Biodex: quad 1.3% deficit (negligible) · ham right +5.4% stronger · ROM deficit 9.1° (primary flag) · NMC accel lag 20% right quad extension
-- Hop test: 101% composite LSI · clinician "no hesitation, control 10/10"
-- Week 4 of trainer program · gaining weight (was 5–8 lb below playing weight)
-- Supabase athlete_id: `yari` · pain metric key: `knee` · gate: 3
-
----
-
-## File Inventory
-
-### Active / Current
-
-| File | Ver | Role | Notes |
-|------|-----|------|-------|
-| `SJR_Dashboard_v2_20260408.html` | v2 | Coach dashboard | All 4 athletes (Patrick/Shaylan/Cadence/Yari) · pain cards · injury log · CSV export · auto-refresh 60s · nav links to v3/v4 files |
-| `SJR_WeeklyGuide_Patrick_v5_20260402.html` | v5.3 | Patrick weekly | Supabase · 4 metrics: Back/Nerve/Glute/Ankle · 3 timings: AM/Pre/Post · auto-stage on metric switch |
-| `shaylan_weekly_v3_20260402.html` | v3 | Shaylan weekly | Supabase · Browse exercises (same-tab) · Th/Sa/Su labels fixed |
-| `Cadence_Weekly_v3_20260402.html` | v3 | Cadence weekly | Supabase · Browse exercises (same-tab) · Th/Sa/Su labels fixed |
-| `SJR_Yari_Guide_v1_20260317.html` | v1 | Yari full guide + weekly | Dark theme · ROM block · 7-day overlay · Supabase pain log · Browse exercises · ACL-RSI · research |
-| `SJR_Library_Master_v4_20260402.html` | v4.1 | Exercise library | 80 cards · quality + phase tags · spinal filter row removed from UI · 5 new experts · deep-link URL params |
-| `SJR_Periodization_Master_v2_20260313.html` | v2 | Periodization reference | Deep-links to Library via URL params |
-| `patrick_protocol_v2_20260402.html` | v2 | Patrick clinical reference | Floating This Week button |
-
-### Superseded (keep for reference, don't link)
-`SJR_Dashboard_v1_20260402.html` · `SJR_Library_Master_v2_20260313.html` · `SJR_Library_Master_v3_20260402.html` · `Yari_weekly_v1.html`
-
----
+## Athletes
+| Athlete | Sport | Injury | Status | Target |
+|---------|-------|--------|--------|--------|
+| Patrick | Volleyball | L4-L5 spinal rehab (foraminal stenosis) | Bridge-to-load phase | King of the Court, Summer 2026 |
+| Shaylan | Sprint/Jump (MJC → Berkeley) | Knee rehab + shin splints | Active | Conference, State |
+| Cadence | Sprint/Jump (Cal Poly) | Plantar fascia + shin load intolerance | Active | Commonwealth Games Glasgow, July 2026 |
+| Yari | Soccer (professional) | ACL rehab | Active — own project silo | Return to play |
+| Rosanne | General fitness | None | Profile pending — own project silo | — |
 
 ## Supabase
+- **URL:** `https://jedsnurnnwmpcbdvtlbs.supabase.co`
+- **Key:** `sb_publishable_3WGolnM5dOK88Y4WdKCFGA_Hi6wj-_z`
+- **Region:** Oregon
+- **Tables:** `pain_logs`, `injury_logs`, `athlete_state`
+- **Athlete IDs:** `patrick`, `shaylan`, `cadence`, `yari`
 
-**URL:** `https://jedsnurnnwmpcbdvtlbs.supabase.co`
-**Key:** `sb_publishable_3WGolnM5dOK88Y4WdKCFGA_Hi6wj-_z`
-**Region:** Oregon
+### Supabase API rules (critical)
+- `sb_publishable_` keys go in `apikey` header ONLY
+- NEVER use `Authorization: Bearer` with sb_publishable_ keys — rejected silently
+- 204 responses return no body — handle with `if(res.status === 204) return []`
+- `sbFetch` is a regular (non-async) function — it uses `await` internally but works because it is always called from async callers
+- All Supabase save functions (`saveGateLog`, `saveLogToSupabase`, etc.) MUST be marked `async`
+- Missing `async` on save functions = silent failure — logs reach localStorage but never Supabase
 
-### Tables
-| Table | Purpose | Key columns |
-|-------|---------|-------------|
-| `pain_logs` | Daily pain scores per athlete per metric | `athlete_id`, `date`, `metric`, `score` |
-| `injury_logs` | Injury events, onset notes | `athlete_id`, `date`, `location`, `description` |
-| `athlete_state` | Week/phase persistence | `athlete_id`, `current_week`, `last_updated` |
-
-### Athlete IDs + Metric Keys
-| Athlete | ID | Metrics (key → label → gate) |
-|---------|----|------------------------------|
-| Patrick | `patrick` | `morning` Morning Pain /2 · `nerve` Nerve/Calf /2 · `ankle` Ankle Spot /3 |
-| Shaylan | `shaylan` | `knee` Knee /3 · `back` Back /2 |
-| Cadence | `cadence` | `foot_shin` Foot/Shin /3 |
-| Yari    | `yari`    | `knee` Right Knee /3 |
-
-### Critical API Rules
+### Critical async pattern
 ```javascript
-// Key goes in apikey header ONLY — NEVER Authorization: Bearer
-const headers = { 'apikey': SB_KEY, 'Content-Type': 'application/json' };
+// CORRECT
+function sbFetch(path, opts = {}){
+  // uses await internally — called only from async functions
+}
+async function saveGateLog(athleteId, entry){
+  const result = await sbFetch('/rest/v1/pain_logs', { ... });
+}
 
-// 204 = success with no body — handle explicitly
-if(res.status === 204) return [];
-
-// upsert pattern
-headers['Prefer'] = 'resolution=merge-duplicates';
+// WRONG — causes syntax error
+async function sbFetch(...){ }         // don't mark sbFetch async
+async async function saveGateLog(){ }  // never stack async keywords
 ```
 
----
+## File Inventory (canonical — April 2026)
+| File | Version | Notes |
+|------|---------|-------|
+| `SJR_WeeklyGuide_Patrick_v5_20260402.html` | v5.3 | Supabase · 4-metric pain log (Back/Nerve/Glute/Ankle) · 3 timings (AM/Pre/Post) · auto-stage on metric switch · foot yoga |
+| `shaylan_weekly_v3_20260402.html` | v3 | Supabase · framework skeleton · Browse exercises (absolute URL, same tab) · Th/Sa/Su labels |
+| `Cadence_Weekly_v3_20260402.html` | v3 | Supabase · framework skeleton · Browse exercises · async saveGateLog fixed |
+| `SJR_Yari_Guide_v1_20260317.html` | v1 | Supabase-wired · ACL rehab · date bug pending fix · schedule rebuild pending |
+| `SJR_Library_Master_v4_20260402.html` | v4.1 | 80 cards · quality tags · 6-quality filter · spinal filter UI removed · absolute Browse URLs |
+| `SJR_Dashboard_v2_20260408.html` | v2 | All 4 athletes · auto-refresh · injury log · CSV export |
+| `patrick_protocol_v2_20260402.html` | v2 | Floating This Week button |
+| `SJR_Periodization_Master_v2_20260313.html` | v2 | Library links fixed to absolute URL v4.1 |
+
+### Version numbering convention
+- Bump **date suffix** for fixes/patches: `_v3_20260402` → `_v3_20260414`
+- Bump **version number** for structural changes: v3 → v4
+- Overwrite via GitHub Desktop — never delete-then-upload on mobile
 
 ## Technical Standards
 
 ### Dates — strictly enforced
 ```javascript
-// CORRECT — local constructor only
+// CORRECT — local constructor
 const base = new Date(2026, 2, 23); // month is 0-indexed
 const d = new Date(ws.getFullYear(), ws.getMonth(), ws.getDate() + offset);
 
+// CORRECT — date string from local date
 function sbDateStr(d){
   return d.getFullYear() + '-' +
     String(d.getMonth()+1).padStart(2,'0') + '-' +
     String(d.getDate()).padStart(2,'0');
 }
 
-// NEVER — causes UTC/Pacific timezone shift
-new Date('2026-03-23')        // string constructor
-d.toISOString().slice(0,10)   // UTC offset bug
+// NEVER — causes UTC/Pacific timezone shift (shows day before in US)
+new Date('2026-03-23')        // string constructor parses as UTC midnight
+d.toISOString().slice(0,10)   // returns UTC date, not local date
 ```
 
-### Week Base Dates
-| Athlete | Base | Value |
-|---------|------|-------|
-| Patrick | `new Date(2026, 2, 23)` | Mon Mar 23 2026 |
-| Shaylan | `new Date(2026, 2, 9)`  | Mon Mar 9 2026  |
-| Cadence | `new Date(2026, 2, 16)` | Mon Mar 16 2026 |
-| Yari    | `new Date(2026, 2, 17)` | Mon Mar 17 2026 (program start) |
+### Week base dates
+- Patrick: `new Date(2026, 2, 23)` — Mon Mar 23 2026
+- Shaylan: `new Date(2026, 2, 9)` — Mon Mar 9 2026
+- Cadence: `new Date(2026, 2, 16)` — Mon Mar 16 2026
+- Yari: confirm from file
 
-### detectCurrentWeek() — declare AFTER getWeekStart() and WEEKS array
+### detectCurrentWeek() — always declare AFTER getWeekStart() and AFTER WEEKS array
 ```javascript
 function detectCurrentWeek(){
   const today = sbDateStr(new Date());
@@ -132,10 +110,32 @@ function detectCurrentWeek(){
 }
 ```
 
-### Script tag rule — critical
-- **Exactly ONE `<script>` and ONE `</script>` per file**
-- Duplicate script blocks cause `Unexpected token '<'` — the most common build error
-- Run `node --check filename.js` on every script block before finalizing
+### Script tag rule
+- Exactly ONE `<script>` open and ONE `</script>` close per file
+- Run `node --check` on extracted script block before every output
+- Duplicate script blocks cause `Unexpected token '<'` — most common build error
+
+### localStorage
+- Offline fallback cache only — never primary store
+- Prefixes: `pt_` (Patrick) · `sh_` (Shaylan) · `cad_` (Cadence) · `yari_` (Yari)
+
+### Day labels — FAB bar
+```javascript
+// CORRECT
+['M','T','W','Th','F','Sa','Su']
+// CSS: font-size:.62rem; letter-spacing:-.02em
+
+// WRONG — Tuesday and Thursday indistinguishable
+['M','T','W','T','F','S','S']
+```
+
+### Browse exercises button
+```javascript
+const LIBRARY_URL = 'https://padraik99.github.io/sjr-system/SJR_Library_Master_v4_20260402.html';
+// Always absolute URL — relative paths 404 on mobile/bookmarked links
+// No target="_blank" — Safari iOS blocks new tabs from links
+// Same-tab navigation — Supabase persists week state on return
+```
 
 ### Async init pattern (all weekly guides)
 ```javascript
@@ -155,106 +155,68 @@ async function initApp(){
 initApp();
 ```
 
-### localStorage
-- Offline fallback cache only — Supabase is primary
-- Prefixes: `pt_` Patrick · `sh_` Shaylan · `cad_` Cadence · `yari_` Yari
+## Library (v4.1)
+**80 cards** across 11 sections:
+Posterior Chain · Anterior Chain · Single-Leg Complex · Isometric Holds · Hip & Glute · Upper Body · Mobility & Joint Prep · Sprint Drills · Jump & Bound · Ankle & Foot · Energy System
 
-### Day labels in FAB bar
-`['M','T','W','Th','F','Sa','Su']` — NOT `['M','T','W','T','F','S','S']`
-CSS: `font-size:.62rem; letter-spacing:-.02em` to fit longer labels
+**Filter groups (AND across groups, OR within group):**
+- Phase: `phase-rehab` · `phase-bridge` · `phase-gpp` · `phase-spp` · `phase-comp` · `phase-trans` · `phase-maint` · `phase-perf`
+- Quality: `quality-gpp` · `quality-hypertrophy` · `quality-strength` · `quality-power` · `quality-velocity` · `quality-isometric`
+- Intensity: `intensity-sub` · `intensity-max`
 
-### Line endings
-All files must be **LF only** (no CRLF). GitHub Desktop will warn on CRLF.
-Fix: `sed -i 's/\r//' filename.html` or Python `content.replace(b'\r\n', b'\n')`
-Permanent fix for repo: add `.gitattributes` → `* text=auto eol=lf`
+**Spinal load:** `sl-low` · `sl-mod` · `sl-high` tags remain on cards (Patrick's guide reads them) but Spinal Load filter row is removed from Library UI. `hidespinal` URL param is deprecated.
 
----
+**URL deep-link format:**
+```
+https://padraik99.github.io/sjr-system/SJR_Library_Master_v4_20260402.html?phase=phase-bridge,phase-gpp&quality=quality-strength&intensity=intensity-sub
+```
 
-## Library Deep-Link URL Params
-
-Used by Browse Exercises buttons in athlete guides to pre-filter the Library.
-
-| Param | Values | Example |
-|-------|--------|---------|
-| `phase` | `phase-rehab`, `phase-bridge`, `phase-gpp`, `phase-spp`, `phase-comp`, `phase-trans`, `phase-maint`, `phase-perf` | `?phase=phase-rehab,phase-bridge,phase-gpp` |
-| `quality` | `quality-gpp`, `quality-hypertrophy`, `quality-strength`, `quality-power`, `quality-velocity`, `quality-isometric` | `?quality=quality-strength,quality-isometric` |
-| `hidespinal` | `1` | `?hidespinal=1` (all athletes except Patrick) |
-| `intensity` | `intensity-sub` | optional |
-
-**Yari current link:** `?phase=phase-rehab,phase-bridge,phase-gpp&hidespinal=1`
-
-> Note: `hidespinal` param is now a no-op in Library v4.1 (spinal filter row removed from UI). Param is harmless but can be cleaned from links in a future pass.
-
----
-
-## Training Quality → MED (Zourdos et al., FAU)
-
-| Quality | MED Sets | Note |
-|---------|----------|------|
-| Strength | 3–5 | Pronounced diminishing returns beyond this |
+## Training Quality → MED (Zourdos et al., FAU JSHS 2024)
+| Quality | MED | Note |
+|---------|-----|------|
+| Strength | 3–5 sets | Diminishing returns beyond this |
 | Hypertrophy | 4 fractional sets | More volume rarely adds proportional gain |
-| Speed/Power | Low volume, maximal intent | Full recovery between reps — CNS dominant |
-| Isometric | 5×45s | Analgesic window is the target, not fatigue |
+| Speed/Power | Low volume, maximal intent | Full recovery — CNS dominant |
+| Isometric | 5×45s (Rio analgesia) or 20–30s (Baar collagen) | Different durations, different mechanisms |
 | GPP | Volume over intensity | Tissue tolerance is the goal |
 
----
+## Expert Reference Pool (19)
+Baar · Grey · Ward · Natera · Barr · Schexnayder · McGill · Alfredson · Rio · Uthoff · Bosch · Dietz · Winkelman · Zourdos · Spina · Boyle · Cressey · Shepherd · Mack
 
-## Expert Reference Pool
-
-**In active use across SJR documents:**
-Baar (collagen/tendon/estrogen/LOX) · Grey (joint-first loading) · Ward (Flow Motion, foot chain) · Natera (sprint-specific isometrics) · Barr (ground impulse, foot mechanics) · Schexnayder (LJ periodization, penultimate) · McGill (spine, trap bar) · Alfredson (eccentric heel raise) · Rio (isometric analgesia) · Uthoff (backward running, zero shear) · Bosch (coordination-first return to sport) · Dietz (triphasic sequencing) · Winkelman (cuing) · Zourdos (MED, training quality) · Petersen (Nordic curl meta-analysis) · Grindem (ACL LSI thresholds) · Ardern (ACL-RSI) · Filbay (conservative ACL outcomes) · Hewett (estrogen/ACL risk) · Loenneke (BFR) · Mountjoy (LEA female athletes) · Spina (CARs, joint health) · Boyle (functional movement) · Cressey (shoulder/hip mobility) · Shepherd (sprint mechanics) · Mack (speed development)
-
----
-
-## Naming Convention
-
-`SJR_[DocumentType]_[Athlete/Scope]_v[Version]_[YYYYMMDD].html`
-
-Examples:
-- `SJR_Dashboard_v2_20260408.html`
-- `SJR_Yari_Guide_v1_20260317.html`
-- `SJR_Library_Master_v4_20260402.html`
+| Expert | Scope |
+|--------|-------|
+| Baar | Collagen/tendon programming, isometric loading, estrogen-LOX interaction |
+| Grey | Joint-first biomechanics, load tolerance development |
+| Ward | Flow Motion triplanar model, frontal plane loading |
+| Natera | Sprint-specific isometrics, overcoming isos, gait phase loading |
+| Barr | Ground impulse, foot-ankle spring, joint-level sprint analysis |
+| Schexnayder | LJ periodization, penultimate mechanics, CNS load management |
+| McGill | Spinal load classification, Big Three, neutral spine lifting |
+| Alfredson | Eccentric heel raise protocol (1998), Achilles tendinopathy |
+| Rio | Isometric analgesia (2015), patellar tendinopathy, cortical inhibition |
+| Uthoff | Backward running, non-impact load management |
+| Bosch | Sprint biomechanics as coordination, bi-articular hamstring, single-leg Roman Chair |
+| Dietz | Triphasic model (eccentric→isometric→concentric), ACL prevention |
+| Winkelman | Motor learning, internal vs external cueing, sprint mechanics coaching |
+| Zourdos | MED and diminishing returns framework (FAU JSHS 2024) |
+| Spina | FRC/CARs/PAILs/RAILs, end-range isometric loading, joint health |
+| Boyle | Psoas activation, Pallof press, joint-by-joint movement model |
+| Cressey | Hip mobility, 90/90 transition, shoulder health, baseball athletes |
+| Shepherd | LJ run-up mechanics, resisted sprint methodology, drop jump progressions |
+| Mack | Movement elasticity, scapular motor control, NHL/NBA applied practice |
 
 ## Commit Message Convention
-
 `[scope]: what changed + why`
 
 Examples:
-- `Dashboard v2: add Yari card + fix nav link versions`
-- `Yari guide: Phase 2 Week 4 overlay + Supabase pain logging`
-- `Girls v3 patch: Library browse same-tab, Th/Sa/Su day labels`
-
----
+- `Patrick v5.3: auto-stage on metric switch, remove Add Another Metric button`
+- `Library v4.1: +13 exercises, retag intensity/quality, remove spinal filter UI`
+- `Cadence v3: fix async saveGateLog — Supabase logs now saving`
+- `Periodization v2: fix Library links to absolute URL v4.1`
+- `CLAUDE.md: update to April 2026 state`
 
 ## Queued Work
-
-### SJR — Active (priority order)
-- [ ] Yari: weekly overlay update each phase/week transition (ongoing)
-- [ ] Yari: date label bug fix — `toISOString().slice(0,10)` in renderDay dateLabel showing one day ahead; fix with local constructor + `sbDateStr()` pattern
-- [ ] Yari: confirm `athlete_state` row exists in Supabase for `yari`
-- [ ] Dashboard: clean up `hidespinal` param from Library links (now a no-op)
-- [ ] Periodization Guide: Library nav buttons
-- [ ] Library: high-value exercise additions (incremental)
-- [ ] Shaylan individual HTML protocol document
-- [ ] Cadence individual HTML protocol document
-- [ ] Patrick individual HTML protocol document
-- [ ] `.gitattributes` → `* text=auto eol=lf` added to repo root
-
-### SJR — Completed
-- [x] Patrick weekly guide v5 → v5.3 — 4 metrics (Back/Nerve/Glute/Ankle), 3 timings (AM/Pre/Post), auto-stage on metric switch, removed Add Another Metric button
-- [x] Shaylan weekly guide v3 — Supabase, Browse exercises (same-tab), Th/Sa/Su labels
-- [x] Cadence weekly guide v3 — Supabase, Browse exercises (same-tab), Th/Sa/Su labels
-- [x] Library v4 → v4.1 — 80 cards (was 67), spinal filter row removed from UI, 5 new experts, phase/intensity tags fixed
-- [x] Dashboard v1 → v2 — added Yari, fixed nav link versions (v3→v4 Library, v2→v3 girls)
-- [x] Yari full guide v1 — clinical protocol, exercise library, weekly overlay, Supabase pain logging, Browse exercises, ACL-RSI, Phase 2 Week 4 current
-- [x] CLAUDE.md — structured template committed to repo
-
----
-
-## Multi-Project Note
-
-This CLAUDE.md is **project-scoped** to SJR. When working across multiple projects:
-- Each project root should have its own CLAUDE.md
-- Name them descriptively if storing centrally: `CLAUDE_SJR.md`, `CLAUDE_[ProjectName].md`
-- The format above (Project ID · Stack · Roster · File Inventory · DB · Rules · Queue) works as a reusable template
-- Paste the relevant project's CLAUDE.md into context at the start of each session
+- Yari guide v2: rebuild schedule (Mon/Wed/Fri strength · Tue/Thu canal · Sat field/plyo) · fix date bug · verify Supabase async · done in Yari's project silo
+- Repo cleanup: delete `(1)` duplicate files from GitHub Desktop when at desktop
+- Rosanne workout guide: profile uploaded to her project silo · backend decision pending
+- VBT persuasion deck: separate thread
