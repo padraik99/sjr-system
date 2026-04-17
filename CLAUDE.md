@@ -225,9 +225,12 @@ Full audit report: `SJR_Security_Audit_20260416.md` (in repo root)
 - [x] HIGH: loadAll() catch — e.message via innerHTML → textContent
 - [x] HIGH: setInterval inside saveInjury() → moved to top-level init
 
+### Completed fixes (2026-04-16) — CSP (all 8 files)
+- [x] HIGH: All 8 files — CSP meta tag added: default-src none; script-src unsafe-inline; connect-src Supabase (Supabase files) or none (static files); style-src unsafe-inline + fonts.googleapis.com; font-src fonts.gstatic.com; img-src self data:
+- Note: frame-ancestors NOT settable via meta tag — requires HTTP header. GitHub Pages does not support custom headers natively. Acknowledged gap — mitigated by XSS fix eliminating the primary injection path.
+
 ### Remaining remediation queue
-- [ ] HIGH: All 8 files — add CSP meta tag (connect-src Supabase, font-src gstatic, frame-ancestors none)
-- [ ] HIGH: Verify Supabase RLS policies on pain_logs, injury_logs, athlete_state
+- [ ] HIGH: Verify Supabase RLS policies on pain_logs, injury_logs, athlete_state — requires manual check in Supabase dashboard (see RLS verification instructions below)
 - [ ] MEDIUM: Yari guide lines 847/1513 — innerHTML for score/today → textContent
 - [ ] MEDIUM: Weekly guides (Patrick/Shaylan/Cadence/Yari) — innerHTML for WEEKS/phase-badge → DOM construction
 - [ ] MEDIUM: Library -1 suffix artifact — confirm canonical file exists, remove duplicate

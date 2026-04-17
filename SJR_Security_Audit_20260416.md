@@ -265,13 +265,13 @@ This app uses a shared localStorage namespace under the origin `padraik99.github
 
 - [x] [CRITICAL] SJR_Dashboard_v2_20260408.html — saveInjury() accepts free-text location and description with no sanitization before Supabase POST; **FIXED 2026-04-16** — added maxlength="200" on #inj-location, maxlength="1000" on #inj-desc, and JS length guards before POST
 
-- [ ] [HIGH] All files (8) — no Content Security Policy meta tag; add CSP restricting connect-src to Supabase, font-src to fonts.gstatic.com, and blocking all other external script/fetch
+- [x] [HIGH] All files (8) — no Content Security Policy meta tag; **FIXED 2026-04-16** — CSP meta tag added to all 8 files: default-src 'none'; script-src 'unsafe-inline'; connect-src Supabase URL (Supabase files) or 'none' (static files); style-src 'unsafe-inline' + fonts.googleapis.com; font-src fonts.gstatic.com; img-src 'self' data:. Note: frame-ancestors requires HTTP header — not settable via meta tag on GitHub Pages.
 
 - [x] [HIGH] SJR_Dashboard_v2_20260408.html — loadAll() error handler renders e.message via innerHTML (line 473); **FIXED 2026-04-16** — replaced with DOM construction using textContent
 
 - [x] [HIGH] SJR_Dashboard_v2_20260408.html — setInterval(loadAll, 60000) called inside saveInjury() (line 634); **FIXED 2026-04-16** — moved to top-level init block; registers once only
 
-- [ ] [HIGH] All Supabase-connected files (5) — Supabase key sb_publishable_3WGolnM5dOK88Y4WdKCFGA_Hi6wj-_z is hardcoded in client-side JS in a public repo; verify Supabase RLS (Row Level Security) policies are enabled on pain_logs, injury_logs, and athlete_state tables — without RLS the key grants full table access to anyone who views source
+- [ ] [HIGH] All Supabase-connected files (5) — Supabase key sb_publishable_3WGolnM5dOK88Y4WdKCFGA_Hi6wj-_z is hardcoded in client-side JS in a public repo; verify Supabase RLS (Row Level Security) policies are enabled on pain_logs, injury_logs, and athlete_state tables — without RLS the key grants full table access to anyone who views source. **Requires manual check — see RLS Verification section below.**
 
 - [ ] [MEDIUM] SJR_Yari_Guide_v2_20260414.html — innerHTML used to render score and today at lines 847 and 1513; these are currently safe (integer + local date string) but should use textContent for consistency and future-proofing
 
@@ -301,4 +301,48 @@ The audit found no evidence that RLS status is documented or verified anywhere i
 
 ---
 
-*End of report. No changes have been made. Awaiting instructions.*
+## RLS Verification Instructions (manual — Patrick)
+
+Supabase dashboard: **https://supabase.com/dashboard/project/jedsnurnnwmpcbdvtlbs**
+
+### Step 1 — Check RLS enabled on each table
+
+1. Go to **Table Editor** → select table → click **"RLS disabled"** badge (top right of table view)  
+   — or —  
+   Go to **Authentication → Policies** and look for each table.
+
+For each of the three tables, confirm the toggle reads **"RLS enabled"**:
+
+| Table | RLS enabled? | Verified by |
+|-------|-------------|-------------|
+| `pain_logs` | ☐ | |
+| `injury_logs` | ☐ | |
+| `athlete_state` | ☐ | |
+
+### Step 2 — What to do if RLS is disabled
+
+If ANY table shows RLS disabled, enable it immediately via the toggle. Then add a policy — the minimum effective policy for this app (anon/publishable key only, no user auth):
+
+```sql
+-- pain_logs: allow read/insert for known athlete IDs only
+CREATE POLICY "athlete_ids_only" ON pain_logs
+  FOR ALL USING (athlete_id IN ('patrick', 'shaylan', 'cadence', 'yari'));
+
+-- injury_logs: same
+CREATE POLICY "athlete_ids_only" ON injury_logs
+  FOR ALL USING (athlete_id IN ('patrick', 'shaylan', 'cadence', 'yari'));
+
+-- athlete_state: same
+CREATE POLICY "athlete_ids_only" ON athlete_state
+  FOR ALL USING (athlete_id IN ('patrick', 'shaylan', 'cadence', 'yari'));
+```
+
+This still allows any holder of the publishable key to read/write any athlete's data, but it closes the door to arbitrary row insertion with fake athlete IDs. Full per-user isolation requires Supabase Auth (JWT), which is a larger architectural change.
+
+### Step 3 — Document result in CLAUDE.md
+
+Once verified, update the Remaining remediation queue in CLAUDE.md to mark this item complete and note the RLS status found.
+
+---
+
+*Updated 2026-04-16: CRITICAL and HIGH items resolved except Supabase RLS (manual verification required).*
