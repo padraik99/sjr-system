@@ -335,10 +335,10 @@ main { padding:1.25rem 1.5rem; max-width:1100px; margin:0 auto; }
       </div>
       <div class="form-field">
         <label class="form-label">Location</label>
-        <input class="form-input" type="text" id="inj-location" placeholder="e.g. left L5 nerve">
+        <input class="form-input" type="text" id="inj-location" placeholder="e.g. left L5 nerve" maxlength="200">
       </div>
       <button class="form-submit" onclick="saveInjury()">+ Log</button>
-      <textarea class="form-textarea" id="inj-desc" placeholder="Description — symptoms, context, session load at time of onset…"></textarea>
+      <textarea class="form-textarea" id="inj-desc" placeholder="Description — symptoms, context, session load at time of onset…" maxlength="1000"></textarea>
     </div>
     <table class="injury-table" id="injury-table">
       <thead>
@@ -470,8 +470,18 @@ async function loadAll(){
     if(btn2){ btn2.textContent = '↻ Refresh'; btn2.disabled = false; }
 
   } catch(e){
-    document.getElementById('athletes-grid').innerHTML =
-      `<div class="loading-state">⚠ Load failed: ${e.message}<br><br>Make sure files are served via localhost, not file://</div>`;
+    const grid = document.getElementById('athletes-grid');
+    grid.textContent = '';
+    const errDiv = document.createElement('div');
+    errDiv.className = 'loading-state';
+    const msg = document.createElement('p');
+    msg.textContent = '⚠ Load failed: ' + e.message;
+    const hint = document.createElement('p');
+    hint.textContent = 'Make sure files are served via localhost, not file://';
+    hint.style.marginTop = '0.5rem';
+    errDiv.appendChild(msg);
+    errDiv.appendChild(hint);
+    grid.appendChild(errDiv);
     console.error(e);
   }
 }
@@ -596,22 +606,48 @@ function buildSparkHtml(data, athleteCls){
 // ─────────────────────────────────────────
 function renderInjuryTable(){
   const tbody = document.getElementById('injury-tbody');
+  // Clear existing rows
+  tbody.textContent = '';
+
   if(!allInjuries.length){
-    tbody.innerHTML = '<tr><td colspan="4" class="no-data">No injury logs yet</td></tr>';
+    const tr = document.createElement('tr');
+    const td = document.createElement('td');
+    td.colSpan = 4;
+    td.className = 'no-data';
+    td.textContent = 'No injury logs yet';
+    tr.appendChild(td);
+    tbody.appendChild(tr);
     return;
   }
-  tbody.innerHTML = allInjuries.map(inj => {
-    const dotCls = 'dot-' + inj.athlete_id;
-    const date = inj.date || '—';
-    const loc  = inj.location || '—';
-    const desc = inj.description || '—';
-    return `<tr>
-      <td><span class="athlete-dot ${dotCls}"></span>${inj.athlete_id}</td>
-      <td style="white-space:nowrap">${date}</td>
-      <td>${loc}</td>
-      <td style="max-width:320px">${desc}</td>
-    </tr>`;
-  }).join('');
+
+  // Build rows via DOM — user-supplied fields (location, description) use textContent only
+  allInjuries.forEach(inj => {
+    const tr = document.createElement('tr');
+
+    // Col 1: athlete dot + name
+    const td1 = document.createElement('td');
+    const dot = document.createElement('span');
+    dot.className = 'athlete-dot dot-' + (inj.athlete_id || '');
+    td1.appendChild(dot);
+    td1.appendChild(document.createTextNode(inj.athlete_id || '—'));
+
+    // Col 2: date (ISO string from Supabase — numeric/punctuation only)
+    const td2 = document.createElement('td');
+    td2.style.whiteSpace = 'nowrap';
+    td2.textContent = inj.date || '—';
+
+    // Col 3: location — user free-text, textContent only
+    const td3 = document.createElement('td');
+    td3.textContent = inj.location || '—';
+
+    // Col 4: description — user free-text, textContent only
+    const td4 = document.createElement('td');
+    td4.style.maxWidth = '320px';
+    td4.textContent = inj.description || '—';
+
+    tr.append(td1, td2, td3, td4);
+    tbody.appendChild(tr);
+  });
 }
 
 async function saveInjury(){
@@ -621,6 +657,8 @@ async function saveInjury(){
   const desc     = document.getElementById('inj-desc').value.trim();
 
   if(!location && !desc){ alert('Add a location or description.'); return; }
+  if(location.length > 200){ alert('Location must be 200 characters or fewer.'); return; }
+  if(desc.length > 1000){ alert('Description must be 1,000 characters or fewer.'); return; }
 
   try {
     await sbFetch('/rest/v1/injury_logs', {
@@ -630,8 +668,6 @@ async function saveInjury(){
     document.getElementById('inj-location').value = '';
     document.getElementById('inj-desc').value = '';
     await loadAll();
-// Auto-refresh every 60 seconds
-setInterval(loadAll, 60000);
   } catch(e){
     alert('Save failed: ' + e.message);
   }
@@ -679,6 +715,8 @@ function download(csv, filename){
 document.getElementById('inj-date').value = todayStr();
 
 loadAll();
+// Auto-refresh every 60 seconds — registered once at init, not inside saveInjury()
+setInterval(loadAll, 60000);
 </script>
 </body>
 </html>

@@ -60,7 +60,7 @@ async async function saveGateLog(){ }  // never stack async keywords
 | `Cadence_Weekly_v3_20260402.html` | v3 | Supabase · framework skeleton · Browse exercises · async saveGateLog fixed |
 | `SJR_Yari_Guide_v1_20260317.html` | v1 | Supabase-wired · ACL rehab · date bug pending fix · schedule rebuild pending |
 | `SJR_Library_Master_v4_20260402.html` | v4.1 | 80 cards · quality tags · 6-quality filter · spinal filter UI removed · absolute Browse URLs |
-| `SJR_Dashboard_v2_20260408.html` | v2 | All 4 athletes · auto-refresh · injury log · CSV export |
+| `SJR_Dashboard_v2_20260408.html` | v2.1 | All 4 athletes · auto-refresh · injury log · CSV export · **security patch 2026-04-16**: stored XSS fixed (renderInjuryTable → DOM/textContent), input validation added (maxlength + JS guards), e.message innerHTML→textContent, setInterval moved to init |
 | `patrick_protocol_v2_20260402.html` | v2 | Floating This Week button |
 | `SJR_Periodization_Master_v2_20260313.html` | v2 | Library links fixed to absolute URL v4.1 |
 
@@ -215,8 +215,28 @@ Examples:
 - `Periodization v2: fix Library links to absolute URL v4.1`
 - `CLAUDE.md: update to April 2026 state`
 
-## Queued Work
-- Yari guide v2: rebuild schedule (Mon/Wed/Fri strength · Tue/Thu canal · Sat field/plyo) · fix date bug · verify Supabase async · done in Yari's project silo
-- Repo cleanup: delete `(1)` duplicate files from GitHub Desktop when at desktop
-- Rosanne workout guide: profile uploaded to her project silo · backend decision pending
-- VBT persuasion deck: separate thread
+## Security Audit — Status (updated 2026-04-16)
+
+Full audit report: `SJR_Security_Audit_20260416.md` (in repo root)
+
+### Completed fixes (2026-04-16) — Dashboard v2.1
+- [x] CRITICAL: renderInjuryTable() — DOM/textContent replaces innerHTML for user fields
+- [x] CRITICAL: saveInjury() — maxlength attrs + JS length guards before POST
+- [x] HIGH: loadAll() catch — e.message via innerHTML → textContent
+- [x] HIGH: setInterval inside saveInjury() → moved to top-level init
+
+### Remaining remediation queue
+- [ ] HIGH: All 8 files — add CSP meta tag (connect-src Supabase, font-src gstatic, frame-ancestors none)
+- [ ] HIGH: Verify Supabase RLS policies on pain_logs, injury_logs, athlete_state
+- [ ] MEDIUM: Yari guide lines 847/1513 — innerHTML for score/today → textContent
+- [ ] MEDIUM: Weekly guides (Patrick/Shaylan/Cadence/Yari) — innerHTML for WEEKS/phase-badge → DOM construction
+- [ ] MEDIUM: Library -1 suffix artifact — confirm canonical file exists, remove duplicate
+- [ ] MEDIUM: Document localStorage plaintext health data risk in codebase
+- [ ] LOW: CSV export confirmation prompt before download
+- [ ] LOW: Consider self-hosting Google Fonts
+
+### Active session rules
+- Any fix must be matched by a changelog entry in CLAUDE.md and a checklist update above.
+- User/stored data must render via textContent, never innerHTML.
+- Default to zero-dependency, free solutions.
+- Flag any deviation from these rules before proceeding.
