@@ -2,7 +2,6 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; connect-src https://jedsnurnnwmpcbdvtlbs.supabase.co; img-src 'self' data:;">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <meta name="theme-color" content="#0f0f0e">
 <title>Patrick — Weekly Training Guide v5</title>
@@ -398,7 +397,7 @@ main { padding:1.25rem; max-width:700px; margin:0 auto; }
   <div class="hdr-top">
     <div>
       <div class="hdr-name">Patrick</div>
-      <div class="hdr-sub">L4–L5 Bridge → King of the Court · v5.3</div>
+      <div class="hdr-sub">L4–L5 · Return to Athletic Life · v5.4</div>
     </div>
     <div class="phase-badge" id="phase-badge">Bridge · W1<span>Mar 24–30</span></div>
   </div>
@@ -849,7 +848,7 @@ const WEEKS = [
           { label:'Lower Body — If Active', cls:'accent', items:[
             {name:'Trap bar — elevated start', dose:'match Mon load · 3×6'},
             {name:'Single-leg negatives off step', dose:'2×10/side'},
-            {name:'Single-leg glute bridge', dose:'3×10/side'},
+            {name:'Single-leg glute bridge', note:'bent knee on raised leg', dose:'3×10/side'},
           ]},
           { label:'Upper', items:[
             {name:'Bench press', dose:'2×10'},
@@ -893,7 +892,7 @@ const WEEKS = [
             {name:'Trap bar — elevated start', dose:'65→85 lbs · 3×8'},
             {name:'Box squat / goblet squat', dose:'3×10 · light DB'},
             {name:'Single-leg negatives off step', dose:'3×10/side'},
-            {name:'Single-leg glute bridge', dose:'3×12/side · 3s pause'},
+            {name:'Single-leg glute bridge', note:'bent knee on raised leg', dose:'3×12/side · 3s pause'},
           ]},
           { label:'Upper', items:[
             {name:'Bench press', dose:'3×10 · +5 lbs'},
@@ -946,7 +945,7 @@ const WEEKS = [
           ]},
           { label:'If Light Gym', items:[
             {name:'Trap bar — elevated start', dose:'same weight · 2×8'},
-            {name:'Single-leg glute bridge', dose:'2×10/side'},
+            {name:'Single-leg glute bridge', note:'bent knee on raised leg', dose:'2×10/side'},
             {name:'Bench press', dose:'2×10'},
             {name:'Banded row', dose:'2×15'},
           ]},
@@ -991,7 +990,7 @@ const WEEKS = [
           ]},
           { label:'Lower Body — If Active', cls:'accent', items:[
             {name:'Trap bar — elevated start', dose:'85 lbs · 3×6'},
-            {name:'Single-leg glute bridge', dose:'3×12/side'},
+            {name:'Single-leg glute bridge', note:'bent knee on raised leg', dose:'3×12/side'},
             {name:'Step-up — low box', dose:'2×10/side'},
           ]},
           { label:'Upper', items:[
@@ -1036,7 +1035,7 @@ const WEEKS = [
             {name:'Trap bar — elevated start', dose:'85–100 lbs · 4×6'},
             {name:'Box squat / goblet squat', dose:'3×10 · 20–25 lbs DB'},
             {name:'Single-leg negatives off step', dose:'3×10/side'},
-            {name:'Single-leg glute bridge', dose:'3×12/side · 3s pause'},
+            {name:'Single-leg glute bridge', note:'bent knee on raised leg', dose:'3×12/side · 3s pause'},
             {name:'Step-up — low box', dose:'3×10/side · add DB'},
           ]},
           { label:'Upper', items:[
@@ -1089,7 +1088,7 @@ const WEEKS = [
           ]},
           { label:'If Light Gym', items:[
             {name:'Trap bar — elevated start', dose:'same weight · 2×8'},
-            {name:'Single-leg glute bridge', dose:'2×12/side'},
+            {name:'Single-leg glute bridge', note:'bent knee on raised leg', dose:'2×12/side'},
             {name:'Banded row', dose:'2×15'},
           ]},
           { label:'Always', cls:'green', items:[
@@ -1133,7 +1132,7 @@ const WEEKS = [
           { label:'Lower Body — If Active', cls:'accent', items:[
             {name:'Trap bar — elevated start', dose:'100 lbs · 4×6 test'},
             {name:'Single-leg negatives off step', dose:'3×10/side'},
-            {name:'Single-leg glute bridge', dose:'3×12/side'},
+            {name:'Single-leg glute bridge', note:'bent knee on raised leg', dose:'3×12/side'},
           ]},
           { label:'Upper', items:[
             {name:'Bench press', dose:'3×8'},
@@ -1275,78 +1274,137 @@ const WEEKS = [
 
   // ── POST-ESI SETTLE ─────────────────────────────────────────────
   {
-    label:'Post-ESI · Settle', dates:'TBD', phase:'Post-ESI Phase',
-    focus:'2 weeks light only · Upper maintain · Walk + bike · Let the procedure work',
+    label:'Bridge · W5 — Steady', dates:'Apr 20–26', phase:'Bridge Phase',
+    focus:'Back irritable — steady state week. Canal + sled stay. Trap bar volume down. Forward running continues. Gabapentin taper started.',
     days:[
-      { name:'Days 1–2', type:'C', intent:'Post-ESI — Walk Only',
-        sub:'No lower body loading. Non-negotiable.',
-        collagen:false,
-        blocks:[
-          { label:'Foot Yoga', cls:'green', items:[
-            {name:'Heel Rock — Calcaneal Mobility', dose:'2×10 ea'},
-            {name:'Ankle Circles + Dorsiflexion', dose:'10 ea direction'},
-          ]},
-          { label:'Light Only', cls:'green', items:[
-            {name:'Stationary bike', dose:'15 min very easy'},
-            {name:'Nerve floss — peroneal', dose:'1× gentle'},
-          ]},
-        ]
-      },
-      { name:'Days 3–7', type:'C', intent:'Settle — Reintro',
-        sub:'Upper body returns at light intensity Day 3. Dead bug only Day 5–7.',
-        collagen:false,
-        blocks:[
-          { label:'Foot Yoga', cls:'green', items:[
-            {name:'Heel Rock — Calcaneal Mobility', dose:'2×10 ea'},
-            {name:'Short Foot Exercise', dose:'2×10s ea'},
-            {name:'Ankle Circles + Dorsiflexion', dose:'10 ea direction'},
-          ]},
-          { label:'Upper Only (Day 3+)', items:[
-            {name:'Bench press', dose:'2×10 light'},
-            {name:'Banded row', dose:'2×15 light'},
-            {name:'Negative pushups', dose:'2×10'},
-          ]},
-          { label:'Core Light (Day 5+)', items:[
-            {name:'Dead bug', dose:'1×10/side'},
-          ]},
-          { label:'Decompress', cls:'green', items:[
-            {name:'Stationary bike', dose:'15–20 min easy'},
-          ]},
-        ]
-      },
-      { name:'Days 8–14', type:'C', intent:'Settle — Test Glute Response',
-        sub:'First glute bridge test Day 8. Canal easy walk reintro Day 11.',
-        collagen:false,
+      { name:'Monday', type:'A', intent:'Strength — Light', sub:'Gym. Pull the trap bar load back 15–20%. Back decides the day.',
+        collagen:true,
         blocks:[
           { label:'Foot Yoga', cls:'green', items:[
             {name:'Heel Rock — Calcaneal Mobility', dose:'2×10 ea'},
             {name:'Short Foot Exercise', dose:'2×10s ea'},
             {name:'Toe Spread and Lift', dose:'2×10'},
-            {name:'Ankle Circles + Dorsiflexion', dose:'10 ea direction'},
+            {name:'Ankle Dorsiflexion Mob — Weight-Bearing', dose:'5 ea side'},
           ]},
-          { label:'Glute Test (Day 8+)', cls:'accent', items:[
-            {name:'Glute bridge — bilateral', dose:'2×10 · note L vs R difference'},
-            {name:'Clamshells — banded', dose:'2×10/side light'},
-            {name:'Single-leg glute bridge', dose:'2×8/side · compare sides (Day 11+)'},
+          { label:'Main Block', items:[
+            {name:'Trap Bar Deadlift — Elevated Start', note:'3×5 · back off 15–20% from W3 peak · stop if back loads', dose:'3×5'},
+            {name:'Step-Up — Weighted', note:'controlled — no spinal compression', dose:'3×10 ea'},
+            {name:'Single-leg glute bridge', note:'bent knee on raised leg', dose:'3×10/side · 3s pause'},
+            {name:'Sled Pull — Backward', note:'foraminal decompression', dose:'4×20m'},
           ]},
-          { label:'Core + Decompress', items:[
-            {name:'Dead bug', dose:'2×8/side'},
-            {name:'Stationary bike', dose:'20 min'},
-            {name:'Backward jog intervals', dose:'easy walk only · 4×20s (Day 11+)'},
+          { label:'McGill Core', items:[
+            {name:'Bird Dog — Extended Hold', dose:'3×10s ea'},
+            {name:'Side Plank — Full', dose:'2×20s ea'},
+            {name:'Dead Bug — Contralateral Hold', dose:'3×8 ea'},
           ]},
         ]
       },
-      { name:'Rest', type:'rest', intent:'Rest Days', sub:'Multiple rest days through settle phase. Sleep is the work.', collagen:false, rest:true, blocks:[] },
-      { name:'Rest', type:'rest', intent:'Rest', sub:'Full rest.', collagen:false, rest:true, blocks:[] },
-      { name:'Rest', type:'rest', intent:'Rest', sub:'Full rest.', collagen:false, rest:true, blocks:[] },
-      { name:'Rest', type:'rest', intent:'Rest', sub:'Full rest.', collagen:false, rest:true, blocks:[] },
+      { name:'Tuesday', type:'A', intent:'Canal + Yari', sub:'Forward running. Proprioceptive work. Band circuit. Core at home.',
+        collagen:false,
+        blocks:[
+          { label:'Foot Yoga', cls:'green', items:[
+            {name:'Heel Rock — Calcaneal Mobility', dose:'2×10 ea'},
+            {name:'Ankle Circles + Dorsiflexion', dose:'10 ea direction'},
+          ]},
+          { label:'Canal Session', items:[
+            {name:'Dynamic warmup', dose:'5 min'},
+            {name:'Rock work + eyes-closed balance', note:'proprioceptive — both legs', dose:'3×20s ea'},
+            {name:'Curved run intervals', note:'forward · work = higher knees / rest = gentle curves · 1.25 mi total · break halfway', dose:'×4–6'},
+          ]},
+          { label:'Band Circuit', items:[
+            {name:'Band Lateral Shuffle', dose:'3×15 ea'},
+            {name:'Monster Walk — Banded Forward/Backward', dose:'2×20 steps'},
+            {name:'Isometric Wall Sit — Mid Angle', note:'nerve check post-canal · 3×45s', dose:'3×45s'},
+          ]},
+          { label:'Home — Core', items:[
+            {name:'Dead Bug — Contralateral Hold', dose:'3×8 ea'},
+            {name:'Bird Dog — Extended Hold', dose:'3×10s ea'},
+          ]},
+        ]
+      },
+      { name:'Wednesday', type:'A', intent:'Strength — Light', sub:'Gym. Single-leg focus. Back stays out of it.',
+        collagen:false,
+        blocks:[
+          { label:'Foot Yoga', cls:'green', items:[
+            {name:'Heel Rock — Calcaneal Mobility', dose:'2×10 ea'},
+            {name:'Short Foot Exercise', dose:'2×10s ea'},
+          ]},
+          { label:'Main Block', items:[
+            {name:'Romanian Deadlift (RDL)', note:'2×10 moderate — hinge not load', dose:'2×10'},
+            {name:'Step-Up — Weighted', dose:'3×10 ea'},
+            {name:'Single-leg glute bridge', note:'bent knee on raised leg', dose:'3×12/side'},
+            {name:'Cable Pull-Through', dose:'3×12'},
+          ]},
+          { label:'McGill Core', items:[
+            {name:'Bird Dog — Extended Hold', dose:'3×10s ea'},
+            {name:'Side Plank — Full', dose:'2×20s ea'},
+          ]},
+        ]
+      },
+      { name:'Thursday', type:'A', intent:'Canal + Sled', sub:'Same as Tuesday + sled. Back decompression priority.',
+        collagen:true,
+        blocks:[
+          { label:'Foot Yoga', cls:'green', items:[
+            {name:'Heel Rock — Calcaneal Mobility', dose:'2×10 ea'},
+            {name:'Ankle Circles + Dorsiflexion', dose:'10 ea direction'},
+          ]},
+          { label:'Canal Session', items:[
+            {name:'Dynamic warmup', dose:'5 min'},
+            {name:'Rock work + eyes-closed balance', note:'proprioceptive — both legs', dose:'3×20s ea'},
+            {name:'Curved run intervals', note:'forward · work = higher knees / rest = gentle curves · 1.25 mi total · break halfway', dose:'×4–6'},
+          ]},
+          { label:'Band Circuit', items:[
+            {name:'Band Lateral Shuffle', dose:'3×15 ea'},
+            {name:'Monster Walk — Banded Forward/Backward', dose:'2×20 steps'},
+          ]},
+          { label:'Sled', items:[
+            {name:'Sled Pull — Backward', note:'foraminal decompression — non-negotiable', dose:'4×20m'},
+          ]},
+        ]
+      },
+      { name:'Friday', type:'A', intent:'Strength — Light', sub:'Gym. Same as Monday. Autoregulate — back still guides.',
+        collagen:true,
+        blocks:[
+          { label:'Foot Yoga', cls:'green', items:[
+            {name:'Heel Rock — Calcaneal Mobility', dose:'2×10 ea'},
+            {name:'Short Foot Exercise', dose:'2×10s ea'},
+            {name:'Toe Spread and Lift', dose:'2×10'},
+          ]},
+          { label:'Main Block', items:[
+            {name:'Trap Bar Deadlift — Elevated Start', note:'3×5 · same as Monday or -5% · autoregulate', dose:'3×5'},
+            {name:'Step-Up — Weighted', dose:'3×10 ea'},
+            {name:'Single-leg glute bridge', note:'bent knee on raised leg', dose:'3×12/side · 3s pause'},
+            {name:'Sled Pull — Backward', dose:'3×20m'},
+          ]},
+          { label:'McGill Core', items:[
+            {name:'Bird Dog — Extended Hold', dose:'3×10s ea'},
+            {name:'Dead Bug — Contralateral Hold', dose:'3×8 ea'},
+          ]},
+        ]
+      },
+      { name:'Saturday', type:'C', intent:'Rest / Walk', sub:'No loading. Walk or bike if back allows.',
+        collagen:false,
+        blocks:[
+          { label:'Optional', cls:'green', items:[
+            {name:'Walking — Extended Duration', dose:'20–30 min easy'},
+            {name:'Stationary Bike — Low Resistance Steady State', dose:'15 min very easy'},
+          ]},
+        ]
+      },
+      { name:'Sunday', type:'C', intent:'Rest', sub:'Full rest. Monitor gabapentin taper — note warmth vs pain.',
+        collagen:false,
+        blocks:[
+          { label:'Rest', cls:'green', items:[
+            {name:'Ankle Circles + Dorsiflexion', dose:'5 min gentle'},
+          ]},
+        ]
+      },
     ]
   },
 
-  // ── UNLOCK W1–2 ─────────────────────────────────────────────────
   {
-    label:'Unlock · W1–2', dates:'TBD post-ESI', phase:'Unlock / GPP',
-    focus:'Exploit the recruitment window · Trap bar resets to 70% · Glute med now trainable',
+    label:'Unlock · W1', dates:'Post June 5 consult', phase:'Unlock / GPP',
+    focus:'Post-procedure unlock phase — begins after June 5 pain clinic consult · Trap bar resets to 70% · Glute med now trainable',
     days:[
       { name:'Monday', type:'A', intent:'Day A — Reload',
         sub:'Trap bar resets to 70% of bridge peak. Feel the glute difference.',
@@ -1360,7 +1418,7 @@ const WEEKS = [
           ]},
           { label:'Lower Body', cls:'accent', items:[
             {name:'Trap bar — elevated start', dose:'~75 lbs · 3×8 reset'},
-            {name:'Single-leg glute bridge', dose:'3×12/side · note recruitment diff'},
+            {name:'Single-leg glute bridge', note:'bent knee on raised leg', dose:'3×12/side · note recruitment diff'},
             {name:'Box squat / goblet squat', dose:'3×10'},
             {name:'Step-up — low box', dose:'3×10/side'},
             {name:'Hip thrust — barbell', dose:'3×12 intro'},
@@ -1454,7 +1512,7 @@ const WEEKS = [
           { label:'Lower Body Build', cls:'accent', items:[
             {name:'Trap bar — elevated start', dose:'+10 lbs · 4×6'},
             {name:'Hip thrust — barbell', dose:'3×12 · add load'},
-            {name:'Single-leg glute bridge', dose:'3×12/side'},
+            {name:'Single-leg glute bridge', note:'bent knee on raised leg', dose:'3×12/side'},
             {name:'Wall sit isometric', dose:'4×45s'},
           ]},
           { label:'Decompress', cls:'green', items:[

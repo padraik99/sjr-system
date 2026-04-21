@@ -799,7 +799,7 @@ function getWeekStart(w){
 
 const WEEKS = [
   { label:'Phase 2 · Week 5', range:'Apr 13–19', note:'Strength 3×/week · Canal Tue+Thu · Bilateral plyo Sat' },
-  { label:'Phase 2 · Week 6', range:'Apr 20–26', note:'Load progressed · canal+sled · plyo toward unilateral' },
+  { label:'Phase 2 · Week 6 — Deload', range:'Apr 20–26', note:'Volume −30% · load held · good ramp soreness — let tissue consolidate · canal+sled maintained' },
   { label:'Phase 3 · May Gate', range:'Apr 27–May 3', note:'May gate week — hop test re-run, ACL-RSI, full load assessment' },
 ];
 
@@ -938,7 +938,7 @@ const DAYS_BY_WEEK = [
           {name:'Box Squat — Lower Box',           dose:'3×8 · same box height as Mon'},
           {name:'Hip Thrust — Single-Leg',         dose:'3×8 each · right priority'},
           {name:'Nordic Curl — Eccentric',         dose:'3×4 · 5s descent · both legs'},
-          {name:'Single-Leg RDL — Ipsilateral DB', dose:'3×8 each'},
+          {name:'Single-Leg RDL — Ipsilateral DB', dose:'2×8 each'},
           {name:'Wall Sit',                        dose:'3×30s · finish session'},
         ]},
       ]
@@ -999,7 +999,7 @@ const DAYS_BY_WEEK = [
         { label:'Strength Block', items:[
           {name:'Trap Bar DL — Standard Handles',  dose:'4×5 · RPE 8 · best lift of the week'},
           {name:'Box Squat — Lower Box',           dose:'3×8'},
-          {name:'Hip Thrust — Single-Leg',         dose:'3×8 each'},
+          {name:'Hip Thrust — Single-Leg',         dose:'2×8 each'},
           {name:'Nordic Curl — Eccentric',         dose:'3×4 · 5s descent · note if easier than Mon'},
           {name:'Single-Leg RDL — Ipsilateral DB', dose:'3×8 each · match or +load'},
           {name:'Wall Sit',                        dose:'3×30s · finish session'},
@@ -1054,7 +1054,7 @@ const DAYS_BY_WEEK = [
   // ── WEEK 1: Apr 20–26 (Phase 2 Week 6) ──────────────────────
   [
     { name:'Monday',    collagen:true,  rest:false, intent:'Session A — Strength',
-      sub:'Load progression. Box squat: trial without wedge if ROM felt symmetric last week. Nordic: note if band assist reducing.',
+      sub:'Deload week — volume −30%, load held. Legs feeling good from ramp. Let tissue consolidate. Keep wedge. Bank assist stays on Nordic.',
       blocks:[
         { label:'ROM Block', items:[
           {name:'Heel Slide',       dose:'3×15 right · 2s hold'},
@@ -1067,12 +1067,12 @@ const DAYS_BY_WEEK = [
           {name:'Short Foot + Toe Yoga',           dose:'2×12 each'},
         ]},
         { label:'Strength Block', items:[
-          {name:'Trap Bar DL — Standard Handles',  dose:'4×5 · RPE 8 · +5% from Week 5'},
-          {name:'Box Squat — Lower Box',           dose:'3×8 · trial without wedge · wedge back if ache appears'},
-          {name:'Hip Thrust — Single-Leg',         dose:'3×8 each · right extra set'},
-          {name:'Nordic Curl — Eccentric',         dose:'3×5 · 5s descent · reduce band assist'},
-          {name:'Single-Leg RDL — Contralateral DB ★', dose:'3×8 each · contralateral DB harder · progress from ipsilateral'},
-          {name:'Wall Sit',                        dose:'3×30s'},
+          {name:'Trap Bar DL — Standard Handles',  dose:'3×4 · RPE 6–7 · hold Week 5 load'},
+          {name:'Box Squat — Lower Box',           dose:'2×8 · keep wedge · one set down'},
+          {name:'Hip Thrust — Single-Leg',         dose:'2×8 each · drop the extra set'},
+          {name:'Nordic Curl — Eccentric',         dose:'2×4 · 5s descent · keep band assist'},
+          {name:'Single-Leg RDL — Contralateral DB ★', dose:'2×8 each · ipsilateral DB · back off to easier variation'},
+          {name:'Wall Sit',                        dose:'2×30s'},
         ]},
         { gold:true, label:'BFR Supplement', items:[
           {name:'BFR Box Squat or Seated Extension', dose:'1×30 / 3×15 · 20–30%'},
@@ -1081,7 +1081,7 @@ const DAYS_BY_WEEK = [
     },
 
     { name:'Tuesday',   collagen:false, rest:false, intent:'Canal — with Patrick',
-      sub:'Same structure as last week. Perturbation quality up — push unpredictability.',
+      sub:'Canal same structure. Ease off perturbation intensity slightly — deload week.',
       blocks:[
         { label:'ROM Block (brief)', items:[
           {name:'Heel Slide', dose:'3×15 right'},
@@ -1110,7 +1110,7 @@ const DAYS_BY_WEEK = [
           {name:'Med Ball Reactive Catch — SL',   dose:'3×6 each · 6 lb · unpredictable throw'},
         ]},
         { gold:true, label:'Core — At Home After', items:[
-          {name:'Dead Bugs',  dose:'3×8 each'},
+          {name:'Dead Bugs',  dose:'2×8 each'},
           {name:'Bird Dogs',  dose:'3×10 each'},
           {name:'Side Plank', dose:'3×30s each'},
         ]},
@@ -1118,7 +1118,7 @@ const DAYS_BY_WEEK = [
     },
 
     { name:'Wednesday', collagen:true,  rest:false, intent:'Session A — Strength',
-      sub:'Match Monday or progress. Contralateral RDL second session — assess 48hr response from Monday.',
+      sub:'Match Monday deload. Note how soreness is resolving — informs Week 7 loading decision.',
       blocks:[
         { label:'ROM Block', items:[
           {name:'Heel Slide',       dose:'3×15 right'},
@@ -1131,18 +1131,18 @@ const DAYS_BY_WEEK = [
           {name:'Short Foot + Toe Yoga',           dose:'2×12 each'},
         ]},
         { label:'Strength Block', items:[
-          {name:'Trap Bar DL',                      dose:'4×5 · match Mon'},
-          {name:'Box Squat',                        dose:'3×8 · same box / wedge decision'},
+          {name:'Trap Bar DL',                      dose:'3×4 · match Mon deload'},
+          {name:'Box Squat',                        dose:'2×8 · keep wedge'},
           {name:'Hip Thrust — Single-Leg',          dose:'3×8 each'},
-          {name:'Nordic Curl',                      dose:'3×5 · 5s descent'},
+          {name:'Nordic Curl',                      dose:'2×4 · 5s descent · band assist'},
           {name:'Single-Leg RDL — Contralateral DB',dose:'3×8 each'},
-          {name:'Wall Sit',                         dose:'3×30s'},
+          {name:'Wall Sit',                         dose:'2×30s'},
         ]},
       ]
     },
 
     { name:'Thursday',  collagen:false, rest:false, intent:'Canal + Sled — with Patrick',
-      sub:'Sled load up from last week. Lateral sled drag progressing. Begin adding sharper curves to run work.',
+      sub:'Sled maintained — same load as last week. Canal same structure. No progression this week.',
       blocks:[
         { label:'ROM Block (brief)', items:[
           {name:'Heel Slide', dose:'3×15 right'},
