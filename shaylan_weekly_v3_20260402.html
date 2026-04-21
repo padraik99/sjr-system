@@ -495,7 +495,10 @@ main{padding:1.25rem}
     <strong>Autoregulation Gates</strong>
     Knee ≤ 3/10 · Back ≤ 2/10 — during AND 24hrs after
   </div>
-  <button class="gate-log-btn" onclick="openGateModal()">Log</button>
+  <div style="display:flex;gap:.5rem;">
+  <button class="gate-log-btn" style="flex:1;" onclick="openGateModal()">📋 Log</button>
+  <button class="gate-log-btn" style="flex:1;background:var(--surface2);border-color:rgba(200,80,60,0.3);color:#c8503c;" onclick="openInjuryModal()">⚠ Issue</button>
+</div>
 </div>
 
 <!-- DAY SELECTOR -->
@@ -515,62 +518,80 @@ main{padding:1.25rem}
 <!-- GATE LOG MODAL -->
 <div class="modal-bg" id="gate-modal">
   <div class="modal">
-    <div class="modal-title">Gate Check</div>
+    <div class="modal-title">Pain Log</div>
     <div class="modal-sub" id="modal-date-label">Logging for today</div>
 
-    <!-- METRIC TOGGLE -->
-    <div class="timing-toggle" style="margin-bottom:1rem">
-      <button class="timing-btn active" id="metric-knee" onclick="selectMetric('knee')">🦵 Knee</button>
-      <button class="timing-btn" id="metric-back" onclick="selectMetric('back')">🔴 Back</button>
+    <div id="pending-summary" style="display:none;margin-bottom:1rem;
+      background:var(--surface2);border:1px solid var(--border);border-radius:4px;
+      padding:0.6rem 0.85rem;">
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:0.58rem;
+        letter-spacing:0.14em;text-transform:uppercase;color:var(--dim);margin-bottom:0.4rem;">
+        Queued — tap Save all to commit
+      </div>
+      <div id="pending-list" style="font-family:'IBM Plex Mono',monospace;
+        font-size:0.72rem;color:var(--accent2);line-height:1.8;"></div>
     </div>
 
-    <!-- KNEE SECTION -->
-    <div id="knee-section">
-      <div style="font-family:'IBM Plex Mono',monospace;font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:.5rem">Knee Pain — Gate ≤ 3/10</div>
+    <div class="metric-toggle" style="grid-template-columns:1fr 1fr 1fr;">
+      <button class="metric-btn active" id="mbtn-knee" onclick="selectMetric('knee')">🦵 Knee</button>
+      <button class="metric-btn" id="mbtn-shin" onclick="selectMetric('shin')">🦴 Shin</button>
+      <button class="metric-btn" id="mbtn-back" onclick="selectMetric('back')">🔴 Back</button>
+    </div>
+
+    <div id="score-section-knee">
+      <div class="score-label">Knee Pain — Gate ≤ 3/10</div>
       <div class="score-grid">
-        <button class="score-btn" data-score="0" onclick="selectScore(0,'knee')">0</button>
-        <button class="score-btn" data-score="1" onclick="selectScore(1,'knee')">1</button>
-        <button class="score-btn" data-score="2" onclick="selectScore(2,'knee')">2</button>
-        <button class="score-btn" data-score="3" onclick="selectScore(3,'knee')">3</button>
-        <button class="score-btn" data-score="4" onclick="selectScore(4,'knee')">4</button>
-        <button class="score-btn" data-score="5" onclick="selectScore(5,'knee')">5</button>
+        <button class="score-btn" data-v="0" onclick="selectScore(0)">0</button>
+        <button class="score-btn" data-v="1" onclick="selectScore(1)">1</button>
+        <button class="score-btn" data-v="2" onclick="selectScore(2)">2</button>
+        <button class="score-btn" data-v="3" onclick="selectScore(3)">3</button>
+        <button class="score-btn" data-v="4" onclick="selectScore(4)">4</button>
+        <button class="score-btn" data-v="5" onclick="selectScore(5)">5</button>
       </div>
       <div class="score-legend"><span>0 = None</span><span>3 = Gate limit</span><span>5 = Stop</span></div>
     </div>
 
-    <!-- BACK SECTION -->
-    <div id="back-section" style="display:none">
-      <div style="font-family:'IBM Plex Mono',monospace;font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:.5rem">Back Pain — Gate ≤ 2/10</div>
+    <div id="score-section-shin" style="display:none">
+      <div class="score-label">Shin Load — Track Trend</div>
       <div class="score-grid">
-        <button class="score-btn back-btn" data-score="0" onclick="selectScore(0,'back')">0</button>
-        <button class="score-btn back-btn" data-score="1" onclick="selectScore(1,'back')">1</button>
-        <button class="score-btn back-btn" data-score="2" onclick="selectScore(2,'back')">2</button>
-        <button class="score-btn back-btn" data-score="3" onclick="selectScore(3,'back')">3</button>
-        <button class="score-btn back-btn" data-score="4" onclick="selectScore(4,'back')">4</button>
-        <button class="score-btn back-btn" data-score="5" onclick="selectScore(5,'back')">5</button>
+        <button class="score-btn" data-v="0" onclick="selectScore(0)">0</button>
+        <button class="score-btn" data-v="1" onclick="selectScore(1)">1</button>
+        <button class="score-btn" data-v="2" onclick="selectScore(2)">2</button>
+        <button class="score-btn" data-v="3" onclick="selectScore(3)">3</button>
+        <button class="score-btn" data-v="4" onclick="selectScore(4)">4</button>
+        <button class="score-btn" data-v="5" onclick="selectScore(5)">5</button>
       </div>
-      <div class="score-legend"><span>0 = None</span><span>2 = Gate limit</span><span>5 = Stop</span></div>
-      <!-- LOCATION TOGGLE -->
-      <div style="font-family:'IBM Plex Mono',monospace;font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:.75rem 0 .4rem">Location</div>
-      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:.4rem;margin-bottom:.75rem">
-        <button class="timing-btn" id="loc-right" onclick="selectLocation('right')">Right</button>
-        <button class="timing-btn" id="loc-bilateral" onclick="selectLocation('bilateral')">Both</button>
-        <button class="timing-btn" id="loc-other" onclick="selectLocation('other')">Other</button>
-      </div>
+      <div class="score-legend"><span>0 = Silent</span><span>2 = Acceptable</span><span>3+ = Reduce</span></div>
     </div>
 
-    <!-- TIMING -->
-    <div class="timing-toggle">
-      <button class="timing-btn active" id="timing-during" onclick="selectTiming('during')">During session</button>
-      <button class="timing-btn" id="timing-after" onclick="selectTiming('after')">24hrs after</button>
+    <div id="score-section-back" style="display:none">
+      <div class="score-label">Back — Log and Monitor</div>
+      <div class="score-grid">
+        <button class="score-btn" data-v="0" onclick="selectScore(0)">0</button>
+        <button class="score-btn" data-v="1" onclick="selectScore(1)">1</button>
+        <button class="score-btn" data-v="2" onclick="selectScore(2)">2</button>
+        <button class="score-btn" data-v="3" onclick="selectScore(3)">3</button>
+        <button class="score-btn" data-v="4" onclick="selectScore(4)">4</button>
+        <button class="score-btn" data-v="5" onclick="selectScore(5)">5</button>
+      </div>
+      <div class="score-legend"><span>0 = None</span><span>2 = Gate limit</span><span>3+ = Day C</span></div>
+    </div>
+
+    <div class="timing-toggle" style="grid-template-columns:1fr 1fr 1fr;">
+      <button class="timing-btn active" id="tbtn-am" onclick="selectTiming('am')">AM</button>
+      <button class="timing-btn" id="tbtn-pre" onclick="selectTiming('pre')">Pre-Session</button>
+      <button class="timing-btn" id="tbtn-post" onclick="selectTiming('post')">Post-Session</button>
     </div>
 
     <div class="gate-status" id="gate-status"></div>
 
-    <button class="modal-save" onclick="saveGate()">Save</button>
+    <div style="margin-bottom:.45rem;">
+      <button class="modal-save" style="width:100%;" onclick="saveLog()">Save all</button>
+    </div>
     <button class="modal-cancel" onclick="closeGateModal()">Cancel</button>
   </div>
 </div>
+
 
 <!-- WEEK NAV -->
 <div class="week-nav">
@@ -586,6 +607,7 @@ main{padding:1.25rem}
 // ─────────────────────────────────────────
 // SUPABASE CONFIG
 // ─────────────────────────────────────────
+const ATHLETE_ID = 'shaylan';
 const SUPA_URL = 'https://jedsnurnnwmpcbdvtlbs.supabase.co';
 const SUPA_KEY = 'sb_publishable_3WGolnM5dOK88Y4WdKCFGA_Hi6wj-_z';
 
@@ -1494,379 +1516,142 @@ function detectCurrentWeek(){
 // ─────────────────────────────────────────
 let currentWeek = parseInt(localStorage.getItem('sh_week') || '0');
 let selectedDay  = 0;
+// ─────────────────────────────────────────
+// GATE LOG MODAL — 3 metrics, auto-stage, timing persists
+// ─────────────────────────────────────────
+const METRICS = ['knee','shin','back'];
+const METRIC_LABELS = { knee:'Knee', shin:'Shin', back:'Back' };
+const TIMING_LABELS = { am:'AM', pre:'Pre-Session', post:'Post-Session' };
+const GATE_LIMITS = { knee:3, shin:2, back:2 };
+
+let activeMetric = 'knee';
 let selectedScore = null;
-let selectedMetric = 'knee';
-let selectedTiming = 'during';
-let selectedLocation = 'right';
-let selectedEvents = new Set(JSON.parse(localStorage.getItem('sh_events') || '[]'));
-const gateLogs = JSON.parse(localStorage.getItem('sh_gate') || '[]');
+let selectedTiming = 'am';
+let pendingScores = {};
 
-// ─────────────────────────────────────────
-// MEET SCHEDULE + COUNTDOWN
-// ─────────────────────────────────────────
-const MEETS = [
-  { name:'Coast/Valley',   short:'Coast/Valley', date:'2026-03-27' },
-  { name:'Mike Fanelli',   short:'Fanelli',       date:'2026-04-03' },
-  { name:'NCAL Multi',     short:'NCAL Multi',    date:'2026-04-07' },
-  { name:'UCLA Invite',    short:'UCLA',          date:'2026-04-11' },
-  { name:'Mt SAC Invite',  short:'Mt SAC',        date:'2026-04-16' },
-  { name:'Last Chance',    short:'Last Chance',   date:'2026-04-18' },
-  { name:'Big 8 Champs',   short:'Big 8',         date:'2026-04-21' },
-  { name:'NorCal Champs',  short:'NorCal',        date:'2026-05-01' },
-  { name:'State Champs',   short:'State',         date:'2026-05-15' },
-];
-
-(function initMeetCountdown(){
-  const now = new Date();
-  function daysTo(d){ return Math.max(0, Math.ceil((new Date(d) - now) / 86400000)); }
-
-  const upcoming = MEETS.filter(m => daysTo(m.date) > 0);
-  const next  = upcoming[0];
-  const after = upcoming[1];
-
-  if(next){
-    document.getElementById('meet1-label').textContent = 'Next';
-    document.getElementById('meet1-name').textContent  = next.short;
-    document.getElementById('meet1-days').textContent  = daysTo(next.date) + 'd';
-  }
-  if(after){
-    document.getElementById('meet2-label').textContent = 'Then';
-    document.getElementById('meet2-name').textContent  = after.short;
-    document.getElementById('meet2-days').textContent  = daysTo(after.date) + 'd';
-  }
-  document.getElementById('state-count').textContent = daysTo('2026-05-15') + 'd';
-})();
-
-// ─────────────────────────────────────────
-// DAY SELECTOR
-// ─────────────────────────────────────────
-function initDaySelector(){
-  const todayStr = todayStr_sh();
-  const weekStart = getWeekStart(currentWeek);
-  const DAY_INITIALS = ['M','T','W','Th','F','Sa','Su'];
-  let selectIdx = 0;
-
-  document.querySelectorAll('.day-btn').forEach((btn, i) => {
-    btn.classList.remove('today','active','logged');
-    const d = new Date(weekStart);
-    d.setDate(d.getDate() + i);
-    const dateStr = sbDateStr(d);
-    // Populate date number
-    const dateEl = document.getElementById('ddate-' + i);
-    if(dateEl) dateEl.textContent = d.getDate();
-    btn.querySelector('.day-initial').textContent = DAY_INITIALS[i];
-    if(dateStr === todayStr){ btn.classList.add('today'); selectIdx = i; }
-    if(gateLogs.some(l => l.date === dateStr)) btn.classList.add('logged');
+function openGateModal(){
+  pendingScores = {};
+  selectedScore = null;
+  activeMetric = 'knee';
+  selectedTiming = 'am';
+  document.querySelectorAll('.score-btn').forEach(b => b.classList.remove('selected'));
+  METRICS.forEach(k => {
+    document.getElementById('mbtn-'+k).classList.toggle('active', k==='knee');
+    document.getElementById('score-section-'+k).style.display = k==='knee'?'block':'none';
   });
-  selectDay(selectIdx);
+  syncTimingButtons();
+  document.getElementById('gate-status').style.display = 'none';
+  document.getElementById('pending-summary').style.display = 'none';
+  document.getElementById('pending-list').textContent = '';
+  const today = new Date().toLocaleDateString('en-US',{weekday:'long',month:'short',day:'numeric'});
+  document.getElementById('modal-date-label').textContent = 'Logging for ' + today;
+  document.getElementById('gate-modal').classList.add('open');
 }
 
-function todayStr_sh(){ return sbDateStr(new Date()); }
-
-function getWeekStart(weekIdx){
-  // W1 starts Mon Mar 09 2026 — the Monday of the week containing Mar 14
-  const base = new Date(2026, 2, 9); // Mon Mar 9 2026
-  base.setDate(base.getDate() + weekIdx * 7);
-  return base;
+function closeGateModal(){
+  document.getElementById('gate-modal').classList.remove('open');
+  pendingScores = {};
 }
 
-function selectDay(idx){
-  selectedDay = idx;
-  document.querySelectorAll('.day-btn').forEach((b,i) => {
-    b.classList.toggle('active', i === idx);
-  });
-  renderDay(idx);
-}
-
-// ─────────────────────────────────────────
-// EVENT SELECTOR — comp day logic
-// ─────────────────────────────────────────
-const EVENTS = [
-  { id:'lj',    label:'Long Jump', cls:'lj' },
-  { id:'100',   label:'100m',      cls:'' },
-  { id:'200',   label:'200m',      cls:'' },
-  { id:'400',   label:'400 / 4×400', cls:'relay' },
-  { id:'4x100', label:'4×100 relay', cls:'relay' },
-];
-
-function toggleEvent(id){
-  if(selectedEvents.has(id)) selectedEvents.delete(id);
-  else selectedEvents.add(id);
-  localStorage.setItem('sh_events', JSON.stringify([...selectedEvents]));
-  // Re-render just the event-driven prehab block
-  renderEventPrehab();
-  // Update chip states
-  document.querySelectorAll('.event-chip').forEach(c => {
-    const isSelected = selectedEvents.has(c.dataset.event);
-    c.classList.toggle('selected', isSelected);
+function syncTimingButtons(){
+  ['am','pre','post'].forEach(t => {
+    document.getElementById('tbtn-'+t).classList.toggle('active', t===selectedTiming);
   });
 }
 
-function buildEventPrehab(events){
-  // Returns array of block objects based on selected events
-  const has = id => events.has(id);
-  const hasLJ     = has('lj');
-  const hasSprint = has('100') || has('200');
-  const has400    = has('400');
-  const hasRelay  = has('4x100') || has('400');
-  const blocks = [];
-
-  // Non-negotiables always
-  blocks.push({label:'Non-Negotiables — Every Comp Day', items: TRACK_A_FULL});
-
-  // LJ-specific — left knee is the risk joint
-  if(hasLJ){
-    blocks.push({label:'Long Jump Prep', gold:true, items:[
-      {name:'Patellar Isometric Wall Sit', note:'Rio analgesia — left knee pre-session', dose:'5×45s'},
-      {name:'VMO Terminal Knee Extension', note:'Left knee activation', dose:'3×10'},
-      {name:'Penultimate Step Drill — Short Approach', note:'"Stamp the mark" — 4 reps activation', dose:'4 reps'},
-    ]});
+function selectMetric(m){
+  // Auto-stage current metric if score selected
+  if(selectedScore !== null && activeMetric !== m){
+    pendingScores[activeMetric] = { score: selectedScore, timing: selectedTiming };
+    updatePendingSummary();
   }
-
-  // Sprint-specific — VMO + ankle stiffness
-  if(hasSprint && !hasLJ){
-    blocks.push({label:'Sprint Prep', items:[
-      {name:'VMO Terminal Knee Extension', dose:'2×10'},
-      {name:'Banded Clamshell', note:'hip activation', dose:'2×10 ea'},
-    ]});
-  }
-
-  // 400/relay — spine + posterior chain insurance
-  if(has400){
-    blocks.push({label:'400 / Relay Prep', items:[
-      {name:'Dead Bug — Contralateral Hold', note:'McGill — spine insurance for back stretch', dose:'2×6 ea'},
-      {name:'Bird Dog — 8s Hold', note:'posterior chain activation', dose:'2×6 ea'},
-      {name:'Single-Leg Glute Bridge', note:'glute drive under fatigue', dose:'2×10 ea'},
-    ]});
-  } else if(hasRelay){
-    blocks.push({label:'Relay Prep', items:[
-      {name:'Dead Bug — Contralateral Hold', note:'McGill — back gate prevention', dose:'2×6 ea'},
-      {name:'Banded Clamshell', note:'hip activation', dose:'2×10 ea'},
-    ]});
-  }
-
-  // Contrast warmup — always on comp day
-  blocks.push(CONTRAST);
-  blocks.push(GATE_POST);
-
-  return blocks;
-}
-
-function renderEventPrehab(){
-  const container = document.getElementById('event-prehab');
-  if(!container) return;
-  if(selectedEvents.size === 0){
-    container.innerHTML = `<div style="text-align:center;padding:1.25rem;color:var(--muted);font-size:.82rem;font-style:italic">Tap your events above — prehab will update here</div>`;
-    return;
-  }
-  const blocks = buildEventPrehab(selectedEvents);
-  let html = '<hr class="event-prehab-divider">';
-  blocks.forEach(block => {
-    const lClass = block.gold ? 'block-label gold' : 'block-label';
-    html += `<div class="ex-block"><div class="${lClass}">${block.label}</div>`;
-    block.items.forEach((ex, ei) => {
-      const dClass = block.gold ? 'ex-dose gold' : 'ex-dose';
-      const info = getExInfo(ex.name);
-      const uid = `ev-${ei}-${block.label.slice(0,4).replace(/\s/g,'')}`;
-      if(info){
-        html += `
-        <div class="ex-row" onclick="toggleExDetail('${uid}')" id="row-${uid}">
-          <div class="ex-name">${ex.name}${ex.note ? `<small>${ex.note}</small>` : ''}</div>
-          <div style="display:flex;align-items:center;gap:.4rem;flex-shrink:0">
-            <div class="${dClass}">${ex.dose}</div>
-            <span class="ex-chevron">▼</span>
-          </div>
-        </div>
-        <div class="ex-detail" id="${uid}">
-          <div class="ex-detail-section">
-            <div class="ex-detail-label">Setup & Dose</div>
-            <div class="ex-detail-text">${info.setup}</div>
-          </div>
-          <div class="ex-detail-section">
-            <div class="ex-detail-label gold">Cue</div>
-            <div class="ex-detail-text">${info.cue}</div>
-          </div>
-          ${info.url ? `<a class="ex-video-link" href="${info.url}" target="_blank">▶ Search Demo</a>` : ''}
-        </div>`;
-      } else {
-        html += `<div class="ex-row"><div class="ex-name">${ex.name}${ex.note ? `<small>${ex.note}</small>` : ''}</div><div class="${dClass}">${ex.dose}</div></div>`;
-      }
+  activeMetric = m;
+  selectedScore = null;
+  document.querySelectorAll('.score-btn').forEach(b => b.classList.remove('selected'));
+  if(pendingScores[m] !== undefined){
+    const staged = pendingScores[m].score;
+    document.querySelectorAll('#score-section-'+m+' .score-btn').forEach(b => {
+      b.classList.toggle('selected', parseInt(b.dataset.v)===staged);
     });
-    html += `</div>`;
+    selectedScore = staged;
+  }
+  METRICS.forEach(k => {
+    document.getElementById('mbtn-'+k).classList.toggle('active', k===m);
+    document.getElementById('score-section-'+k).style.display = k===m?'block':'none';
   });
-  container.innerHTML = html;
+  document.getElementById('gate-status').style.display = 'none';
+  if(selectedScore !== null) updateGateStatus();
 }
 
-// ─────────────────────────────────────────
-// RENDER DAY
-// ─────────────────────────────────────────
-function renderDay(idx){
-  const week = WEEKS[currentWeek];
-  const day  = week.days[idx];
-  let html = '';
+function selectScore(n){
+  selectedScore = n;
+  document.querySelectorAll('#score-section-'+activeMetric+' .score-btn').forEach(b => {
+    b.classList.toggle('selected', parseInt(b.dataset.v)===n);
+  });
+  updateGateStatus();
+}
 
-  // Meet banner
-  if(week.meets && week.meets.length){
-    html += `<div style="background:rgba(255,209,102,.07);border:1px solid rgba(255,209,102,.3);border-radius:8px;padding:.6rem .9rem;margin-bottom:1rem;font-family:'IBM Plex Mono',monospace;font-size:.68rem;color:var(--gold)">🏟 ${week.meets.join(' · ')}</div>`;
+function selectTiming(t){
+  selectedTiming = t;
+  syncTimingButtons();
+  if(pendingScores[activeMetric] !== undefined){
+    pendingScores[activeMetric].timing = t;
+    updatePendingSummary();
   }
+}
 
-  // Gate breach banners
-  const breach = isGateBreached();
-  if(breach.knee){
-    html += `<div class="hold-banner"><div class="hold-icon">🛑</div><div class="hold-text"><strong>Knee Gate Breached</strong>Score exceeded 3/10 in last 48hrs. Hold current phase. Reduce volume 25%.</div></div>`;
-  }
-  if(breach.back){
-    html += `<div class="hold-banner"><div class="hold-icon">⚠️</div><div class="hold-text"><strong>Back Gate Breached — Asymmetry Flag</strong>Right lower back >2/10. Reduce right-side loading 20%. McGill priority. Flag to Patrick.</div></div>`;
-  }
-
-  // Compute actual date for this slot
-  const weekStart = getWeekStart(currentWeek);
-  const slotDate = new Date(weekStart.getFullYear(), weekStart.getMonth(), weekStart.getDate() + idx);
-  const dateStr = sbDateStr(slotDate);
-  const dateLabel = slotDate.toLocaleDateString('en-US',{weekday:'long',month:'short',day:'numeric'});
-
-  if(day.rest){
-    html += `<div class="day-intent">${day.intent}</div><div class="day-sub" style="color:var(--accent);font-size:.78rem;margin-bottom:.2rem">${dateLabel}</div><div class="day-sub">${day.sub}</div>`;
-    html += `<div class="rest-card"><div class="rest-icon">💤</div><div class="rest-title">Rest Day</div><div class="rest-text">Walk, sleep, eat well. No prehab load. Recovery is the work.</div></div>`;
-    document.getElementById('main-content').innerHTML = html;
-    return;
-  }
-
-  html += `<div class="day-intent">${day.intent}</div><div class="day-sub" style="color:var(--accent);font-size:.78rem;margin-bottom:.2rem">${dateLabel}</div><div class="day-sub">${day.sub}</div>`;
-
-  if(day.collagen){
-    html += `<div class="collagen-alert"><div class="collagen-icon">⚡</div><div class="collagen-text"><strong>Collagen Window</strong>15g collagen + 200mg Vit C — 60 min before this session</div></div>`;
-  }
-
-  // ── COMP DAY — event selector replaces static blocks
-  const isCompDay = day.intent && day.intent.toLowerCase().startsWith('compete');
-  if(isCompDay){
-    // Event selector chips
-    const chipsHtml = EVENTS.map(e => {
-      const isSel = selectedEvents.has(e.id);
-      return `<button class="event-chip${isSel ? ' selected ' + e.cls : ''}" data-event="${e.id}" onclick="toggleEvent('${e.id}')">${e.label}</button>`;
-    }).join('');
-    html += `<div class="event-selector">
-      <div class="event-selector-label">Today's Events</div>
-      <div class="event-chips">${chipsHtml}</div>
-    </div>
-    <div id="event-prehab"></div>`;
-    document.getElementById('main-content').innerHTML = html;
-    renderEventPrehab();
+function updateGateStatus(){
+  const el = document.getElementById('gate-status');
+  if(selectedScore === null){ el.style.display='none'; return; }
+  el.style.display = 'block';
+  const s = selectedScore;
+  const limit = GATE_LIMITS[activeMetric];
+  if(activeMetric === 'knee'){
+    if(s<=2){ el.className='gate-status pass'; el.textContent='✓ Knee gate clear — proceed'; }
+    else if(s===3){ el.className='gate-status reduce'; el.textContent='⚠ At gate limit — reduce volume 30%'; }
+    else{ el.className='gate-status hold'; el.textContent='🛑 Gate breached — modify session'; }
+  } else if(activeMetric === 'shin'){
+    if(s<=1){ el.className='gate-status pass'; el.textContent='✓ Shin silent — proceed'; }
+    else if(s<=2){ el.className='gate-status reduce'; el.textContent='⚠ Shin load — monitor, reduce impact'; }
+    else{ el.className='gate-status hold'; el.textContent='🛑 Shin elevated — no impact today'; }
   } else {
-    // ── NON-COMP DAY — static blocks
-
-  // ─────────────────────────────────────────
-  // FRAMEWORK — quality + phase inference
-  // ─────────────────────────────────────────
-  const LIBRARY_FILE = 'https://padraik99.github.io/sjr-system/SJR_Library_Master_v4_20260402.html';
-
-  function inferQualityTags(intent){
-    const i = (intent || '').toLowerCase();
-    if(/strength|single.leg load|single.leg integ/.test(i)) return 'quality-strength,quality-hypertrophy';
-    if(/speed.end/.test(i))                                  return 'quality-velocity,quality-hypertrophy';
-    if(/speed|compete|sharp|pre.meet|pre.big|pre.ncal|pre.state|loading/.test(i)) return 'quality-velocity,quality-power';
-    if(/rehab|prehab|easy|walk.through/.test(i))             return 'quality-gpp,quality-isometric';
-    if(/recovery|rest|active rec|core|taper/.test(i))        return 'quality-gpp,quality-isometric';
-    return 'quality-gpp';
-  }
-
-  function inferMED(intent){
-    const tags = inferQualityTags(intent);
-    if(tags.includes('strength'))     return '<strong>Strength</strong> · 3–5 sets · diminishing returns beyond this (Zourdos et al.)';
-    if(tags.includes('velocity'))     return '<strong>Speed/Power</strong> · low volume, maximal intent · CNS — full recovery between reps';
-    if(tags.includes('hypertrophy'))  return '<strong>Hypertrophy</strong> · 4 fractional sets MED · more volume rarely adds proportional gain';
-    if(tags.includes('isometric'))    return '<strong>Isometric</strong> · 5×45s · analgesic window is the target, not fatigue';
-    return '<strong>GPP</strong> · volume over intensity · tissue tolerance is the goal';
-  }
-
-  function buildLibraryURL(weekPhase, intent){
-    const quality = inferQualityTags(intent);
-    // Map athlete week phase to library phase tags
-    let phaseTag = 'phase-bridge';
-    if(typeof weekPhase === 'number'){
-      // Cadence uses numeric phases
-      if(weekPhase === 1) phaseTag = 'phase-bridge';
-      else if(weekPhase === 2) phaseTag = 'phase-gpp';
-      else if(weekPhase >= 3) phaseTag = 'phase-spp,phase-comp';
-    } else {
-      const p = (weekPhase || '').toLowerCase();
-      if(/phase 1/.test(p))             phaseTag = 'phase-bridge,phase-gpp';
-      if(/phase 1.+2|phase 2/.test(p))  phaseTag = 'phase-gpp,phase-spp';
-      if(/phase 3|peak|taper|state|comp/.test(p)) phaseTag = 'phase-spp,phase-comp';
-    }
-    return LIBRARY_FILE + '?phase=' + phaseTag + '&quality=' + quality + '&hidespinal=1';
-  }
-
-  function buildFrameworkBar(weekPhase, intent){
-    if(!intent || /rest/i.test(intent)) return '';
-    const url = buildLibraryURL(weekPhase, intent);
-    const med = inferMED(intent);
-    return '<div class="framework-bar">' +
-      '<div class="framework-med">' + med + '</div>' +
-      '<a class="browse-btn" href="' + url + '">Browse exercises</a>' +
-      '</div>';
-  }
-
-    function buildBlocksHtml(blocks, weekPhase, intent){
-      let bhtml = '';
-      blocks.forEach(block => {
-        const lClass = block.gold ? 'block-label gold' : 'block-label';
-        bhtml += `<div class="ex-block"><div class="${lClass}">${block.label}</div>`;
-        block.items.forEach((ex, ei) => {
-          const dClass = block.gold ? 'ex-dose gold' : 'ex-dose';
-          const info = getExInfo(ex.name);
-          const uid = `ex-${idx}-${ei}-${block.label.slice(0,3).replace(/\s/g,'')}`;
-          if(info){
-            bhtml += `
-            <div class="ex-row" onclick="toggleExDetail('${uid}')" id="row-${uid}">
-              <div class="ex-name">${ex.name}${ex.note ? `<small>${ex.note}</small>` : ''}</div>
-              <div style="display:flex;align-items:center;gap:.4rem;flex-shrink:0">
-                <div class="${dClass}">${ex.dose}</div>
-                <span class="ex-chevron">▼</span>
-              </div>
-            </div>
-            <div class="ex-detail" id="${uid}">
-              <div class="ex-detail-section">
-                <div class="ex-detail-label">Setup & Dose</div>
-                <div class="ex-detail-text">${info.setup}</div>
-              </div>
-              <div class="ex-detail-section">
-                <div class="ex-detail-label gold">Cue</div>
-                <div class="ex-detail-text">${info.cue}</div>
-              </div>
-              ${info.url ? `<a class="ex-video-link" href="${info.url}" target="_blank">▶ Search Demo</a>` : ''}
-            </div>`;
-          } else {
-            bhtml += `<div class="ex-row"><div class="ex-name">${ex.name}${ex.note ? `<small>${ex.note}</small>` : ''}</div><div class="${dClass}">${ex.dose}</div></div>`;
-          }
-        });
-        bhtml += `</div>`;
-      });
-      bhtml += buildFrameworkBar(weekPhase, intent);
-      return bhtml;
-    }
-    html += buildBlocksHtml(day.blocks, week.phase, day.intent);
-
-    // Gate log history
-    const dayLogs = gateLogs.filter(l => l.date === dateStr);
-    if(dayLogs.length){
-      html += `<div class="history-section"><div class="history-label">Gate Log</div>`;
-      dayLogs.forEach(l => {
-        const limit = l.metric === 'back' ? 2 : 3;
-        const scoreClass = l.score === 0 ? 'ok' : l.score <= limit ? 'warn' : 'bad';
-        const metricLabel = l.metric === 'back' ? `Back${l.location ? ' · ' + l.location : ''}` : 'Knee';
-        html += `<div class="log-row">
-          <span class="log-date">${metricLabel} · ${l.timing === 'during' ? 'During' : '24hr after'}</span>
-          <span class="log-score ${scoreClass}">${l.score}/10</span>
-          <span class="log-timing">${l.score <= limit ? '✓ held' : '⚠ breached'}</span>
-        </div>`;
-      });
-      html += `</div>`;
-    }
-    document.getElementById('main-content').innerHTML = html;
+    if(s<=1){ el.className='gate-status pass'; el.textContent='✓ Back clear'; }
+    else if(s===2){ el.className='gate-status reduce'; el.textContent='⚠ Back noted — log and monitor'; }
+    else{ el.className='gate-status hold'; el.textContent='🛑 Back elevated — reduce loading'; }
   }
 }
+
+function updatePendingSummary(){
+  const keys = Object.keys(pendingScores);
+  if(!keys.length){ document.getElementById('pending-summary').style.display='none'; return; }
+  document.getElementById('pending-summary').style.display = 'block';
+  document.getElementById('pending-list').innerHTML = keys.map(k => {
+    const p = pendingScores[k];
+    return '✓ ' + METRIC_LABELS[k] + ': ' + p.score + '/10 (' + TIMING_LABELS[p.timing] + ')';
+  }).join('<br>');
+}
+
+function saveLog(){
+  if(selectedScore !== null){
+    pendingScores[activeMetric] = { score: selectedScore, timing: selectedTiming };
+  }
+  const toSave = Object.keys(pendingScores);
+  if(!toSave.length) return;
+  const today = todayStr();
+  const ts = Date.now();
+  toSave.forEach(metric => {
+    const p = pendingScores[metric];
+    const entry = { date:today, metric, score:p.score, timing:p.timing, ts };
+    gateLogs.push(entry);
+    saveGateLog(ATHLETE_ID, entry);
+  });
+  localStorage.setItem('sh_gate', JSON.stringify(gateLogs));
+  closeGateModal();
+  initDaySelector();
+}
+
+document.getElementById('gate-modal').addEventListener('click', function(e){ if(e.target===this) closeGateModal(); });
+
 
 // ─────────────────────────────────────────
 // WEEK NAVIGATION
@@ -2016,6 +1801,7 @@ document.getElementById('gate-modal').addEventListener('click', function(e){
 // INIT
 // ─────────────────────────────────────────
 async function initApp(){
+  await loadInjuryLogs();
   const det = detectCurrentWeek();
   if(det !== null){
     currentWeek = det.week;
@@ -2029,6 +1815,164 @@ async function initApp(){
   if(det !== null) selectDay(det.day);
 }
 initApp();
-</script>
+// ─────────────────────────────────────────
+// INJURY LOG MODAL
+// ─────────────────────────────────────────
+let injuryLogs = [];
+let selectedInjuryRegion = null;
+let selectedInjurySeverity = null;
+
+function openInjuryModal(){
+  selectedInjuryRegion = null;
+  selectedInjurySeverity = null;
+  document.querySelectorAll('[id^="ireg-"]').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('#injury-score-grid .score-btn').forEach(b => b.classList.remove('selected'));
+  document.getElementById('injury-desc').value = '';
+  const today = new Date().toLocaleDateString('en-US',{weekday:'long',month:'short',day:'numeric'});
+  document.getElementById('injury-date-label').textContent = today;
+  document.getElementById('injury-modal').classList.add('open');
+}
+
+function closeInjuryModal(){
+  document.getElementById('injury-modal').classList.remove('open');
+}
+
+function selectInjuryRegion(r){
+  selectedInjuryRegion = r;
+  document.querySelectorAll('[id^="ireg-"]').forEach(b => b.classList.remove('active'));
+  document.getElementById('ireg-'+r).classList.add('active');
+}
+
+function selectInjurySeverity(n){
+  selectedInjurySeverity = n;
+  document.querySelectorAll('#injury-score-grid .score-btn').forEach(b => {
+    b.classList.toggle('selected', parseInt(b.dataset.v)===n);
+  });
+}
+
+async function saveInjuryLog(){
+  if(!selectedInjuryRegion || !selectedInjurySeverity) return;
+  const desc = document.getElementById('injury-desc').value.trim();
+  const entry = {
+    date: todayStr(),
+    region: selectedInjuryRegion,
+    description: desc,
+    severity: selectedInjurySeverity,
+    ts: Date.now()
+  };
+  injuryLogs.push(entry);
+  localStorage.setItem(ATHLETE_ID + '_injuries', JSON.stringify(injuryLogs));
+  try {
+    await sbFetch('/rest/v1/injury_logs', {
+      method: 'POST',
+      prefer: 'return=representation',
+      body: JSON.stringify({
+        athlete_id: ATHLETE_ID,
+        date: entry.date,
+        region: entry.region,
+        description: entry.description,
+        severity: entry.severity
+      })
+    });
+    showSyncBadge('ok');
+  } catch(e){ showSyncBadge('offline'); }
+  closeInjuryModal();
+  updateInjuryGate();
+}
+
+function getActiveInjuryPhase(){
+  const now = Date.now();
+  const recent = injuryLogs.filter(l => {
+    const age = (now - new Date(l.date).getTime()) / 86400000;
+    return age <= 7 && l.severity >= 3;
+  });
+  if(!recent.length) return null;
+  if(recent.some(l => ['knee','shin','foot'].includes(l.region))) return 'phase-rehab,phase-bridge';
+  if(recent.some(l => l.severity >= 4)) return 'phase-rehab,phase-bridge';
+  return 'phase-bridge,phase-gpp';
+}
+
+function updateInjuryGate(){
+  const override = getActiveInjuryPhase();
+  const brwBtns = document.querySelectorAll('.browse-btn');
+  brwBtns.forEach(btn => {
+    if(override){
+      const url = btn.href;
+      const base = url.split('?')[0];
+      btn.href = base + '?phase=' + override + '&quality=quality-gpp,quality-isometric&hidespinal=1';
+      btn.style.borderColor = 'rgba(200,80,60,0.5)';
+      btn.style.color = '#c8503c';
+      btn.title = '⚠ Active injury — Library filtered to rehab/bridge';
+    } else {
+      btn.style.borderColor = '';
+      btn.style.color = '';
+      btn.title = '';
+    }
+  });
+}
+
+async function loadInjuryLogs(){
+  const cached = localStorage.getItem(ATHLETE_ID + '_injuries');
+  if(cached) try { injuryLogs = JSON.parse(cached); } catch(e){}
+  try {
+    const cutoff = sbDateStr(new Date(Date.now() - 7*86400000));
+    const rows = await sbFetch('/rest/v1/injury_logs?athlete_id=eq.' + ATHLETE_ID + '&date=gte.' + cutoff + '&order=date.desc');
+    if(rows && rows.length){ injuryLogs = rows; localStorage.setItem(ATHLETE_ID + '_injuries', JSON.stringify(rows)); }
+  } catch(e){}
+  updateInjuryGate();
+}
+
+document.getElementById('injury-modal').addEventListener('click', function(e){ if(e.target===this) closeInjuryModal(); });
+
+
+</script><!-- INJURY LOG MODAL -->
+<div class="modal-bg" id="injury-modal">
+  <div class="modal">
+    <div class="modal-title">Log an Issue</div>
+    <div class="modal-sub" id="injury-date-label">Today</div>
+
+    <div style="margin-bottom:.85rem;">
+      <div class="score-label" style="margin-bottom:.4rem;">Region</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:.35rem;">
+        <button class="timing-btn" id="ireg-knee" onclick="selectInjuryRegion('knee')">Knee</button>
+        <button class="timing-btn" id="ireg-shin" onclick="selectInjuryRegion('shin')">Shin</button>
+        <button class="timing-btn" id="ireg-foot" onclick="selectInjuryRegion('foot')">Foot/Ankle</button>
+        <button class="timing-btn" id="ireg-hip" onclick="selectInjuryRegion('hip')">Hip</button>
+        <button class="timing-btn" id="ireg-back" onclick="selectInjuryRegion('back')">Back</button>
+        <button class="timing-btn" id="ireg-shoulder" onclick="selectInjuryRegion('shoulder')">Shoulder</button>
+        <button class="timing-btn" id="ireg-other" onclick="selectInjuryRegion('other')" style="grid-column:1/-1;">Other</button>
+      </div>
+    </div>
+
+    <div style="margin-bottom:.85rem;">
+      <div class="score-label" style="margin-bottom:.4rem;">Description</div>
+      <input id="injury-desc" type="text" placeholder="Brief description..."
+        style="width:100%;box-sizing:border-box;background:var(--surface2);border:1px solid var(--border);
+        border-radius:4px;padding:.5rem .75rem;font-family:'IBM Plex Mono',monospace;
+        font-size:.72rem;color:var(--text);outline:none;"/>
+    </div>
+
+    <div style="margin-bottom:1rem;">
+      <div class="score-label" style="margin-bottom:.25rem;">Severity</div>
+      <div class="score-legend" style="margin-bottom:.4rem;">
+        <span>1–2 = Monitor</span><span>3 = Modify</span><span>4–5 = Stop</span>
+      </div>
+      <div class="score-grid" id="injury-score-grid">
+        <button class="score-btn" data-v="1" onclick="selectInjurySeverity(1)">1</button>
+        <button class="score-btn" data-v="2" onclick="selectInjurySeverity(2)">2</button>
+        <button class="score-btn" data-v="3" onclick="selectInjurySeverity(3)">3</button>
+        <button class="score-btn" data-v="4" onclick="selectInjurySeverity(4)">4</button>
+        <button class="score-btn" data-v="5" onclick="selectInjurySeverity(5)">5</button>
+      </div>
+    </div>
+
+    <div style="margin-bottom:.45rem;">
+      <button class="modal-save" style="width:100%;" onclick="saveInjuryLog()">Save Issue</button>
+    </div>
+    <button class="modal-cancel" onclick="closeInjuryModal()">Cancel</button>
+  </div>
+</div>
+
+
 </body>
 </html>

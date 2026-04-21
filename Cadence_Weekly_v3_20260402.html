@@ -497,7 +497,7 @@ main{padding:1.25rem}
     <strong>Morning Check — Daily</strong>
     Rate foot/shin pain 0–10 before getting out of bed
   </div>
-  <button class="gate-log-btn" onclick="openGateModal()">Log</button>
+  <div style="display:flex;gap:.5rem;"><button class="gate-log-btn" onclick="openGateModal()" style="flex:1;">Log</button><button class="gate-log-btn" style="flex:1;background:var(--surface2);border-color:rgba(200,80,60,0.3);color:#c8503c;" onclick="openInjuryModal()">⚠ Issue</button></div>
 </div>
 
 <!-- DAY SELECTOR -->
@@ -517,28 +517,80 @@ main{padding:1.25rem}
 <!-- GATE LOG MODAL -->
 <div class="modal-bg" id="gate-modal">
   <div class="modal">
-    <div class="modal-title">Morning Gate Check</div>
+    <div class="modal-title">Pain Log</div>
     <div class="modal-sub" id="modal-date-label">Logging for today</div>
-    <div class="score-grid" id="score-grid">
-      <button class="score-btn" data-score="0" onclick="selectScore(0)">0</button>
-      <button class="score-btn" data-score="1" onclick="selectScore(1)">1</button>
-      <button class="score-btn" data-score="2" onclick="selectScore(2)">2</button>
-      <button class="score-btn" data-score="3" onclick="selectScore(3)">3</button>
-      <button class="score-btn" data-score="4" onclick="selectScore(4)">4</button>
-      <button class="score-btn" data-score="5" onclick="selectScore(5)">5</button>
+
+    <div id="pending-summary" style="display:none;margin-bottom:1rem;
+      background:var(--surface2);border:1px solid var(--border);border-radius:4px;
+      padding:0.6rem 0.85rem;">
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:0.58rem;
+        letter-spacing:0.14em;text-transform:uppercase;color:var(--dim);margin-bottom:0.4rem;">
+        Queued — tap Save all to commit
+      </div>
+      <div id="pending-list" style="font-family:'IBM Plex Mono',monospace;
+        font-size:0.72rem;color:var(--accent2);line-height:1.8;"></div>
     </div>
-    <div class="score-legend">
-      <span>0 = None</span><span>3 = Loading limit</span><span>5 = Stop</span>
+
+    <div class="metric-toggle" style="grid-template-columns:1fr 1fr 1fr;">
+      <button class="metric-btn active" id="mbtn-foot" onclick="selectMetric('foot')">🦶 Foot/Shin</button>
+      <button class="metric-btn" id="mbtn-knee" onclick="selectMetric('knee')">🦵 Knee</button>
+      <button class="metric-btn" id="mbtn-back" onclick="selectMetric('back')">🔴 Back</button>
     </div>
-    <div class="timing-toggle">
-      <button class="timing-btn active" id="timing-morning" onclick="selectTiming('morning')">Morning (before rising)</button>
-      <button class="timing-btn" id="timing-session" onclick="selectTiming('session')">During session</button>
+
+    <div id="score-section-foot">
+      <div class="score-label">Foot / Shin Load — Gate ≤ 3/10</div>
+      <div class="score-grid">
+        <button class="score-btn" data-v="0" onclick="selectScore(0)">0</button>
+        <button class="score-btn" data-v="1" onclick="selectScore(1)">1</button>
+        <button class="score-btn" data-v="2" onclick="selectScore(2)">2</button>
+        <button class="score-btn" data-v="3" onclick="selectScore(3)">3</button>
+        <button class="score-btn" data-v="4" onclick="selectScore(4)">4</button>
+        <button class="score-btn" data-v="5" onclick="selectScore(5)">5</button>
+      </div>
+      <div class="score-legend"><span>0 = Silent</span><span>3 = Loading limit</span><span>5 = Stop</span></div>
     </div>
+
+    <div id="score-section-knee" style="display:none">
+      <div class="score-label">Knee — Track Trend</div>
+      <div class="score-grid">
+        <button class="score-btn" data-v="0" onclick="selectScore(0)">0</button>
+        <button class="score-btn" data-v="1" onclick="selectScore(1)">1</button>
+        <button class="score-btn" data-v="2" onclick="selectScore(2)">2</button>
+        <button class="score-btn" data-v="3" onclick="selectScore(3)">3</button>
+        <button class="score-btn" data-v="4" onclick="selectScore(4)">4</button>
+        <button class="score-btn" data-v="5" onclick="selectScore(5)">5</button>
+      </div>
+      <div class="score-legend"><span>0 = None</span><span>2 = Monitor</span><span>3+ = Reduce</span></div>
+    </div>
+
+    <div id="score-section-back" style="display:none">
+      <div class="score-label">Back — Log and Monitor</div>
+      <div class="score-grid">
+        <button class="score-btn" data-v="0" onclick="selectScore(0)">0</button>
+        <button class="score-btn" data-v="1" onclick="selectScore(1)">1</button>
+        <button class="score-btn" data-v="2" onclick="selectScore(2)">2</button>
+        <button class="score-btn" data-v="3" onclick="selectScore(3)">3</button>
+        <button class="score-btn" data-v="4" onclick="selectScore(4)">4</button>
+        <button class="score-btn" data-v="5" onclick="selectScore(5)">5</button>
+      </div>
+      <div class="score-legend"><span>0 = None</span><span>2 = Acceptable</span><span>3+ = Note</span></div>
+    </div>
+
+    <div class="timing-toggle" style="grid-template-columns:1fr 1fr 1fr;">
+      <button class="timing-btn active" id="tbtn-am" onclick="selectTiming('am')">AM</button>
+      <button class="timing-btn" id="tbtn-pre" onclick="selectTiming('pre')">Pre-Session</button>
+      <button class="timing-btn" id="tbtn-post" onclick="selectTiming('post')">Post-Session</button>
+    </div>
+
     <div class="gate-status" id="gate-status"></div>
-    <button class="modal-save" onclick="saveGate()">Save</button>
+
+    <div style="margin-bottom:.45rem;">
+      <button class="modal-save" style="width:100%;" onclick="saveLog()">Save all</button>
+    </div>
     <button class="modal-cancel" onclick="closeGateModal()">Cancel</button>
   </div>
 </div>
+
 
 <!-- WEEK NAV -->
 <div class="week-nav">
@@ -554,6 +606,7 @@ main{padding:1.25rem}
 // ─────────────────────────────────────────
 // SUPABASE CONFIG
 // ─────────────────────────────────────────
+const ATHLETE_ID = 'cadence';
 const SUPA_URL = 'https://jedsnurnnwmpcbdvtlbs.supabase.co';
 const SUPA_KEY = 'sb_publishable_3WGolnM5dOK88Y4WdKCFGA_Hi6wj-_z';
 
@@ -1225,66 +1278,140 @@ phase3Labels.forEach((label, i) => {
 // ─────────────────────────────────────────────────────────────────────────────
 let currentWeek = parseInt(localStorage.getItem('cad_week') || '1');
 let selectedDay  = 0;
+// ─────────────────────────────────────────
+// GATE LOG MODAL — 3 metrics, auto-stage, timing persists
+// ─────────────────────────────────────────
+const METRICS = ['foot','knee','back'];
+const METRIC_LABELS = { foot:'Foot/Shin', knee:'Knee', back:'Back' };
+const TIMING_LABELS = { am:'AM', pre:'Pre-Session', post:'Post-Session' };
+const GATE_LIMITS = { foot:3, knee:2, back:2 };
+
+let activeMetric = 'foot';
 let selectedScore = null;
-let selectedTiming = 'morning';
-const gateLogs = JSON.parse(localStorage.getItem('cad_gate') || '[]');
+let selectedTiming = 'am';
+let pendingScores = {};
 
-// MEET DATES — Cal Poly 2026 schedule
-const MEET_DATES = {
-  next: '2026-03-21',
-  nextName: 'Mark Conover Classic',
-  conf: '2026-05-15',  // Big West Championships
-  // Upcoming after first meet:
-  schedule: [
-    { date:'2026-03-21', name:'Mark Conover Classic ✓', home:true },
-    { date:'2026-03-27', name:'West Coast Relays' },
-    { date:'2026-04-03', name:'Stanford Invitational' },
-    { date:'2026-04-16', name:'Bryan Clay / Mt. SAC' },
-    { date:'2026-04-26', name:'UCSB Invite' },
-    { date:'2026-05-01', name:'Fresno State Invite' },
-    { date:'2026-05-08', name:'Franson Last Chance' },
-    { date:'2026-05-15', name:'Big West Championships ★', conf:true },
-    { date:'2026-05-27', name:'NCAA West Prelims' },
-    { date:'2026-06-10', name:'NCAA Outdoors' },
-  ]
-};
-
-// ─────────────────────────────────────────────────────────────────────────────
-// MEET COUNTDOWN
-// ─────────────────────────────────────────────────────────────────────────────
-(function(){
-  const now = new Date();
-  now.setHours(0,0,0,0);
-  function daysTo(d){
-    if(!d) return '—';
-    const target = new Date(d);
-    target.setHours(0,0,0,0);
-    const diff = Math.round((target - now) / 86400000);
-    if(diff === 0) return 'Today!';
-    if(diff === 1) return 'Tomorrow!';
-    return diff > 0 ? diff + 'd' : '—';
-  }
-  // Find next upcoming meet
-  const upcoming = MEET_DATES.schedule.find(m => {
-    const d = new Date(m.date);
-    d.setHours(0,0,0,0);
-    return d >= now;
+function openGateModal(){
+  pendingScores = {};
+  selectedScore = null;
+  activeMetric = 'foot';
+  selectedTiming = 'am';
+  document.querySelectorAll('.score-btn').forEach(b => b.classList.remove('selected'));
+  METRICS.forEach(k => {
+    document.getElementById('mbtn-'+k).classList.toggle('active', k==='foot');
+    document.getElementById('score-section-'+k).style.display = k==='foot'?'block':'none';
   });
-  if(upcoming){
-    document.getElementById('next-meet-name').textContent = upcoming.name;
-    document.getElementById('next-meet-count').textContent = daysTo(upcoming.date);
-  }
-  document.getElementById('conf-count').textContent = daysTo(MEET_DATES.conf);
-})();
-
-// ─────────────────────────────────────────────────────────────────────────────
-// DAY SELECTOR
-// ─────────────────────────────────────────────────────────────────────────────
-function getWeekStart(weekIdx){
-  const base = new Date(2026, 2, 16); // Mon Mar 16 2026 — local constructor avoids UTC offset
-  base.setDate(base.getDate() + weekIdx * 7);
-  return base;
+  syncTimingButtons();
+  document.getElementById('gate-status').style.display = 'none';
+  document.getElementById('pending-summary').style.display = 'none';
+  document.getElementById('pending-list').textContent = '';
+  const today = new Date().toLocaleDateString('en-US',{weekday:'long',month:'short',day:'numeric'});
+  document.getElementById('modal-date-label').textContent = 'Logging for ' + today;
+  document.getElementById('gate-modal').classList.add('open');
 }
+
+function closeGateModal(){
+  document.getElementById('gate-modal').classList.remove('open');
+  pendingScores = {};
+}
+
+function syncTimingButtons(){
+  ['am','pre','post'].forEach(t => {
+    document.getElementById('tbtn-'+t).classList.toggle('active', t===selectedTiming);
+  });
+}
+
+function selectMetric(m){
+  if(selectedScore !== null && activeMetric !== m){
+    pendingScores[activeMetric] = { score: selectedScore, timing: selectedTiming };
+    updatePendingSummary();
+  }
+  activeMetric = m;
+  selectedScore = null;
+  document.querySelectorAll('.score-btn').forEach(b => b.classList.remove('selected'));
+  if(pendingScores[m] !== undefined){
+    const staged = pendingScores[m].score;
+    document.querySelectorAll('#score-section-'+m+' .score-btn').forEach(b => {
+      b.classList.toggle('selected', parseInt(b.dataset.v)===staged);
+    });
+    selectedScore = staged;
+  }
+  METRICS.forEach(k => {
+    document.getElementById('mbtn-'+k).classList.toggle('active', k===m);
+    document.getElementById('score-section-'+k).style.display = k===m?'block':'none';
+  });
+  document.getElementById('gate-status').style.display = 'none';
+  if(selectedScore !== null) updateGateStatus();
+}
+
+function selectScore(n){
+  selectedScore = n;
+  document.querySelectorAll('#score-section-'+activeMetric+' .score-btn').forEach(b => {
+    b.classList.toggle('selected', parseInt(b.dataset.v)===n);
+  });
+  updateGateStatus();
+}
+
+function selectTiming(t){
+  selectedTiming = t;
+  syncTimingButtons();
+  if(pendingScores[activeMetric] !== undefined){
+    pendingScores[activeMetric].timing = t;
+    updatePendingSummary();
+  }
+}
+
+function updateGateStatus(){
+  const el = document.getElementById('gate-status');
+  if(selectedScore === null){ el.style.display='none'; return; }
+  el.style.display = 'block';
+  const s = selectedScore;
+  if(activeMetric === 'foot'){
+    if(s<=2){ el.className='gate-status pass'; el.textContent='✓ Foot/shin clear — proceed'; }
+    else if(s===3){ el.className='gate-status reduce'; el.textContent='⚠ At loading limit — reduce impact'; }
+    else{ el.className='gate-status hold'; el.textContent='🛑 Loading gate breached — modify session'; }
+  } else if(activeMetric === 'knee'){
+    if(s<=1){ el.className='gate-status pass'; el.textContent='✓ Knee clear'; }
+    else if(s<=2){ el.className='gate-status reduce'; el.textContent='⚠ Knee noted — monitor'; }
+    else{ el.className='gate-status hold'; el.textContent='🛑 Knee elevated — reduce loading'; }
+  } else {
+    if(s<=1){ el.className='gate-status pass'; el.textContent='✓ Back clear'; }
+    else if(s<=2){ el.className='gate-status reduce'; el.textContent='⚠ Back noted — log and monitor'; }
+    else{ el.className='gate-status hold'; el.textContent='🛑 Back elevated — reduce loading'; }
+  }
+}
+
+function updatePendingSummary(){
+  const keys = Object.keys(pendingScores);
+  if(!keys.length){ document.getElementById('pending-summary').style.display='none'; return; }
+  document.getElementById('pending-summary').style.display = 'block';
+  document.getElementById('pending-list').innerHTML = keys.map(k => {
+    const p = pendingScores[k];
+    return '✓ ' + METRIC_LABELS[k] + ': ' + p.score + '/10 (' + TIMING_LABELS[p.timing] + ')';
+  }).join('<br>');
+}
+
+function saveLog(){
+  if(selectedScore !== null){
+    pendingScores[activeMetric] = { score: selectedScore, timing: selectedTiming };
+  }
+  const toSave = Object.keys(pendingScores);
+  if(!toSave.length) return;
+  const today = todayStr();
+  const ts = Date.now();
+  toSave.forEach(metric => {
+    const p = pendingScores[metric];
+    const entry = { date:today, metric, score:p.score, timing:p.timing, ts };
+    gateLogs.push(entry);
+    saveGateLog(ATHLETE_ID, entry);
+  });
+  localStorage.setItem('cad_gate', JSON.stringify(gateLogs));
+  closeGateModal();
+  initDaySelector();
+}
+
+document.getElementById('gate-modal').addEventListener('click', function(e){ if(e.target===this) closeGateModal(); });
+
 
 function initDaySelector(){
   const jsDay = new Date().getDay();
@@ -1625,6 +1752,7 @@ document.getElementById('gate-modal').addEventListener('click', function(e){
 // INIT
 // ─────────────────────────────────────────────────────────────────────────────
 async function initApp(){
+  await loadInjuryLogs();
   const det = detectCurrentWeek();
   if(det !== null){
     currentWeek = det.week;
@@ -1638,6 +1766,164 @@ async function initApp(){
   if(det !== null) selectDay(det.day);
 }
 initApp();
-</script>
+// ─────────────────────────────────────────
+// INJURY LOG MODAL
+// ─────────────────────────────────────────
+let injuryLogs = [];
+let selectedInjuryRegion = null;
+let selectedInjurySeverity = null;
+
+function openInjuryModal(){
+  selectedInjuryRegion = null;
+  selectedInjurySeverity = null;
+  document.querySelectorAll('[id^="ireg-"]').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('#injury-score-grid .score-btn').forEach(b => b.classList.remove('selected'));
+  document.getElementById('injury-desc').value = '';
+  const today = new Date().toLocaleDateString('en-US',{weekday:'long',month:'short',day:'numeric'});
+  document.getElementById('injury-date-label').textContent = today;
+  document.getElementById('injury-modal').classList.add('open');
+}
+
+function closeInjuryModal(){
+  document.getElementById('injury-modal').classList.remove('open');
+}
+
+function selectInjuryRegion(r){
+  selectedInjuryRegion = r;
+  document.querySelectorAll('[id^="ireg-"]').forEach(b => b.classList.remove('active'));
+  document.getElementById('ireg-'+r).classList.add('active');
+}
+
+function selectInjurySeverity(n){
+  selectedInjurySeverity = n;
+  document.querySelectorAll('#injury-score-grid .score-btn').forEach(b => {
+    b.classList.toggle('selected', parseInt(b.dataset.v)===n);
+  });
+}
+
+async function saveInjuryLog(){
+  if(!selectedInjuryRegion || !selectedInjurySeverity) return;
+  const desc = document.getElementById('injury-desc').value.trim();
+  const entry = {
+    date: todayStr(),
+    region: selectedInjuryRegion,
+    description: desc,
+    severity: selectedInjurySeverity,
+    ts: Date.now()
+  };
+  injuryLogs.push(entry);
+  localStorage.setItem(ATHLETE_ID + '_injuries', JSON.stringify(injuryLogs));
+  try {
+    await sbFetch('/rest/v1/injury_logs', {
+      method: 'POST',
+      prefer: 'return=representation',
+      body: JSON.stringify({
+        athlete_id: ATHLETE_ID,
+        date: entry.date,
+        region: entry.region,
+        description: entry.description,
+        severity: entry.severity
+      })
+    });
+    showSyncBadge('ok');
+  } catch(e){ showSyncBadge('offline'); }
+  closeInjuryModal();
+  updateInjuryGate();
+}
+
+function getActiveInjuryPhase(){
+  const now = Date.now();
+  const recent = injuryLogs.filter(l => {
+    const age = (now - new Date(l.date).getTime()) / 86400000;
+    return age <= 7 && l.severity >= 3;
+  });
+  if(!recent.length) return null;
+  if(recent.some(l => ['knee','shin','foot'].includes(l.region))) return 'phase-rehab,phase-bridge';
+  if(recent.some(l => l.severity >= 4)) return 'phase-rehab,phase-bridge';
+  return 'phase-bridge,phase-gpp';
+}
+
+function updateInjuryGate(){
+  const override = getActiveInjuryPhase();
+  const brwBtns = document.querySelectorAll('.browse-btn');
+  brwBtns.forEach(btn => {
+    if(override){
+      const url = btn.href;
+      const base = url.split('?')[0];
+      btn.href = base + '?phase=' + override + '&quality=quality-gpp,quality-isometric&hidespinal=1';
+      btn.style.borderColor = 'rgba(200,80,60,0.5)';
+      btn.style.color = '#c8503c';
+      btn.title = '⚠ Active injury — Library filtered to rehab/bridge';
+    } else {
+      btn.style.borderColor = '';
+      btn.style.color = '';
+      btn.title = '';
+    }
+  });
+}
+
+async function loadInjuryLogs(){
+  const cached = localStorage.getItem(ATHLETE_ID + '_injuries');
+  if(cached) try { injuryLogs = JSON.parse(cached); } catch(e){}
+  try {
+    const cutoff = sbDateStr(new Date(Date.now() - 7*86400000));
+    const rows = await sbFetch('/rest/v1/injury_logs?athlete_id=eq.' + ATHLETE_ID + '&date=gte.' + cutoff + '&order=date.desc');
+    if(rows && rows.length){ injuryLogs = rows; localStorage.setItem(ATHLETE_ID + '_injuries', JSON.stringify(rows)); }
+  } catch(e){}
+  updateInjuryGate();
+}
+
+document.getElementById('injury-modal').addEventListener('click', function(e){ if(e.target===this) closeInjuryModal(); });
+
+
+</script><!-- INJURY LOG MODAL -->
+<div class="modal-bg" id="injury-modal">
+  <div class="modal">
+    <div class="modal-title">Log an Issue</div>
+    <div class="modal-sub" id="injury-date-label">Today</div>
+
+    <div style="margin-bottom:.85rem;">
+      <div class="score-label" style="margin-bottom:.4rem;">Region</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:.35rem;">
+        <button class="timing-btn" id="ireg-knee" onclick="selectInjuryRegion('knee')">Knee</button>
+        <button class="timing-btn" id="ireg-shin" onclick="selectInjuryRegion('shin')">Shin</button>
+        <button class="timing-btn" id="ireg-foot" onclick="selectInjuryRegion('foot')">Foot/Ankle</button>
+        <button class="timing-btn" id="ireg-hip" onclick="selectInjuryRegion('hip')">Hip</button>
+        <button class="timing-btn" id="ireg-back" onclick="selectInjuryRegion('back')">Back</button>
+        <button class="timing-btn" id="ireg-shoulder" onclick="selectInjuryRegion('shoulder')">Shoulder</button>
+        <button class="timing-btn" id="ireg-other" onclick="selectInjuryRegion('other')" style="grid-column:1/-1;">Other</button>
+      </div>
+    </div>
+
+    <div style="margin-bottom:.85rem;">
+      <div class="score-label" style="margin-bottom:.4rem;">Description</div>
+      <input id="injury-desc" type="text" placeholder="Brief description..."
+        style="width:100%;box-sizing:border-box;background:var(--surface2);border:1px solid var(--border);
+        border-radius:4px;padding:.5rem .75rem;font-family:'IBM Plex Mono',monospace;
+        font-size:.72rem;color:var(--text);outline:none;"/>
+    </div>
+
+    <div style="margin-bottom:1rem;">
+      <div class="score-label" style="margin-bottom:.25rem;">Severity</div>
+      <div class="score-legend" style="margin-bottom:.4rem;">
+        <span>1–2 = Monitor</span><span>3 = Modify</span><span>4–5 = Stop</span>
+      </div>
+      <div class="score-grid" id="injury-score-grid">
+        <button class="score-btn" data-v="1" onclick="selectInjurySeverity(1)">1</button>
+        <button class="score-btn" data-v="2" onclick="selectInjurySeverity(2)">2</button>
+        <button class="score-btn" data-v="3" onclick="selectInjurySeverity(3)">3</button>
+        <button class="score-btn" data-v="4" onclick="selectInjurySeverity(4)">4</button>
+        <button class="score-btn" data-v="5" onclick="selectInjurySeverity(5)">5</button>
+      </div>
+    </div>
+
+    <div style="margin-bottom:.45rem;">
+      <button class="modal-save" style="width:100%;" onclick="saveInjuryLog()">Save Issue</button>
+    </div>
+    <button class="modal-cancel" onclick="closeInjuryModal()">Cancel</button>
+  </div>
+</div>
+
+
 </body>
 </html>

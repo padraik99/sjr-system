@@ -429,7 +429,7 @@ main { padding:1.25rem; max-width:700px; margin:0 auto; }
     <strong>Autoregulation Gates</strong>
     AM ≤2/10 · Nerve ≤2.5/10 · Ankle spot — log and track
   </div>
-  <button class="gate-log-btn" onclick="openModal()">Log</button>
+  <div style="display:flex;gap:.5rem;"><button class="gate-log-btn" onclick="openModal()" style="flex:1;">Log</button><button class="gate-log-btn" style="flex:1;background:var(--surface2);border-color:rgba(200,80,60,0.3);color:#c8503c;" onclick="openInjuryModal()">⚠ Issue</button></div>
 </div>
 
 <!-- DAY SELECTOR -->
@@ -2195,6 +2195,116 @@ async function init(){
 }
 
 init();
+// ─────────────────────────────────────────
+// INJURY LOG MODAL
+// ─────────────────────────────────────────
+let injuryLogs = [];
+let selectedInjuryRegion = null;
+let selectedInjurySeverity = null;
+
+function openInjuryModal(){
+  selectedInjuryRegion = null;
+  selectedInjurySeverity = null;
+  document.querySelectorAll('[id^="ireg-"]').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('#injury-score-grid .score-btn').forEach(b => b.classList.remove('selected'));
+  document.getElementById('injury-desc').value = '';
+  const today = new Date().toLocaleDateString('en-US',{weekday:'long',month:'short',day:'numeric'});
+  document.getElementById('injury-date-label').textContent = today;
+  document.getElementById('injury-modal').classList.add('open');
+}
+
+function closeInjuryModal(){
+  document.getElementById('injury-modal').classList.remove('open');
+}
+
+function selectInjuryRegion(r){
+  selectedInjuryRegion = r;
+  document.querySelectorAll('[id^="ireg-"]').forEach(b => b.classList.remove('active'));
+  document.getElementById('ireg-'+r).classList.add('active');
+}
+
+function selectInjurySeverity(n){
+  selectedInjurySeverity = n;
+  document.querySelectorAll('#injury-score-grid .score-btn').forEach(b => {
+    b.classList.toggle('selected', parseInt(b.dataset.v)===n);
+  });
+}
+
+async function saveInjuryLog(){
+  if(!selectedInjuryRegion || !selectedInjurySeverity) return;
+  const desc = document.getElementById('injury-desc').value.trim();
+  const entry = {
+    date: todayStr(),
+    region: selectedInjuryRegion,
+    description: desc,
+    severity: selectedInjurySeverity,
+    ts: Date.now()
+  };
+  injuryLogs.push(entry);
+  localStorage.setItem(ATHLETE_ID + '_injuries', JSON.stringify(injuryLogs));
+  try {
+    await sbFetch('/rest/v1/injury_logs', {
+      method: 'POST',
+      prefer: 'return=representation',
+      body: JSON.stringify({
+        athlete_id: ATHLETE_ID,
+        date: entry.date,
+        region: entry.region,
+        description: entry.description,
+        severity: entry.severity
+      })
+    });
+    showSyncBadge('ok');
+  } catch(e){ showSyncBadge('offline'); }
+  closeInjuryModal();
+  updateInjuryGate();
+}
+
+function getActiveInjuryPhase(){
+  const now = Date.now();
+  const recent = injuryLogs.filter(l => {
+    const age = (now - new Date(l.date).getTime()) / 86400000;
+    return age <= 7 && l.severity >= 3;
+  });
+  if(!recent.length) return null;
+  if(recent.some(l => ['knee','shin','foot'].includes(l.region))) return 'phase-rehab,phase-bridge';
+  if(recent.some(l => l.severity >= 4)) return 'phase-rehab,phase-bridge';
+  return 'phase-bridge,phase-gpp';
+}
+
+function updateInjuryGate(){
+  const override = getActiveInjuryPhase();
+  const brwBtns = document.querySelectorAll('.browse-btn');
+  brwBtns.forEach(btn => {
+    if(override){
+      const url = btn.href;
+      const base = url.split('?')[0];
+      btn.href = base + '?phase=' + override + '&quality=quality-gpp,quality-isometric&hidespinal=1';
+      btn.style.borderColor = 'rgba(200,80,60,0.5)';
+      btn.style.color = '#c8503c';
+      btn.title = '⚠ Active injury — Library filtered to rehab/bridge';
+    } else {
+      btn.style.borderColor = '';
+      btn.style.color = '';
+      btn.title = '';
+    }
+  });
+}
+
+async function loadInjuryLogs(){
+  const cached = localStorage.getItem(ATHLETE_ID + '_injuries');
+  if(cached) try { injuryLogs = JSON.parse(cached); } catch(e){}
+  try {
+    const cutoff = sbDateStr(new Date(Date.now() - 7*86400000));
+    const rows = await sbFetch('/rest/v1/injury_logs?athlete_id=eq.' + ATHLETE_ID + '&date=gte.' + cutoff + '&order=date.desc');
+    if(rows && rows.length){ injuryLogs = rows; localStorage.setItem(ATHLETE_ID + '_injuries', JSON.stringify(rows)); }
+  } catch(e){}
+  updateInjuryGate();
+}
+
+document.getElementById('injury-modal').addEventListener('click', function(e){ if(e.target===this) closeInjuryModal(); });
+
+
 </script>
 <footer style="padding:1.5rem 1.25rem 1rem;border-top:1px solid var(--border);text-align:center;">
   <button id="migrate-btn" onclick="migrateLocalToSupabase()"
