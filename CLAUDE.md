@@ -20,7 +20,7 @@ Weekly schedule: Mon/Wed/Fri gym · Tue canal + bands + occlusion with Yari · T
 | Shaylan | Sprint/Jump (MJC → Berkeley) | Knee rehab + shin splints | Active | Conference, State |
 | Cadence | Sprint/Jump (Cal Poly) | Plantar fascia + shin load intolerance | Active | Commonwealth Games Glasgow, July 2026 |
 | Yari | Soccer (professional) | ACL rehab | Active — own project silo | Return to play |
-| Rosanne | General fitness | None | Profile pending — own project silo | — |
+| Rosanne | General fitness | None | On hold — build deferred | — |
 
 ## Supabase
 - **URL:** `https://jedsnurnnwmpcbdvtlbs.supabase.co`
@@ -235,7 +235,7 @@ Full audit report: `SJR_Security_Audit_20260416.md` (in repo root)
 - Note: frame-ancestors NOT settable via meta tag — requires HTTP header. GitHub Pages does not support custom headers natively. Acknowledged gap — mitigated by XSS fix eliminating the primary injection path.
 
 ### Remaining remediation queue
-- [ ] HIGH: Verify Supabase RLS policies on pain_logs, injury_logs, athlete_state — requires manual check in Supabase dashboard (see RLS verification instructions below)
+- [x] HIGH: Supabase RLS policies on pain_logs, injury_logs, athlete_state — verified 2026-04-14
 - [ ] MEDIUM: Yari guide lines 847/1513 — innerHTML for score/today → textContent
 - [ ] MEDIUM: Weekly guides (Patrick/Shaylan/Cadence/Yari) — innerHTML for WEEKS/phase-badge → DOM construction
 - [ ] MEDIUM: Library -1 suffix artifact — confirm canonical file exists, remove duplicate
