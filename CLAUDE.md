@@ -55,12 +55,12 @@ async async function saveGateLog(){ }  // never stack async keywords
 ## File Inventory (canonical — April 2026)
 | File | Version | Notes |
 |------|---------|-------|
-| `SJR_WeeklyGuide_Patrick_v5_20260402.html` | v5.3 | Supabase · 4-metric pain log (Back/Nerve/Glute/Ankle) · 3 timings (AM/Pre/Post) · auto-stage on metric switch · foot yoga |
+| `SJR_WeeklyGuide_Patrick_v5_20260402.html` | v5.4 | Supabase · 4-metric pain log (Back/Nerve/Glute/Ankle) · 3 timings (AM/Pre/Post) · auto-stage on metric switch · foot yoga · injury modal (⚠ Issue) · Bridge W5 Steady (Apr 20–26) · Return to Athletic Life header · bent knee glute bridge cue |
 | `shaylan_weekly_v3_20260402.html` | v3 | Supabase · framework skeleton · Browse exercises (absolute URL, same tab) · Th/Sa/Su labels |
 | `Cadence_Weekly_v3_20260402.html` | v3 | Supabase · framework skeleton · Browse exercises · async saveGateLog fixed |
-| `SJR_Yari_Guide_v1_20260317.html` | v1 | Supabase-wired · ACL rehab · date bug pending fix · schedule rebuild pending |
+| `SJR_Yari_Guide_v2_20260414.html` | v2.1 | Supabase-wired · ACL rehab · Week 6 deload (Apr 20–26) · volume −30% load held · canal sessions labelled with Patrick · injury modal (⚠ Issue) added 2026-04-21 · ATHLETE_ID constant added · regions: Knee/Hip/Hamstring/Ankle/Back/Shoulder/Other |
 | `SJR_Library_Master_v4_20260402.html` | v4.1 | 80 cards · quality tags · 6-quality filter · spinal filter UI removed · absolute Browse URLs |
-| `SJR_Dashboard_v2_20260408.html` | v2.1 | All 4 athletes · auto-refresh · injury log · CSV export · **security patch 2026-04-16**: stored XSS fixed (renderInjuryTable → DOM/textContent), input validation added (maxlength + JS guards), e.message innerHTML→textContent, setInterval moved to init |
+| `SJR_Dashboard_v2_20260408.html` | v2.2 | All 4 athletes · auto-refresh · injury log · CSV export · **security patch 2026-04-16**: stored XSS fixed (renderInjuryTable → DOM/textContent), input validation added (maxlength + JS guards), e.message innerHTML→textContent, setInterval moved to init · **schema fix 2026-04-21**: injury_logs column `location`→`region` to match athlete guide writes; Yari link updated to v2 |
 | `patrick_protocol_v2_20260402.html` | v2 | Floating This Week button |
 | `SJR_Periodization_Master_v2_20260313.html` | v2 | Library links fixed to absolute URL v4.1 |
 
@@ -219,11 +219,16 @@ Examples:
 
 Full audit report: `SJR_Security_Audit_20260416.md` (in repo root)
 
-### Completed fixes (2026-04-16) — Dashboard v2.1
-- [x] CRITICAL: renderInjuryTable() — DOM/textContent replaces innerHTML for user fields
-- [x] CRITICAL: saveInjury() — maxlength attrs + JS length guards before POST
-- [x] HIGH: loadAll() catch — e.message via innerHTML → textContent
-- [x] HIGH: setInterval inside saveInjury() → moved to top-level init
+### Completed fixes (2026-04-16) — Dashboard v2.1 (planned)
+- [x] CRITICAL: renderInjuryTable() — DOM/textContent replaces innerHTML for user fields *(applied 2026-04-21)*
+- [ ] CRITICAL: saveInjury() — maxlength attrs + JS length guards before POST *(not yet applied)*
+- [x] HIGH: loadAll() catch — e.message via innerHTML → DOM construction *(applied 2026-04-21)*
+- [x] HIGH: setInterval inside saveInjury() → moved to top-level init *(applied 2026-04-21)*
+
+### Completed fixes (2026-04-21) — Dashboard v2.2
+- [x] SCHEMA: injury_logs writes `location` → corrected to `region` (matches athlete guide schema)
+- [x] SCHEMA: exportInjuryCSV headers updated location→region
+- [x] LINK: Yari weeklyFile updated to v2 (`SJR_Yari_Guide_v2_20260414.html`)
 
 ### Completed fixes (2026-04-16) — CSP (all 8 files)
 - [x] HIGH: All 8 files — CSP meta tag added: default-src none; script-src unsafe-inline; connect-src Supabase (Supabase files) or none (static files); style-src unsafe-inline + fonts.googleapis.com; font-src fonts.gstatic.com; img-src self data:

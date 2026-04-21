@@ -202,6 +202,59 @@ footer .accent{color:var(--accent)}
   .findings-grid{grid-template-columns:1fr}
   .flag-grid{grid-template-columns:1fr}
   h2{font-size:2.2rem}
+  .score-grid{grid-template-columns:repeat(5,1fr);gap:.35rem}
+}
+/* ── INJURY MODAL ── */
+.modal-bg{
+  display:none;position:fixed;inset:0;z-index:100;
+  background:rgba(0,0,0,.75);backdrop-filter:blur(6px);
+  align-items:flex-end;justify-content:center;
+}
+.modal-bg.open{display:flex}
+.modal{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:16px 16px 0 0;
+  width:100%;max-width:480px;
+  padding:1.5rem 1.5rem 2.5rem;
+}
+.modal-title{
+  font-family:'Bebas Neue',sans-serif;font-size:1.6rem;
+  letter-spacing:.06em;color:var(--text);margin-bottom:.25rem
+}
+.modal-sub{font-size:.8rem;color:var(--muted);margin-bottom:1.5rem}
+.score-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:.5rem;margin-bottom:1.5rem}
+.score-btn{
+  background:var(--surface2);border:2px solid var(--border);
+  border-radius:8px;padding:.75rem 0;
+  font-family:'Bebas Neue',sans-serif;font-size:1.5rem;
+  cursor:pointer;transition:all .15s;color:var(--muted);text-align:center;
+}
+.score-btn.selected{transform:scale(1.08);box-shadow:0 0 16px rgba(200,169,110,.5);border-color:var(--accent);color:var(--accent)}
+.score-legend{
+  display:flex;justify-content:space-between;
+  font-family:'IBM Plex Mono',monospace;font-size:.62rem;
+  color:var(--muted);margin-bottom:1rem;
+}
+.timing-btn{
+  background:var(--surface2);border:1px solid var(--border);
+  border-radius:8px;padding:.65rem;
+  font-family:'IBM Plex Mono',monospace;font-size:.72rem;
+  letter-spacing:.06em;text-transform:uppercase;
+  cursor:pointer;color:var(--muted);text-align:center;transition:all .15s;
+}
+.timing-btn.active{background:rgba(200,169,110,.1);border-color:var(--accent);color:var(--accent)}
+.modal-save{
+  width:100%;background:var(--accent);color:var(--bg);
+  border:none;border-radius:10px;padding:1rem;
+  font-family:'IBM Plex Mono',monospace;font-size:.85rem;
+  font-weight:600;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;
+}
+.modal-cancel{
+  width:100%;background:none;border:1px solid var(--border);
+  color:var(--muted);border-radius:10px;padding:.75rem;
+  font-family:'IBM Plex Mono',monospace;font-size:.75rem;
+  letter-spacing:.08em;text-transform:uppercase;cursor:pointer;margin-top:.5rem;
 }
 </style>
 </head>
@@ -767,6 +820,7 @@ footer .accent{color:var(--accent)}
 // ── SUPABASE ─────────────────────────────────────────────────────
 const SUPA_URL = 'https://jedsnurnnwmpcbdvtlbs.supabase.co';
 const SUPA_KEY = 'sb_publishable_3WGolnM5dOK88Y4WdKCFGA_Hi6wj-_z';
+const ATHLETE_ID = 'yari';
 
 // sbFetch is NOT async — called only from async callers (CLAUDE.md spec)
 function sbFetch(path, opts = {}){
@@ -1564,6 +1618,12 @@ function selectDay(idx){
     <div id="pain-logged" style="margin-top:.5rem;min-height:1.2rem">
       ${cachedPain!==null?`<span style="color:var(--success);font-family:'IBM Plex Mono',monospace;font-size:.7rem">✓ logged ${cachedPain}/10 today</span>`:''}
     </div>
+    <div style="margin-top:.6rem;">
+      <button onclick="openInjuryModal()"
+        style="background:var(--surface2);border:1px solid rgba(200,80,60,0.35);color:#c8503c;
+        padding:.42rem .9rem;border-radius:4px;cursor:pointer;font-family:'IBM Plex Mono',monospace;
+        font-size:.72rem;letter-spacing:.04em;">⚠ Issue</button>
+    </div>
   </div>`;
 
   document.getElementById('day-content').innerHTML = html;
@@ -1610,9 +1670,132 @@ async function initApp(){
   const todayTab = document.querySelector(`.day-tab[data-day="${tabIdx}"]`);
   if(todayTab) todayTab.classList.add('today');
   selectDay(tabIdx < 7 ? tabIdx : 0);
+  await loadInjuryLogs();
 }
 initApp();
 
-</script>
+// ─────────────────────────────────────────
+// INJURY LOG MODAL
+// ─────────────────────────────────────────
+let injuryLogs = [];
+let selectedInjuryRegion = null;
+let selectedInjurySeverity = null;
+
+function openInjuryModal(){
+  selectedInjuryRegion = null;
+  selectedInjurySeverity = null;
+  document.querySelectorAll('[id^="ireg-"]').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('#injury-score-grid .score-btn').forEach(b => b.classList.remove('selected'));
+  document.getElementById('injury-desc').value = '';
+  const today = new Date().toLocaleDateString('en-US',{weekday:'long',month:'short',day:'numeric'});
+  document.getElementById('injury-date-label').textContent = today;
+  document.getElementById('injury-modal').classList.add('open');
+}
+
+function closeInjuryModal(){
+  document.getElementById('injury-modal').classList.remove('open');
+}
+
+function selectInjuryRegion(r){
+  selectedInjuryRegion = r;
+  document.querySelectorAll('[id^="ireg-"]').forEach(b => b.classList.remove('active'));
+  document.getElementById('ireg-'+r).classList.add('active');
+}
+
+function selectInjurySeverity(n){
+  selectedInjurySeverity = n;
+  document.querySelectorAll('#injury-score-grid .score-btn').forEach(b => {
+    b.classList.toggle('selected', parseInt(b.dataset.v)===n);
+  });
+}
+
+async function saveInjuryLog(){
+  if(!selectedInjuryRegion || !selectedInjurySeverity) return;
+  const desc = document.getElementById('injury-desc').value.trim();
+  const entry = {
+    date: sbDateStr(new Date()),
+    region: selectedInjuryRegion,
+    description: desc,
+    severity: selectedInjurySeverity,
+    ts: Date.now()
+  };
+  injuryLogs.push(entry);
+  localStorage.setItem(ATHLETE_ID + '_injuries', JSON.stringify(injuryLogs));
+  try {
+    await sbFetch('/rest/v1/injury_logs', {
+      method: 'POST',
+      prefer: 'return=minimal',
+      body: JSON.stringify({
+        athlete_id: ATHLETE_ID,
+        date: entry.date,
+        region: entry.region,
+        description: entry.description,
+        severity: entry.severity
+      })
+    });
+  } catch(e){}
+  closeInjuryModal();
+}
+
+async function loadInjuryLogs(){
+  const cached = localStorage.getItem(ATHLETE_ID + '_injuries');
+  if(cached) try { injuryLogs = JSON.parse(cached); } catch(e){}
+  try {
+    const cutoff = sbDateStr(new Date(Date.now() - 7*86400000));
+    const rows = await sbFetch('/rest/v1/injury_logs?athlete_id=eq.' + ATHLETE_ID + '&date=gte.' + cutoff + '&order=date.desc');
+    if(rows && rows.length){ injuryLogs = rows; localStorage.setItem(ATHLETE_ID + '_injuries', JSON.stringify(rows)); }
+  } catch(e){}
+}
+
+
+</script><!-- INJURY LOG MODAL -->
+<div class="modal-bg" id="injury-modal" onclick="if(event.target===this)closeInjuryModal()">
+  <div class="modal">
+    <div class="modal-title">Log an Issue</div>
+    <div class="modal-sub" id="injury-date-label">Today</div>
+
+    <div style="margin-bottom:.85rem;">
+      <div class="score-label" style="margin-bottom:.4rem;">Region</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:.35rem;">
+        <button class="timing-btn" id="ireg-knee" onclick="selectInjuryRegion('knee')">Knee</button>
+        <button class="timing-btn" id="ireg-hip" onclick="selectInjuryRegion('hip')">Hip</button>
+        <button class="timing-btn" id="ireg-hamstring" onclick="selectInjuryRegion('hamstring')">Hamstring</button>
+        <button class="timing-btn" id="ireg-ankle" onclick="selectInjuryRegion('ankle')">Ankle</button>
+        <button class="timing-btn" id="ireg-back" onclick="selectInjuryRegion('back')">Back</button>
+        <button class="timing-btn" id="ireg-shoulder" onclick="selectInjuryRegion('shoulder')">Shoulder</button>
+        <button class="timing-btn" id="ireg-other" onclick="selectInjuryRegion('other')" style="grid-column:1/-1;">Other</button>
+      </div>
+    </div>
+
+    <div style="margin-bottom:.85rem;">
+      <div class="score-label" style="margin-bottom:.4rem;">Description</div>
+      <input id="injury-desc" type="text" placeholder="Brief description..."
+        style="width:100%;box-sizing:border-box;background:var(--surface2);border:1px solid var(--border);
+        border-radius:4px;padding:.5rem .75rem;font-family:'IBM Plex Mono',monospace;
+        font-size:.72rem;color:var(--text);outline:none;"/>
+    </div>
+
+    <div style="margin-bottom:1rem;">
+      <div class="score-label" style="margin-bottom:.25rem;">Severity</div>
+      <div class="score-legend" style="margin-bottom:.4rem;">
+        <span>1–2 = Monitor</span><span>3 = Modify</span><span>4–5 = Stop</span>
+      </div>
+      <div class="score-grid" id="injury-score-grid">
+        <button class="score-btn" data-v="1" onclick="selectInjurySeverity(1)">1</button>
+        <button class="score-btn" data-v="2" onclick="selectInjurySeverity(2)">2</button>
+        <button class="score-btn" data-v="3" onclick="selectInjurySeverity(3)">3</button>
+        <button class="score-btn" data-v="4" onclick="selectInjurySeverity(4)">4</button>
+        <button class="score-btn" data-v="5" onclick="selectInjurySeverity(5)">5</button>
+      </div>
+    </div>
+
+    <div style="margin-bottom:.45rem;">
+      <button class="modal-save" style="width:100%;" onclick="saveInjuryLog()">Save Issue</button>
+    </div>
+    <button class="modal-cancel" onclick="closeInjuryModal()">Cancel</button>
+  </div>
+</div>
+
+
 </body>
 </html>

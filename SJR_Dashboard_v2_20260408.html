@@ -425,7 +425,7 @@ const ATHLETES = [
     metrics: [
       { key: 'knee', label: 'Right Knee', gate: 3 },
     ],
-    weeklyFile: 'SJR_Yari_Guide_v1_20260317.html'
+    weeklyFile: 'SJR_Yari_Guide_v2_20260414.html'
   },
 ];
 
@@ -470,8 +470,14 @@ async function loadAll(){
     if(btn2){ btn2.textContent = '↻ Refresh'; btn2.disabled = false; }
 
   } catch(e){
-    document.getElementById('athletes-grid').innerHTML =
-      `<div class="loading-state">⚠ Load failed: ${e.message}<br><br>Make sure files are served via localhost, not file://</div>`;
+    const errDiv = document.createElement('div');
+    errDiv.className = 'loading-state';
+    errDiv.textContent = '⚠ Load failed: ' + e.message;
+    const hint = document.createElement('br');
+    const hint2 = document.createTextNode('Make sure files are served via localhost, not file://');
+    errDiv.appendChild(document.createElement('br'));
+    errDiv.appendChild(hint2);
+    document.getElementById('athletes-grid').replaceChildren(errDiv);
     console.error(e);
   }
 }
@@ -596,42 +602,60 @@ function buildSparkHtml(data, athleteCls){
 // ─────────────────────────────────────────
 function renderInjuryTable(){
   const tbody = document.getElementById('injury-tbody');
+  tbody.replaceChildren();
   if(!allInjuries.length){
-    tbody.innerHTML = '<tr><td colspan="4" class="no-data">No injury logs yet</td></tr>';
+    const tr = document.createElement('tr');
+    const td = document.createElement('td');
+    td.colSpan = 4; td.className = 'no-data';
+    td.textContent = 'No injury logs yet';
+    tr.appendChild(td); tbody.appendChild(tr);
     return;
   }
-  tbody.innerHTML = allInjuries.map(inj => {
-    const dotCls = 'dot-' + inj.athlete_id;
-    const date = inj.date || '—';
-    const loc  = inj.location || '—';
-    const desc = inj.description || '—';
-    return `<tr>
-      <td><span class="athlete-dot ${dotCls}"></span>${inj.athlete_id}</td>
-      <td style="white-space:nowrap">${date}</td>
-      <td>${loc}</td>
-      <td style="max-width:320px">${desc}</td>
-    </tr>`;
-  }).join('');
+  allInjuries.forEach(inj => {
+    const tr = document.createElement('tr');
+
+    // Athlete cell
+    const tdAth = document.createElement('td');
+    const dot = document.createElement('span');
+    dot.className = 'athlete-dot dot-' + (inj.athlete_id || '');
+    tdAth.appendChild(dot);
+    tdAth.appendChild(document.createTextNode(inj.athlete_id || '—'));
+
+    // Date cell
+    const tdDate = document.createElement('td');
+    tdDate.style.whiteSpace = 'nowrap';
+    tdDate.textContent = inj.date || '—';
+
+    // Region cell (matches athlete guide schema)
+    const tdReg = document.createElement('td');
+    tdReg.textContent = inj.region || '—';
+
+    // Description cell
+    const tdDesc = document.createElement('td');
+    tdDesc.style.maxWidth = '320px';
+    tdDesc.textContent = inj.description || '—';
+
+    tr.append(tdAth, tdDate, tdReg, tdDesc);
+    tbody.appendChild(tr);
+  });
 }
 
 async function saveInjury(){
-  const athlete  = document.getElementById('inj-athlete').value;
-  const date     = document.getElementById('inj-date').value || todayStr();
-  const location = document.getElementById('inj-location').value.trim();
-  const desc     = document.getElementById('inj-desc').value.trim();
+  const athlete = document.getElementById('inj-athlete').value;
+  const date    = document.getElementById('inj-date').value || todayStr();
+  const region  = document.getElementById('inj-location').value.trim();
+  const desc    = document.getElementById('inj-desc').value.trim();
 
-  if(!location && !desc){ alert('Add a location or description.'); return; }
+  if(!region && !desc){ alert('Add a location or description.'); return; }
 
   try {
     await sbFetch('/rest/v1/injury_logs', {
       method: 'POST', prefer: 'return=minimal',
-      body: JSON.stringify({ athlete_id: athlete, date, location, description: desc })
+      body: JSON.stringify({ athlete_id: athlete, date, region, description: desc })
     });
     document.getElementById('inj-location').value = '';
     document.getElementById('inj-desc').value = '';
     await loadAll();
-// Auto-refresh every 60 seconds
-setInterval(loadAll, 60000);
   } catch(e){
     alert('Save failed: ' + e.message);
   }
@@ -657,7 +681,7 @@ function exportCSV(athleteId){
 
 function exportInjuryCSV(){
   if(!allInjuries.length){ alert('No injury logs to export.'); return; }
-  const headers = ['athlete_id','date','location','description','created_at'];
+  const headers = ['athlete_id','date','region','description','created_at'];
   const csv = [headers.join(',')].concat(
     allInjuries.map(r => headers.map(h => JSON.stringify(r[h] ?? '')).join(','))
   ).join('\n');
@@ -679,6 +703,8 @@ function download(csv, filename){
 document.getElementById('inj-date').value = todayStr();
 
 loadAll();
+// Auto-refresh every 60 seconds (one timer at init — not inside saveInjury)
+setInterval(loadAll, 60000);
 </script>
 </body>
 </html>
