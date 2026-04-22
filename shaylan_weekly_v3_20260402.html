@@ -1281,14 +1281,14 @@ const WEEKS = [
     ]
   },
 
-  // ── WEEK 7 — P3 Peak / Big 8 Tue-Wed ──────────────────────────────
+  // ── WEEK 7 — P3 Peak / Big 8 Thu Apr 23 (rain-out rescheduled) ────
   {
     label:'P3 · W7', dates:'Apr 20–26', phase:'Phase 3 Peak',
-    focus:'Big 8 Champs Delta Tue Apr 21 + Wed Apr 22. Conference championships.',
-    meets:['Big 8 Champs Delta — Tue Apr 21 + Wed Apr 22'],
+    focus:'Big 8 Champs Delta — rescheduled to Thu Apr 23 (Tue Apr 21 rained out).',
+    meets:['Big 8 Champs Delta — Thu Apr 23 (rescheduled)'],
     days:[
-      // idx=0 Mon Apr 20 — pre-Big 8 activate
-      { name:'Monday Apr 20', intent:'Pre-Big 8 Activate', sub:'Conference championships tomorrow. Short activation + penultimate drill only.', collagen:true,
+      // idx=0 Mon Apr 20 — pre-meet activate (meet now Thu)
+      { name:'Monday Apr 20', intent:'Pre-Meet Activate', sub:'Meet rescheduled to Thursday. Keep the body ready — short activation only. No fatigue.', collagen:true,
         blocks:[
           {label:'Non-Negotiables', items: TRACK_A_FULL},
           {label:'Activation', items:[
@@ -1300,26 +1300,36 @@ const WEEKS = [
           ]},
         ]
       },
-      // idx=1 Tue Apr 21 — BIG 8 DAY 1
-      compDay('Big 8 Champs Day 1', 'Delta Tue Apr 21. Conference championships. Contrast warmup. Gate log.'),
-      // idx=2 Wed Apr 22 — BIG 8 DAY 2
-      compDay('Big 8 Champs Day 2', 'Delta Wed Apr 22. Day 2. Track A pre-session. No new load. Gate log.'),
-      // idx=3 Thu Apr 23 — recovery
-      { name:'Thursday Apr 23', intent:'Recovery', sub:'Post Big 8. Track A + McGill only.', collagen:false,
+      // idx=1 Tue Apr 21 — rain-out
+      { name:'Tuesday Apr 21', intent:'Rain-Out — Hold', sub:'Meet canceled today (rain). No training load. Stay loose. Early night.', collagen:false,
+        blocks:[
+          {label:'Non-Negotiables', items: TRACK_A_SHORT},
+          {label:'Light Flush Only', items:[
+            {name:'Dead Bug — Contralateral Hold', dose:'2×6 ea'},
+            {name:'Side Plank', dose:'2×20s ea — no fatigue'},
+          ]},
+        ]
+      },
+      // idx=2 Wed Apr 22 — pre-meet day
+      { name:'Wednesday Apr 22', intent:'Pre-Meet — Final Activate', sub:'Meet tomorrow. Same protocol as Monday. Penultimate drill only. 4 reps. Done.', collagen:true,
+        blocks:[
+          {label:'Non-Negotiables', items: TRACK_A_FULL},
+          {label:'Activation', items:[
+            {name:'Patellar Isometric Wall Sit', note:'analgesia', dose:'5×45s'},
+            {name:'Dead Bug — Contralateral Hold', dose:'2×6 ea'},
+          ]},
+          {label:'Penultimate — 4 Reps Only', gold:true, items:[
+            {name:'Penultimate Step Drill — Short Approach', note:'"Stamp the mark" — 4 reps, no more', dose:'4 reps'},
+          ]},
+        ]
+      },
+      // idx=3 Thu Apr 23 — BIG 8 CHAMPS (rescheduled)
+      compDay('Big 8 Champs — Rescheduled', 'Delta Thu Apr 23. Moved from Tuesday (rain). Everything since March. Contrast warmup. Gate log.'),
+      // idx=4 Fri Apr 24 — post-meet recovery
+      { name:'Friday Apr 24', intent:'Post-Meet Recovery', sub:'Track A + McGill only. Let the body process. Taper continues.', collagen:false,
         blocks:[
           {label:'Non-Negotiables', items: TRACK_A_FULL},
           {label:'Core Only', items: MCGILL},
-        ]
-      },
-      // idx=4 Fri Apr 24 — taper begins
-      { name:'Friday Apr 24', intent:'Taper Begins', sub:'Volume drops now. Quality over quantity from here.', collagen:true,
-        blocks:[
-          {label:'Non-Negotiables', items: TRACK_A_FULL},
-          {label:'Maintenance Only', items:[
-            {name:'Patellar Isometric Wall Sit', dose:'3×45s'},
-            {name:'Single-Leg Glute Bridge', dose:'2×10 ea'},
-            {name:'Banded Clamshell', dose:'2×10 ea'},
-          ]},
         ]
       },
       // idx=5 Sat Apr 25 — rest
