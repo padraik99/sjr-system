@@ -1499,7 +1499,7 @@ const WEEKS = [
 ];
 
 function detectCurrentWeek(){
-  const today = todayStr_sh();
+  const today = todayStr();
   for(let w = 0; w < WEEKS.length; w++){
     const ws = getWeekStart(w);
     for(let d = 0; d < 7; d++){
@@ -1516,6 +1516,7 @@ function detectCurrentWeek(){
 // ─────────────────────────────────────────
 let currentWeek = parseInt(localStorage.getItem('sh_week') || '0');
 let selectedDay  = 0;
+let gateLogs     = JSON.parse(localStorage.getItem('sh_gate') || '[]');
 // ─────────────────────────────────────────
 // GATE LOG MODAL — 3 metrics, auto-stage, timing persists
 // ─────────────────────────────────────────
@@ -1687,115 +1688,91 @@ function toggleExDetail(uid){
 }
 
 // ─────────────────────────────────────────
-// GATE MODAL
+// WEEK / DAY RENDERING
 // ─────────────────────────────────────────
-function openGateModal(){
-  selectedScore = null;
-  selectedMetric = 'knee';
-  selectedTiming = 'during';
-  selectedLocation = 'right';
-  document.querySelectorAll('.score-btn').forEach(b => b.classList.remove('selected'));
-  document.getElementById('metric-knee').classList.add('active');
-  document.getElementById('metric-back').classList.remove('active');
-  document.getElementById('knee-section').style.display = 'block';
-  document.getElementById('back-section').style.display = 'none';
-  document.getElementById('timing-during').classList.add('active');
-  document.getElementById('timing-after').classList.remove('active');
-  document.getElementById('gate-status').style.display = 'none';
-  document.querySelectorAll('[id^="loc-"]').forEach(b => b.classList.remove('active'));
-  document.getElementById('loc-right').classList.add('active');
-  const today = new Date().toLocaleDateString('en-US',{weekday:'long', month:'short', day:'numeric'});
-  document.getElementById('modal-date-label').textContent = `Logging for ${today}`;
-  document.getElementById('gate-modal').classList.add('open');
+function getWeekStart(weekIdx){
+  const base = new Date(2026, 2, 9); // Mon Mar 9 2026 — Shaylan base
+  return new Date(base.getFullYear(), base.getMonth(), base.getDate() + weekIdx * 7);
 }
 
-function closeGateModal(){
-  document.getElementById('gate-modal').classList.remove('open');
-}
-
-function selectMetric(m){
-  selectedMetric = m;
-  selectedScore = null;
-  document.querySelectorAll('.score-btn').forEach(b => b.classList.remove('selected'));
-  document.getElementById('metric-knee').classList.toggle('active', m === 'knee');
-  document.getElementById('metric-back').classList.toggle('active', m === 'back');
-  document.getElementById('knee-section').style.display = m === 'knee' ? 'block' : 'none';
-  document.getElementById('back-section').style.display = m === 'back' ? 'block' : 'none';
-  document.getElementById('gate-status').style.display = 'none';
-}
-
-function selectScore(n, metric){
-  selectedScore = n;
-  const btns = metric === 'back'
-    ? document.querySelectorAll('.back-btn')
-    : document.querySelectorAll('.score-btn:not(.back-btn)');
-  btns.forEach(b => b.classList.toggle('selected', parseInt(b.dataset.score) === n));
-  updateGateStatus();
-}
-
-function selectTiming(t){
-  selectedTiming = t;
-  document.getElementById('timing-during').classList.toggle('active', t === 'during');
-  document.getElementById('timing-after').classList.toggle('active', t === 'after');
-}
-
-function selectLocation(loc){
-  selectedLocation = loc;
-  document.querySelectorAll('[id^="loc-"]').forEach(b => b.classList.remove('active'));
-  document.getElementById('loc-' + loc).classList.add('active');
-}
-
-function updateGateStatus(){
-  const el = document.getElementById('gate-status');
-  if(selectedScore === null){ el.style.display = 'none'; return; }
-  el.style.display = 'block';
-  const limit = selectedMetric === 'back' ? 2 : 3;
-  if(selectedScore === 0){
-    el.className = 'gate-status pass';
-    el.textContent = '✓ All clear';
-  } else if(selectedScore <= limit){
-    el.className = 'gate-status pass';
-    el.textContent = selectedScore === limit
-      ? `⚠ At ${selectedMetric} gate limit — monitor carefully`
-      : `✓ ${selectedMetric === 'back' ? 'Back' : 'Knee'} gate held`;
-  } else {
-    el.className = 'gate-status hold';
-    el.textContent = selectedMetric === 'back'
-      ? '🛑 Back gate breached — asymmetry flag. Reduce right-side loading 20%. Flag to Patrick.'
-      : '🛑 Knee gate breached — hold phase, reduce volume 25%';
+function initDaySelector(){
+  const ws  = getWeekStart(currentWeek);
+  const tod = todayStr();
+  const loggedDates = new Set(gateLogs.map(l => l.date));
+  for(let d = 0; d < 7; d++){
+    const day = new Date(ws.getFullYear(), ws.getMonth(), ws.getDate() + d);
+    const ds  = sbDateStr(day);
+    const lbl = document.getElementById('ddate-' + d);
+    const btn = document.querySelector('.day-btn[data-day="' + d + '"]');
+    if(lbl) lbl.textContent = (day.getMonth()+1) + '/' + day.getDate();
+    if(btn){
+      btn.classList.toggle('today',  ds === tod);
+      btn.classList.toggle('logged', loggedDates.has(ds));
+    }
   }
 }
 
-function saveGate(){
-  if(selectedScore === null) return;
-  const today = todayStr();
-  const entry = {
-    date: today,
-    metric: selectedMetric,
-    score: selectedScore,
-    timing: selectedTiming,
-    ts: Date.now()
-  };
-  if(selectedMetric === 'back') entry.location = selectedLocation;
-  gateLogs.push(entry);
-  localStorage.setItem('sh_gate', JSON.stringify(gateLogs));
-  saveGateLog('shaylan', entry);
-  closeGateModal();
-  initDaySelector();
-  renderDay(selectedDay);
+function selectDay(d){
+  selectedDay = d;
+  document.querySelectorAll('.day-btn').forEach(b => b.classList.remove('active'));
+  const btn = document.querySelector('.day-btn[data-day="' + d + '"]');
+  if(btn) btn.classList.add('active');
+  renderDay(d);
+}
+
+function renderDay(d){
+  const week = WEEKS[currentWeek];
+  const day  = week && week.days[d];
+  const main = document.getElementById('main-content');
+  if(!day){ main.innerHTML = ''; return; }
+
+  if(day.rest){
+    main.innerHTML = '<div class="rest-card"><div class="rest-icon">🛌</div>'
+      + '<div class="rest-title">Rest Day</div>'
+      + '<div class="rest-text">' + (day.sub || '') + '</div></div>';
+    return;
+  }
+
+  let html = '';
+  html += '<div class="day-intent">' + (day.intent || '') + '</div>';
+  html += '<div class="day-sub">'    + (day.sub    || '') + '</div>';
+
+  if(day.collagen){
+    html += '<div class="collagen-alert">'
+      + '<div class="collagen-icon">⏰</div>'
+      + '<div class="collagen-text"><strong>Collagen Window</strong>'
+      + 'Gelatin + Vit C 30–45 min before. Baar protocol — tendon, ligament, bone stress.</div>'
+      + '</div>';
+  }
+
+  (day.blocks || []).forEach(function(block){
+    const gold = block.gold ? ' gold' : '';
+    html += '<div class="ex-block">';
+    html += '<div class="block-label' + gold + '">' + block.label + '</div>';
+    (block.items || []).forEach(function(ex){
+      html += '<div class="ex-row">';
+      html += '<div class="ex-name">' + ex.name;
+      if(ex.note) html += '<small>' + ex.note + '</small>';
+      html += '</div>';
+      html += '<div class="ex-dose' + gold + '">' + ex.dose + '</div>';
+      html += '</div>';
+    });
+    html += '</div>';
+  });
+
+  main.innerHTML = html;
 }
 
 function isGateBreached(){
   const cutoff = Date.now() - 48 * 3600000;
-  const kneeBreached = gateLogs.some(l => l.metric !== 'back' && l.score > 3 && l.ts > cutoff);
-  const backBreached  = gateLogs.some(l => l.metric === 'back' && l.score > 2 && l.ts > cutoff);
-  return { any: kneeBreached || backBreached, knee: kneeBreached, back: backBreached };
+  const recent = gateLogs.filter(function(l){ return (l.ts || 0) > cutoff; });
+  return {
+    knee: recent.some(function(l){ return l.metric === 'knee' && l.score > GATE_LIMITS.knee; }),
+    shin: recent.some(function(l){ return l.metric === 'shin' && l.score > GATE_LIMITS.shin; }),
+    back: recent.some(function(l){ return l.metric === 'back' && l.score > GATE_LIMITS.back; }),
+    any:  recent.some(function(l){ return GATE_LIMITS[l.metric] !== undefined && l.score > GATE_LIMITS[l.metric]; })
+  };
 }
-
-// Close modal on bg tap
-document.getElementById('gate-modal').addEventListener('click', function(e){
-  if(e.target === this) closeGateModal();
-});
 
 // ─────────────────────────────────────────
 // INIT

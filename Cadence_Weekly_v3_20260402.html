@@ -1278,6 +1278,7 @@ phase3Labels.forEach((label, i) => {
 // ─────────────────────────────────────────────────────────────────────────────
 let currentWeek = parseInt(localStorage.getItem('cad_week') || '1');
 let selectedDay  = 0;
+let gateLogs     = JSON.parse(localStorage.getItem('cad_gate') || '[]');
 // ─────────────────────────────────────────
 // GATE LOG MODAL — 3 metrics, auto-stage, timing persists
 // ─────────────────────────────────────────
@@ -1682,71 +1683,23 @@ function toggleCwDetail(uid){
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// GATE MODAL
+// WEEK START + GATE BREACH CHECK
 // ─────────────────────────────────────────────────────────────────────────────
-function openGateModal(){
-  selectedScore = null;
-  selectedTiming = 'morning';
-  document.querySelectorAll('.score-btn').forEach(b => b.classList.remove('selected'));
-  document.getElementById('timing-morning').classList.add('active');
-  document.getElementById('timing-session').classList.remove('active');
-  document.getElementById('gate-status').style.display = 'none';
-  const today = new Date().toLocaleDateString('en-US',{weekday:'long',month:'short',day:'numeric'});
-  document.getElementById('modal-date-label').textContent = `Logging for ${today}`;
-  document.getElementById('gate-modal').classList.add('open');
-}
-
-function closeGateModal(){
-  document.getElementById('gate-modal').classList.remove('open');
-}
-
-function selectScore(n){
-  selectedScore = n;
-  document.querySelectorAll('.score-btn').forEach(b => b.classList.toggle('selected', parseInt(b.dataset.score) === n));
-  updateGateStatus();
-}
-
-function selectTiming(t){
-  selectedTiming = t;
-  document.getElementById('timing-morning').classList.toggle('active', t === 'morning');
-  document.getElementById('timing-session').classList.toggle('active', t === 'session');
-}
-
-function updateGateStatus(){
-  const el = document.getElementById('gate-status');
-  if(selectedScore === null){ el.style.display = 'none'; return; }
-  el.style.display = 'block';
-  if(selectedScore <= 2){
-    el.className = 'gate-status pass';
-    el.textContent = '✓ Gate held — green light';
-  } else if(selectedScore === 3){
-    el.className = 'gate-status pass';
-    el.textContent = '⚡ At threshold — hold current load, monitor closely';
-  } else {
-    el.className = 'gate-status hold';
-    el.textContent = '⚠ Elevated — reduce volume 25–30%, do not progress phase';
-  }
-}
-
-function saveGate(){
-  if(selectedScore === null) return;
-  const today = todayStr();
-  gateLogs.push({ date: today, score: selectedScore, timing: selectedTiming, ts: Date.now() });
-  localStorage.setItem('cad_gate', JSON.stringify(gateLogs));
-  saveGateLog('cadence', gateLogs[gateLogs.length-1]);
-  closeGateModal();
-  initDaySelector();
-  renderDay(selectedDay);
+function getWeekStart(weekIdx){
+  const base = new Date(2026, 2, 16); // Mon Mar 16 2026 — Cadence base
+  return new Date(base.getFullYear(), base.getMonth(), base.getDate() + weekIdx * 7);
 }
 
 function isGateBreached(){
   const cutoff = Date.now() - 48 * 3600000;
-  return gateLogs.some(l => l.score > 3 && l.ts > cutoff);
+  const recent = gateLogs.filter(function(l){ return (l.ts || 0) > cutoff; });
+  return {
+    foot: recent.some(function(l){ return l.metric === 'foot' && l.score > GATE_LIMITS.foot; }),
+    knee: recent.some(function(l){ return l.metric === 'knee' && l.score > GATE_LIMITS.knee; }),
+    back: recent.some(function(l){ return l.metric === 'back' && l.score > GATE_LIMITS.back; }),
+    any:  recent.some(function(l){ return GATE_LIMITS[l.metric] !== undefined && l.score > GATE_LIMITS[l.metric]; })
+  };
 }
-
-document.getElementById('gate-modal').addEventListener('click', function(e){
-  if(e.target === this) closeGateModal();
-});
 
 // ─────────────────────────────────────────────────────────────────────────────
 // INIT
