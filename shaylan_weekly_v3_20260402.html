@@ -872,6 +872,16 @@ const EX_INFO = {
     cue: 'Drive hips up — don\'t sag. Straight line ear to ankle. Lateral chain working: QL, glute med, obliques. If right side fatigues faster or feels weaker, flag it to Patrick.',
     url: 'https://www.youtube.com/results?search_query=side+plank+McGill+lateral+chain+gluteus+medius'
   },
+  'Penultimate Step Drill — Short Approach': {
+    setup: '4–8 reps. Short run-up (~8–10 strides). Mark your takeoff board. Full recovery between reps — this is CNS quality work, not volume.',
+    cue: '"Stamp the mark." Penultimate step (second-to-last) is the longest step of the approach — it lowers your COM and loads the plant leg. Plant the takeoff foot flat and fast, not reaching forward. Eyes ahead, drive the free knee up. Every rep the same.',
+    url: 'https://www.youtube.com/results?search_query=penultimate+step+long+jump+approach+mechanics+Schexnayder'
+  },
+  'Log back score': {
+    setup: 'Tap the Log button at the top of the page.',
+    cue: 'Rate right-side back 0–10. Gate limit: ≤2/10 morning-after. If right side is consistently higher than left, flag it to Patrick — lateral asymmetry matters in sprint mechanics.',
+    url: null
+  },
 };
 
 function getExInfo(name){
@@ -1743,6 +1753,7 @@ function renderDay(d){
     return;
   }
 
+  let exCounter = 0;
   let html = '';
   html += '<div class="day-intent">' + (day.intent || '') + '</div>';
   html += '<div class="day-sub">'    + (day.sub    || '') + '</div>';
@@ -1760,12 +1771,37 @@ function renderDay(d){
     html += '<div class="ex-block">';
     html += '<div class="block-label' + gold + '">' + block.label + '</div>';
     (block.items || []).forEach(function(ex){
-      html += '<div class="ex-row">';
-      html += '<div class="ex-name">' + ex.name;
-      if(ex.note) html += '<small>' + ex.note + '</small>';
-      html += '</div>';
-      html += '<div class="ex-dose' + gold + '">' + ex.dose + '</div>';
-      html += '</div>';
+      const info = getExInfo(ex.name);
+      const uid  = 'ex-' + exCounter++;
+      if(info){
+        html += '<div class="ex-row" id="row-' + uid + '" onclick="toggleExDetail(\'' + uid + '\')">';
+        html += '<div class="ex-name">' + ex.name;
+        if(ex.note) html += '<small>' + ex.note + '</small>';
+        html += '</div>';
+        html += '<div class="ex-dose' + gold + '">' + ex.dose + '</div>';
+        html += '<span class="ex-chevron">▾</span>';
+        html += '</div>';
+        html += '<div class="ex-detail" id="' + uid + '">';
+        html += '<div class="ex-detail-section">';
+        html += '<div class="ex-detail-label' + gold + '">Setup</div>';
+        html += '<div class="ex-detail-text">' + info.setup + '</div>';
+        html += '</div>';
+        html += '<div class="ex-detail-section">';
+        html += '<div class="ex-detail-label' + gold + '">Cue</div>';
+        html += '<div class="ex-detail-text">' + info.cue + '</div>';
+        html += '</div>';
+        if(info.url){
+          html += '<a class="ex-video-link" href="' + info.url + '" target="_blank">▶ Demo search</a>';
+        }
+        html += '</div>';
+      } else {
+        html += '<div class="ex-row">';
+        html += '<div class="ex-name">' + ex.name;
+        if(ex.note) html += '<small>' + ex.note + '</small>';
+        html += '</div>';
+        html += '<div class="ex-dose' + gold + '">' + ex.dose + '</div>';
+        html += '</div>';
+      }
     });
     html += '</div>';
   });
