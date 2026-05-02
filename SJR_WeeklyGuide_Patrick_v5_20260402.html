@@ -846,6 +846,32 @@ const EX_INFO = {
     cue: 'Ankles are the spring — minimal knee bend. The stiffness is the stimulus: brief, high-rate tendon loading drives LOX upregulation (Baar). Start at 3 min and build. Any nerve response (calf, foot) = stop, note, don\'t push through.',
     url: 'https://www.youtube.com/results?search_query=stiff+ankle+hops+tendon+loading+Baar+LOX+collagen+protocol'
   },
+  // ── YIELDS ISO & RECENT GYM ADDITIONS ──
+  'Goblet Squat with Iso Hold': {
+    setup: 'Hold goblet position at bottom — pause 3–5s before standing. DB at chest. Do not exceed 60–70° knee flexion initially.',
+    cue: 'This targets the exact sticky point: combined hip flexion and knee extension under load. The iso hold trains the end-range tendon under tension (Baar). Drive knees out at the bottom. Spine neutral — resist the urge to round. Progress weight only when iso hold is pain-free.',
+    url: 'https://www.youtube.com/results?search_query=goblet+squat+isometric+hold+tendon+loading+hip+flexion'
+  },
+  'Dead Hang': {
+    setup: '3×30s. Grip a pull-up bar or rings. Full passive hang — no active shoulder engagement.',
+    cue: 'Gravity traction for the lumbar spine. The foraminal space at L4-L5 opens under axial unloading. Breathe and let the spine decompress. Do NOT activate the lats or shoulders — passive is the point. If numbness appears in hands before 30s, shorten sets. Do after heavy lower body work.',
+    url: 'https://www.youtube.com/results?search_query=dead+hang+spinal+decompression+lumbar+traction+foraminal'
+  },
+  'Superman': {
+    setup: '3×6–8 reps. Lie face down, arms extended overhead. Slow lift and hold 2s.',
+    cue: 'Lift arms, chest, and legs simultaneously — hold 2s at the top. Multifidus and erector activation without axial compression. Key for proprioceptive feedback through the posterior chain. If L4-L5 localizes (sharp, not the familiar ache), stop immediately.',
+    url: 'https://www.youtube.com/results?search_query=superman+exercise+lumbar+multifidus+erector+extension'
+  },
+  'Standing Hip External Rotation': {
+    setup: '2×7 each side. Stand on one leg, rotate stance hip outward without letting the pelvis tilt.',
+    cue: 'Deep external rotators (piriformis, obturators) — the same ones compressed by chronic hip flexor tightness. Strengthening these in standing decompresses the posterior hip capsule and reduces sciatic referral path tension. Keep pelvis level — do not let the stance hip hike.',
+    url: 'https://www.youtube.com/results?search_query=standing+hip+external+rotation+piriformis+deep+rotators'
+  },
+  'Seated Hip Flexion Hold': {
+    setup: '2×30s each leg. Sit tall on bench edge. Lift one knee toward chest against gentle band or hand resistance. Hold isometrically.',
+    cue: 'Targets the exact sticky point: hip flexion strength at end range. The psoas and iliacus are both weak AND shortened in L4-L5 stenosis — iso holds at 90°+ build the missing end-range strength. Sit tall — do not slouch into lumbar flexion to compensate.',
+    url: 'https://www.youtube.com/results?search_query=seated+hip+flexion+isometric+hold+psoas+iliacus+rehab'
+  },
   // ── PERFORMANCE ──
   'A-March': {
     setup: '3–4×20m. Slow, deliberate.',
@@ -871,7 +897,7 @@ const CANAL_RUN_BLOCK = {
   label:'Canal Run', cls:'accent', items:[
     {name:'Dynamic warmup', dose:'5 min'},
     {name:'Backward jog intervals', note:'warmup role · easy pace', dose:'~0.25 mi'},
-    {name:'Forward run intervals', dose:'0.5 mi × 2–3 · higher knees on work segments'},
+    {name:'Forward run intervals', dose:'0.5 mi × 3–4 · 2 mi total · breaks at each 0.5 · higher knees'},
     {name:'Curved run intervals', note:'sharpen curve radius over weeks', dose:'×4–6'},
     {name:'Rock work + eyes-closed balance', note:'post-run proprioception', dose:'3×20s ea'},
   ]
@@ -880,7 +906,7 @@ const CANAL_RUN_SLED = {
   label:'Canal Run', cls:'accent', items:[
     {name:'Dynamic warmup', dose:'5 min'},
     {name:'Backward jog intervals', note:'warmup role · easy pace', dose:'~0.25 mi'},
-    {name:'Forward run intervals', dose:'0.5 mi × 2 · higher knees on work segments'},
+    {name:'Forward run intervals', dose:'0.5 mi × 3–4 · 2 mi total · breaks each 0.5'},
     {name:'Curved run intervals', note:'sharpen curve radius', dose:'×3–4'},
     {name:'Rock work + eyes-closed balance', dose:'3×20s ea'},
   ]
@@ -928,6 +954,13 @@ const ANKLE_HOPS = {
   ]
 };
 
+const ISO_TENDON = {
+  label:'Yielding Iso Block', cls:'accent', items:[
+    {name:'Goblet Squat with Iso Hold', dose:'3×10 · 3s pause at bottom'},
+    {name:'Seated Hip Flexion Hold', dose:'2×30s ea · end-range strength'},
+    {name:'Dead Hang', dose:'3×30s · post-session decompression'},
+  ]
+};
 // ─────────────────────────────────────────
 // WEEK DATA
 // ─────────────────────────────────────────
@@ -1500,6 +1533,7 @@ const WEEKS = [
             {name:'Side Plank — Full', dose:'2×20s ea'},
             {name:'Dead Bug — Contralateral Hold', dose:'3×8 ea'},
           ]},
+          ISO_TENDON,
         ]
       },
       { name:'Tuesday', type:'A', intent:'Canal + Yari', sub:'Forward running. Ankle hops if collagen timed. Band circuit.',
@@ -1529,6 +1563,7 @@ const WEEKS = [
             {name:'Bird Dog — Extended Hold', dose:'3×10s ea'},
             {name:'Side Plank — Full', dose:'2×20s ea'},
           ]},
+          ISO_TENDON,
         ]
       },
       { name:'Thursday', type:'A', intent:'Canal + Sled', sub:'Forward run + sled. Decompression priority.',
@@ -1552,7 +1587,7 @@ const WEEKS = [
             {name:'Trap Bar Deadlift — Elevated Start', note:'3×5 · same as Monday or -5% · autoregulate', dose:'3×5'},
             {name:'Step-Up — Weighted', dose:'3×10 ea'},
             {name:'Single-leg glute bridge', note:'bent knee on raised leg', dose:'3×12/side · 3s pause'},
-            {name:'Sled Pull — Backward', dose:'3×20m'},
+            {name:'Hip Thrust — Barbell', note:'entering earlier than planned — 45 lbs', dose:'3×10'},
           ]},
           { label:'McGill Core', items:[
             {name:'Bird Dog — Extended Hold', dose:'3×10s ea'},
@@ -1648,7 +1683,7 @@ const WEEKS = [
             {name:'Trap Bar Deadlift — Elevated Start', note:'3×5 · same as Monday or -5%', dose:'3×5'},
             {name:'Step-Up — Weighted', dose:'3×10 ea'},
             {name:'Single-leg glute bridge', note:'bent knee on raised leg', dose:'3×12/side'},
-            {name:'Sled Pull — Backward', dose:'3×20m'},
+            {name:'Hip Thrust — Barbell', dose:'3×10 · progress from W5'},
           ]},
           { label:'McGill Core', items:[
             {name:'Bird Dog — Extended Hold', dose:'3×10s ea'},
@@ -1744,7 +1779,7 @@ const WEEKS = [
             {name:'Trap Bar Deadlift — Elevated Start', note:'3×5 · match Monday', dose:'3×5'},
             {name:'Step-Up — Weighted', dose:'3×10 ea'},
             {name:'Single-leg glute bridge', note:'bent knee on raised leg', dose:'3×12/side'},
-            {name:'Sled Pull — Backward', dose:'3×20m'},
+            {name:'Hip Thrust — Barbell', dose:'3×10 · add load if W6 clean'},
           ]},
           { label:'McGill Core', items:[
             {name:'Bird Dog — Extended Hold', dose:'3×10s ea'},
