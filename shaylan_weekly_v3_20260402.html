@@ -880,6 +880,21 @@ const EX_INFO = {
   'Log back score': {
     setup: 'Tap the Log button at the top of the page.',
     cue: 'Rate right-side back 0–10. Gate limit: ≤2/10 morning-after. If right side is consistently higher than left, flag it to Patrick — lateral asymmetry matters in sprint mechanics.',
+  'Heel Walks — Tibialis Anterior': {
+    setup: '2×20m. Lift toes as high as possible, walk on heels only. Controlled pace — activation, not speed.',
+    cue: 'Toes up the whole way. Feel the anterior shin firing. If you feel cramping in the front of the shin, that\'s the right spot — ease off slightly and build over weeks.',
+    url: 'https://www.youtube.com/results?search_query=heel+walks+tibialis+anterior+shin+splints+rehab'
+  },
+  'Resisted Inversion Hold — Tib Post': {
+    setup: '2×30s each foot. Band looped around forefoot. Hold foot in slight inversion (turned in). No movement — pure isometric hold.',
+    cue: 'Feel the pull along the inside of the lower leg — that\'s tibialis posterior, the primary muscle at the medial shin border. Still. 30 seconds.',
+    url: 'https://www.youtube.com/results?search_query=tibialis+posterior+isometric+band+shin+splints+medial+MTSS'
+  },
+  'Single-Leg Calf Raise — Inversion Bias': {
+    setup: '2×10 each leg. Single-leg calf raise — at the top, roll slightly toward the big toe side (inversion). 3-second eccentric down.',
+    cue: 'Rise, bias inward at the top, then a slow 3-count down. The inversion bias loads tib post through range. Knee straight = gastroc; slight bend = soleus. Both matter.',
+    url: 'https://www.youtube.com/results?search_query=tibialis+posterior+strengthening+calf+raise+inversion+shin+splints'
+  },
     url: null
   },
 };
@@ -921,6 +936,12 @@ const GATE_POST = { label:'Post-Session Gate', items:[
 const BACKWARD_30 = {label:'Supplemental', gold:true, items:[{name:'Backward Run', dose:'3×30m'}]};
 const BACKWARD_60 = {label:'Supplemental', gold:true, items:[{name:'Backward Run', dose:'5×60m'}]};
 const BACKWARD_CONTRAST = {label:'Supplemental', gold:true, items:[{name:'Backward Run + Forward Sprint Contrast', dose:'5×30m'}]};
+const SHIN_COMP = { label:'Shin Health — Maintenance', items:[
+  {name:'Heel Walks — Tibialis Anterior',        dose:'2×20m · toes up · controlled pace'},
+  {name:'Resisted Inversion Hold — Tib Post',    dose:'2×30s ea · band around forefoot · inversion hold'},
+  {name:'Single-Leg Calf Raise — Inversion Bias',dose:'2×10 ea · 3s eccentric · slight inversion at top'},
+]};
+
 
 // ── Competition day template (reused across weeks)
 function compDay(meetName, extraNote){
@@ -952,6 +973,7 @@ const WEEKS = [
             {name:'Banded Clamshell', note:'slow eccentric', dose:'3×15 ea'},
             {name:'Single-Leg Glute Bridge', dose:'3×12 ea'},
           ]},
+          SHIN_COMP,
           BACKWARD_30,
         ]
       },
@@ -1021,6 +1043,7 @@ const WEEKS = [
             {name:'Banded Clamshell', note:'ankle weight if 15 felt easy', dose:'3×15 ea'},
             {name:'Single-Leg Glute Bridge', note:'3s pause', dose:'3×12 ea'},
           ]},
+          SHIN_COMP,
           BACKWARD_CONTRAST,
         ]
       },

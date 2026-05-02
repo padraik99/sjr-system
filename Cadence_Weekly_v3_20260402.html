@@ -808,6 +808,21 @@ const EX_INFO = {
   'CW: Single-Leg Pogo — Takeoff Foot Only': {
     setup: 'Phase 3+: 3×10 contacts. Takeoff foot only. Full recovery between sets.',
     cue: 'Single-leg pogo on the takeoff foot. Same cues — minimal knee bend, ankle spring. This is the closest gym analog to the board contact in LJ. Build bilateral version first across phases. Any PF pain = back to bilateral.',
+  'Heel Walks — Tibialis Anterior': {
+    setup: '2×20m. Lift toes as high as possible, walk on heels only. Controlled pace — activation, not speed.',
+    cue: 'Toes up the whole way. Feel the anterior shin firing. If you feel cramping in the front of the shin, that\'s the right spot — ease off slightly and build over weeks.',
+    url: 'https://www.youtube.com/results?search_query=heel+walks+tibialis+anterior+shin+splints+rehab'
+  },
+  'Resisted Inversion Hold — Tib Post': {
+    setup: '2×30s each foot. Band looped around forefoot. Hold foot in slight inversion (turned in). No movement — pure isometric hold.',
+    cue: 'Feel the pull along the inside of the lower leg — that\'s tibialis posterior, the primary muscle at the medial shin border. Still. 30 seconds.',
+    url: 'https://www.youtube.com/results?search_query=tibialis+posterior+isometric+band+shin+splints+medial+MTSS'
+  },
+  'Single-Leg Calf Raise — Inversion Bias': {
+    setup: '2×10 each leg. Single-leg calf raise — at the top, roll slightly toward the big toe side (inversion). 3-second eccentric down.',
+    cue: 'Rise, bias inward at the top, then a slow 3-count down. The inversion bias loads tib post through range. Knee straight = gastroc; slight bend = soleus. Both matter.',
+    url: 'https://www.youtube.com/results?search_query=tibialis+posterior+strengthening+calf+raise+inversion+shin+splints'
+  },
     url: 'https://www.youtube.com/results?search_query=single+leg+pogo+hop+reactive+ankle+sprint+LJ+takeoff'
   },
 };
@@ -864,6 +879,12 @@ const CONTRAST_WARMUP = {
   ]
 };
 
+const SHIN_COMP = { label:'Shin Health — Maintenance', items:[
+  {name:'Heel Walks — Tibialis Anterior',        dose:'2×20m · toes up · controlled pace'},
+  {name:'Resisted Inversion Hold — Tib Post',    dose:'2×30s ea · band around forefoot · inversion hold'},
+  {name:'Single-Leg Calf Raise — Inversion Bias',dose:'2×10 ea · 3s eccentric · slight inversion at top'},
+]};
+
 // ─────────────────────────────────────────────────────────────────────────────
 // WEEK DATA
 // ─────────────────────────────────────────────────────────────────────────────
@@ -889,6 +910,7 @@ const WEEKS = [
             {name:'Soleus Isometric — Seated Knee-Bent', dose:'4×45s'},
             {name:'Grey Glute Bridge — Incomplete Extension', dose:'3×10s ea'},
           ]},
+          SHIN_COMP,
         ]
       },
       { name:'Tuesday', intent:'Rehab', sub:'Track A + full Block B. Collagen window.', collagen:true, cwPhase:1,
@@ -1070,6 +1092,7 @@ const WEEKS = [
             {name:'Single-Leg Calcaneal Mobility Squat', dose:'3×6 ea'},
             {name:'Jump Rope — Stiff Ankle', dose:'2 min'},
           ]},
+          SHIN_COMP,
         ]
       },
       { name:'Tuesday', intent:'Rehab + Hamstring', sub:'Block B/C + proximal hamstring ISO.', collagen:true, cwPhase:2,
@@ -1165,6 +1188,7 @@ const WEEKS = [
             {name:'Single-Leg RDL — Bodyweight', dose:'3×8 ea'},
             {name:'Jump Rope — Stiff Ankle', dose:'3×2 min, 1-min rest'},
           ]},
+          SHIN_COMP,
         ]
       },
       { name:'Tuesday', intent:'Rehab + Eccentric', sub:'Eccentric heel raise enters (Phase 3 prep).', collagen:true, cwPhase:2,
