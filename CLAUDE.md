@@ -11,13 +11,16 @@ Workflow: GitHub Desktop — drag new file into local folder (overwrites existin
 **Patrick** — architect, coach, and athlete. Managing L4-L5 spinal rehab (foraminal stenosis).
 Return-to-volleyball target: King of the Court, summer 2026.
 Pain clinic pending: ESI vs radiofrequency ablation — decision gate for Phase 3+.
-Weekly schedule: Mon/Wed/Fri gym · Tue canal + bands + occlusion with Yari · Thu canal + sled · Sat/Sun rest/recovery.
+Weekly schedule: Mon/Wed/Fri gym · Tue canal + bands + occlusion with Yari · Thu canal + sled (with Yari) · Sat/Sun rest/recovery + MOBILITY_LIGHT.
+Backward work at gym: Matrix treadmill (club) — NOT sled. Sled is canal days only (Tue/Thu).
+90/90 Hip Transition deferred — mobility not yet warranting it. Revisit when range improves.
+Canal distance: 2 miles total (0.5 mi forward intervals × 3–4 with breaks). Pain levels holding ≤4/10. HR frequently >160 bpm — aerobic base building as side effect.
 
 ## Athletes
 | Athlete | Sport | Injury | Status | Target |
 |---------|-------|--------|--------|--------|
 | Patrick | Volleyball | L4-L5 spinal rehab (foraminal stenosis) | Bridge-to-load phase | King of the Court, Summer 2026 |
-| Shaylan | Sprint/Jump (MJC → Berkeley) | Knee rehab + shin splints | Active | Conference, State |
+| Shaylan | Sprint/Jump (MJC → Berkeley) | Knee rehab + shin splints | Active — comp phase | Conference, State · 11.29 100m PR (top 40 US, all D1 included, May 2026) · 6.08m LJ scratched |
 | Cadence | Sprint/Jump (Cal Poly) | Plantar fascia + shin load intolerance | Active | Commonwealth Games Glasgow, July 2026 |
 | Yari | Soccer (professional) | ACL rehab | Active — own project silo | Return to play |
 | Rosanne | General fitness | None | On hold — build deferred | — |
@@ -52,13 +55,13 @@ async function sbFetch(...){ }         // don't mark sbFetch async
 async async function saveGateLog(){ }  // never stack async keywords
 ```
 
-## File Inventory (canonical — April 2026)
+## File Inventory (canonical — May 2026)
 | File | Version | Notes |
 |------|---------|-------|
-| `SJR_WeeklyGuide_Patrick_v5_20260402.html` | v5.4 | Supabase · 4-metric pain log (Back/Nerve/Glute/Ankle) · 3 timings (AM/Pre/Post) · auto-stage on metric switch · foot yoga · injury modal (⚠ Issue) · Bridge W5 Steady (Apr 20–26) · Return to Athletic Life header · bent knee glute bridge cue |
-| `shaylan_weekly_v3_20260402.html` | v3 | Supabase · framework skeleton · Browse exercises (absolute URL, same tab) · Th/Sa/Su labels |
-| `Cadence_Weekly_v3_20260402.html` | v3 | Supabase · framework skeleton · Browse exercises · async saveGateLog fixed |
-| `SJR_Yari_Guide_v2_20260414.html` | v2.1 | Supabase-wired · ACL rehab · Week 6 deload (Apr 20–26) · volume −30% load held · canal sessions labelled with Patrick · injury modal (⚠ Issue) added 2026-04-21 · ATHLETE_ID constant added · regions: Knee/Hip/Hamstring/Ankle/Back/Shoulder/Other |
+| `SJR_WeeklyGuide_Patrick_v5_20260402.html` | v5.6 | Supabase · 4-metric pain log · shared canal/iso/mobility constants · W5–W7 Bridge weeks · canal template refactored (forward run primary, backward as warmup) · ISO_TENDON block Mon/Wed · Mon sled → Matrix treadmill · 90/90 removed · MOBILITY_LIGHT updated (thoracic ext, femoral nerve floss, couch stretch) |
+| `shaylan_weekly_v3_20260402.html` | v3.1 | Supabase · expandable EX_INFO panels · SHIN_COMP maintenance block (tib ant/post) added all comp Mondays |
+| `Cadence_Weekly_v3_20260402.html` | v3.1 | Supabase · expandable EX_INFO panels · SHIN_COMP maintenance block added comp Mondays (skip post-meet recovery Mon) · async saveGateLog fixed |
+| `SJR_Yari_Guide_v2_20260414.html` | v2.2 | Supabase-wired · ACL rehab · W6 deload + Phase 3 May Gate · split squat iso hold + toe progression + supine hamstring pulses (pumping the brakes) added all Strength Blocks |
 | `SJR_Library_Master_v4_20260402.html` | v4.1 | 80 cards · quality tags · 6-quality filter · spinal filter UI removed · absolute Browse URLs |
 | `SJR_Dashboard_v2_20260408.html` | v2.2 | All 4 athletes · auto-refresh · injury log · CSV export · **security patch 2026-04-16**: stored XSS fixed (renderInjuryTable → DOM/textContent), input validation added (maxlength + JS guards), e.message innerHTML→textContent, setInterval moved to init · **schema fix 2026-04-21**: injury_logs column `location`→`region` to match athlete guide writes; Yari link updated to v2 |
 | `patrick_protocol_v2_20260402.html` | v2 | Floating This Week button |
@@ -248,3 +251,72 @@ Full audit report: `SJR_Security_Audit_20260416.md` (in repo root)
 - User/stored data must render via textContent, never innerHTML.
 - Default to zero-dependency, free solutions.
 - Flag any deviation from these rules before proceeding.
+
+---
+
+## Resources & Research Pipeline
+
+### Books Applied to System (confirmed)
+| Book | Author | Chapters Used | Applied To |
+|------|--------|--------------|------------|
+| *Built from Broken* | Scott Hogan | Ch. 4–10 (tendons, cartilage, muscle, bone, ligament, nerve, inflammation) | MOBILITY_LIGHT additions (thoracic ext, femoral nerve floss, couch stretch); confirmed ISO and collagen protocols already aligned |
+| *Back Mechanic* | Stuart McGill | Full | Patrick spinal protocol, Big Three, neutral spine, spinal load classification throughout |
+| *The Sports Gene* | David Epstein | Context only | Athlete development framing — not directly applied |
+
+### Key Papers in Active Use
+| Paper | Finding Applied |
+|-------|----------------|
+| Rio et al. (2015) — BJSM | Isometric analgesia: 5×45s at mid-angle reduces cortical inhibition; applied to Wall Sit (Yari), Isometric Wall Sit nerve check (Patrick) |
+| Shaw et al. (2017) — AJSM | Collagen synthesis: 15g hydrolyzed + 200mg Vit C, 60 min pre-load doubles collagen markers; applied to all collagen:true days |
+| Alfredson et al. (1998) | Eccentric heel raise protocol; basis for soleus/gastroc eccentric work (Cadence, Shaylan) |
+| Zourdos et al. (FAU JSHS 2024) | MED framework — strength 3–5 sets, hypertrophy 4 fractional, speed/power low volume high intent; applied to all block design |
+| Baar — LOX upregulation | Stiff ankle hops post-collagen upregulate LOX → collagen crosslinking; applied to ANKLE_HOPS protocol |
+| Petersen et al. (2011) | Nordic hamstring curl dose-response; basis for Yari Nordic eccentric protocol |
+
+### Research Pipeline — Bookmarked for Investigation
+
+These are areas where evidence is evolving or where deeper review may update current practice. Not action items yet — flag when relevant to a programming decision.
+
+#### Spinal Rehab (Patrick)
+- **Foraminal stenosis — decompression loading specificity**: What direction and load magnitude optimally opens the L4-L5 foramen? Backward sled vs. backward treadmill vs. aquatic — comparative decompression studies limited. Worth tracking as Patrick transitions modes.
+- **ESI vs. radiofrequency ablation outcomes**: Comparative RCT data for foraminal stenosis specifically (vs. central stenosis, which is better studied). Cochrane reviews updated 2023–2024.
+- **Gabapentin taper and sensorimotor function**: Any evidence on proprioceptive blunting during/after gabapentin? Relevant to Patrick's balance and single-leg work timing.
+- **Kettlebell deadlift vs. trap bar for lumbar**: McGill's spinal load data on KB swings/deadlifts vs. trap bar. Trap bar elevated start currently used — confirm it remains lowest compressive option.
+
+#### Tendinopathy (all athletes)
+- **Heavy slow resistance (HSR) vs. isometric**: Cook, Docking, Rio — the continuum model debate. Is there a reactive vs. degenerative distinction that changes iso dose? Docking's 2022 update worth reviewing.
+- **Collagen timing window precision**: Baar's 45–60 min window — is there evidence on whether 30 min or 90 min changes outcomes? Any sex-specific timing data (relevant to Shaylan/Cadence/Yari)?
+- **Estrogen-LOX interaction** (Baar): Female athletes may have reduced LOX activity at certain cycle phases, impairing collagen crosslinking post-load. Practical implications for Shaylan/Cadence/Yari collagen protocol timing. **Needs deeper review.**
+
+#### ACL Rehab (Yari)
+- **LSI threshold debate**: 90% vs. 95% limb symmetry for return to sport. Recent meta-analyses (van Melick 2022) suggest LSI alone is insufficient — psychological readiness (ACL-RSI ≥65) and hop battery together. Currently both in guide.
+- **Re-injury rate at 9 vs. 12 months**: Grindem et al. data on timing. Yari's Phase 3 gate approaching — confirm current RTP criteria align with best available evidence.
+- **Hamstring co-contraction and ACL protection**: The mechanism behind supine extended leg pulses (pumping the brakes) — deceleration-range hamstring iso. Hewett's work on neuromuscular training and ACL re-injury rates.
+- **Split squat ISO and knee valgus control**: Any EMG studies on split squat iso position and VMO/glute med activation compared to standard wall sit? Relevant to Yari's new iso progression.
+
+#### Sprint / Jump (Shaylan, Cadence)
+- **Shin splints (MTSS) — bone stress vs. muscle model**: The tib post tension model (currently guiding our tib post iso work) vs. the tibial bone bending model. Recent imaging studies (MRI bone stress markers) may update loading prescription. Barrie & Meeuwisse 2019 worth reviewing.
+- **Tibial bone stress capacity building**: Progressive impact loading protocols for MTSS prevention — what's the minimum effective stimulus? Fredericson's grading and return-to-run protocols.
+- **Penultimate step mechanics** (Shaylan LJ): Schexnayder's work on COM lowering strategy. Any recent 3D kinematics data on optimal penultimate step length-to-height ratio?
+- **Plantar fascia loading protocols** (Cadence): Rathleff et al. high-load strength training (single-leg heel raise with towel curl) — already partly applied. Baar collagen timing for PF specifically — less studied than Achilles.
+- **Nordic hamstring curl — hamstring strain prevention in sprinters**: Any evidence specific to LJ/sprint athletes vs. soccer? Dose and timing relative to competition.
+
+#### Motor Learning & Coaching
+- **External vs. internal focus cueing** (Winkelman): Sprint mechanics cues that hold up under fatigue — research on dual-task degradation of internal cues. Relevant for meet-day vs. practice coaching approach.
+- **Blocked vs. random practice for sprint mechanics**: Any updated data since Winkelman's work? Implications for Shaylan's approach run consistency problem (scratches at board).
+
+#### BFR / Occlusion
+- **Optimal cuff pressure for hypertrophy vs. pain management**: Loenneke's pressure recommendations. Elastic bands (current use with Yari) vs. pneumatic cuffs — pressure equivalence data limited.
+- **BFR and bone density**: Emerging evidence on BFR + impact for bone adaptation. Relevant for Cadence/Shaylan shin load intolerance.
+
+### Key Journals to Monitor
+- British Journal of Sports Medicine (BJSM) — tendinopathy, ACL, return to sport
+- Journal of Strength and Conditioning Research (JSCR) — periodization, load management
+- International Journal of Sports Physiology and Performance (IJSPP) — sprint/jump, elite athlete data
+- Journal of Orthopaedic & Sports Physical Therapy (JOSPT) — clinical rehab protocols
+- Sports Medicine — systematic reviews across all domains
+
+### Practitioner Sources (primary)
+Frans Bosch (sprint coordination) · Stuart McGill (spine) · Keith Baar (tendon/collagen) · Ebonie Rio (isometric analgesia) · Nick Winkelman (motor learning) · Mike Boyle (joint-by-joint) · Greg Rose / TPI model (rotational athletes) · Tim Gabbett (load management, AMS ratio) · Ben Peterson (hamstring) · Michael Fredericson (bone stress)
+
+*Note: When a research question becomes a programming decision, search BJSM and PubMed first, then cross-reference with practitioner application. Flag any finding that contradicts current protocols before applying.*
