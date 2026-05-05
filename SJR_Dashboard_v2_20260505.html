@@ -25,7 +25,7 @@
   --patrick: #7ea4b8;
   --shaylan: #c87e7e;
   --cadence: #a47eb8;
-  --yari: #7eb8a4;
+  --yari: #7eb87e;
 }
 * { margin:0; padding:0; box-sizing:border-box; }
 body {
@@ -301,10 +301,9 @@ main { padding:1.25rem 1.5rem; max-width:1100px; margin:0 auto; }
 
 <div class="nav-links">
   <a class="nav-link" href="SJR_WeeklyGuide_Patrick_v5_20260402.html">Patrick →</a>
-  <a class="nav-link" href="shaylan_weekly_v3_20260402.html">Shaylan →</a>
-  <a class="nav-link" href="Cadence_Weekly_v3_20260402.html">Cadence →</a>
-  <a class="nav-link" href="SJR_Yari_Guide_v2_20260414.html">Yari →</a>
-  <a class="nav-link" href="SJR_Library_Master_v4_20260402.html">Exercise Library →</a>
+  <a class="nav-link" href="shaylan_weekly_v2_20260402.html">Shaylan →</a>
+  <a class="nav-link" href="Cadence_Weekly_v2_20260402.html">Cadence →</a>
+  <a class="nav-link" href="SJR_Library_Master_v3_20260402.html">Exercise Library →</a>
   <a class="nav-link" href="SJR_Periodization_Master_v2_20260313.html">Periodization →</a>
 </div>
 
@@ -361,7 +360,6 @@ main { padding:1.25rem 1.5rem; max-width:1100px; margin:0 auto; }
     <button class="export-btn" onclick="exportCSV('patrick')">Patrick — Pain Log CSV</button>
     <button class="export-btn" onclick="exportCSV('shaylan')">Shaylan — Pain Log CSV</button>
     <button class="export-btn" onclick="exportCSV('cadence')">Cadence — Pain Log CSV</button>
-    <button class="export-btn" onclick="exportCSV('yari')">Yari — Pain Log CSV</button>
     <button class="export-btn" onclick="exportCSV('all')">All Athletes — Combined CSV</button>
     <button class="export-btn" onclick="exportInjuryCSV()">Injury Log CSV</button>
   </div>
@@ -411,27 +409,30 @@ const ATHLETES = [
       { key: 'knee', label: 'Knee', gate: 3 },
       { key: 'back', label: 'Back', gate: 2 },
     ],
-    weeklyFile: 'shaylan_weekly_v3_20260402.html'
+    weeklyFile: 'shaylan_weekly_v2_20260402.html'
   },
   {
     id: 'cadence', label: 'Cadence', cls: 'cadence',
     metrics: [
       { key: 'foot_shin', label: 'Foot / Shin', gate: 3 },
     ],
-    weeklyFile: 'Cadence_Weekly_v3_20260402.html'
+    weeklyFile: 'Cadence_Weekly_v2_20260402.html'
   },
   {
     id: 'yari', label: 'Yari', cls: 'yari',
     metrics: [
-      { key: 'knee', label: 'Right Knee', gate: 3 },
+      { key: 'anterior_knee', label: 'Anterior Knee Ache', gate: 3 },
     ],
-    weeklyFile: 'SJR_Yari_Guide_v2_20260414.html'
+    weeklyFile: 'SJR_Yari_Guide_v2_20260414.html',
+    assessmentFile: 'SJR_Yari_Assessment_v1_20260505.html',
+    isACL: true
   },
 ];
 
 // In-memory cache after load
 let allLogs = [];    // all pain_logs rows
 let allInjuries = []; // all injury_logs rows
+let allAssessments = []; // all assessment_logs rows (Yari)
 let athleteStates = {}; // { patrick: { current_week, current_phase }, ... }
 
 // ─────────────────────────────────────────
@@ -450,14 +451,16 @@ async function loadAll(){
       String(since.getMonth()+1).padStart(2,'0') + '-' +
       String(since.getDate()).padStart(2,'0');
 
-    const [logs, injuries, states] = await Promise.all([
+    const [logs, injuries, states, assessments] = await Promise.all([
       sbFetch('/rest/v1/pain_logs?date=gte.' + sinceStr + '&order=date.desc,created_at.desc&select=*'),
       sbFetch('/rest/v1/injury_logs?order=date.desc&select=*'),
       sbFetch('/rest/v1/athlete_state?select=*'),
+      sbFetch('/rest/v1/assessment_logs?athlete_id=eq.yari&order=assessment_date.desc&limit=5&select=*').catch(() => []),
     ]);
 
-    allLogs      = logs      || [];
-    allInjuries  = injuries  || [];
+    allLogs        = logs        || [];
+    allInjuries    = injuries    || [];
+    allAssessments = assessments || [];
     (states || []).forEach(s => athleteStates[s.athlete_id] = s);
 
     renderAthletes();
@@ -470,14 +473,8 @@ async function loadAll(){
     if(btn2){ btn2.textContent = '↻ Refresh'; btn2.disabled = false; }
 
   } catch(e){
-    const errDiv = document.createElement('div');
-    errDiv.className = 'loading-state';
-    errDiv.textContent = '⚠ Load failed: ' + e.message;
-    const hint = document.createElement('br');
-    const hint2 = document.createTextNode('Make sure files are served via localhost, not file://');
-    errDiv.appendChild(document.createElement('br'));
-    errDiv.appendChild(hint2);
-    document.getElementById('athletes-grid').replaceChildren(errDiv);
+    document.getElementById('athletes-grid').innerHTML =
+      `<div class="loading-state">⚠ Load failed: ${e.message}<br><br>Make sure files are served via localhost, not file://</div>`;
     console.error(e);
   }
 }
@@ -551,6 +548,51 @@ function renderAthletes(){
       ? `<div class="breach-banner"><strong>⚠ Gate Breach</strong>${breaches.join(' · ')}</div>`
       : '';
 
+    // ACL assessment panel — Yari only
+    let aclPanelHtml = '';
+    if(athlete.isACL){
+      const latest = allAssessments[0];
+      if(latest){
+        const distLSI = latest.distance_lsi != null ? latest.distance_lsi.toFixed(1)+'%' : '—';
+        const spdLSI  = latest.speed_lsi    != null ? latest.speed_lsi.toFixed(1)+'%'    : '—';
+        const rsi     = latest.acl_rsi_score != null ? latest.acl_rsi_score.toFixed(0)    : '—';
+        const romDiff = (latest.rom_left != null && latest.rom_right != null)
+          ? (latest.rom_left - latest.rom_right).toFixed(1)+'°' : '—';
+        const agAnt   = latest.ag_ant_ratio_right != null ? latest.ag_ant_ratio_right.toFixed(1)+'%' : '—';
+        const gateLabel = latest.gate || '—';
+        const clearedCls = latest.cleared === true ? 'ok' : latest.cleared === false ? 'bad' : 'none';
+        const clearedTxt = latest.cleared === true ? 'CLEARED' : latest.cleared === false ? 'NOT YET' : '—';
+        aclPanelHtml = `
+          <div style="margin-top:0.65rem;padding:0.65rem 0.75rem;background:var(--surface2);border:1px solid var(--border);border-radius:3px;">
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:0.55rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--dim);margin-bottom:0.45rem;">
+              Last Assessment · ${latest.assessment_date || '—'} · ${gateLabel}
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:0.4rem;">
+              ${[
+                ['Dist LSI', distLSI, parseFloat(latest.distance_lsi) >= 90],
+                ['Spd LSI',  spdLSI,  parseFloat(latest.speed_lsi) <= 110],
+                ['ACL-RSI',  rsi,     parseFloat(latest.acl_rsi_score) >= 65],
+                ['ROM Δ',    romDiff, parseFloat(latest.rom_left - latest.rom_right) <= 9],
+                ['Ag/Ant R', agAnt,   parseFloat(latest.ag_ant_ratio_right) >= 76],
+                ['Gate',     `<span class="metric-score ${clearedCls}">${clearedTxt}</span>`, null],
+              ].map(([k, v, pass]) => `
+                <div>
+                  <div style="font-family:'IBM Plex Mono',monospace;font-size:0.5rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--dim);">${k}</div>
+                  <div style="font-family:'IBM Plex Mono',monospace;font-size:0.72rem;color:${pass === true ? 'var(--green)' : pass === false ? 'var(--red)' : 'var(--muted)'};">${v}</div>
+                </div>`).join('')}
+            </div>
+            <div style="margin-top:0.4rem;text-align:right;">
+              <a href="${athlete.assessmentFile}" style="font-family:'IBM Plex Mono',monospace;font-size:0.55rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--dim);text-decoration:none;" onmouseover="this.style.color='var(--green)'" onmouseout="this.style.color='var(--dim)'">Open Assessment Form →</a>
+            </div>
+          </div>`;
+      } else {
+        aclPanelHtml = `
+          <div style="margin-top:0.65rem;padding:0.65rem 0.75rem;background:var(--surface2);border:1px solid var(--border);border-radius:3px;font-family:'IBM Plex Mono',monospace;font-size:0.62rem;color:var(--dim);">
+            No assessments on record yet. <a href="${athlete.assessmentFile}" style="color:var(--yari);text-decoration:none;">Open form →</a>
+          </div>`;
+      }
+    }
+
     return `<div class="athlete-card">
       <div class="athlete-card-header">
         <span class="athlete-name ${athlete.cls}">${athlete.label}</span>
@@ -564,6 +606,7 @@ function renderAthletes(){
         <span>${athlete.metrics[0].label}</span>
         <span>today</span>
       </div>
+      ${aclPanelHtml}
     </div>`;
   }).join('');
 }
@@ -602,60 +645,42 @@ function buildSparkHtml(data, athleteCls){
 // ─────────────────────────────────────────
 function renderInjuryTable(){
   const tbody = document.getElementById('injury-tbody');
-  tbody.replaceChildren();
   if(!allInjuries.length){
-    const tr = document.createElement('tr');
-    const td = document.createElement('td');
-    td.colSpan = 4; td.className = 'no-data';
-    td.textContent = 'No injury logs yet';
-    tr.appendChild(td); tbody.appendChild(tr);
+    tbody.innerHTML = '<tr><td colspan="4" class="no-data">No injury logs yet</td></tr>';
     return;
   }
-  allInjuries.forEach(inj => {
-    const tr = document.createElement('tr');
-
-    // Athlete cell
-    const tdAth = document.createElement('td');
-    const dot = document.createElement('span');
-    dot.className = 'athlete-dot dot-' + (inj.athlete_id || '');
-    tdAth.appendChild(dot);
-    tdAth.appendChild(document.createTextNode(inj.athlete_id || '—'));
-
-    // Date cell
-    const tdDate = document.createElement('td');
-    tdDate.style.whiteSpace = 'nowrap';
-    tdDate.textContent = inj.date || '—';
-
-    // Region cell (matches athlete guide schema)
-    const tdReg = document.createElement('td');
-    tdReg.textContent = inj.region || '—';
-
-    // Description cell
-    const tdDesc = document.createElement('td');
-    tdDesc.style.maxWidth = '320px';
-    tdDesc.textContent = inj.description || '—';
-
-    tr.append(tdAth, tdDate, tdReg, tdDesc);
-    tbody.appendChild(tr);
-  });
+  tbody.innerHTML = allInjuries.map(inj => {
+    const dotCls = 'dot-' + inj.athlete_id;
+    const date = inj.date || '—';
+    const loc  = inj.location || '—';
+    const desc = inj.description || '—';
+    return `<tr>
+      <td><span class="athlete-dot ${dotCls}"></span>${inj.athlete_id}</td>
+      <td style="white-space:nowrap">${date}</td>
+      <td>${loc}</td>
+      <td style="max-width:320px">${desc}</td>
+    </tr>`;
+  }).join('');
 }
 
 async function saveInjury(){
-  const athlete = document.getElementById('inj-athlete').value;
-  const date    = document.getElementById('inj-date').value || todayStr();
-  const region  = document.getElementById('inj-location').value.trim();
-  const desc    = document.getElementById('inj-desc').value.trim();
+  const athlete  = document.getElementById('inj-athlete').value;
+  const date     = document.getElementById('inj-date').value || todayStr();
+  const location = document.getElementById('inj-location').value.trim();
+  const desc     = document.getElementById('inj-desc').value.trim();
 
-  if(!region && !desc){ alert('Add a location or description.'); return; }
+  if(!location && !desc){ alert('Add a location or description.'); return; }
 
   try {
     await sbFetch('/rest/v1/injury_logs', {
       method: 'POST', prefer: 'return=minimal',
-      body: JSON.stringify({ athlete_id: athlete, date, region, description: desc })
+      body: JSON.stringify({ athlete_id: athlete, date, location, description: desc })
     });
     document.getElementById('inj-location').value = '';
     document.getElementById('inj-desc').value = '';
     await loadAll();
+// Auto-refresh every 60 seconds
+setInterval(loadAll, 60000);
   } catch(e){
     alert('Save failed: ' + e.message);
   }
@@ -681,7 +706,7 @@ function exportCSV(athleteId){
 
 function exportInjuryCSV(){
   if(!allInjuries.length){ alert('No injury logs to export.'); return; }
-  const headers = ['athlete_id','date','region','description','created_at'];
+  const headers = ['athlete_id','date','location','description','created_at'];
   const csv = [headers.join(',')].concat(
     allInjuries.map(r => headers.map(h => JSON.stringify(r[h] ?? '')).join(','))
   ).join('\n');
@@ -703,8 +728,6 @@ function download(csv, filename){
 document.getElementById('inj-date').value = todayStr();
 
 loadAll();
-// Auto-refresh every 60 seconds (one timer at init — not inside saveInjury)
-setInterval(loadAll, 60000);
 </script>
 </body>
 </html>

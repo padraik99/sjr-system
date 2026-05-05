@@ -1,0 +1,1349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Yari — Gate Assessment · SJR</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=IBM+Plex+Mono:wght@300;400;500&family=IBM+Plex+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+/* ── VARIABLES ── */
+:root {
+  --bg: #0f0f0e;
+  --surface: #1a1a18;
+  --surface2: #222220;
+  --surface3: #2a2a27;
+  --border: #2e2e2a;
+  --text: #e8e4dc;
+  --muted: #8a8680;
+  --dim: #5a5855;
+  --accent: #c8a96e;
+  --green: #7eb87e;
+  --yellow: #c8b46e;
+  --red: #c87e7e;
+  --teal: #7eb8a4;
+  --yari: #7eb87e;
+  --yari-dim: rgba(126,184,126,0.12);
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  background:var(--bg); color:var(--text);
+  font-family:'IBM Plex Sans',sans-serif;
+  font-weight:300; line-height:1.6; font-size:15px;
+  min-height:100vh; padding-bottom:4rem;
+}
+
+/* ── HEADER ── */
+header {
+  padding:1.75rem 1.5rem 1.25rem;
+  border-bottom:1px solid var(--border);
+  display:flex; justify-content:space-between; align-items:flex-end;
+  flex-wrap:wrap; gap:1rem;
+}
+.hdr-left {}
+.hdr-title {
+  font-family:'Playfair Display',serif;
+  font-size:1.9rem; font-weight:900; color:var(--yari); line-height:1;
+  letter-spacing:-0.01em;
+}
+.hdr-sub {
+  font-family:'IBM Plex Mono',monospace;
+  font-size:0.6rem; letter-spacing:0.2em; text-transform:uppercase;
+  color:var(--dim); margin-top:0.35rem;
+}
+.hdr-right { display:flex; gap:0.5rem; flex-wrap:wrap; align-items:center; }
+.hdr-btn {
+  background:var(--surface2); border:1px solid var(--border);
+  border-radius:3px; padding:0.4rem 0.85rem;
+  font-family:'IBM Plex Mono',monospace; font-size:0.62rem;
+  letter-spacing:0.08em; text-transform:uppercase;
+  color:var(--muted); cursor:pointer; transition:all 0.15s;
+}
+.hdr-btn:hover { border-color:var(--accent); color:var(--accent); }
+.hdr-btn.primary {
+  background:var(--yari); color:var(--bg); border-color:var(--yari);
+  font-weight:500;
+}
+.hdr-btn.primary:hover { background:#8fc88f; border-color:#8fc88f; }
+.hdr-btn.print-btn { border-color:var(--dim); }
+.hdr-btn.print-btn:hover { border-color:var(--teal); color:var(--teal); }
+
+/* ── MAIN ── */
+main { max-width:860px; margin:0 auto; padding:1.5rem; }
+
+/* ── SECTION ── */
+.section {
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:4px; margin-bottom:1.25rem;
+  overflow:hidden;
+}
+.section-header {
+  padding:0.85rem 1rem;
+  border-bottom:1px solid var(--border);
+  display:flex; justify-content:space-between; align-items:center;
+  cursor:pointer; user-select:none;
+  transition:background 0.15s;
+}
+.section-header:hover { background:var(--surface2); }
+.section-title {
+  font-family:'IBM Plex Mono',monospace; font-size:0.68rem;
+  letter-spacing:0.16em; text-transform:uppercase; color:var(--accent);
+}
+.section-toggle {
+  font-family:'IBM Plex Mono',monospace; font-size:0.65rem;
+  color:var(--dim); transition:transform 0.2s;
+}
+.section.collapsed .section-toggle { transform:rotate(-90deg); }
+.section-body { padding:1rem; }
+.section.collapsed .section-body { display:none; }
+
+/* ── FORM GRID ── */
+.form-grid {
+  display:grid; gap:0.75rem;
+  grid-template-columns:repeat(auto-fit, minmax(160px, 1fr));
+}
+.form-grid-2 { grid-template-columns:1fr 1fr; }
+.form-grid-3 { grid-template-columns:1fr 1fr 1fr; }
+.form-grid-4 { grid-template-columns:1fr 1fr 1fr 1fr; }
+.form-grid-full { grid-column:1/-1; }
+
+.field { display:flex; flex-direction:column; gap:0.3rem; }
+.field-label {
+  font-family:'IBM Plex Mono',monospace; font-size:0.58rem;
+  letter-spacing:0.1em; text-transform:uppercase; color:var(--dim);
+}
+.field-sublabel {
+  font-family:'IBM Plex Mono',monospace; font-size:0.52rem;
+  color:var(--dim); margin-top:-0.15rem; letter-spacing:0.04em;
+}
+.field-input, .field-select, .field-textarea {
+  background:var(--surface2); border:1px solid var(--border);
+  border-radius:3px; padding:0.5rem 0.65rem;
+  font-family:'IBM Plex Mono',monospace; font-size:0.78rem;
+  color:var(--text); outline:none; transition:border-color 0.15s;
+  width:100%;
+}
+.field-input:focus, .field-select:focus, .field-textarea:focus {
+  border-color:var(--accent);
+}
+.field-select option { background:var(--surface2); }
+.field-textarea {
+  font-family:'IBM Plex Sans',sans-serif; font-size:0.85rem;
+  resize:vertical; min-height:80px;
+}
+.field-input.flag-warn { border-color:var(--yellow); }
+.field-input.flag-ok   { border-color:var(--green); }
+.field-input.flag-bad  { border-color:var(--red); }
+
+/* ── BILATERAL ROWS ── */
+.bilateral-group {
+  margin-bottom:0.85rem;
+}
+.bilateral-label {
+  font-family:'IBM Plex Mono',monospace; font-size:0.58rem;
+  letter-spacing:0.1em; text-transform:uppercase; color:var(--muted);
+  margin-bottom:0.4rem;
+  display:flex; justify-content:space-between; align-items:center;
+}
+.lsi-badge {
+  font-family:'Playfair Display',serif; font-size:1rem; color:var(--dim);
+  transition:color 0.2s;
+}
+.lsi-badge.ok { color:var(--green); }
+.lsi-badge.warn { color:var(--yellow); }
+.lsi-badge.bad { color:var(--red); }
+.bilateral-inputs {
+  display:grid; grid-template-columns:1fr auto 1fr; gap:0.5rem;
+  align-items:center;
+}
+.bilateral-sep {
+  font-family:'IBM Plex Mono',monospace; font-size:0.7rem;
+  color:var(--dim); text-align:center;
+}
+.side-tag {
+  font-family:'IBM Plex Mono',monospace; font-size:0.52rem;
+  color:var(--dim); text-align:center; letter-spacing:0.08em;
+  text-transform:uppercase; margin-top:0.2rem;
+}
+
+/* ── DIVIDER ── */
+.divider {
+  height:1px; background:var(--border);
+  margin:0.85rem 0;
+}
+.divider-label {
+  font-family:'IBM Plex Mono',monospace; font-size:0.55rem;
+  letter-spacing:0.16em; text-transform:uppercase; color:var(--dim);
+  margin-bottom:0.5rem; margin-top:0.85rem;
+}
+
+/* ── VERDICT PANEL ── */
+.verdict-panel {
+  background:var(--surface2); border:1px solid var(--border);
+  border-radius:4px; padding:1rem; margin-top:0.5rem;
+}
+.verdict-grid {
+  display:grid; grid-template-columns:repeat(auto-fit, minmax(160px, 1fr));
+  gap:0.6rem; margin-bottom:0.75rem;
+}
+.verdict-item {
+  display:flex; flex-direction:column; gap:0.15rem;
+}
+.verdict-key {
+  font-family:'IBM Plex Mono',monospace; font-size:0.55rem;
+  letter-spacing:0.1em; text-transform:uppercase; color:var(--dim);
+}
+.verdict-val {
+  font-family:'Playfair Display',serif; font-size:1.2rem;
+  color:var(--muted);
+}
+.verdict-val.pass { color:var(--green); }
+.verdict-val.fail { color:var(--red); }
+.verdict-val.warn { color:var(--yellow); }
+.verdict-val.na { color:var(--dim); font-size:0.9rem; }
+
+.gate-verdict {
+  padding:0.75rem 1rem;
+  border-radius:3px; margin-top:0.5rem;
+  font-family:'IBM Plex Mono',monospace; font-size:0.7rem;
+  letter-spacing:0.06em; line-height:1.5;
+  border:1px solid var(--border); color:var(--muted);
+  background:var(--surface3);
+}
+.gate-verdict.pass {
+  background:rgba(126,184,126,0.08);
+  border-color:rgba(126,184,126,0.35);
+  color:var(--green);
+}
+.gate-verdict.fail {
+  background:rgba(200,126,126,0.08);
+  border-color:rgba(200,126,126,0.35);
+  color:var(--red);
+}
+.gate-verdict strong { display:block; font-size:0.82rem; margin-bottom:0.2rem; }
+
+/* ── HISTORY ── */
+.history-section { margin-top:1.5rem; }
+.history-title {
+  font-family:'IBM Plex Mono',monospace; font-size:0.58rem;
+  letter-spacing:0.2em; text-transform:uppercase; color:var(--dim);
+  margin-bottom:0.65rem;
+  display:flex; align-items:center; gap:0.5rem;
+}
+.history-title::before { content:''; width:20px; height:1px; background:var(--dim); }
+
+.history-card {
+  background:var(--surface); border:1px solid var(--border);
+  border-radius:4px; padding:0.85rem 1rem; margin-bottom:0.6rem;
+}
+.history-card-header {
+  display:flex; justify-content:space-between; align-items:baseline;
+  margin-bottom:0.5rem;
+}
+.history-date {
+  font-family:'Playfair Display',serif; font-size:1rem; color:var(--accent);
+}
+.history-gate {
+  font-family:'IBM Plex Mono',monospace; font-size:0.58rem;
+  letter-spacing:0.12em; text-transform:uppercase; color:var(--dim);
+}
+.history-metrics {
+  display:flex; flex-wrap:wrap; gap:0.5rem;
+}
+.h-metric {
+  font-family:'IBM Plex Mono',monospace; font-size:0.62rem;
+  padding:0.2rem 0.5rem; border-radius:2px;
+  background:var(--surface2); border:1px solid var(--border);
+  color:var(--muted);
+}
+.h-metric span { color:var(--text); }
+
+.no-history {
+  font-family:'IBM Plex Mono',monospace; font-size:0.65rem;
+  color:var(--dim); letter-spacing:0.08em; padding:1rem 0;
+}
+
+/* ── SAVE FEEDBACK ── */
+.save-feedback {
+  position:fixed; bottom:1.5rem; right:1.5rem;
+  background:var(--surface); border:1px solid var(--border);
+  border-radius:4px; padding:0.6rem 1rem;
+  font-family:'IBM Plex Mono',monospace; font-size:0.65rem;
+  letter-spacing:0.06em; color:var(--muted);
+  opacity:0; transform:translateY(8px);
+  transition:opacity 0.3s, transform 0.3s;
+  pointer-events:none; z-index:100;
+}
+.save-feedback.show {
+  opacity:1; transform:translateY(0);
+}
+.save-feedback.ok { border-color:var(--green); color:var(--green); }
+.save-feedback.err { border-color:var(--red); color:var(--red); }
+
+/* ── SPINNER ── */
+.spinner {
+  display:inline-block; width:14px; height:14px;
+  border:2px solid var(--border); border-top-color:var(--accent);
+  border-radius:50%; animation:spin 0.8s linear infinite;
+  vertical-align:middle; margin-right:0.4rem;
+}
+@keyframes spin { to { transform:rotate(360deg); } }
+
+/* ── OVERRIDE TOGGLE ── */
+.override-row {
+  display:flex; align-items:center; gap:0.75rem; margin-top:0.5rem;
+}
+.toggle-label {
+  font-family:'IBM Plex Mono',monospace; font-size:0.62rem;
+  letter-spacing:0.08em; text-transform:uppercase; color:var(--muted);
+}
+.toggle-switch {
+  position:relative; display:inline-block;
+  width:36px; height:20px;
+}
+.toggle-switch input { opacity:0; width:0; height:0; }
+.toggle-slider {
+  position:absolute; cursor:pointer;
+  top:0; left:0; right:0; bottom:0;
+  background:var(--surface3); border:1px solid var(--border);
+  border-radius:20px; transition:0.2s;
+}
+.toggle-slider:before {
+  position:absolute; content:'';
+  height:14px; width:14px; left:2px; bottom:2px;
+  background:var(--dim); border-radius:50%; transition:0.2s;
+}
+.toggle-switch input:checked + .toggle-slider { background:var(--yari-dim); border-color:var(--yari); }
+.toggle-switch input:checked + .toggle-slider:before { transform:translateX(16px); background:var(--yari); }
+
+/* ── PRINT ── */
+@media print {
+  body { background:#fff; color:#111; font-size:12px; }
+  header { border-color:#ccc; padding:1rem; }
+  .hdr-title { color:#2a5a2a; }
+  .hdr-right { display:none; }
+  .section { border-color:#ccc; background:#fff; margin-bottom:0.75rem; }
+  .section-header { background:#f5f5f0; cursor:default; }
+  .section-title { color:#2a5a2a; }
+  .section-toggle { display:none; }
+  .section.collapsed .section-body { display:block !important; }
+  .section-body { padding:0.75rem 1rem; }
+  .field-input, .field-select, .field-textarea {
+    background:#f9f9f6; border-color:#ccc; color:#111;
+  }
+  .verdict-panel { background:#f5f5f0; border-color:#ccc; }
+  .gate-verdict { border-color:#ccc; }
+  .gate-verdict.pass { background:#edf7ed; color:#2a5a2a; border-color:#7eb87e; }
+  .gate-verdict.fail { background:#fdeaea; color:#7a2a2a; border-color:#c87e7e; }
+  .verdict-val.pass { color:#2a5a2a; }
+  .verdict-val.fail { color:#7a2a2a; }
+  .verdict-val.warn { color:#7a5a00; }
+  .save-feedback, .hdr-btn { display:none; }
+  .history-section { margin-top:1rem; }
+  .history-card { border-color:#ccc; background:#f9f9f6; }
+  .history-date { color:#2a5a2a; }
+  .h-metric { background:#efefea; border-color:#ccc; }
+  .divider { background:#ccc; }
+  .lsi-badge.ok { color:#2a5a2a; }
+  .lsi-badge.warn { color:#7a5a00; }
+  .lsi-badge.bad { color:#7a2a2a; }
+  a { color:#111; }
+  .bilateral-sep { color:#666; }
+  .side-tag { color:#888; }
+}
+
+@media(max-width:600px) {
+  main { padding:1rem; }
+  .form-grid-3, .form-grid-4 { grid-template-columns:1fr 1fr; }
+  header { padding:1rem; }
+}
+
+::-webkit-scrollbar { width:4px; }
+::-webkit-scrollbar-track { background:var(--bg); }
+::-webkit-scrollbar-thumb { background:var(--border); border-radius:2px; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="hdr-left">
+    <div class="hdr-title">Gate Assessment</div>
+    <div class="hdr-sub">Yaritza Arista · ACL Return-to-Sport · Sprint · Jump · Resilience</div>
+  </div>
+  <div class="hdr-right">
+    <button class="hdr-btn print-btn" onclick="window.print()">⎙ Print</button>
+    <button class="hdr-btn" onclick="loadHistory()">↻ History</button>
+    <button class="hdr-btn primary" id="save-btn" onclick="saveAssessment()">Save Assessment</button>
+  </div>
+</header>
+
+<main>
+
+  <!-- ── META ── -->
+  <div class="section" id="sec-meta">
+    <div class="section-header" onclick="toggleSection('sec-meta')">
+      <span class="section-title">Assessment Info</span>
+      <span class="section-toggle">▾</span>
+    </div>
+    <div class="section-body">
+      <div class="form-grid form-grid-4">
+        <div class="field">
+          <label class="field-label">Date</label>
+          <input class="field-input" type="date" id="f-date">
+        </div>
+        <div class="field">
+          <label class="field-label">Gate</label>
+          <select class="field-select" id="f-gate" onchange="updateVerdict()">
+            <option value="baseline">Baseline</option>
+            <option value="may" selected>May Gate</option>
+            <option value="june">June Gate</option>
+            <option value="interim">Interim</option>
+          </select>
+        </div>
+        <div class="field">
+          <label class="field-label">Protocol Week</label>
+          <input class="field-input" type="number" id="f-week" min="1" max="16" placeholder="e.g. 6">
+        </div>
+        <div class="field">
+          <label class="field-label">Clinician</label>
+          <input class="field-input" type="text" id="f-clinician" placeholder="">
+        </div>
+        <div class="field form-grid-full">
+          <label class="field-label">Location</label>
+          <input class="field-input" type="text" id="f-location" placeholder="">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── BIODEX ── -->
+  <div class="section" id="sec-biodex">
+    <div class="section-header" onclick="toggleSection('sec-biodex')">
+      <span class="section-title">Biodex — Isokinetic</span>
+      <span class="section-toggle">▾</span>
+    </div>
+    <div class="section-body">
+
+      <div class="divider-label">Extension — 180°/sec</div>
+
+      <div class="bilateral-group">
+        <div class="bilateral-label">
+          Peak Torque (ft-lbs)
+          <span class="lsi-badge" id="lsi-pt-ext">—</span>
+        </div>
+        <div class="bilateral-inputs">
+          <div>
+            <input class="field-input" type="number" step="0.1" id="b-pt-ext-l" placeholder="Left" oninput="calcLSI('b-pt-ext-l','b-pt-ext-r','lsi-pt-ext',90,true)">
+            <div class="side-tag">Left (uninv)</div>
+          </div>
+          <div class="bilateral-sep">vs</div>
+          <div>
+            <input class="field-input" type="number" step="0.1" id="b-pt-ext-r" placeholder="Right" oninput="calcLSI('b-pt-ext-l','b-pt-ext-r','lsi-pt-ext',90,true)">
+            <div class="side-tag">Right (inv)</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="bilateral-group">
+        <div class="bilateral-label">
+          Peak TQ/BW (%)
+          <span class="lsi-badge" id="lsi-tqbw-ext">—</span>
+        </div>
+        <div class="bilateral-inputs">
+          <div>
+            <input class="field-input" type="number" step="0.1" id="b-tqbw-ext-l" placeholder="Left" oninput="calcLSI('b-tqbw-ext-l','b-tqbw-ext-r','lsi-tqbw-ext',90,true)">
+            <div class="side-tag">Left (uninv)</div>
+          </div>
+          <div class="bilateral-sep">vs</div>
+          <div>
+            <input class="field-input" type="number" step="0.1" id="b-tqbw-ext-r" placeholder="Right" oninput="calcLSI('b-tqbw-ext-l','b-tqbw-ext-r','lsi-tqbw-ext',90,true)">
+            <div class="side-tag">Right (inv)</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="divider-label">Flexion — 180°/sec</div>
+
+      <div class="bilateral-group">
+        <div class="bilateral-label">
+          Peak Torque (ft-lbs)
+          <span class="lsi-badge" id="lsi-pt-flex">—</span>
+        </div>
+        <div class="bilateral-inputs">
+          <div>
+            <input class="field-input" type="number" step="0.1" id="b-pt-flex-l" placeholder="Left" oninput="calcLSI('b-pt-flex-l','b-pt-flex-r','lsi-pt-flex',90,true); calcAgAnt()">
+            <div class="side-tag">Left (uninv)</div>
+          </div>
+          <div class="bilateral-sep">vs</div>
+          <div>
+            <input class="field-input" type="number" step="0.1" id="b-pt-flex-r" placeholder="Right" oninput="calcLSI('b-pt-flex-l','b-pt-flex-r','lsi-pt-flex',90,true); calcAgAnt()">
+            <div class="side-tag">Right (inv)</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="divider-label">Agonist / Antagonist Ratio (goal ≥76%)</div>
+      <div class="form-grid form-grid-2">
+        <div class="field">
+          <label class="field-label">Left Ag/Ant (%)</label>
+          <input class="field-input" type="number" step="0.1" id="b-agant-l" placeholder="auto" readonly>
+        </div>
+        <div class="field">
+          <label class="field-label">Right Ag/Ant (%)</label>
+          <input class="field-input" type="number" step="0.1" id="b-agant-r" placeholder="auto" readonly>
+        </div>
+      </div>
+      <div class="field-sublabel" style="margin-top:0.3rem">Auto-calculated from Peak TQ ext / flex. Enter manually if Biodex reports differ.</div>
+
+      <div class="divider-label">Acceleration Time (goal: ≤50ms uninv, ≤60ms inv)</div>
+      <div class="form-grid form-grid-2">
+        <div class="field">
+          <label class="field-label">Accel Time Left (ms)</label>
+          <input class="field-input" type="number" id="b-accel-l" placeholder="e.g. 50" oninput="flagAccel()">
+        </div>
+        <div class="field">
+          <label class="field-label">Accel Time Right (ms)</label>
+          <input class="field-input" type="number" id="b-accel-r" placeholder="e.g. 60" oninput="flagAccel(); updateVerdict()">
+        </div>
+      </div>
+
+      <div class="divider-label">ROM (goal: bilateral symmetric)</div>
+      <div class="bilateral-group">
+        <div class="bilateral-label">
+          ROM — Flexion (°)
+          <span class="lsi-badge" id="lsi-rom">—</span>
+        </div>
+        <div class="bilateral-inputs">
+          <div>
+            <input class="field-input" type="number" step="0.1" id="b-rom-l" placeholder="Left" oninput="calcRomDiff()">
+            <div class="side-tag">Left (uninv)</div>
+          </div>
+          <div class="bilateral-sep">vs</div>
+          <div>
+            <input class="field-input" type="number" step="0.1" id="b-rom-r" placeholder="Right" oninput="calcRomDiff()">
+            <div class="side-tag">Right (inv)</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="divider-label">Anterior Ache Under Load</div>
+      <div class="form-grid form-grid-2">
+        <div class="field">
+          <label class="field-label">Ache Rating (0–10)</label>
+          <input class="field-input" type="number" id="f-ache" min="0" max="10" placeholder="0" oninput="updateVerdict()">
+        </div>
+        <div class="field">
+          <label class="field-label">Quad Deficit (%)</label>
+          <input class="field-input" type="number" step="0.1" id="b-quad-def" placeholder="e.g. 1.3" oninput="updateVerdict()">
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── HOP TESTS ── -->
+  <div class="section" id="sec-hop">
+    <div class="section-header" onclick="toggleSection('sec-hop')">
+      <span class="section-title">Hop Test Battery</span>
+      <span class="section-toggle">▾</span>
+    </div>
+    <div class="section-body">
+
+      <div class="divider-label">Distance Tests (cm) — goal ≥90% LSI · Administered by trainer</div>
+
+      <div class="bilateral-group">
+        <div class="bilateral-label">Single Hop <span class="lsi-badge" id="lsi-single">—</span></div>
+        <div class="bilateral-inputs">
+          <div>
+            <input class="field-input" type="number" id="h-single-l" placeholder="Left" oninput="calcLSI('h-single-l','h-single-r','lsi-single',90,true)">
+            <div class="side-tag">Left (uninv)</div>
+          </div>
+          <div class="bilateral-sep">vs</div>
+          <div>
+            <input class="field-input" type="number" id="h-single-r" placeholder="Right" oninput="calcLSI('h-single-l','h-single-r','lsi-single',90,true)">
+            <div class="side-tag">Right (inv)</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="bilateral-group">
+        <div class="bilateral-label">Triple Hop <span class="lsi-badge" id="lsi-triple">—</span></div>
+        <div class="bilateral-inputs">
+          <div>
+            <input class="field-input" type="number" id="h-triple-l" placeholder="Left" oninput="calcLSI('h-triple-l','h-triple-r','lsi-triple',90,true)">
+            <div class="side-tag">Left (uninv)</div>
+          </div>
+          <div class="bilateral-sep">vs</div>
+          <div>
+            <input class="field-input" type="number" id="h-triple-r" placeholder="Right" oninput="calcLSI('h-triple-l','h-triple-r','lsi-triple',90,true)">
+            <div class="side-tag">Right (inv)</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="bilateral-group">
+        <div class="bilateral-label">Crossover Hop <span class="lsi-badge" id="lsi-crossover">—</span></div>
+        <div class="bilateral-inputs">
+          <div>
+            <input class="field-input" type="number" id="h-cross-l" placeholder="Left" oninput="calcLSI('h-cross-l','h-cross-r','lsi-crossover',90,true); calcDistLSI()">
+            <div class="side-tag">Left (uninv)</div>
+          </div>
+          <div class="bilateral-sep">vs</div>
+          <div>
+            <input class="field-input" type="number" id="h-cross-r" placeholder="Right" oninput="calcLSI('h-cross-l','h-cross-r','lsi-crossover',90,true); calcDistLSI()">
+            <div class="side-tag">Right (inv)</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-grid form-grid-2">
+        <div class="field">
+          <label class="field-label">Distance Composite LSI (%)</label>
+          <input class="field-input" type="number" step="0.1" id="h-dist-lsi" placeholder="auto" oninput="updateVerdict()">
+          <div class="field-sublabel">Auto or enter Biodex composite</div>
+        </div>
+      </div>
+
+      <div class="divider" style="margin-top:1rem"></div>
+      <div class="divider-label">Speed Tests (sec) — goal ≤110% LSI (lower = better)</div>
+
+      <div class="bilateral-group">
+        <div class="bilateral-label">Forward Hop <span class="lsi-badge" id="lsi-fwd">—</span></div>
+        <div class="bilateral-inputs">
+          <div>
+            <input class="field-input" type="number" step="0.01" id="h-fwd-l" placeholder="Left" oninput="calcSpeedLSI('h-fwd-l','h-fwd-r','lsi-fwd')">
+            <div class="side-tag">Left (uninv)</div>
+          </div>
+          <div class="bilateral-sep">vs</div>
+          <div>
+            <input class="field-input" type="number" step="0.01" id="h-fwd-r" placeholder="Right" oninput="calcSpeedLSI('h-fwd-l','h-fwd-r','lsi-fwd')">
+            <div class="side-tag">Right (inv)</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="bilateral-group">
+        <div class="bilateral-label">Crossover Hop (speed) <span class="lsi-badge" id="lsi-cross-spd">—</span></div>
+        <div class="bilateral-inputs">
+          <div>
+            <input class="field-input" type="number" step="0.01" id="h-cross-spd-l" placeholder="Left" oninput="calcSpeedLSI('h-cross-spd-l','h-cross-spd-r','lsi-cross-spd')">
+            <div class="side-tag">Left (uninv)</div>
+          </div>
+          <div class="bilateral-sep">vs</div>
+          <div>
+            <input class="field-input" type="number" step="0.01" id="h-cross-spd-r" placeholder="Right" oninput="calcSpeedLSI('h-cross-spd-l','h-cross-spd-r','lsi-cross-spd')">
+            <div class="side-tag">Right (inv)</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="bilateral-group">
+        <div class="bilateral-label">Figure 8 <span class="lsi-badge" id="lsi-fig8">—</span></div>
+        <div class="bilateral-inputs">
+          <div>
+            <input class="field-input" type="number" step="0.01" id="h-fig8-l" placeholder="Left" oninput="calcSpeedLSI('h-fig8-l','h-fig8-r','lsi-fig8')">
+            <div class="side-tag">Left (uninv)</div>
+          </div>
+          <div class="bilateral-sep">vs</div>
+          <div>
+            <input class="field-input" type="number" step="0.01" id="h-fig8-r" placeholder="Right" oninput="calcSpeedLSI('h-fig8-l','h-fig8-r','lsi-fig8')">
+            <div class="side-tag">Right (inv)</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="bilateral-group">
+        <div class="bilateral-label">Side Hop <span class="lsi-badge" id="lsi-side">—</span></div>
+        <div class="bilateral-inputs">
+          <div>
+            <input class="field-input" type="number" step="0.01" id="h-side-l" placeholder="Left" oninput="calcSpeedLSI('h-side-l','h-side-r','lsi-side')">
+            <div class="side-tag">Left (uninv)</div>
+          </div>
+          <div class="bilateral-sep">vs</div>
+          <div>
+            <input class="field-input" type="number" step="0.01" id="h-side-r" placeholder="Right" oninput="calcSpeedLSI('h-side-l','h-side-r','lsi-side')">
+            <div class="side-tag">Right (inv)</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-grid form-grid-2">
+        <div class="field">
+          <label class="field-label">Speed Composite LSI (%)</label>
+          <input class="field-input" type="number" step="0.1" id="h-spd-lsi" placeholder="auto" oninput="updateVerdict()">
+          <div class="field-sublabel">Auto or enter Biodex composite</div>
+        </div>
+        <div class="field">
+          <label class="field-label">Clinician Rating</label>
+          <select class="field-select" id="h-clinician-rating" onchange="updateVerdict()">
+            <option value="">Select…</option>
+            <option value="excellent">Excellent — no hesitation, control 10/10</option>
+            <option value="good">Good — minor hesitation, control 8–9/10</option>
+            <option value="fair">Fair — visible hesitation, control 6–7/10</option>
+            <option value="poor">Poor — hesitation, instability</option>
+          </select>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── ACL-RSI ── -->
+  <div class="section" id="sec-rsi">
+    <div class="section-header" onclick="toggleSection('sec-rsi')">
+      <span class="section-title">ACL-RSI — Psychological Readiness</span>
+      <span class="section-toggle">▾</span>
+    </div>
+    <div class="section-body">
+      <div class="form-grid form-grid-2" style="margin-bottom:0.75rem">
+        <div class="field">
+          <label class="field-label">ACL-RSI Score (0–100)</label>
+          <input class="field-input" type="number" id="f-rsi" min="0" max="100" step="0.1" placeholder="threshold ≥65" oninput="updateVerdict()">
+          <div class="field-sublabel">Sum ÷ 120 × 100 · Ardern et al. 2013</div>
+        </div>
+        <div class="field">
+          <label class="field-label">Raw Sum (0–120)</label>
+          <input class="field-input" type="number" id="f-rsi-raw" min="0" max="120" placeholder="optional" oninput="autoRSI()">
+          <div class="field-sublabel">Auto-calculates score above</div>
+        </div>
+      </div>
+      <div class="divider-label">Domain Breakdown (optional)</div>
+      <div class="form-grid form-grid-3">
+        <div class="field">
+          <label class="field-label">Emotion</label>
+          <input class="field-input" type="number" step="0.1" id="f-rsi-emotion" placeholder="0–100">
+        </div>
+        <div class="field">
+          <label class="field-label">Confidence in Performance</label>
+          <input class="field-input" type="number" step="0.1" id="f-rsi-confidence" placeholder="0–100">
+        </div>
+        <div class="field">
+          <label class="field-label">Risk Appraisal</label>
+          <input class="field-input" type="number" step="0.1" id="f-rsi-risk" placeholder="0–100">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── FUNCTIONAL ── -->
+  <div class="section" id="sec-functional">
+    <div class="section-header" onclick="toggleSection('sec-functional')">
+      <span class="section-title">Functional & Training Status</span>
+      <span class="section-toggle">▾</span>
+    </div>
+    <div class="section-body">
+      <div class="form-grid form-grid-2">
+        <div class="field">
+          <label class="field-label">5v5 Sessions ×3 Symptom-Free?</label>
+          <select class="field-select" id="f-5v5" onchange="updateVerdict()">
+            <option value="">Not tested</option>
+            <option value="yes">Yes — completed ×3</option>
+            <option value="partial">Partial</option>
+            <option value="no">No</option>
+          </select>
+        </div>
+        <div class="field">
+          <label class="field-label">Playing Weight Within 2–3 lb?</label>
+          <select class="field-select" id="f-weight" onchange="updateVerdict()">
+            <option value="">Not assessed</option>
+            <option value="yes">Yes</option>
+            <option value="no">No</option>
+          </select>
+        </div>
+        <div class="field">
+          <label class="field-label">Hesitation in 1v1 Contact</label>
+          <select class="field-select" id="f-hesitation" onchange="updateVerdict()">
+            <option value="">Not assessed</option>
+            <option value="none">No hesitation</option>
+            <option value="minor">Minor hesitation</option>
+            <option value="significant">Significant hesitation</option>
+          </select>
+        </div>
+        <div class="field">
+          <label class="field-label">Current Body Weight (lb)</label>
+          <input class="field-input" type="number" id="f-bw" step="0.5" placeholder="goal ~118–121">
+        </div>
+        <div class="field">
+          <label class="field-label">Training Load Status</label>
+          <select class="field-select" id="f-load">
+            <option value="">—</option>
+            <option value="full">Full protocol load</option>
+            <option value="deload">Deload week</option>
+            <option value="modified">Modified — amber knee days</option>
+          </select>
+        </div>
+        <div class="field">
+          <label class="field-label">Post-Session Ache Persisting >3hr?</label>
+          <select class="field-select" id="f-postache" onchange="updateVerdict()">
+            <option value="">Not assessed</option>
+            <option value="no">No</option>
+            <option value="yes">Yes</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── NOTES ── -->
+  <div class="section" id="sec-notes">
+    <div class="section-header" onclick="toggleSection('sec-notes')">
+      <span class="section-title">Notes</span>
+      <span class="section-toggle">▾</span>
+    </div>
+    <div class="section-body">
+      <div class="form-grid form-grid-2">
+        <div class="field">
+          <label class="field-label">Clinician Notes</label>
+          <textarea class="field-textarea" id="f-notes-clinician" placeholder="Clinician observations, restrictions, verbal clearance statements…" maxlength="1000"></textarea>
+        </div>
+        <div class="field">
+          <label class="field-label">Trainer Notes</label>
+          <textarea class="field-textarea" id="f-notes-trainer" placeholder="Patrick — session quality, dual exposure load, psychological readiness, gait observations…" maxlength="1000"></textarea>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── VERDICT ── -->
+  <div class="section" id="sec-verdict">
+    <div class="section-header" onclick="toggleSection('sec-verdict')">
+      <span class="section-title">Gate Verdict</span>
+      <span class="section-toggle">▾</span>
+    </div>
+    <div class="section-body">
+
+      <div class="verdict-panel">
+        <div class="verdict-grid" id="verdict-grid">
+          <!-- populated by JS -->
+        </div>
+        <div class="gate-verdict" id="gate-verdict-box">
+          Enter data above to generate verdict.
+        </div>
+      </div>
+
+      <div class="override-row" style="margin-top:0.85rem">
+        <label class="toggle-switch">
+          <input type="checkbox" id="override-toggle" onchange="updateVerdict()">
+          <span class="toggle-slider"></span>
+        </label>
+        <span class="toggle-label">Manual override — trainer/physio sign-off</span>
+      </div>
+      <div class="field" id="override-note-field" style="display:none; margin-top:0.5rem">
+        <label class="field-label">Override Rationale</label>
+        <textarea class="field-textarea" id="f-override-note" placeholder="Clinical judgment basis for override…" maxlength="500" style="min-height:56px"></textarea>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── HISTORY ── -->
+  <div class="history-section">
+    <div class="history-title">Assessment History</div>
+    <div id="history-container">
+      <div class="no-history"><span class="spinner"></span>Loading history…</div>
+    </div>
+  </div>
+
+</main>
+
+<div class="save-feedback" id="save-feedback"></div>
+
+<script>
+// ─────────────────────────────────────────
+// SUPABASE
+// ─────────────────────────────────────────
+const SUPA_URL = 'https://jedsnurnnwmpcbdvtlbs.supabase.co';
+const SUPA_KEY = 'sb_publishable_3WGolnM5dOK88Y4WdKCFGA_Hi6wj-_z';
+
+function sbFetch(path, opts = {}){
+  const headers = { 'apikey': SUPA_KEY, 'Content-Type': 'application/json' };
+  if(opts.prefer) headers['Prefer'] = opts.prefer;
+  return fetch(SUPA_URL + path, {
+    method: opts.method || 'GET', headers, body: opts.body || undefined,
+  }).then(res => {
+    if(!res.ok) return res.text().then(t => Promise.reject(new Error(res.status + ': ' + t)));
+    if(res.status === 204) return [];
+    return res.json();
+  });
+}
+
+// ─────────────────────────────────────────
+// GATE THRESHOLDS
+// ─────────────────────────────────────────
+const GATES = {
+  may: {
+    dist_lsi: 90,    // hop distance LSI ≥90%
+    spd_lsi: 110,    // speed LSI ≤110%
+    rsi: 65,         // ACL-RSI ≥65
+    ache: 3,         // anterior ache <4/10
+    ag_ant: 76,      // ag/ant ratio ≥76% (target, not hard gate)
+    rom_diff: 9,     // ROM gap ≤9° (matching baseline)
+    label: 'May Gate — Preseason Participation'
+  },
+  june: {
+    dist_lsi: 95,    // ≥95% bilateral
+    spd_lsi: 110,
+    rsi: 65,
+    ache: 3,
+    ag_ant: 76,
+    rom_diff: 5,     // essentially symmetric
+    label: 'June Gate — Full Clearance'
+  },
+  baseline: { label: 'Baseline — No Gate Criteria Applied' },
+  interim:  { label: 'Interim Assessment' }
+};
+
+// ─────────────────────────────────────────
+// SECTION TOGGLE
+// ─────────────────────────────────────────
+function toggleSection(id){
+  document.getElementById(id).classList.toggle('collapsed');
+}
+
+// ─────────────────────────────────────────
+// LSI CALCULATIONS
+// ─────────────────────────────────────────
+function calcLSI(idL, idR, badgeId, threshold, higherBetter){
+  const L = parseFloat(document.getElementById(idL).value);
+  const R = parseFloat(document.getElementById(idR).value);
+  const badge = document.getElementById(badgeId);
+  if(isNaN(L) || isNaN(R) || L === 0){ badge.textContent = '—'; badge.className = 'lsi-badge'; return null; }
+  const lsi = higherBetter ? (R/L*100) : (L/R*100); // for distance: R/L; for speed: uninv/inv
+  badge.textContent = lsi.toFixed(1) + '%';
+  if(higherBetter){
+    badge.className = 'lsi-badge ' + (lsi >= threshold ? 'ok' : lsi >= threshold-5 ? 'warn' : 'bad');
+  } else {
+    badge.className = 'lsi-badge ' + (lsi <= threshold ? 'ok' : lsi <= threshold+5 ? 'warn' : 'bad');
+  }
+  updateVerdict();
+  return lsi;
+}
+
+function calcSpeedLSI(idL, idR, badgeId){
+  // speed: lower = better; LSI = (uninv/inv)*100; goal ≤110%
+  const L = parseFloat(document.getElementById(idL).value);
+  const R = parseFloat(document.getElementById(idR).value);
+  const badge = document.getElementById(badgeId);
+  if(isNaN(L) || isNaN(R) || R === 0){ badge.textContent = '—'; badge.className = 'lsi-badge'; return null; }
+  const lsi = L/R*100;
+  badge.textContent = lsi.toFixed(1) + '%';
+  badge.className = 'lsi-badge ' + (lsi <= 110 ? 'ok' : lsi <= 115 ? 'warn' : 'bad');
+  updateVerdict();
+  return lsi;
+}
+
+function calcDistLSI(){
+  // composite: average of single, triple, crossover
+  const singles  = calcLSI('h-single-l','h-single-r','lsi-single',90,true);
+  const triples  = calcLSI('h-triple-l','h-triple-r','lsi-triple',90,true);
+  const crosses  = calcLSI('h-cross-l','h-cross-r','lsi-crossover',90,true);
+  const vals = [singles, triples, crosses].filter(v => v !== null);
+  if(!vals.length) return;
+  const composite = vals.reduce((a,b) => a+b, 0) / vals.length;
+  const el = document.getElementById('h-dist-lsi');
+  if(!el.dataset.manual) el.value = composite.toFixed(1);
+  updateVerdict();
+}
+
+function calcRomDiff(){
+  const L = parseFloat(document.getElementById('b-rom-l').value);
+  const R = parseFloat(document.getElementById('b-rom-r').value);
+  const badge = document.getElementById('lsi-rom');
+  if(isNaN(L) || isNaN(R)){ badge.textContent = '—'; badge.className = 'lsi-badge'; return; }
+  const diff = L - R;
+  badge.textContent = diff.toFixed(1) + '°Δ';
+  badge.className = 'lsi-badge ' + (diff <= 5 ? 'ok' : diff <= 9 ? 'warn' : 'bad');
+  updateVerdict();
+}
+
+function calcAgAnt(){
+  const extL = parseFloat(document.getElementById('b-pt-ext-l').value);
+  const extR = parseFloat(document.getElementById('b-pt-ext-r').value);
+  const flxL = parseFloat(document.getElementById('b-pt-flex-l').value);
+  const flxR = parseFloat(document.getElementById('b-pt-flex-r').value);
+  if(!isNaN(flxL) && !isNaN(extL) && extL > 0){
+    document.getElementById('b-agant-l').value = (flxL/extL*100).toFixed(1);
+  }
+  if(!isNaN(flxR) && !isNaN(extR) && extR > 0){
+    document.getElementById('b-agant-r').value = (flxR/extR*100).toFixed(1);
+  }
+  updateVerdict();
+}
+
+function flagAccel(){
+  const r = parseFloat(document.getElementById('b-accel-r').value);
+  const el = document.getElementById('b-accel-r');
+  if(isNaN(r)){ el.className = 'field-input'; return; }
+  el.className = 'field-input ' + (r <= 60 ? 'flag-ok' : r <= 75 ? 'flag-warn' : 'flag-bad');
+}
+
+function autoRSI(){
+  const raw = parseFloat(document.getElementById('f-rsi-raw').value);
+  if(!isNaN(raw) && raw >= 0 && raw <= 120){
+    document.getElementById('f-rsi').value = (raw/120*100).toFixed(1);
+    updateVerdict();
+  }
+}
+
+// ─────────────────────────────────────────
+// VERDICT ENGINE
+// ─────────────────────────────────────────
+function updateVerdict(){
+  const gate = document.getElementById('f-gate').value;
+  const thresholds = GATES[gate];
+
+  const distLSI  = parseFloat(document.getElementById('h-dist-lsi').value);
+  const spdLSI   = parseFloat(document.getElementById('h-spd-lsi').value);
+  const rsi      = parseFloat(document.getElementById('f-rsi').value);
+  const ache     = parseFloat(document.getElementById('f-ache').value);
+  const agAntL   = parseFloat(document.getElementById('b-agant-l').value);
+  const agAntR   = parseFloat(document.getElementById('b-agant-r').value);
+  const romL     = parseFloat(document.getElementById('b-rom-l').value);
+  const romR     = parseFloat(document.getElementById('b-rom-r').value);
+  const romDiff  = (!isNaN(romL) && !isNaN(romR)) ? romL - romR : NaN;
+  const override = document.getElementById('override-toggle').checked;
+
+  // Override field visibility
+  document.getElementById('override-note-field').style.display = override ? 'block' : 'none';
+
+  if(gate === 'baseline' || gate === 'interim'){
+    document.getElementById('verdict-grid').innerHTML = '';
+    const box = document.getElementById('gate-verdict-box');
+    box.className = 'gate-verdict';
+    box.textContent = thresholds.label + ' — no pass/fail criteria applied.';
+    return;
+  }
+
+  const criteria = [];
+
+  // Distance LSI
+  if(!isNaN(distLSI)){
+    criteria.push({
+      key:'Hop Distance LSI',
+      val: distLSI.toFixed(1)+'%',
+      pass: distLSI >= thresholds.dist_lsi,
+      threshold: '≥'+thresholds.dist_lsi+'%'
+    });
+  }
+
+  // Speed LSI
+  if(!isNaN(spdLSI)){
+    criteria.push({
+      key:'Hop Speed LSI',
+      val: spdLSI.toFixed(1)+'%',
+      pass: spdLSI <= thresholds.spd_lsi,
+      threshold: '≤'+thresholds.spd_lsi+'%'
+    });
+  }
+
+  // ACL-RSI
+  if(!isNaN(rsi)){
+    criteria.push({
+      key:'ACL-RSI',
+      val: rsi.toFixed(1),
+      pass: rsi >= thresholds.rsi,
+      threshold: '≥'+thresholds.rsi
+    });
+  }
+
+  // Anterior ache
+  if(!isNaN(ache)){
+    criteria.push({
+      key:'Anterior Ache',
+      val: ache+'/10',
+      pass: ache < thresholds.ache,
+      threshold: '<'+thresholds.ache+'/10'
+    });
+  }
+
+  // Ag/Ant (advisory — not hard gate)
+  if(!isNaN(agAntL) || !isNaN(agAntR)){
+    const agantVal = !isNaN(agAntR) ? agAntR : agAntL;
+    criteria.push({
+      key:'Ag/Ant Ratio (R)',
+      val: agantVal.toFixed(1)+'%',
+      pass: agantVal >= thresholds.ag_ant,
+      threshold: '≥'+thresholds.ag_ant+'%',
+      advisory: true
+    });
+  }
+
+  // ROM diff
+  if(!isNaN(romDiff)){
+    criteria.push({
+      key:'ROM Gap',
+      val: romDiff.toFixed(1)+'°',
+      pass: romDiff <= thresholds.rom_diff,
+      threshold: '≤'+thresholds.rom_diff+'°'
+    });
+  }
+
+  // June-only: 5v5, weight, hesitation
+  if(gate === 'june'){
+    const fiveV5 = document.getElementById('f-5v5').value;
+    if(fiveV5) criteria.push({ key:'5v5 ×3 Sessions', val:fiveV5, pass:fiveV5==='yes', threshold:'Yes' });
+
+    const weight = document.getElementById('f-weight').value;
+    if(weight) criteria.push({ key:'Playing Weight', val:weight, pass:weight==='yes', threshold:'Within 2–3 lb' });
+
+    const hesitation = document.getElementById('f-hesitation').value;
+    if(hesitation) criteria.push({ key:'1v1 Hesitation', val:hesitation, pass:hesitation==='none', threshold:'None' });
+
+    const postAche = document.getElementById('f-postache').value;
+    if(postAche) criteria.push({ key:'Post-session Ache >3hr', val:postAche, pass:postAche==='no', threshold:'No' });
+  }
+
+  // Render verdict grid
+  const grid = document.getElementById('verdict-grid');
+  grid.innerHTML = criteria.map(c => {
+    let cls = c.advisory ? 'warn' : (c.pass ? 'pass' : 'fail');
+    const icon = c.advisory ? '◎' : (c.pass ? '✓' : '✗');
+    return `<div class="verdict-item">
+      <span class="verdict-key">${c.key}<br><span style="color:var(--dim)">${c.threshold}</span></span>
+      <span class="verdict-val ${cls}">${icon} ${c.textContent || c.val}</span>
+    </div>`;
+  }).join('');
+
+  // Hard criteria only (exclude advisory)
+  const hardCriteria = criteria.filter(c => !c.advisory);
+  const allPass = hardCriteria.length > 0 && hardCriteria.every(c => c.pass);
+  const anyData = criteria.length > 0;
+
+  const box = document.getElementById('gate-verdict-box');
+
+  if(!anyData){
+    box.className = 'gate-verdict';
+    box.innerHTML = 'Enter assessment data above to generate verdict.';
+    return;
+  }
+
+  const failedItems = hardCriteria.filter(c => !c.pass).map(c => c.key);
+
+  if(override){
+    box.className = 'gate-verdict pass';
+    box.innerHTML = `<strong>CLEARED — Manual Override</strong>${thresholds.label} · Trainer/physio sign-off applied.`;
+  } else if(allPass){
+    box.className = 'gate-verdict pass';
+    box.innerHTML = `<strong>CLEARED ✓</strong>${thresholds.label} — All criteria met. Proceed to next phase.`;
+  } else if(hardCriteria.length === 0){
+    box.className = 'gate-verdict';
+    box.innerHTML = 'Awaiting hard-criteria data.';
+  } else {
+    box.className = 'gate-verdict fail';
+    box.innerHTML = `<strong>NOT CLEARED ✗</strong>${thresholds.label} — Not yet. Criteria outstanding: ${failedItems.join(', ')}.`;
+  }
+}
+
+// ─────────────────────────────────────────
+// SAVE
+// ─────────────────────────────────────────
+function gv(id){ return document.getElementById(id).value.trim() || null; }
+function gn(id){ const v = parseFloat(document.getElementById(id).value); return isNaN(v) ? null : v; }
+
+async function saveAssessment(){
+  const btn = document.getElementById('save-btn');
+  btn.textContent = '↻ Saving…'; btn.disabled = true;
+
+  const gate       = gv('f-gate');
+  const date       = gv('f-date') || todayStr();
+  const gateLabel  = GATES[gate]?.label || gate;
+  const override   = document.getElementById('override-toggle').checked;
+
+  const payload = {
+    athlete_id:       'yari',
+    assessment_date:  date,
+    week_number:      gn('f-week'),
+    gate,
+    clinician:        gv('f-clinician'),
+    location:         gv('f-location'),
+    // Biodex
+    quad_deficit_pct:    gn('b-quad-def'),
+    ag_ant_ratio_left:   gn('b-agant-l'),
+    ag_ant_ratio_right:  gn('b-agant-r'),
+    rom_left:            gn('b-rom-l'),
+    rom_right:           gn('b-rom-r'),
+    accel_time_left:     gn('b-accel-l'),
+    accel_time_right:    gn('b-accel-r'),
+    pt_ext_left:         gn('b-pt-ext-l'),
+    pt_ext_right:        gn('b-pt-ext-r'),
+    pt_flex_left:        gn('b-pt-flex-l'),
+    pt_flex_right:       gn('b-pt-flex-r'),
+    // Hop
+    single_hop_l:        gn('h-single-l'),
+    single_hop_r:        gn('h-single-r'),
+    triple_hop_l:        gn('h-triple-l'),
+    triple_hop_r:        gn('h-triple-r'),
+    crossover_hop_l:     gn('h-cross-l'),
+    crossover_hop_r:     gn('h-cross-r'),
+    distance_lsi:        gn('h-dist-lsi'),
+    forward_hop_l:       gn('h-fwd-l'),
+    forward_hop_r:       gn('h-fwd-r'),
+    crossover_speed_l:   gn('h-cross-spd-l'),
+    crossover_speed_r:   gn('h-cross-spd-r'),
+    figure8_l:           gn('h-fig8-l'),
+    figure8_r:           gn('h-fig8-r'),
+    side_hop_l:          gn('h-side-l'),
+    side_hop_r:          gn('h-side-r'),
+    speed_lsi:           gn('h-spd-lsi'),
+    clinician_hop_rating:gv('h-clinician-rating'),
+    // RSI
+    acl_rsi_score:       gn('f-rsi'),
+    rsi_emotion:         gn('f-rsi-emotion'),
+    rsi_confidence:      gn('f-rsi-confidence'),
+    rsi_risk:            gn('f-rsi-risk'),
+    // Functional
+    anterior_ache:       gn('f-ache'),
+    fivev5_complete:     gv('f-5v5'),
+    playing_weight_ok:   gv('f-weight'),
+    contact_hesitation:  gv('f-hesitation'),
+    body_weight_lb:      gn('f-bw'),
+    postache_3hr:        gv('f-postache'),
+    // Notes
+    clinician_notes:     gv('f-notes-clinician'),
+    trainer_notes:       gv('f-notes-trainer'),
+    // Verdict
+    override_applied:    override,
+    override_note:       gv('f-override-note'),
+    cleared:             override || (document.getElementById('gate-verdict-box').className.includes('pass') && !document.getElementById('gate-verdict-box').className.includes('fail'))
+  };
+
+  try {
+    await sbFetch('/rest/v1/assessment_logs', {
+      method: 'POST', prefer: 'return=minimal',
+      body: JSON.stringify(payload)
+    });
+    showFeedback('Saved to Supabase ✓', 'ok');
+    loadHistory();
+  } catch(e){
+    // Table may not exist yet — show SQL
+    showFeedback('Save failed — see console', 'err');
+    console.error('Save error:', e.message);
+    console.log('If table is missing, run the CREATE TABLE SQL shown in the page source comments.');
+  }
+
+  btn.textContent = 'Save Assessment'; btn.disabled = false;
+}
+
+function showFeedback(msg, cls){
+  const el = document.getElementById('save-feedback');
+  el.textContent = msg;
+  el.className = 'save-feedback show ' + cls;
+  setTimeout(() => { el.className = 'save-feedback'; }, 3200);
+}
+
+function todayStr(){
+  const d = new Date();
+  return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+}
+
+// ─────────────────────────────────────────
+// HISTORY
+// ─────────────────────────────────────────
+async function loadHistory(){
+  const container = document.getElementById('history-container');
+  container.innerHTML = '<div class="no-history"><span class="spinner"></span>Loading…</div>';
+  try {
+    const rows = await sbFetch('/rest/v1/assessment_logs?athlete_id=eq.yari&order=assessment_date.desc&select=*');
+    if(!rows.length){
+      container.innerHTML = '<div class="no-history">No assessments on record yet.</div>';
+      return;
+    }
+    container.innerHTML = rows.map(r => {
+      const metrics = [];
+      if(r.distance_lsi != null) metrics.push(`Dist LSI <span>${r.distance_lsi}%</span>`);
+      if(r.speed_lsi != null)    metrics.push(`Spd LSI <span>${r.speed_lsi}%</span>`);
+      if(r.acl_rsi_score != null) metrics.push(`RSI <span>${r.acl_rsi_score}</span>`);
+      if(r.rom_right != null && r.rom_left != null) metrics.push(`ROM Δ <span>${(r.rom_left - r.rom_right).toFixed(1)}°</span>`);
+      if(r.ag_ant_ratio_right != null) metrics.push(`Ag/Ant R <span>${r.ag_ant_ratio_right}%</span>`);
+      if(r.anterior_ache != null) metrics.push(`Ache <span>${r.anterior_ache}/10</span>`);
+      const clearedText = r.cleared ? '✓ Cleared' : (r.cleared === false ? '✗ Not cleared' : '—');
+      const clearedColor = r.cleared ? 'color:var(--green)' : (r.cleared === false ? 'color:var(--red)' : '');
+      return `<div class="history-card">
+        <div class="history-card-header">
+          <span class="history-date">${r.assessment_date || '—'}</span>
+          <span class="history-gate">${r.gate || '—'} · Wk ${r.week_number || '?'} · <span style="${clearedColor}">${clearedText}</span></span>
+        </div>
+        <div class="history-metrics">
+          ${metrics.map(m => `<span class="h-metric">${m}</span>`).join('')}
+        </div>
+        ${r.clinician_notes ? `<div style="font-size:0.75rem;color:var(--muted);margin-top:0.4rem;font-style:italic">${r.clinician_notes.substring(0,120)}${r.clinician_notes.length>120?'…':''}</div>` : ''}
+      </div>`;
+    }).join('');
+  } catch(e){
+    container.innerHTML = '<div class="no-history">Could not load history — table may not exist yet.</div>';
+  }
+}
+
+// ─────────────────────────────────────────
+// INIT
+// ─────────────────────────────────────────
+document.getElementById('f-date').value = todayStr();
+updateVerdict();
+loadHistory();
+</script>
+
+<!--
+CREATE TABLE assessment_logs (
+  id                  uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  athlete_id          text NOT NULL,
+  assessment_date     date,
+  week_number         integer,
+  gate                text,
+  clinician           text,
+  location            text,
+  quad_deficit_pct    numeric,
+  ag_ant_ratio_left   numeric,
+  ag_ant_ratio_right  numeric,
+  rom_left            numeric,
+  rom_right           numeric,
+  accel_time_left     integer,
+  accel_time_right    integer,
+  pt_ext_left         numeric,
+  pt_ext_right        numeric,
+  pt_flex_left        numeric,
+  pt_flex_right       numeric,
+  single_hop_l        numeric,
+  single_hop_r        numeric,
+  triple_hop_l        numeric,
+  triple_hop_r        numeric,
+  crossover_hop_l     numeric,
+  crossover_hop_r     numeric,
+  distance_lsi        numeric,
+  forward_hop_l       numeric,
+  forward_hop_r       numeric,
+  crossover_speed_l   numeric,
+  crossover_speed_r   numeric,
+  figure8_l           numeric,
+  figure8_r           numeric,
+  side_hop_l          numeric,
+  side_hop_r          numeric,
+  speed_lsi           numeric,
+  clinician_hop_rating text,
+  acl_rsi_score       numeric,
+  rsi_emotion         numeric,
+  rsi_confidence      numeric,
+  rsi_risk            numeric,
+  anterior_ache       integer,
+  fivev5_complete     text,
+  playing_weight_ok   text,
+  contact_hesitation  text,
+  body_weight_lb      numeric,
+  postache_3hr        text,
+  clinician_notes     text,
+  trainer_notes       text,
+  override_applied    boolean DEFAULT false,
+  override_note       text,
+  cleared             boolean,
+  created_at          timestamptz DEFAULT now()
+);
+
+-- RLS
+ALTER TABLE assessment_logs ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "athlete_ids_only" ON assessment_logs
+  FOR ALL USING (athlete_id IN ('patrick','shaylan','cadence','yari','rosanne'));
+-->
+
+</body>
+</html>
