@@ -858,7 +858,11 @@ const SUPA_URL = 'https://jedsnurnnwmpcbdvtlbs.supabase.co';
 const SUPA_KEY = 'sb_publishable_3WGolnM5dOK88Y4WdKCFGA_Hi6wj-_z';
 
 function sbFetch(path, opts = {}){
-  const headers = { 'apikey': SUPA_KEY, 'Content-Type': 'application/json' };
+  const headers = {
+    'apikey': SUPA_KEY,
+    'Authorization': 'Bearer ' + SUPA_KEY,
+    'Content-Type': 'application/json'
+  };
   if(opts.prefer) headers['Prefer'] = opts.prefer;
   return fetch(SUPA_URL + path, {
     method: opts.method || 'GET', headers, body: opts.body || undefined,
