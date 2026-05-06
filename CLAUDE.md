@@ -218,6 +218,24 @@ Examples:
 - `Periodization v2: fix Library links to absolute URL v4.1`
 - `CLAUDE.md: update to April 2026 state`
 
+### Session Orientation — run this first
+At the start of any session, run `git log --oneline -20` to see recent commits before accepting Patrick's verbal description of what's changed. Patrick's descriptions are directionally accurate but may omit details — the commit log is ground truth. Cross-reference against the File Inventory above to catch version drift.
+
+```bash
+git -C "C:/Users/padra/Documents/GitHub/sjr-system" log --oneline -20
+```
+
+### Recent Commit Log (May 2026)
+| Hash | Message |
+|------|---------|
+| e6e1e7d | Patrick v5.6: Mon sled → Matrix treadmill · 90/90 removed · Built from Broken additions (thoracic ext, femoral nerve floss, couch stretch) in MOBILITY_LIGHT |
+| (pending push) | CLAUDE.md + Shaylan/Cadence v3.1: research pipeline · shin health block · v5.6 file state |
+| d5f0e2f | Yari v2.2: split squat iso hold + toe progression + supine hamstring pulses — W6 deload intro, Phase 3 ramp |
+| (pending push) | Yari Assessment v1.1: delete button on history cards · remove debug logs |
+| (pending push) | Yari Assessment v1: fix sbFetch — remove Authorization:Bearer, align with working guides |
+
+*Note: "pending push" commits are staged locally — Patrick pushes via GitHub Desktop. Update hashes here after push if significant for future reference.*
+
 ## Security Audit — Status (updated 2026-04-16)
 
 Full audit report: `SJR_Security_Audit_20260416.md` (in repo root)

@@ -867,8 +867,6 @@ function sbFetch(path, opts = {}){
     method: opts.method || 'GET', headers, body: opts.body || undefined,
   }).then(async res => {
     const bodyText = await res.text();
-    console.log('Supabase response status:', res.status);
-    console.log('Supabase response body:', bodyText);
     if(!res.ok) return Promise.reject(new Error(res.status + ': ' + bodyText));
     if(res.status === 204 || !bodyText) return [];
     try { return JSON.parse(bodyText); }
@@ -1276,6 +1274,9 @@ async function loadHistory(){
           ${metrics.map(m => `<span class="h-metric">${m}</span>`).join('')}
         </div>
         ${r.clinician_notes ? `<div style="font-size:0.75rem;color:var(--muted);margin-top:0.4rem;font-style:italic">${r.clinician_notes.substring(0,120)}${r.clinician_notes.length>120?'…':''}</div>` : ''}
+        <div style="margin-top:0.5rem;text-align:right">
+          <button onclick="deleteAssessment('${r.id}', this)" style="font-size:0.7rem;padding:0.2rem 0.6rem;background:transparent;border:1px solid rgba(255,255,255,0.15);border-radius:4px;color:var(--muted);cursor:pointer">✕ Delete</button>
+        </div>
       </div>`;
     }).join('');
   } catch(e){
@@ -1283,6 +1284,41 @@ async function loadHistory(){
   }
 }
 
+
+// ─────────────────────────────────────────
+// DELETE
+// ─────────────────────────────────────────
+const _deleteTimers = {};
+function deleteAssessment(id, btn){
+  if(btn.dataset.confirming === 'yes'){
+    clearTimeout(_deleteTimers[id]);
+    btn.textContent = '↻';
+    btn.disabled = true;
+    sbFetch('/rest/v1/assessment_logs?id=eq.' + id, {
+      method: 'DELETE', prefer: 'return=minimal'
+    }).then(() => {
+      showFeedback('Record deleted', 'ok');
+      loadHistory();
+    }).catch(e => {
+      showFeedback('Delete failed — check RLS policy allows DELETE for anon', 'err');
+      console.error('Delete error:', e.message);
+      btn.textContent = '✕ Delete';
+      btn.disabled = false;
+      delete btn.dataset.confirming;
+    });
+  } else {
+    btn.dataset.confirming = 'yes';
+    btn.textContent = 'Confirm?';
+    btn.style.background = 'rgba(220,50,50,0.18)';
+    btn.style.color = '#e07070';
+    _deleteTimers[id] = setTimeout(() => {
+      btn.textContent = '✕ Delete';
+      btn.style.background = '';
+      btn.style.color = '';
+      delete btn.dataset.confirming;
+    }, 3000);
+  }
+}
 // ─────────────────────────────────────────
 // INIT
 // ─────────────────────────────────────────
