@@ -866,10 +866,14 @@ function sbFetch(path, opts = {}){
   if(opts.prefer) headers['Prefer'] = opts.prefer;
   return fetch(SUPA_URL + path, {
     method: opts.method || 'GET', headers, body: opts.body || undefined,
-  }).then(res => {
-    if(!res.ok) return res.text().then(t => Promise.reject(new Error(res.status + ': ' + t)));
-    if(res.status === 204) return [];
-    return res.json();
+  }).then(async res => {
+    const bodyText = await res.text();
+    console.log('Supabase response status:', res.status);
+    console.log('Supabase response body:', bodyText);
+    if(!res.ok) return Promise.reject(new Error(res.status + ': ' + bodyText));
+    if(res.status === 204 || !bodyText) return [];
+    try { return JSON.parse(bodyText); }
+    catch(e) { return []; }
   });
 }
 
