@@ -327,6 +327,28 @@ These are areas where evidence is evolving or where deeper review may update cur
 - **Optimal cuff pressure for hypertrophy vs. pain management**: Loenneke's pressure recommendations. Elastic bands (current use with Yari) vs. pneumatic cuffs — pressure equivalence data limited.
 - **BFR and bone density**: Emerging evidence on BFR + impact for bone adaptation. Relevant for Cadence/Shaylan shin load intolerance.
 
+#### Multi-Planar Work — Mobility & Strength at End-of-Range ★ Priority
+This is an identified gap across the entire system. Most current programming is sagittal-dominant. Two distinct problems to solve:
+
+**1. Multi-planar mobility** — joint access to frontal and transverse plane ranges under load, not just passive end-range.
+**2. Strength at end-of-range** — Spina's PAILs/RAILs framework. The gap between passive ROM and active (loaded) ROM is the injury zone. Closing it requires isometric contractions *at* end range, not through mid-range.
+
+Athlete-specific applications:
+- **Patrick**: Thoracic transverse plane (already started — Quadruped Thoracic Rotation). Next layer: active thoracic rotation strength (not just passive). Frontal plane hip loading (lateral lunge, lateral step-up) to reduce spinal load via hip abductor recruitment. Avoid lumbar rotation end-range loading near the stenotic foramen.
+- **Yari**: Frontal plane is the ACL protection plane — valgus is a frontal/transverse event. Deliberate frontal plane single-leg strength (lateral squat hold, frontal plane RDL) as a proactive layer beyond reactive perturbation work.
+- **Shaylan/Cadence**: Penultimate LJ step is a frontal plane loading event. Triplanar ankle loading (inversion bias already in — extend to eversion and transverse plane). Multi-directional calf progressions.
+
+Research to dig into:
+- **Spina — PAILs/RAILs protocols**: Joint-specific strength at end-of-range. Hip and thoracic spine are the priority joints for this system. How much intensity, how much time under tension, frequency relative to other work?
+- **Sahrmann — directional loading specificity**: Loading direction determines adaptation direction. The scientific basis for why sagittal-only training leaves frontal/transverse plane gaps. Movement Impairment Syndromes — relevant to Patrick's lumbar pattern and Yari's valgus tendency.
+- **Gary Gray — Applied Functional Science (AFS)**: Triplanar loading as the foundation for functional strength. Chain reaction biomechanics — how foot pronation drives tibial IR drives femoral IR drives hip mechanics. Relevant to both spinal rehab and ACL protection.
+- **Craig Liebenson**: Functional rehabilitation, multi-planar movement assessment, integration of mobility and stability in the same movement.
+- **Active vs. passive ROM gap as injury predictor**: Is there published data on the size of the passive-active ROM gap predicting injury risk? Spina's clinical claim vs. what's in the literature.
+- **Hip CARs in athletic populations**: Controlled Articular Rotations as daily joint health practice — what's the evidence base, what frequency, and does it transfer to athletic performance?
+- **Frontal plane loading and lumbar spinal stenosis**: Any contraindication data? Lateral lunge creates frontal plane hip load but may also create some lateral lumbar shear — need to review before programming for Patrick.
+
+*Implementation note: When ready to build, add a multi-planar mobility block to MOBILITY_LIGHT and a PAILs/RAILs end-range block to appropriate gym sessions. Start with hip and thoracic spine — highest return for all athletes.*
+
 ### Key Journals to Monitor
 - British Journal of Sports Medicine (BJSM) — tendinopathy, ACL, return to sport
 - Journal of Strength and Conditioning Research (JSCR) — periodization, load management
