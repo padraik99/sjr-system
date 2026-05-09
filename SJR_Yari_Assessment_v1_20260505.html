@@ -697,32 +697,69 @@ main { max-width:860px; margin:0 auto; padding:1.5rem; }
       <span class="section-toggle">▾</span>
     </div>
     <div class="section-body">
+
+      <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:0.85rem 1rem;margin-bottom:1rem;font-size:0.78rem;color:var(--muted);line-height:1.6">
+        <strong style="color:var(--fg);display:block;margin-bottom:0.3rem">For Yari to complete privately</strong>
+        Rate each statement 0–10 where <strong>0 = not at all</strong> and <strong>10 = completely</strong>. Answer honestly — scores influence return-to-play decisions. There are no right or wrong answers. · Webster et al. (2008) · Ardern et al. (2013)
+      </div>
+
+      <div class="divider-label">Emotions (Q1–4)</div>
+      <div class="form-grid form-grid-2">
+        <div class="field"><label class="field-label">1. I am scared of re-injuring my knee.</label>
+          <input class="field-input rsi-q" type="number" min="0" max="10" step="1" placeholder="0–10" oninput="calcRSI()"></div>
+        <div class="field"><label class="field-label">2. I am frustrated because I have to limit my sport due to my knee.</label>
+          <input class="field-input rsi-q" type="number" min="0" max="10" step="1" placeholder="0–10" oninput="calcRSI()"></div>
+        <div class="field"><label class="field-label">3. I feel miserable because of my knee injury.</label>
+          <input class="field-input rsi-q" type="number" min="0" max="10" step="1" placeholder="0–10" oninput="calcRSI()"></div>
+        <div class="field"><label class="field-label">4. I am anxious about my knee performing well in sport.</label>
+          <input class="field-input rsi-q" type="number" min="0" max="10" step="1" placeholder="0–10" oninput="calcRSI()"></div>
+      </div>
+
+      <div class="divider-label">Confidence in Performance (Q5–8)</div>
+      <div class="form-grid form-grid-2">
+        <div class="field"><label class="field-label">5. I am confident I can perform at my previous level of sport.</label>
+          <input class="field-input rsi-q" type="number" min="0" max="10" step="1" placeholder="0–10" oninput="calcRSI()"></div>
+        <div class="field"><label class="field-label">6. I am confident my knee will not give way when I play sport.</label>
+          <input class="field-input rsi-q" type="number" min="0" max="10" step="1" placeholder="0–10" oninput="calcRSI()"></div>
+        <div class="field"><label class="field-label">7. I am able to play sport without concern for my knee.</label>
+          <input class="field-input rsi-q" type="number" min="0" max="10" step="1" placeholder="0–10" oninput="calcRSI()"></div>
+        <div class="field"><label class="field-label">8. I am confident about meeting the physical demands of my sport.</label>
+          <input class="field-input rsi-q" type="number" min="0" max="10" step="1" placeholder="0–10" oninput="calcRSI()"></div>
+      </div>
+
+      <div class="divider-label">Risk Appraisal (Q9–12)</div>
+      <div class="form-grid form-grid-2">
+        <div class="field"><label class="field-label">9. I think I am likely to re-injure my knee.</label>
+          <input class="field-input rsi-q" type="number" min="0" max="10" step="1" placeholder="0–10" oninput="calcRSI()"></div>
+        <div class="field"><label class="field-label">10. I am afraid of accidentally injuring my knee.</label>
+          <input class="field-input rsi-q" type="number" min="0" max="10" step="1" placeholder="0–10" oninput="calcRSI()"></div>
+        <div class="field"><label class="field-label">11. I am worried about performing poorly when I return to sport.</label>
+          <input class="field-input rsi-q" type="number" min="0" max="10" step="1" placeholder="0–10" oninput="calcRSI()"></div>
+        <div class="field"><label class="field-label">12. I am afraid I will hurt my knee when I return to sport.</label>
+          <input class="field-input rsi-q" type="number" min="0" max="10" step="1" placeholder="0–10" oninput="calcRSI()"></div>
+      </div>
+
+      <div class="divider-label">Calculated Score</div>
       <div class="form-grid form-grid-2" style="margin-bottom:0.75rem">
         <div class="field">
           <label class="field-label">ACL-RSI Score (0–100)</label>
-          <input class="field-input" type="number" id="f-rsi" min="0" max="100" step="0.1" placeholder="threshold ≥65" oninput="updateVerdict()">
-          <div class="field-sublabel">Sum ÷ 120 × 100 · Ardern et al. 2013</div>
+          <input class="field-input" type="number" id="f-rsi" min="0" max="100" step="0.1" placeholder="auto-fills from Q1–12" oninput="updateVerdict()">
+          <div class="field-sublabel">Sum ÷ 120 × 100 · threshold ≥65 · or enter manually</div>
         </div>
         <div class="field">
           <label class="field-label">Raw Sum (0–120)</label>
-          <input class="field-input" type="number" id="f-rsi-raw" min="0" max="120" placeholder="optional" oninput="autoRSI()">
+          <input class="field-input" type="number" id="f-rsi-raw" min="0" max="120" placeholder="auto-fills from Q1–12" oninput="autoRSI()">
           <div class="field-sublabel">Auto-calculates score above</div>
         </div>
       </div>
-      <div class="divider-label">Domain Breakdown (optional)</div>
+      <div class="divider-label">Domain Breakdown (auto-filled)</div>
       <div class="form-grid form-grid-3">
-        <div class="field">
-          <label class="field-label">Emotion</label>
-          <input class="field-input" type="number" step="0.1" id="f-rsi-emotion" placeholder="0–100">
-        </div>
-        <div class="field">
-          <label class="field-label">Confidence in Performance</label>
-          <input class="field-input" type="number" step="0.1" id="f-rsi-confidence" placeholder="0–100">
-        </div>
-        <div class="field">
-          <label class="field-label">Risk Appraisal</label>
-          <input class="field-input" type="number" step="0.1" id="f-rsi-risk" placeholder="0–100">
-        </div>
+        <div class="field"><label class="field-label">Emotion (Q1–4)</label>
+          <input class="field-input" type="number" step="0.1" id="f-rsi-emotion" placeholder="0–100"></div>
+        <div class="field"><label class="field-label">Confidence (Q5–8)</label>
+          <input class="field-input" type="number" step="0.1" id="f-rsi-confidence" placeholder="0–100"></div>
+        <div class="field"><label class="field-label">Risk Appraisal (Q9–12)</label>
+          <input class="field-input" type="number" step="0.1" id="f-rsi-risk" placeholder="0–100"></div>
       </div>
     </div>
   </div>
@@ -990,6 +1027,24 @@ function autoRSI(){
     document.getElementById('f-rsi').value = (raw/120*100).toFixed(1);
     updateVerdict();
   }
+}
+
+function calcRSI(){
+  const qs = Array.from(document.querySelectorAll('.rsi-q'))
+    .map(el => parseFloat(el.value))
+    .filter(v => !isNaN(v));
+  if(!qs.length) return;
+  const sum = qs.reduce((a,b) => a+b, 0);
+  document.getElementById('f-rsi-raw').value = sum;
+  document.getElementById('f-rsi').value = (sum/120*100).toFixed(1);
+  const allQs = Array.from(document.querySelectorAll('.rsi-q')).map(el => parseFloat(el.value)||0);
+  const emo  = allQs.slice(0,4).reduce((a,b)=>a+b,0);
+  const conf = allQs.slice(4,8).reduce((a,b)=>a+b,0);
+  const risk = allQs.slice(8,12).reduce((a,b)=>a+b,0);
+  document.getElementById('f-rsi-emotion').value    = (emo/40*100).toFixed(1);
+  document.getElementById('f-rsi-confidence').value = (conf/40*100).toFixed(1);
+  document.getElementById('f-rsi-risk').value       = (risk/40*100).toFixed(1);
+  updateVerdict();
 }
 
 // ─────────────────────────────────────────
