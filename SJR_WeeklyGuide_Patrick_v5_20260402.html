@@ -872,6 +872,27 @@ const EX_INFO = {
     cue: 'Targets the exact sticky point: hip flexion strength at end range. The psoas and iliacus are both weak AND shortened in L4-L5 stenosis — iso holds at 90°+ build the missing end-range strength. Sit tall — do not slouch into lumbar flexion to compensate.',
     url: 'https://www.youtube.com/results?search_query=seated+hip+flexion+isometric+hold+psoas+iliacus+rehab'
   },
+  // ── MULTI-PLANAR (Spina/FRC) ──
+  'Quadruped Hip CAR': {
+    setup: '5 slow reps each hip. Quadruped position — wrists under shoulders, knees under hips. Go as slow as possible.',
+    cue: 'Controlled Articular Rotation (Spina). Move the femur through a full circle: lift, circle out, back, down. Zero lumbar rotation — pelvis stays absolutely still. The motion is all at the hip joint. Pain-free range only — do not force. Any nerve response = reduce range.',
+    url: 'https://www.youtube.com/results?search_query=quadruped+hip+CAR+controlled+articular+rotation+Spina+FRC'
+  },
+  'Hip PAILs — Flexion End-Range': {
+    setup: '2×10–20s each side. In a seated 90/90 or supine position — move hip to end of flexion range passively, then contract into the end range.',
+    cue: 'PAILs (Progressive Angular Isometric Loading — Spina). At the limit of your hip flexion, contract the hip flexors to push INTO that end range. 20–30% effort first session — this is strong stimulus. Closing the gap between passive and active ROM is the injury prevention mechanism. Never force beyond pain-free range.',
+    url: 'https://www.youtube.com/results?search_query=hip+PAILs+RAILs+flexion+end+range+FRC+Spina'
+  },
+  'Side-Lying Hip Abduction — End-Range ISO Hold': {
+    setup: '2×30s each side. Lie on side, bottom knee slightly bent for stability, top leg straight. Raise top leg to end-range abduction and hold.',
+    cue: 'Frontal plane glute med strength at end-of-range (Ward/Spina). This is NOT a dynamic rep — raise to the top and hold isometrically. The glute med protects the lumbar spine from lateral shear. Keep hips stacked — do not rotate forward or back. Foot slightly internally rotated at top (greater trochanter neutral).',
+    url: 'https://www.youtube.com/results?search_query=side+lying+hip+abduction+isometric+hold+glute+med+end+range'
+  },
+  'VO2 Max Intervals — 4×4': {
+    setup: 'HR monitor required. 4 min work intervals, 3 min active recovery (easy walk/jog) × 4 rounds.',
+    cue: 'Target >90% HRmax on each work interval. Pace should feel very hard — you should not be able to speak in full sentences. Active recovery is walking pace — HR comes down to ~70% before next interval. HR frequently exceeds 160 bpm — this is expected. VO2 max stimulus + aerobic base building together. This is the primary aerobic stimulus replacing forward run intervals.',
+    url: 'https://www.youtube.com/results?search_query=VO2+max+4x4+interval+training+aerobic+capacity+protocol'
+  },
   // ── PERFORMANCE ──
   'A-March': {
     setup: '3–4×20m. Slow, deliberate.',
@@ -894,19 +915,19 @@ const FOOT_YOGA_SHORT = [
   {name:'Ankle Circles + Dorsiflexion', dose:'10 ea direction'},
 ];
 const CANAL_RUN_BLOCK = {
-  label:'Canal Run', cls:'accent', items:[
+  label:'Canal Run — VO2 Max', cls:'accent', items:[
     {name:'Dynamic warmup', dose:'5 min'},
     {name:'Backward jog intervals', note:'warmup role · easy pace', dose:'~0.25 mi'},
-    {name:'Forward run intervals', dose:'0.5 mi × 3–4 · 2 mi total · breaks at each 0.5 · higher knees'},
+    {name:'VO2 Max Intervals — 4×4', note:'HR monitor · target >90% HRmax · HR frequently >160 bpm · aerobic base + VO2 max stimulus', dose:'4 min work / 3 min rest × 4 rounds · ~2 mi total'},
     {name:'Curved run intervals', note:'sharpen curve radius over weeks', dose:'×4–6'},
     {name:'Rock work + eyes-closed balance', note:'post-run proprioception', dose:'3×20s ea'},
   ]
 };
 const CANAL_RUN_SLED = {
-  label:'Canal Run', cls:'accent', items:[
+  label:'Canal Run — VO2 Max', cls:'accent', items:[
     {name:'Dynamic warmup', dose:'5 min'},
     {name:'Backward jog intervals', note:'warmup role · easy pace', dose:'~0.25 mi'},
-    {name:'Forward run intervals', dose:'0.5 mi × 3–4 · 2 mi total · breaks each 0.5'},
+    {name:'VO2 Max Intervals — 4×4', note:'HR monitor · target >90% HRmax · HR frequently >160 bpm · aerobic base + VO2 max stimulus', dose:'4 min work / 3 min rest × 4 rounds · ~2 mi total'},
     {name:'Curved run intervals', note:'sharpen curve radius', dose:'×3–4'},
     {name:'Rock work + eyes-closed balance', dose:'3×20s ea'},
   ]
@@ -948,6 +969,8 @@ const MOBILITY_LIGHT = {
     {name:'Thoracic Extension — Foam Roller', dose:'2×45s · mid-back · arms crossed · exhale into extension'},
     {name:'Femoral Nerve Floss', dose:'10 reps ea · prone knee bend · L4 territory · stop at nerve symptom'},
     {name:'Couch Stretch — Hip Flexor', dose:'2×45s ea · posterior pelvic tilt · psoas at length'},
+    {name:'Quadruped Hip CAR', note:'Spina · slow full-circle hip rotation · transverse + frontal + sagittal · zero lumbar movement', dose:'5 reps ea · slow controlled'},
+    {name:'Hip PAILs — Flexion End-Range', note:'Spina/FRC · iso contraction AT end of hip flexion range · strength at end-of-range · safe L4-L5 · no lumbar rotation', dose:'2×10–20s ea · build to end-range gently'},
   ]
 };
 const ANKLE_HOPS = {
@@ -960,6 +983,7 @@ const ISO_TENDON = {
   label:'Yielding Iso Block', cls:'accent', items:[
     {name:'Goblet Squat with Iso Hold', dose:'3×10 · 3s pause at bottom'},
     {name:'Seated Hip Flexion Hold', dose:'2×30s ea · end-range strength'},
+    {name:'Side-Lying Hip Abduction — End-Range ISO Hold', note:'frontal plane glute med · hold at top of range · Ward/Spina · safe L4-L5', dose:'2×30s ea · slow raise · hold end-range'},
     {name:'Dead Hang', dose:'3×30s · post-session decompression'},
   ]
 };
@@ -1577,34 +1601,32 @@ const WEEKS = [
           SLED_MAIN,
         ]
       },
-      { name:'Friday', type:'A', intent:'Strength — Light', sub:'Gym. Same as Monday. Autoregulate — back still guides.',
+      { name:'Friday', type:'C', intent:'Recovery — Active Rest', sub:'Mon–Thu load accumulates. Walk only today. No strength, no intervals. Back to gym tomorrow.',
+        collagen:false,
+        blocks:[
+          { label:'Active Recovery', cls:'green', items:[
+            {name:'Easy Walk', dose:'20–30 min · flat ground · conversational pace'},
+            {name:'Cat-Cow', dose:'2×10 slow'},
+            {name:'Supine Figure-4 Stretch', dose:'2×45s ea'},
+            {name:'Child Pose Lateral Reach', dose:'2×30s ea side'},
+          ]},
+        ]
+      },
+      { name:'Saturday', type:'A', intent:'Strength — Third Gym Session', sub:'Third gym session of the week — back and fatigue guide the load. Autoregulate down if needed.',
         collagen:true,
         blocks:[
-          { label:'Foot Yoga', cls:'green', items:[
-            {name:'Heel Rock — Calcaneal Mobility', dose:'2×10 ea'},
-            {name:'Short Foot Exercise', dose:'2×10s ea'},
-            {name:'Toe Spread and Lift', dose:'2×10'},
-          ]},
+          { label:'Foot Yoga', cls:'green', items: FOOT_YOGA_FULL },
           { label:'Main Block', items:[
-            {name:'Trap Bar Deadlift — Elevated Start', note:'3×5 · same as Monday or -5% · autoregulate', dose:'3×5'},
+            {name:'Trap Bar Deadlift — Elevated Start', note:'Match Wednesday or -10% · third session of week · back decides', dose:'3×5'},
             {name:'Step-Up — Weighted', dose:'3×10 ea'},
             {name:'Single-leg glute bridge', note:'bent knee on raised leg', dose:'3×12/side · 3s pause'},
-            {name:'Hip Thrust — Barbell', note:'entering earlier than planned — 45 lbs', dose:'3×10'},
+            {name:'Backward Walk/Jog — Matrix Treadmill', note:'foraminal decompression · 3.5–4.5 mph', dose:'10 min'},
           ]},
           { label:'McGill Core', items:[
             {name:'Bird Dog — Extended Hold', dose:'3×10s ea'},
             {name:'Dead Bug — Contralateral Hold', dose:'3×8 ea'},
           ]},
-        ]
-      },
-      { name:'Saturday', type:'C', intent:'Rest / Walk + Mobility', sub:'No loading. Walk or bike. Slow mobility work.',
-        collagen:false,
-        blocks:[
-          { label:'Optional', cls:'green', items:[
-            {name:'Walking — Extended Duration', dose:'20–30 min easy'},
-            {name:'Stationary Bike — Low Resistance Steady State', dose:'15 min very easy'},
-          ]},
-          MOBILITY_LIGHT,
+          ISO_TENDON,
         ]
       },
       { name:'Sunday', type:'C', intent:'Rest + Mobility', sub:'Full rest. Gabapentin taper — note warmth vs pain. Slow mobility only.',
@@ -1677,30 +1699,32 @@ const WEEKS = [
           SLED_MAIN,
         ]
       },
-      { name:'Friday', type:'A', intent:'Strength', sub:'Gym. Match Monday or autoregulate down.',
+      { name:'Friday', type:'C', intent:'Recovery — Active Rest', sub:'Mon–Thu load accumulates. Walk only today. No strength, no intervals. Back to gym tomorrow.',
+        collagen:false,
+        blocks:[
+          { label:'Active Recovery', cls:'green', items:[
+            {name:'Easy Walk', dose:'20–30 min · flat ground · conversational pace'},
+            {name:'Cat-Cow', dose:'2×10 slow'},
+            {name:'Supine Figure-4 Stretch', dose:'2×45s ea'},
+            {name:'Child Pose Lateral Reach', dose:'2×30s ea side'},
+          ]},
+        ]
+      },
+      { name:'Saturday', type:'A', intent:'Strength — Third Gym Session', sub:'Third gym session of the week — back and fatigue guide the load. Autoregulate down if needed.',
         collagen:true,
         blocks:[
-          { label:'Foot Yoga', cls:'green', items: FOOT_YOGA_SHORT },
+          { label:'Foot Yoga', cls:'green', items: FOOT_YOGA_FULL },
           { label:'Main Block', items:[
-            {name:'Trap Bar Deadlift — Elevated Start', note:'3×5 · same as Monday or -5%', dose:'3×5'},
+            {name:'Trap Bar Deadlift — Elevated Start', note:'Match Wednesday or -10% · third session of week · back decides', dose:'3×5'},
             {name:'Step-Up — Weighted', dose:'3×10 ea'},
-            {name:'Single-leg glute bridge', note:'bent knee on raised leg', dose:'3×12/side'},
-            {name:'Hip Thrust — Barbell', dose:'3×10 · progress from W5'},
+            {name:'Single-leg glute bridge', note:'bent knee on raised leg', dose:'3×12/side · 3s pause'},
+            {name:'Backward Walk/Jog — Matrix Treadmill', note:'foraminal decompression · 3.5–4.5 mph', dose:'10 min'},
           ]},
           { label:'McGill Core', items:[
             {name:'Bird Dog — Extended Hold', dose:'3×10s ea'},
             {name:'Dead Bug — Contralateral Hold', dose:'3×8 ea'},
           ]},
-        ]
-      },
-      { name:'Saturday', type:'C', intent:'Rest / Walk + Mobility', sub:'No loading. Walk or bike. Slow mobility.',
-        collagen:false,
-        blocks:[
-          { label:'Optional', cls:'green', items:[
-            {name:'Walking — Extended Duration', dose:'20–30 min easy'},
-            {name:'Stationary Bike — Low Resistance Steady State', dose:'15 min very easy'},
-          ]},
-          MOBILITY_LIGHT,
+          ISO_TENDON,
         ]
       },
       { name:'Sunday', type:'C', intent:'Rest + Mobility', sub:'Full rest. Slow mobility only.',
@@ -1773,30 +1797,32 @@ const WEEKS = [
           SLED_MAIN,
         ]
       },
-      { name:'Friday', type:'A', intent:'Strength', sub:'Gym. Match Monday.',
+      { name:'Friday', type:'C', intent:'Recovery — Active Rest', sub:'Mon–Thu load accumulates. Walk only today. No strength, no intervals. Back to gym tomorrow.',
+        collagen:false,
+        blocks:[
+          { label:'Active Recovery', cls:'green', items:[
+            {name:'Easy Walk', dose:'20–30 min · flat ground · conversational pace'},
+            {name:'Cat-Cow', dose:'2×10 slow'},
+            {name:'Supine Figure-4 Stretch', dose:'2×45s ea'},
+            {name:'Child Pose Lateral Reach', dose:'2×30s ea side'},
+          ]},
+        ]
+      },
+      { name:'Saturday', type:'A', intent:'Strength — Third Gym Session', sub:'Third gym session of the week — back and fatigue guide the load. Autoregulate down if needed.',
         collagen:true,
         blocks:[
-          { label:'Foot Yoga', cls:'green', items: FOOT_YOGA_SHORT },
+          { label:'Foot Yoga', cls:'green', items: FOOT_YOGA_FULL },
           { label:'Main Block', items:[
-            {name:'Trap Bar Deadlift — Elevated Start', note:'3×5 · match Monday', dose:'3×5'},
+            {name:'Trap Bar Deadlift — Elevated Start', note:'Match Wednesday or -10% · third session of week · back decides', dose:'3×5'},
             {name:'Step-Up — Weighted', dose:'3×10 ea'},
-            {name:'Single-leg glute bridge', note:'bent knee on raised leg', dose:'3×12/side'},
-            {name:'Hip Thrust — Barbell', dose:'3×10 · add load if W6 clean'},
+            {name:'Single-leg glute bridge', note:'bent knee on raised leg', dose:'3×12/side · 3s pause'},
+            {name:'Hip Thrust — Barbell', note:'add load if W6/W7 clean', dose:'3×10'},
           ]},
           { label:'McGill Core', items:[
             {name:'Bird Dog — Extended Hold', dose:'3×10s ea'},
             {name:'Dead Bug — Contralateral Hold', dose:'3×8 ea'},
           ]},
-        ]
-      },
-      { name:'Saturday', type:'C', intent:'Rest / Walk + Mobility', sub:'No loading. Walk or bike. Mobility.',
-        collagen:false,
-        blocks:[
-          { label:'Optional', cls:'green', items:[
-            {name:'Walking — Extended Duration', dose:'20–30 min easy'},
-            {name:'Stationary Bike — Low Resistance Steady State', dose:'15 min very easy'},
-          ]},
-          MOBILITY_LIGHT,
+          ISO_TENDON,
         ]
       },
       { name:'Sunday', type:'C', intent:'Rest + Mobility', sub:'Full rest. Slow mobility only.',

@@ -11,10 +11,10 @@ Workflow: GitHub Desktop — drag new file into local folder (overwrites existin
 **Patrick** — architect, coach, and athlete. Managing L4-L5 spinal rehab (foraminal stenosis).
 Return-to-volleyball target: King of the Court, summer 2026.
 Pain clinic pending: ESI vs radiofrequency ablation — decision gate for Phase 3+.
-Weekly schedule: Mon/Wed/Fri gym · Tue canal + bands + occlusion with Yari · Thu canal + sled (with Yari) · Sat/Sun rest/recovery + MOBILITY_LIGHT.
+Weekly schedule: Mon/Wed/Sat gym · Tue/Thu canal + Yari (4×4 VO2 max intervals, HR monitor) · Fri recovery (walk + relaxing movements only) · Sun rest + MOBILITY_LIGHT.
 Backward work at gym: Matrix treadmill (club) — NOT sled. Sled is canal days only (Tue/Thu).
 90/90 Hip Transition deferred — mobility not yet warranting it. Revisit when range improves.
-Canal distance: 2 miles total (0.5 mi forward intervals × 3–4 with breaks). Pain levels holding ≤4/10. HR frequently >160 bpm — aerobic base building as side effect.
+Canal days (Tue/Thu with Yari): VO2 max 4×4 intervals replacing forward run intervals. 4 min work / 3 min rest × 4 rounds · ~2 mi total · target >90% HRmax. Pain levels holding ≤4/10. HR frequently >160 bpm — aerobic base + VO2 max stimulus.
 
 ## Athletes
 | Athlete | Sport | Injury | Status | Target |
@@ -22,7 +22,7 @@ Canal distance: 2 miles total (0.5 mi forward intervals × 3–4 with breaks). P
 | Patrick | Volleyball | L4-L5 spinal rehab (foraminal stenosis) | Bridge-to-load phase | King of the Court, Summer 2026 |
 | Shaylan | Sprint/Jump (MJC → Berkeley) | Knee rehab + shin splints | Active — comp phase | Conference, State · 11.29 100m PR (top 40 US, all D1 included, May 2026) · 6.08m LJ scratched |
 | Cadence | Sprint/Jump (Cal Poly) | Plantar fascia + shin load intolerance | Active | Commonwealth Games Glasgow, July 2026 |
-| Yari | Soccer (professional) | ACL rehab | Active — own project silo | Return to play |
+| Yari | Soccer (professional) | ACL rehab | Active — Phase 3 · RSA progression underway | Return to Mexico June 9, 2026 · RSA intro W3 · full anaerobic W4 |
 | Rosanne | General fitness | None | On hold — build deferred | — |
 
 ## Supabase
@@ -58,10 +58,10 @@ async async function saveGateLog(){ }  // never stack async keywords
 ## File Inventory (canonical — May 2026)
 | File | Version | Notes |
 |------|---------|-------|
-| `SJR_WeeklyGuide_Patrick_v5_20260402.html` | v5.6 | Supabase · 4-metric pain log · shared canal/iso/mobility constants · W5–W7 Bridge weeks · canal template refactored (forward run primary, backward as warmup) · ISO_TENDON block Mon/Wed · Mon sled → Matrix treadmill · 90/90 removed · MOBILITY_LIGHT updated (thoracic ext, femoral nerve floss, couch stretch) |
-| `shaylan_weekly_v3_20260402.html` | v3.1 | Supabase · expandable EX_INFO panels · SHIN_COMP maintenance block (tib ant/post) added all comp Mondays |
-| `Cadence_Weekly_v3_20260402.html` | v3.1 | Supabase · expandable EX_INFO panels · SHIN_COMP maintenance block added comp Mondays (skip post-meet recovery Mon) · async saveGateLog fixed |
-| `SJR_Yari_Guide_v2_20260414.html` | v2.2 | Supabase-wired · ACL rehab · W6 deload + Phase 3 May Gate · split squat iso hold + toe progression + supine hamstring pulses (pumping the brakes) added all Strength Blocks |
+| `SJR_WeeklyGuide_Patrick_v5_20260402.html` | v5.7 | Supabase · 4-metric pain log · shared canal/iso/mobility constants · W5–W7 Bridge weeks · canal → VO2 max 4×4 intervals · W5–W7 Fri→Recovery, Sat→Gym · ISO_TENDON + Side-Lying Hip Abduction · MOBILITY_LIGHT + Hip CAR + PAILs · EX_INFO entries added |
+| `shaylan_weekly_v3_20260402.html` | v3.2 | Supabase · expandable EX_INFO panels · SHIN_COMP maintenance block · MULTIPLANAR_LOWER (Lateral Lunge + Side-Lying Hip Abduction ISO) added W1+W2 comp Mondays · EX_INFO entries added |
+| `Cadence_Weekly_v3_20260402.html` | v3.2 | Supabase · expandable EX_INFO panels · SHIN_COMP maintenance block · MULTIPLANAR_LOWER (Lateral Lunge + Side-Lying Hip Abduction ISO) added all 3 comp Mondays · EX_INFO entries added |
+| `SJR_Yari_Guide_v2_20260414.html` | v2.3 | Supabase-wired · ACL rehab · W6 deload + Phase 3 May Gate + W3 Aerobic Build + W4 Anaerobic Intro · Side-Lying Hip Abduction ISO + Lateral Step-Up ISO added all Phase 3 Strength Blocks · RSA intro (6×30m 80%) W3 Sat · RSA progression (8×30m 85–90%) W4 Sat · VO2 max 4×4 canal Tue/Thu W3–W4 |
 | `SJR_Library_Master_v4_20260402.html` | v4.1 | 80 cards · quality tags · 6-quality filter · spinal filter UI removed · absolute Browse URLs |
 | `SJR_Dashboard_v2_20260408.html` | v2.2 | All 4 athletes · auto-refresh · injury log · CSV export · **security patch 2026-04-16**: stored XSS fixed (renderInjuryTable → DOM/textContent), input validation added (maxlength + JS guards), e.message innerHTML→textContent, setInterval moved to init · **schema fix 2026-04-21**: injury_logs column `location`→`region` to match athlete guide writes; Yari link updated to v2 |
 | `patrick_protocol_v2_20260402.html` | v2 | Floating This Week button |
@@ -347,7 +347,7 @@ Research to dig into:
 - **Hip CARs in athletic populations**: Controlled Articular Rotations as daily joint health practice — what's the evidence base, what frequency, and does it transfer to athletic performance?
 - **Frontal plane loading and lumbar spinal stenosis**: Any contraindication data? Lateral lunge creates frontal plane hip load but may also create some lateral lumbar shear — need to review before programming for Patrick.
 
-*Implementation note: When ready to build, add a multi-planar mobility block to MOBILITY_LIGHT and a PAILs/RAILs end-range block to appropriate gym sessions. Start with hip and thoracic spine — highest return for all athletes.*
+*Implementation note (May 2026 — partially implemented): Patrick: Hip CAR + PAILs Flexion End-Range added to MOBILITY_LIGHT · Side-Lying Hip Abduction ISO added to ISO_TENDON · EX_INFO entries added. Shaylan/Cadence: MULTIPLANAR_LOWER block (Lateral Lunge + Side-Lying Hip Abduction ISO) added after SHIN_COMP in comp Mondays. Yari: Side-Lying Hip Abduction ISO + Lateral Step-Up ISO Hold added to all Phase 3 Strength Blocks. Remaining: Patrick frontal plane lateral lunge deferred (lateral lumbar shear contraindication review needed). Thoracic transverse plane strength (beyond passive rotation) not yet built.*
 
 ### Key Journals to Monitor
 - British Journal of Sports Medicine (BJSM) — tendinopathy, ACL, return to sport

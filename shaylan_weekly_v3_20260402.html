@@ -897,6 +897,16 @@ const EX_INFO = {
   },
     url: null
   },
+  'Lateral Lunge — Bodyweight': {
+    setup: '2×8 each side. Feet together. Step wide to one side — sit the hips back into the lunge, shin stays vertical, toe points forward. Drive back to start.',
+    cue: 'Ward/Sahrmann frontal plane loading. The hip abductor and adductor are loaded simultaneously on each rep — this is the plane sprinters rarely train. Keep spine tall. The step leg hip drops INTO the stretch (hip-hinge component). Return is driven from the glute. Any hip pinching = reduce depth.',
+    url: 'https://www.youtube.com/results?search_query=lateral+lunge+bodyweight+frontal+plane+hip+mobility+sprint'
+  },
+  'Side-Lying Hip Abduction — End-Range ISO Hold': {
+    setup: '2×30s each side. Side-lying, hips stacked, top leg straight. Raise to end-range and hold isometrically.',
+    cue: 'Spina/Ward frontal plane glute med end-range strength. NOT a dynamic rep — raise to the limit of abduction and hold there. This is strength at end-of-range (closing the passive-active ROM gap). Foot slightly internally rotated at top. Hips stay stacked — no forward tilt. Feels different from standard abduction — that\'s correct.',
+    url: 'https://www.youtube.com/results?search_query=hip+abduction+isometric+hold+end+range+glute+med+strength'
+  },
 };
 
 function getExInfo(name){
@@ -941,6 +951,10 @@ const SHIN_COMP = { label:'Shin Health — Maintenance', items:[
   {name:'Resisted Inversion Hold — Tib Post',    dose:'2×30s ea · band around forefoot · inversion hold'},
   {name:'Single-Leg Calf Raise — Inversion Bias',dose:'2×10 ea · 3s eccentric · slight inversion at top'},
 ]};
+const MULTIPLANAR_LOWER = { label:'Multi-Planar — Frontal + End-Range', items:[
+  {name:'Lateral Lunge — Bodyweight', note:'Ward/Sahrmann · frontal plane hip · ankle/hip mobility · keep spine tall', dose:'2×8 ea · slow · feel hip abductor/adductor tension'},
+  {name:'Side-Lying Hip Abduction — End-Range ISO Hold', note:'Spina/Ward · frontal plane glute med · strength at end-of-range', dose:'2×30s ea · raise to top · hold isometrically'},
+]};
 
 
 // ── Competition day template (reused across weeks)
@@ -974,6 +988,7 @@ const WEEKS = [
             {name:'Single-Leg Glute Bridge', dose:'3×12 ea'},
           ]},
           SHIN_COMP,
+          MULTIPLANAR_LOWER,
           BACKWARD_30,
         ]
       },
@@ -1044,6 +1059,7 @@ const WEEKS = [
             {name:'Single-Leg Glute Bridge', note:'3s pause', dose:'3×12 ea'},
           ]},
           SHIN_COMP,
+          MULTIPLANAR_LOWER,
           BACKWARD_CONTRAST,
         ]
       },

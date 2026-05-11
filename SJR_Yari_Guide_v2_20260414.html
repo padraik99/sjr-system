@@ -878,6 +878,8 @@ const WEEKS = [
   { label:'Phase 2 · Week 5', range:'Apr 13–19', note:'Strength 3×/week · Canal Tue+Thu · Bilateral plyo Sat' },
   { label:'Phase 2 · Week 6 — Deload', range:'Apr 20–26', note:'Volume −30% · load held · good ramp soreness — let tissue consolidate · canal+sled maintained' },
   { label:'Phase 3 · May Gate', range:'Apr 27–May 3', note:'May gate week — hop test re-run, ACL-RSI, full load assessment' },
+  { label:'Phase 3 · Aerobic Build', range:'May 11–17', note:'VO2 max 4×4 Tue+Thu canal · RSA intro Saturday · aerobic ceiling first · anaerobic overlay next week' },
+  { label:'Phase 3 · Anaerobic Intro', range:'May 18–24', note:'RSA 8×30m Sat at 85–90% · VO2 max 4×4 Tue · mixed Tue+Thu canal · June 9 RTP target approaching' },
 ];
 
 // detectCurrentWeek declared AFTER getWeekStart AND AFTER WEEKS (CLAUDE.md spec)
@@ -1354,6 +1356,8 @@ const DAYS_BY_WEEK = [
           {name:'Nordic Curl — Reducing Band Assist',            dose:'3×5 · 5s descent · reduce or remove band'},
           {name:'Single-Leg RDL — Contralateral DB',            dose:'3×8 each · moderate load'},
           {name:'Wall Sit',                                      dose:'3×30s'},
+          {name:'Side-Lying Hip Abduction — End-Range ISO Hold', note:'Ward/Spina · frontal plane ACL protection · glute med end-range', dose:'2×30s ea · slow raise · hold at top'},
+          {name:'Lateral Step-Up — ISO Hold at Top',             note:'frontal plane knee/hip load · glute med + knee stability · ACL valgus control', dose:'2×8 ea · hold 3s at top · knee tracks over 2nd toe'},
           {name:'Split Squat — Isometric Hold',         dose:'3×45s ea · bottom position · knee tracks over 2nd toe'},
           {name:'Supine Extended Leg Pulse — Hamstring',dose:'3×10 pulses ea · \'pumping the brakes\' · heel press into floor · hip at 30°'},
         ]},
@@ -1418,6 +1422,8 @@ const DAYS_BY_WEEK = [
           {name:'Nordic Curl',                    dose:'3×5 · 5s descent · band minimized'},
           {name:'Single-Leg RDL — Contralateral', dose:'3×8 each'},
           {name:'Wall Sit',                       dose:'3×30s'},
+          {name:'Side-Lying Hip Abduction — End-Range ISO Hold', note:'Ward/Spina · frontal plane ACL protection · glute med end-range', dose:'2×30s ea · slow raise · hold at top'},
+          {name:'Lateral Step-Up — ISO Hold at Top',             note:'frontal plane knee/hip load · glute med + knee stability · ACL valgus control', dose:'2×8 ea · hold 3s at top'},
           {name:'Split Squat — Isometric Hold',         dose:'3×45s ea · bottom position · knee tracks over 2nd toe'},
           {name:'Supine Extended Leg Pulse — Hamstring',dose:'3×10 pulses ea · \'pumping the brakes\' · heel press into floor · hip at 30°'},
         ]},
@@ -1480,6 +1486,8 @@ const DAYS_BY_WEEK = [
           {name:'Nordic Curl',                    dose:'3×5 · 5s descent · minimal assist'},
           {name:'Single-Leg RDL — Contralateral', dose:'3×8 each'},
           {name:'Wall Sit',                       dose:'3×30s'},
+          {name:'Side-Lying Hip Abduction — End-Range ISO Hold', note:'Ward/Spina · frontal plane ACL protection · glute med end-range', dose:'2×30s ea · slow raise · hold at top'},
+          {name:'Lateral Step-Up — ISO Hold at Top',             note:'frontal plane knee/hip load · glute med + knee stability · ACL valgus control', dose:'2×8 ea · hold 3s at top'},
           {name:'Split Squat — Isometric Hold',         dose:'3×45s ea · bottom position · knee tracks over 2nd toe'},
           {name:'Split Squat — Iso Hold on Toes ★',     dose:'3×30s ea · heel elevated · progress from flat version · load the ankle plantar-flex position'},
           {name:'Supine Extended Leg Pulse — Hamstring',dose:'3×10 pulses ea · \'pumping the brakes\' · peak effort · heel press, hip at 30°, resist extension'},
@@ -1530,6 +1538,370 @@ const DAYS_BY_WEEK = [
           {name:'Canal Walk',                         dose:'25–30 min'},
           {name:'Soft Tissue',                        dose:'10 min · quads, hams, calves'},
           {name:'BFR Walk — Optional',                dose:'10–15 min · thigh cuffs'},
+        ]},
+      ]
+    },
+  ],
+
+
+  // ── WEEK 3: May 11–17 (Phase 3 / Aerobic Build) ──────────────
+  [
+    { name:'Monday',    collagen:true,  rest:false, intent:'Session A — Strength P3',
+      sub:'Continuing Phase 3. Bulgarian split squat progresses. May gate results should guide load.',
+      blocks:[
+        { label:'ROM Block', items:[
+          {name:'Heel Slide',       dose:'3×15 right'},
+          {name:'Prone Knee Hang',  dose:'2×2 min'},
+          {name:'TRX Strap Squat',  dose:'2×10'},
+          {name:'Wall Slide',       dose:'2×12 right'},
+        ]},
+        { label:'Layer 1', items:[
+          {name:'Single-Leg Stance — Eyes Closed', dose:'3×45s each'},
+          {name:'Short Foot + Toe Yoga',           dose:'2×12 each'},
+        ]},
+        { label:'Strength Block', items:[
+          {name:'Trap Bar DL',                               dose:'4×4–5 · RPE 8 · progress if May gate clean'},
+          {name:'Bulgarian Split Squat',                     dose:'3×8 each · right lead · progress from W2'},
+          {name:'Hip Thrust — Single-Leg',                   dose:'3×8 each'},
+          {name:'Nordic Curl — Eccentric',                   dose:'3×5 · 5s descent · minimal band assist'},
+          {name:'Single-Leg RDL — Contralateral DB',         dose:'3×8 each · moderate-heavy'},
+          {name:'Wall Sit',                                  dose:'3×45s · 70°'},
+          {name:'Side-Lying Hip Abduction — End-Range ISO Hold', note:'Ward/Spina · frontal plane ACL protection · glute med', dose:'2×30s ea · slow raise · hold at top'},
+          {name:'Lateral Step-Up — ISO Hold at Top',             note:'frontal plane knee/hip · glute med · ACL valgus control', dose:'2×8 ea · hold 3s at top · knee over 2nd toe'},
+          {name:'Split Squat — Isometric Hold',              dose:'3×45s ea · bottom position'},
+          {name:'Supine Extended Leg Pulse — Hamstring',     dose:'3×10 pulses ea · \'pumping the brakes\''},
+        ]},
+        { gold:true, label:'BFR Supplement', items:[
+          {name:'BFR Squat or Extension', dose:'1×30 / 3×15 · 20–30%'},
+        ]},
+      ]
+    },
+
+    { name:'Tuesday',   collagen:false, rest:false, intent:'Canal — VO2 Max 4×4 (with Patrick)',
+      sub:'VO2 max 4×4 now primary aerobic stimulus. HR monitor. 4 min work / 3 min rest × 4. Aerobic ceiling building.',
+      blocks:[
+        { label:'ROM Block (brief)', items:[
+          {name:'Heel Slide', dose:'3×15 right'},
+          {name:'Wall Slide',  dose:'2×12 right'},
+        ]},
+        { label:'Dynamic Warmup', items:[
+          {name:'Hip circles + leg swings', dose:'10 each'},
+          {name:'Walking lunges',            dose:'2×10 each'},
+          {name:'Lateral shuffle',           dose:'2×10m'},
+        ]},
+        { label:'Rock / Proprioceptive Work', items:[
+          {name:'Single-Leg Stance — Eyes Closed',   dose:'3×45s each'},
+          {name:'Single-Leg Quarter Squat — 5s Hold', dose:'3×8 each'},
+        ]},
+        { gold:true, label:'VO2 Max Intervals — 4×4', items:[
+          {name:'4×4 Interval Rounds', note:'HR monitor · target >90% HRmax · aerobic ceiling building', dose:'4 min work / 3 min rest × 4 rounds'},
+          {name:'Assessment — Mid-Session', dose:'Anterior ache check · right knee ≤3/10 to continue'},
+        ]},
+        { label:'Band + Isometric Block', items:[
+          {name:'Lateral Band Walk',                dose:'3×10m · heavy band'},
+          {name:'Wall Sit',                         dose:'3×45s'},
+          {name:'Band Perturbation — Single Leg',   dose:'3×10 each'},
+        ]},
+        { gold:true, label:'Core — At Home', items:[
+          {name:'Dead Bugs',  dose:'3×8 each'},
+          {name:'Bird Dogs',  dose:'3×10 each'},
+          {name:'Side Plank', dose:'3×30s each'},
+        ]},
+      ]
+    },
+
+    { name:'Wednesday', collagen:true,  rest:false, intent:'Session A — Strength P3',
+      sub:'Mid-week. Match Monday or autoregulate slightly down.',
+      blocks:[
+        { label:'ROM Block', items:[
+          {name:'Heel Slide',       dose:'3×15 right'},
+          {name:'Prone Knee Hang',  dose:'2×2 min'},
+          {name:'TRX Strap Squat',  dose:'2×10'},
+          {name:'Wall Slide',       dose:'2×12 right'},
+        ]},
+        { label:'Layer 1', items:[
+          {name:'Single-Leg Stance — Eyes Closed', dose:'3×45s each'},
+          {name:'Short Foot + Toe Yoga',           dose:'2×12 each'},
+        ]},
+        { label:'Strength Block', items:[
+          {name:'Trap Bar DL',                               dose:'4×4–5 · match Mon'},
+          {name:'Bulgarian Split Squat',                     dose:'3×8 each'},
+          {name:'Hip Thrust — Single-Leg',                   dose:'3×8 each'},
+          {name:'Nordic Curl',                               dose:'3×5 · 5s descent'},
+          {name:'Single-Leg RDL — Contralateral',            dose:'3×8 each'},
+          {name:'Wall Sit',                                  dose:'3×45s · 70°'},
+          {name:'Side-Lying Hip Abduction — End-Range ISO Hold', note:'Ward/Spina · frontal plane glute med', dose:'2×30s ea'},
+          {name:'Lateral Step-Up — ISO Hold at Top',             note:'frontal plane knee/hip · ACL protection', dose:'2×8 ea · hold 3s'},
+          {name:'Split Squat — Isometric Hold',              dose:'3×45s ea'},
+          {name:'Supine Extended Leg Pulse — Hamstring',     dose:'3×10 pulses ea · \'pumping the brakes\''},
+        ]},
+      ]
+    },
+
+    { name:'Thursday',  collagen:false, rest:false, intent:'Canal + Sled — VO2 Max 4×4 (with Patrick)',
+      sub:'VO2 max 4×4 now primary aerobic stimulus on canal. Sled maintained as sprint primer. HR monitor.',
+      blocks:[
+        { label:'ROM Block (brief)', items:[
+          {name:'Heel Slide', dose:'3×15 right'},
+          {name:'Wall Slide',  dose:'2×12 right'},
+        ]},
+        { label:'Dynamic Warmup', items:[
+          {name:'Hip circles + leg swings', dose:'10 each'},
+          {name:'Walking lunges',            dose:'2×10 each'},
+        ]},
+        { label:'Sled Complex', items:[
+          {name:'Backward Sled Drag', dose:'4×30m · moderate-heavy'},
+          {name:'Lateral Sled Drag',  dose:'3×15m each'},
+          {name:'Forward Sled Drag',  dose:'4×20m · 10–15% BW · hip extension dominant'},
+        ]},
+        { gold:true, label:'VO2 Max Intervals — 4×4', items:[
+          {name:'4×4 Interval Rounds', note:'HR monitor · target >90% HRmax', dose:'4 min work / 3 min rest × 4 rounds'},
+          {name:'Assessment — Mid-Session', dose:'Right knee ≤3/10 to continue'},
+        ]},
+        { label:'Band + Isometric', items:[
+          {name:'Wall Sit',                       dose:'3×45s'},
+          {name:'Band Perturbation — Single Leg', dose:'3×10 each'},
+        ]},
+      ]
+    },
+
+    { name:'Friday',    collagen:true,  rest:false, intent:'Session A — Strength P3',
+      sub:'Last strength session before Saturday RSA intro. Keep energy in reserve — RSA tomorrow.',
+      blocks:[
+        { label:'ROM Block', items:[
+          {name:'Heel Slide',       dose:'3×15 right'},
+          {name:'Prone Knee Hang',  dose:'2×2 min'},
+          {name:'TRX Strap Squat',  dose:'2×10'},
+          {name:'Wall Slide',       dose:'2×12 right'},
+        ]},
+        { label:'Layer 1', items:[
+          {name:'Single-Leg Stance — Eyes Closed', dose:'3×45s each'},
+          {name:'Short Foot + Toe Yoga',           dose:'2×12 each'},
+        ]},
+        { label:'Strength Block', items:[
+          {name:'Trap Bar DL',                               dose:'4×4–5 · RPE 7–8 · pre-RSA — not peak today'},
+          {name:'Bulgarian Split Squat',                     dose:'3×8 each'},
+          {name:'Hip Thrust — Single-Leg',                   dose:'3×8 each'},
+          {name:'Nordic Curl',                               dose:'3×5 · 5s descent'},
+          {name:'Single-Leg RDL — Contralateral',            dose:'3×8 each'},
+          {name:'Wall Sit',                                  dose:'3×30s · conserve today'},
+          {name:'Side-Lying Hip Abduction — End-Range ISO Hold', dose:'2×30s ea'},
+          {name:'Split Squat — Isometric Hold',              dose:'3×30s ea · shorter holds pre-RSA'},
+          {name:'Supine Extended Leg Pulse — Hamstring',     dose:'3×10 pulses ea'},
+        ]},
+      ]
+    },
+
+    { name:'Saturday',  collagen:false, rest:false, intent:'RSA — Repeated Sprint Ability (Intro)',
+      sub:'First anaerobic session. Conservative entry. ACL graft is mature but this is new stimulus — assess right knee plant every rep.',
+      blocks:[
+        { label:'ROM Block + Layer 1', items:[
+          {name:'Heel Slide',                      dose:'3×15 right'},
+          {name:'TRX Strap Squat',                 dose:'2×10'},
+          {name:'Single-Leg Stance — Eyes Closed', dose:'3×45s each'},
+        ]},
+        { gold:true, label:'RSA — Repeated Sprint Ability (Intro)', items:[
+          {name:'Dynamic Warmup — Sprint Prep',  dose:'10 min · leg swings, A-skips, build-up runs × 2'},
+          {name:'Straight-Line Sprint — 30m', note:'80% effort · full recovery 2–3 min · assess right knee plant each rep · Grindem: 101% LSI is the foundation', dose:'6 reps · stop at any hesitation or ache >3/10'},
+          {name:'Post-Sprint Assessment', dose:'Anterior ache check · right knee ≤3/10 · note any asymmetry in push-off'},
+        ]},
+        { label:'Recovery Flush', items:[
+          {name:'Easy Walk',   dose:'5–10 min · normalize HR'},
+          {name:'Soft Tissue', dose:'5 min · quads + right knee surround'},
+        ]},
+      ]
+    },
+
+    { name:'Sunday',    collagen:false, rest:true,  intent:'Rest + Recovery',
+      sub:'Full Layer 1. Active recovery walk. RSA residue — expect some DOMS in hip flexors.',
+      blocks:[
+        { label:'Layer 1 — All 5 · Unhurried', items:[
+          {name:'Single-Leg Stance — Eyes Closed', dose:'3×45s each'},
+          {name:'Short Foot',                      dose:'2×12 each'},
+          {name:'Banded Ankle Circles',            dose:'10 each direction'},
+          {name:'Toe Yoga',                        dose:'2×10 each'},
+          {name:'Slow Eccentric Calf Raise',       dose:'2×10 · 3s down'},
+        ]},
+        { gold:true, label:'Recovery', items:[
+          {name:'Canal Walk',  dose:'25–30 min'},
+          {name:'Soft Tissue', dose:'10 min · quads, hams, calves'},
+        ]},
+      ]
+    },
+  ],
+
+  // ── WEEK 4: May 18–24 (Phase 3 / Anaerobic Intro) ────────────
+  [
+    { name:'Monday',    collagen:true,  rest:false, intent:'Session A — Strength P3',
+      sub:'W4 strength. RSA progresses Saturday — manage fatigue through the week.',
+      blocks:[
+        { label:'ROM Block', items:[
+          {name:'Heel Slide',       dose:'3×15 right'},
+          {name:'Prone Knee Hang',  dose:'2×2 min'},
+          {name:'TRX Strap Squat',  dose:'2×10'},
+          {name:'Wall Slide',       dose:'2×12 right'},
+        ]},
+        { label:'Layer 1', items:[
+          {name:'Single-Leg Stance — Eyes Closed', dose:'3×45s each'},
+          {name:'Short Foot + Toe Yoga',           dose:'2×12 each'},
+        ]},
+        { label:'Strength Block', items:[
+          {name:'Trap Bar DL',                               dose:'4×4–5 · RPE 8'},
+          {name:'Bulgarian Split Squat',                     dose:'3×8 each · progress load if W3 clean'},
+          {name:'Hip Thrust — Single-Leg',                   dose:'3×8 each'},
+          {name:'Nordic Curl — Eccentric',                   dose:'3×5 · 5s descent · minimal assist'},
+          {name:'Single-Leg RDL — Contralateral DB',         dose:'3×8 each'},
+          {name:'Wall Sit',                                  dose:'3×45s'},
+          {name:'Side-Lying Hip Abduction — End-Range ISO Hold', note:'Ward/Spina · frontal plane glute med', dose:'2×30s ea'},
+          {name:'Lateral Step-Up — ISO Hold at Top',             note:'frontal plane knee/hip · ACL valgus control', dose:'2×8 ea · hold 3s at top'},
+          {name:'Split Squat — Isometric Hold',              dose:'3×45s ea'},
+          {name:'Supine Extended Leg Pulse — Hamstring',     dose:'3×10 pulses ea · \'pumping the brakes\''},
+        ]},
+        { gold:true, label:'BFR Supplement', items:[
+          {name:'BFR Squat or Extension', dose:'1×30 / 3×15 · 20–30%'},
+        ]},
+      ]
+    },
+
+    { name:'Tuesday',   collagen:false, rest:false, intent:'Canal — VO2 Max 4×4 (with Patrick)',
+      sub:'VO2 max 4×4 primary aerobic stimulus. HR monitor. Option: if energy high, finish with 4×30m RSA sprints at end after main intervals.',
+      blocks:[
+        { label:'ROM Block (brief)', items:[
+          {name:'Heel Slide', dose:'3×15 right'},
+          {name:'Wall Slide',  dose:'2×12 right'},
+        ]},
+        { label:'Dynamic Warmup', items:[
+          {name:'Hip circles + leg swings', dose:'10 each'},
+          {name:'Walking lunges',            dose:'2×10 each'},
+          {name:'Lateral shuffle',           dose:'2×10m'},
+        ]},
+        { gold:true, label:'VO2 Max Intervals — 4×4', items:[
+          {name:'4×4 Interval Rounds', note:'HR monitor · target >90% HRmax · aerobic ceiling + soccer recovery speed', dose:'4 min work / 3 min rest × 4 rounds'},
+        ]},
+        { gold:true, label:'Optional — RSA Sprints at End', items:[
+          {name:'Straight-Line Sprint — 30m', note:'only if 4×4 felt manageable and right knee ≤2/10', dose:'4 reps · 85–90% · 2 min full recovery between'},
+        ]},
+        { label:'Band + Isometric', items:[
+          {name:'Wall Sit',                       dose:'3×45s'},
+          {name:'Band Perturbation — Single Leg', dose:'3×10 each'},
+        ]},
+      ]
+    },
+
+    { name:'Wednesday', collagen:true,  rest:false, intent:'Session A — Strength P3',
+      sub:'Mid-week strength. Match Monday or autoregulate down. RSA Saturday — leave something.',
+      blocks:[
+        { label:'ROM Block', items:[
+          {name:'Heel Slide',       dose:'3×15 right'},
+          {name:'Prone Knee Hang',  dose:'2×2 min'},
+          {name:'TRX Strap Squat',  dose:'2×10'},
+          {name:'Wall Slide',       dose:'2×12 right'},
+        ]},
+        { label:'Layer 1', items:[
+          {name:'Single-Leg Stance — Eyes Closed', dose:'3×45s each'},
+          {name:'Short Foot + Toe Yoga',           dose:'2×12 each'},
+        ]},
+        { label:'Strength Block', items:[
+          {name:'Trap Bar DL',                               dose:'4×4–5 · match Mon'},
+          {name:'Bulgarian Split Squat',                     dose:'3×8 each'},
+          {name:'Hip Thrust — Single-Leg',                   dose:'3×8 each'},
+          {name:'Nordic Curl',                               dose:'3×5 · 5s descent'},
+          {name:'Single-Leg RDL — Contralateral',            dose:'3×8 each'},
+          {name:'Wall Sit',                                  dose:'3×30s'},
+          {name:'Side-Lying Hip Abduction — End-Range ISO Hold', dose:'2×30s ea'},
+          {name:'Lateral Step-Up — ISO Hold at Top',             dose:'2×8 ea · hold 3s'},
+          {name:'Split Squat — Isometric Hold',              dose:'3×30s ea · conserve pre-Saturday'},
+          {name:'Supine Extended Leg Pulse — Hamstring',     dose:'3×10 pulses ea'},
+        ]},
+      ]
+    },
+
+    { name:'Thursday',  collagen:false, rest:false, intent:'Canal + Sled — Aerobic Maintenance',
+      sub:'Sled + short VO2 session. Volume down from Tue — conserve for Saturday RSA. 2 rounds 4×4 only if energy is high.',
+      blocks:[
+        { label:'ROM Block (brief)', items:[
+          {name:'Heel Slide', dose:'3×15 right'},
+          {name:'Wall Slide',  dose:'2×12 right'},
+        ]},
+        { label:'Dynamic Warmup', items:[
+          {name:'Hip circles + leg swings', dose:'10 each'},
+          {name:'Walking lunges',            dose:'2×10 each'},
+        ]},
+        { label:'Sled Complex', items:[
+          {name:'Backward Sled Drag', dose:'4×30m'},
+          {name:'Lateral Sled Drag',  dose:'3×15m each'},
+        ]},
+        { gold:true, label:'Reduced Aerobic Work — Pre-RSA', items:[
+          {name:'Easy Run Intervals', note:'HR monitor · conversational pace — not VO2 max effort today', dose:'2–3 × 4 min easy · full rest between'},
+        ]},
+        { label:'Band + Isometric', items:[
+          {name:'Wall Sit',                       dose:'3×30s'},
+          {name:'Band Perturbation — Single Leg', dose:'3×10 each'},
+        ]},
+      ]
+    },
+
+    { name:'Friday',    collagen:true,  rest:false, intent:'Session A — Light Strength / RSA Prep',
+      sub:'Short and sharp. RSA tomorrow at 8 reps 85–90%. Activation only — no grinding today.',
+      blocks:[
+        { label:'ROM Block', items:[
+          {name:'Heel Slide',       dose:'3×15 right'},
+          {name:'Prone Knee Hang',  dose:'2×2 min'},
+          {name:'TRX Strap Squat',  dose:'2×10'},
+          {name:'Wall Slide',       dose:'2×12 right'},
+        ]},
+        { label:'Layer 1', items:[
+          {name:'Single-Leg Stance — Eyes Closed', dose:'3×45s each'},
+          {name:'Short Foot + Toe Yoga',           dose:'2×12 each'},
+        ]},
+        { label:'Activation Block — Light', items:[
+          {name:'Trap Bar DL — Activation Load',   dose:'3×5 · RPE 6–7 · activation not training'},
+          {name:'Bulgarian Split Squat',           dose:'2×6 each · light'},
+          {name:'Hip Thrust — Single-Leg',         dose:'2×6 each'},
+          {name:'Side-Lying Hip Abduction — End-Range ISO Hold', dose:'2×30s ea'},
+          {name:'Wall Sit',                        dose:'2×30s'},
+          {name:'Supine Extended Leg Pulse — Hamstring', dose:'2×10 pulses ea'},
+        ]},
+      ]
+    },
+
+    { name:'Saturday',  collagen:false, rest:false, intent:'RSA — Repeated Sprint Ability (W4 Progression)',
+      sub:'8 reps at 85–90%. ACL-RSI ≥65 and right knee ≤2/10 are go-criteria. Any hesitation in plant mechanics = stop and assess.',
+      blocks:[
+        { label:'ROM Block + Layer 1', items:[
+          {name:'Heel Slide',                      dose:'3×15 right'},
+          {name:'TRX Strap Squat',                 dose:'2×10'},
+          {name:'Single-Leg Stance — Eyes Closed', dose:'3×45s each'},
+        ]},
+        { gold:true, label:'RSA — Progression Session', items:[
+          {name:'Dynamic Warmup — Sprint Prep',  dose:'10 min · leg swings, A-skips, build-ups × 3'},
+          {name:'Straight-Line Sprint — 30m', note:'85–90% effort · 2–3 min full recovery · right knee plant assessed every rep · compare effort and hesitation to W3', dose:'8 reps · stop at ache >3/10 or any asymmetry in plant'},
+          {name:'Post-Sprint Assessment', dose:'Anterior ache · right knee symmetry rating · ACL-RSI gut check'},
+        ]},
+        { label:'COD Introduction — Only if Gate Clear', items:[
+          {name:'45° Cut — Walk Speed First', note:'Only if ACL-RSI ≥65 AND knee ≤2/10 after all 8 reps. Walk speed first — feel the plant.', dose:'4×4 reps ea direction · walk → jog progression only'},
+        ]},
+        { label:'Recovery Flush', items:[
+          {name:'Easy Walk',   dose:'10 min'},
+          {name:'Soft Tissue', dose:'10 min · quads, hams, right knee surround'},
+        ]},
+      ]
+    },
+
+    { name:'Sunday',    collagen:false, rest:true,  intent:'Rest + Recovery',
+      sub:'Full Layer 1. Canal walk. June 9 departure in ~2 weeks — keep building the base.',
+      blocks:[
+        { label:'Layer 1 — All 5 · Unhurried', items:[
+          {name:'Single-Leg Stance — Eyes Closed', dose:'3×45s each'},
+          {name:'Short Foot',                      dose:'2×12 each'},
+          {name:'Banded Ankle Circles',            dose:'10 each direction'},
+          {name:'Toe Yoga',                        dose:'2×10 each'},
+          {name:'Slow Eccentric Calf Raise',       dose:'2×10 · 3s down'},
+        ]},
+        { gold:true, label:'Recovery', items:[
+          {name:'Canal Walk',  dose:'25–30 min'},
+          {name:'Soft Tissue', dose:'10 min · quads, hams, calves'},
+          {name:'BFR Walk — Optional', dose:'10–15 min · thigh cuffs'},
         ]},
       ]
     },
