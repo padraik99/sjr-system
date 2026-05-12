@@ -374,20 +374,20 @@ main { padding:1.25rem 1.5rem; max-width:1100px; margin:0 auto; }
 const SUPA_URL = 'https://jedsnurnnwmpcbdvtlbs.supabase.co';
 const SUPA_KEY = 'sb_publishable_3WGolnM5dOK88Y4WdKCFGA_Hi6wj-_z';
 
-async function sbFetch(path, opts = {}){
+function sbFetch(path, opts = {}){
+  // Non-async — returns a Promise — called only from async callers (CLAUDE.md spec)
   const headers = {
     'apikey': SUPA_KEY,
-    'Authorization': 'Bearer ' + SUPA_KEY,
     'Content-Type': 'application/json'
   };
   if(opts.prefer) headers['Prefer'] = opts.prefer;
-  const res = await fetch(SUPA_URL + path, {
+  return fetch(SUPA_URL + path, {
     method: opts.method || 'GET', headers, body: opts.body || undefined,
+  }).then(res => {
+    if(res.status === 204) return [];
+    const ct = res.headers.get('content-type') || '';
+    return ct.includes('application/json') ? res.json() : [];
   });
-  if(!res.ok){ const txt = await res.text(); throw new Error(res.status + ': ' + txt); }
-  if(res.status === 204) return [];
-  const ct = res.headers.get('content-type') || '';
-  return ct.includes('application/json') ? res.json() : [];
 }
 
 function todayStr(){
