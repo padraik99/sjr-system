@@ -397,7 +397,7 @@ main { padding:1.25rem; max-width:700px; margin:0 auto; }
   <div class="hdr-top">
     <div>
       <div class="hdr-name">Patrick</div>
-      <div class="hdr-sub">L4–L5 · Return to Athletic Life · v5.4</div>
+      <div class="hdr-sub">L4–L5 · Return to Athletic Life · v5.5</div>
     </div>
     <div class="phase-badge" id="phase-badge">Bridge · W1<span>Mar 24–30</span></div>
   </div>
@@ -429,7 +429,7 @@ main { padding:1.25rem; max-width:700px; margin:0 auto; }
     <strong>Autoregulation Gates</strong>
     AM ≤2/10 · Nerve ≤2.5/10 · Ankle spot — log and track
   </div>
-  <div style="display:flex;gap:.5rem;"><button class="gate-log-btn" onclick="openModal()" style="flex:1;">Log</button><button class="gate-log-btn" style="flex:1;background:var(--surface2);border-color:rgba(200,80,60,0.3);color:#c8503c;" onclick="openInjuryModal()">⚠ Issue</button></div>
+  <button class="gate-log-btn" onclick="openModal()">Log</button>
 </div>
 
 <!-- DAY SELECTOR -->
@@ -717,307 +717,14 @@ const EX_INFO = {
     cue: 'Hip flexion opens the L4-L5 foramen measurably. Nerve decompression with a cardiovascular side effect. Monitor calf bands during and 1hr after.',
     url: 'https://www.youtube.com/results?search_query=stationary+bike+lumbar+decompression+hip+flexion'
   },
-  // ── BRIDGE-TO-LOAD ADDITIONS ──
-  'Ankle Dorsiflexion Mob — Weight-Bearing': {
-    setup: 'Stand facing wall, foot flat, drive knee forward over 2nd toe keeping heel down. 5 reps each side.',
-    cue: 'Knee tracks over the 2nd toe — don\'t let it collapse inward. Feel the talar glide. Weight-bearing loads the talocrural joint — more carryover to walking mechanics than the seated version.',
-    url: 'https://www.youtube.com/results?search_query=weight+bearing+ankle+dorsiflexion+mobilization+talocrural'
-  },
-  'Band Lateral Shuffle': {
-    setup: '3×15 each direction. Light band around ankles. Stay in athletic stance throughout.',
-    cue: 'Push out from the stance foot — don\'t just drag the trailing leg. Stay low. Hips level. Glute med is the target, not momentum. Stop if back loads.',
-    url: 'https://www.youtube.com/results?search_query=banded+lateral+shuffle+gluteus+medius+hip+stability'
-  },
-  'Bird Dog — Extended Hold': {
-    setup: '3×10s each side. Quadruped — hands under shoulders, knees under hips.',
-    cue: 'Extend opposite arm and leg simultaneously. Spine completely neutral — no rotation, no sagging. Squeeze glute on the extended leg. Hold full 10s before switching. Draw elbow and knee together between reps.',
-    url: 'https://www.youtube.com/results?search_query=bird+dog+McGill+extended+hold+lumbar+stability'
-  },
-  'Cable Pull-Through': {
-    setup: '3×12. Light load. Cable at floor height behind you. Hip hinge — not a squat.',
-    cue: '"Push the floor away with your heels" as you drive hips forward. Posterior chain hip hinge with near-zero spinal compression. If you feel L4-L5 loading, the weight is too heavy.',
-    url: 'https://www.youtube.com/results?search_query=cable+pull-through+hip+hinge+posterior+chain+low+spinal+load'
-  },
-  'Curved run intervals': {
-    setup: '4–6 reps. Forward only. 1.25 mi total — break halfway. Work = tighter curves, higher knees. Rest = wide gentle curves, easy pace.',
-    cue: 'Eyes up, drive knees on the curves. The lateral demand on the foot and ankle is the stimulus — not speed. Monitor nerve/calf response during and within 1hr after.',
-    url: 'https://www.youtube.com/results?search_query=curved+running+intervals+lateral+ankle+load+canal'
-  },
-  'Dead Bug — Contralateral Hold': {
-    setup: '3×8 each side. Lie on back, arms vertical, knees at 90°. Slow — no momentum.',
-    cue: 'Press lower back INTO the floor and hold that contact throughout. Extend opposite arm and leg. If your back lifts off, you\'ve gone too far. Spine doesn\'t move. Only limbs move.',
-    url: 'https://www.youtube.com/results?search_query=dead+bug+McGill+anti+extension+lumbar+rehab'
-  },
-  'Dynamic warmup': {
-    setup: '5 min. Leg swings, hip circles, partial walking lunges, ankle circles. Before every canal session.',
-    cue: 'Proprioception first — don\'t rush. Leg swings forward/lateral to open the hip. Walking lunges: upright trunk, no forward lean. If anything pulls at L4-L5, reduce range — don\'t skip.',
-    url: 'https://www.youtube.com/results?search_query=dynamic+warmup+hip+mobility+low+back+friendly'
-  },
-  'Isometric Wall Sit — Mid Angle': {
-    setup: '3×45s at ~60° knee flexion — NOT full depth. 2-min rest. Post-canal nerve check.',
-    cue: 'Equal weight both feet. If nerve symptoms (calf bands, foot tingling) appear or worsen within the first 45s, stop and note it. Rio protocol: analgesia requires staying in position through initial discomfort — that\'s the mechanism.',
-    url: 'https://www.youtube.com/results?search_query=isometric+wall+sit+Rio+analgesia+mid+angle+lumbar'
-  },
-  'Monster Walk — Banded Forward/Backward': {
-    setup: '2×20 steps each direction. Band around ankles. Slight knee bend, athletic stance.',
-    cue: 'Forward: push off the back foot with control. Backward: same deliberate step. Stay low throughout — don\'t stand up between steps. Don\'t let the band snap your feet together.',
-    url: 'https://www.youtube.com/results?search_query=monster+walk+banded+forward+backward+glute+med+hip+abductor'
-  },
-  'Rock work + eyes-closed balance': {
-    setup: '3×20s each leg. Eyes open first — add eyes closed only when stable. Both legs.',
-    cue: 'Subtle weight shifts in all planes. Keep ankle, knee, and hip aligned. Eyes closed trains the joint mechanoreceptors. Foraminal stenosis can dull proprioceptive signal to the foot — any wobble asymmetry between sides is useful data.',
-    url: 'https://www.youtube.com/results?search_query=single+leg+balance+eyes+closed+proprioception+ankle+neuromuscular'
-  },
-  'Romanian Deadlift (RDL)': {
-    setup: '2×10. Moderate load — hinge drill, not a strength stimulus. Dumbbells preferred.',
-    cue: 'Hip hinge back, neutral spine throughout. "Push the floor away" as you stand. DBs track close to the legs. Hamstring tension is the target — lumbar tension is the warning. Rack it if you feel L4-L5.',
-    url: 'https://www.youtube.com/results?search_query=Romanian+deadlift+RDL+hip+hinge+neutral+spine+McGill'
-  },
-  'Side Plank — Full': {
-    setup: '2×20s each side. Elbow under shoulder, hips stacked, feet stacked. Full expression — no knee contact.',
-    cue: 'Drive hips up — don\'t sag. Straight line ear to ankle. QL and glute med carrying the lateral chain. If right side fatigues faster, that\'s asymmetry — note it.',
-    url: 'https://www.youtube.com/results?search_query=side+plank+full+McGill+quadratus+lumborum+lateral+chain'
-  },
-  'Sled Pull — Backward': {
-    setup: '4×20m. Light sled. Harness or hand straps. Foraminal decompression — not a strength set.',
-    cue: 'Lean forward slightly, pull through the arms and hips. The backward pull position opens the L4-L5 foramen under load — traction with a locomotion component. Monitor nerve response during and 1hr post.',
-    url: 'https://www.youtube.com/results?search_query=sled+pull+backward+lumbar+decompression+foraminal+stenosis'
-  },
-  'Stationary Bike — Low Resistance Steady State': {
-    setup: '15 min very easy. Upright to slightly forward position — NOT reclined.',
-    cue: 'Hip flexion opens the L4-L5 foramen. Keep resistance low enough that you could hold a conversation. Monitor calf bands during and 30 min after — any increase in nerve symptoms, stop and note.',
-    url: 'https://www.youtube.com/results?search_query=stationary+bike+lumbar+foramen+decompression+low+resistance'
-  },
-  'Step-Up — Weighted': {
-    setup: '3×10 each leg. Controlled. Box height where thigh is ~parallel at top.',
-    cue: 'Drive through the heel of the step leg. Full hip and knee extension at the top. Lower under control — the eccentric is where tissue adapts. Trunk upright — no forward lean that loads L4-L5.',
-    url: 'https://www.youtube.com/results?search_query=weighted+step+up+hip+extension+single+leg+strength+lumbar+friendly'
-  },
-  'Trap Bar Deadlift — Elevated Start': {
-    setup: '3×5. Elevated start reduces lumbar flexion demand. 15–20% below peak if deload week.',
-    cue: 'Neutral spine, brace before the pull. Hips and shoulders rise together — don\'t let hips shoot up first. Elevated start keeps you out of the most vulnerable lumbar range. If you feel L4-L5 load at any point, rack it.',
-    url: 'https://www.youtube.com/results?search_query=trap+bar+deadlift+elevated+start+lumbar+neutral+rack+pull'
-  },
-  'Walking — Extended Duration': {
-    setup: '20–30 min easy. Flat ground — canal or track preferred.',
-    cue: 'Upright posture — don\'t drift into hip extension avoidance (forward lean, shuffle gait). Monitor nerve response at 10 and 20 min marks. Any increase in calf bands or foot numbness — note the timing and distance.',
-    url: 'https://www.youtube.com/results?search_query=walking+lumbar+stenosis+gait+mechanics+upright+posture'
-  },
-  // ── MOBILITY — LIGHT DAY ──
-  '90/90 Hip Transition': {
-    setup: '5 reps each side. Sit on floor, both knees at 90°. Slow rotation from one side to the other.',
-    cue: 'Front shin parallel to hips, back shin parallel behind. Drive transition from the hip — not the knee. Feel the end-range load on the hip rotators. If the lumbar compensates (shifts or twists), you\'re going too fast. Cressey: earn the range before you use it.',
-    url: 'https://www.youtube.com/results?search_query=90+90+hip+transition+Cressey+hip+rotation+mobility'
-  },
-  'Quadruped Thoracic Rotation': {
-    setup: '2×10 each side. Quadruped — hands under shoulders, knees under hips. One hand behind head.',
-    cue: 'Rotate the elbow toward the ceiling. The lumbar spine does NOT move — only the thoracic rotates. Boyle joint-by-joint: thoracic rotation capacity directly reduces lumbar rotation demand. Every degree you gain here is a degree the L4-L5 disc doesn\'t have to absorb.',
-    url: 'https://www.youtube.com/results?search_query=quadruped+thoracic+rotation+mobility+joint+by+joint+Boyle'
-  },
-  'Supine Figure-4 Stretch': {
-    setup: '2×45s each side. Lie on back. Cross ankle over opposite knee. Pull both legs toward chest or press the knee away.',
-    cue: 'Piriformis and deep external rotators. The L4-L5 nerve root travels close to piriformis — chronically shortened piriformis can compress the sciatic branch. Hold steady tension, breathe. Don\'t force range.',
-    url: 'https://www.youtube.com/results?search_query=figure+4+piriformis+stretch+supine+sciatic+nerve'
-  },
-  'Sciatic Nerve Floss': {
-    setup: '10 gentle reps. Seated or lying — extend knee while dorsiflexing ankle, then reverse. Slow.',
-    cue: 'Sciatic nerve runs L4-S3 through the posterior thigh. Flossing mobilizes the nerve interface with surrounding tissue — different from stretching the hamstring. Feel a mild nerve sensation, not pain. Move to the edge of tension, not through it.',
-    url: 'https://www.youtube.com/results?search_query=sciatic+nerve+floss+neural+mobilization+L4+L5'
-  },
-  'Child Pose Lateral Reach': {
-    setup: '2×30s each side. From child pose, walk hands to one side and hold.',
-    cue: 'The lateral reach opens the contralateral lumbar foramen — direct foraminal decompression in a gravity-assisted position. Breathe into the stretch. Walk hands further each exhale. No forcing.',
-    url: 'https://www.youtube.com/results?search_query=child+pose+lateral+reach+lumbar+foraminal+decompression'
-  },
-  'Cat-Cow': {
-    setup: '2×10 slow cycles. Quadruped — hands under shoulders, knees under hips.',
-    cue: 'Cat: round the spine fully — pelvis tucked, head drops. Cow: arch gently — pelvis tips forward, chest opens. Move at the rate of your breath. Drives fluid exchange in the disc and gentle facet joint mobilization. Stop at any point that reproduces nerve symptoms.',
-    url: 'https://www.youtube.com/results?search_query=cat+cow+lumbar+spine+mobility+disc+hydration'
-  },
-  // ── FORWARD RUNNING ──
-  'Forward run intervals': {
-    setup: '0.5 mi per interval. 2–3 intervals with full recovery between. Higher knees on work segments.',
-    cue: 'Upright posture — don\'t allow the forward lean that closes L4-L5. Higher knees = hip flexion = opens the foramen on stride. Monitor nerve response (calf/foot) at the 10 min mark. If it increases, back off and note.',
-    url: 'https://www.youtube.com/results?search_query=running+form+lumbar+stenosis+upright+posture+hip+flexion'
-  },
-  // ── TENDON LOADING ──
-  'Stiff Ankle Hops': {
-    setup: 'Collagen + Vit C taken 45–60 min ago — non-negotiable. 3–5 min total. Hot coals pace — quick, minimal ground contact.',
-    cue: 'Ankles are the spring — minimal knee bend. The stiffness is the stimulus: brief, high-rate tendon loading drives LOX upregulation (Baar). Start at 3 min and build. Any nerve response (calf, foot) = stop, note, don\'t push through.',
-    url: 'https://www.youtube.com/results?search_query=stiff+ankle+hops+tendon+loading+Baar+LOX+collagen+protocol'
-  },
-  // ── YIELDS ISO & RECENT GYM ADDITIONS ──
-  'Goblet Squat with Iso Hold': {
-    setup: 'Hold goblet position at bottom — pause 3–5s before standing. DB at chest. Do not exceed 60–70° knee flexion initially.',
-    cue: 'This targets the exact sticky point: combined hip flexion and knee extension under load. The iso hold trains the end-range tendon under tension (Baar). Drive knees out at the bottom. Spine neutral — resist the urge to round. Progress weight only when iso hold is pain-free.',
-    url: 'https://www.youtube.com/results?search_query=goblet+squat+isometric+hold+tendon+loading+hip+flexion'
-  },
-  'Dead Hang': {
-    setup: '3×30s. Grip a pull-up bar or rings. Full passive hang — no active shoulder engagement.',
-    cue: 'Gravity traction for the lumbar spine. The foraminal space at L4-L5 opens under axial unloading. Breathe and let the spine decompress. Do NOT activate the lats or shoulders — passive is the point. If numbness appears in hands before 30s, shorten sets. Do after heavy lower body work.',
-    url: 'https://www.youtube.com/results?search_query=dead+hang+spinal+decompression+lumbar+traction+foraminal'
-  },
-  'Superman': {
-    setup: '3×6–8 reps. Lie face down, arms extended overhead. Slow lift and hold 2s.',
-    cue: 'Lift arms, chest, and legs simultaneously — hold 2s at the top. Multifidus and erector activation without axial compression. Key for proprioceptive feedback through the posterior chain. If L4-L5 localizes (sharp, not the familiar ache), stop immediately.',
-    url: 'https://www.youtube.com/results?search_query=superman+exercise+lumbar+multifidus+erector+extension'
-  },
-  'Standing Hip External Rotation': {
-    setup: '2×7 each side. Stand on one leg, rotate stance hip outward without letting the pelvis tilt.',
-    cue: 'Deep external rotators (piriformis, obturators) — the same ones compressed by chronic hip flexor tightness. Strengthening these in standing decompresses the posterior hip capsule and reduces sciatic referral path tension. Keep pelvis level — do not let the stance hip hike.',
-    url: 'https://www.youtube.com/results?search_query=standing+hip+external+rotation+piriformis+deep+rotators'
-  },
-  'Seated Hip Flexion Hold': {
-    setup: '2×30s each leg. Sit tall on bench edge. Lift one knee toward chest against gentle band or hand resistance. Hold isometrically.',
-    cue: 'Targets the exact sticky point: hip flexion strength at end range. The psoas and iliacus are both weak AND shortened in L4-L5 stenosis — iso holds at 90°+ build the missing end-range strength. Sit tall — do not slouch into lumbar flexion to compensate.',
-    url: 'https://www.youtube.com/results?search_query=seated+hip+flexion+isometric+hold+psoas+iliacus+rehab'
-  },
-  // ── MULTI-PLANAR (Spina/FRC) ──
-  'Quadruped Hip CAR': {
-    setup: '5 slow reps each hip. Quadruped position — wrists under shoulders, knees under hips. Go as slow as possible.',
-    cue: 'Controlled Articular Rotation (Spina). Move the femur through a full circle: lift, circle out, back, down. Zero lumbar rotation — pelvis stays absolutely still. The motion is all at the hip joint. Pain-free range only — do not force. Any nerve response = reduce range.',
-    url: 'https://www.youtube.com/results?search_query=quadruped+hip+CAR+controlled+articular+rotation+Spina+FRC'
-  },
-  'Hip PAILs — Flexion End-Range': {
-    setup: '2×10–20s each side. In a seated 90/90 or supine position — move hip to end of flexion range passively, then contract into the end range.',
-    cue: 'PAILs (Progressive Angular Isometric Loading — Spina). At the limit of your hip flexion, contract the hip flexors to push INTO that end range. 20–30% effort first session — this is strong stimulus. Closing the gap between passive and active ROM is the injury prevention mechanism. Never force beyond pain-free range.',
-    url: 'https://www.youtube.com/results?search_query=hip+PAILs+RAILs+flexion+end+range+FRC+Spina'
-  },
-  'Side-Lying Hip Abduction — End-Range ISO Hold': {
-    setup: '2×30s each side. Lie on side, bottom knee slightly bent for stability, top leg straight. Raise top leg to end-range abduction and hold.',
-    cue: 'Frontal plane glute med strength at end-of-range (Ward/Spina). This is NOT a dynamic rep — raise to the top and hold isometrically. The glute med protects the lumbar spine from lateral shear. Keep hips stacked — do not rotate forward or back. Foot slightly internally rotated at top (greater trochanter neutral).',
-    url: 'https://www.youtube.com/results?search_query=side+lying+hip+abduction+isometric+hold+glute+med+end+range'
-  },
-  'VO2 Max Intervals — 4×4': {
-    setup: 'HR monitor required. 4 min work intervals, 3 min active recovery (easy walk/jog) × 4 rounds.',
-    cue: 'Target >90% HRmax on each work interval. Pace should feel very hard — you should not be able to speak in full sentences. Active recovery is walking pace — HR comes down to ~70% before next interval. HR frequently exceeds 160 bpm — this is expected. VO2 max stimulus + aerobic base building together. This is the primary aerobic stimulus replacing forward run intervals.',
-    url: 'https://www.youtube.com/results?search_query=VO2+max+4x4+interval+training+aerobic+capacity+protocol'
-  },
   // ── PERFORMANCE ──
   'A-March': {
     setup: '3–4×20m. Slow, deliberate.',
     cue: 'Vertical force application, high knee drive, dorsiflexed foot at ground contact. Every movement quality drill starts here.',
     url: 'https://www.youtube.com/results?search_query=A+march+sprint+drill+ground+impulse+Barr'
   },
-  // ── MOBILITY / RECOVERY ADDITIONS ──
-  'Backward Walk/Jog — Matrix Treadmill': {
-    setup: '10–15 min. Start at 3.5 mph walk, progress to 4.5 mph jog when comfortable. Hold handrails lightly for first session only.',
-    cue: 'Maintain slight hip flexion — do not lean back. Neutral spine throughout. This position actively decompresses the L4-L5 foramen by reducing facet joint load. Pace dictates effort — stop if radicular symptoms increase.',
-    url: 'https://www.youtube.com/results?search_query=backward+treadmill+walking+lumbar+decompression+spinal+stenosis'
-  },
-  'Couch Stretch — Hip Flexor': {
-    setup: '2×45s each side. Rear knee on pad or folded mat at base of bench/couch. Front foot flat, shin vertical. Torso upright.',
-    cue: 'Apply posterior pelvic tilt BEFORE leaning into the stretch — flatten your low back first. Feel the stretch in the front of the rear hip (psoas at length). Do not hyperextend the lumbar spine. Breathe into the stretch. Progression: bring torso more upright over time as hip flexor length improves.',
-    url: 'https://www.youtube.com/results?search_query=couch+stretch+hip+flexor+Kelly+Starrett+psoas+mobility'
-  },
-  'Easy Walk': {
-    setup: '20–30 min. Flat ground. Conversational pace — if you cannot speak in full sentences, slow down.',
-    cue: 'Recovery modality only. Monitor pain response during and after. Walk is complete CNS rest — no intervals, no incline. Canal or neighborhood flat. If pain exceeds 4/10 at any point, shorten and log.',
-    url: 'https://www.youtube.com/results?search_query=walking+for+lumbar+spinal+stenosis+recovery+low+back+pain'
-  },
-  'Femoral Nerve Floss': {
-    setup: '10 reps each side. Prone (face down) on mat. Head neutral or turned to one side.',
-    cue: 'Slowly bend the knee to bring heel toward glute — stop the moment you feel tingling, electrical, or burning sensation into the anterior thigh or knee. That is the L4 nerve root. Do not push through neural symptoms. Flossing means you approach and back off — not stretch to end range. If symptoms stay <3/10 and resolve within 5 seconds, you are within tolerance.',
-    url: 'https://www.youtube.com/results?search_query=femoral+nerve+floss+L4+prone+knee+bend+foraminal+stenosis'
-  },
-  'Hip Thrust — Barbell': {
-    setup: '3×10. Upper back on bench edge, bar padded across hip crease, 45 lbs. Feet hip-width, knees over second toe. 3s pause at top.',
-    cue: 'Drive through heels. At the top: posterior pelvic tilt — do NOT hyperextend the lumbar spine. Squeeze glutes hard at lockout. The pause reinforces glute activation vs. lumbar compensation. If low back takes over, reduce load and reset. Goal is maximum glute recruitment with zero spinal load increase.',
-    url: 'https://www.youtube.com/results?search_query=hip+thrust+barbell+glute+activation+neutral+spine+McGill'
-  },
-  'Thoracic Extension — Foam Roller': {
-    setup: '2×45s. Roller positioned at mid-back (T6–T8 — below the shoulder blades). Arms crossed over chest. Knees bent, feet flat.',
-    cue: 'Exhale fully as you extend over the roller. Allow gravity to open the thoracic spine — no forcing. Do not extend the lumbar spine (keep abs lightly braced). Progression: arms move overhead as thoracic extension improves. Target is thoracic mobility only — lumbar stays neutral. Addresses the thoracic stiffness that increases lumbar load.',
-    url: 'https://www.youtube.com/results?search_query=thoracic+extension+foam+roller+mid+back+mobility+McGill'
-  },
 };
 
-// ─────────────────────────────────────────
-// CANAL DAY CONSTANTS
-// ─────────────────────────────────────────
-const FOOT_YOGA_FULL = [
-  {name:'Heel Rock — Calcaneal Mobility', dose:'2×10 ea'},
-  {name:'Short Foot Exercise', dose:'2×10s ea'},
-  {name:'Toe Spread and Lift', dose:'2×10'},
-  {name:'Ankle Circles + Dorsiflexion', dose:'10 ea direction'},
-];
-const FOOT_YOGA_SHORT = [
-  {name:'Heel Rock — Calcaneal Mobility', dose:'2×10 ea'},
-  {name:'Ankle Circles + Dorsiflexion', dose:'10 ea direction'},
-];
-const CANAL_RUN_BLOCK = {
-  label:'Canal Run — VO2 Max', cls:'accent', items:[
-    {name:'Dynamic warmup', dose:'5 min'},
-    {name:'Backward jog intervals', note:'warmup role · easy pace', dose:'~0.25 mi'},
-    {name:'VO2 Max Intervals — 4×4', note:'HR monitor · target >90% HRmax · HR frequently >160 bpm · aerobic base + VO2 max stimulus', dose:'4 min work / 3 min rest × 4 rounds · ~2 mi total'},
-    {name:'Curved run intervals', note:'sharpen curve radius over weeks', dose:'×4–6'},
-    {name:'Rock work + eyes-closed balance', note:'post-run proprioception', dose:'3×20s ea'},
-  ]
-};
-const CANAL_RUN_SLED = {
-  label:'Canal Run — VO2 Max', cls:'accent', items:[
-    {name:'Dynamic warmup', dose:'5 min'},
-    {name:'Backward jog intervals', note:'warmup role · easy pace', dose:'~0.25 mi'},
-    {name:'VO2 Max Intervals — 4×4', note:'HR monitor · target >90% HRmax · HR frequently >160 bpm · aerobic base + VO2 max stimulus', dose:'4 min work / 3 min rest × 4 rounds · ~2 mi total'},
-    {name:'Curved run intervals', note:'sharpen curve radius', dose:'×3–4'},
-    {name:'Rock work + eyes-closed balance', dose:'3×20s ea'},
-  ]
-};
-const BAND_CIRCUIT_TUE = {
-  label:'Band Circuit', items:[
-    {name:'Band Lateral Shuffle', dose:'3×15 ea'},
-    {name:'Monster Walk — Banded Forward/Backward', dose:'2×20 steps'},
-    {name:'Clamshells — banded', dose:'3×15/side'},
-    {name:'Banded hip abduction', dose:'2×10/side'},
-    {name:'Isometric Wall Sit — Mid Angle', note:'nerve check post-canal · 3×45s', dose:'3×45s'},
-  ]
-};
-const OCCLUSION_FINISHER = {
-  label:'Occlusion Finisher', cls:'accent', items:[
-    {name:'Occlusion cuff — leg press or leg extension', dose:'30/15/15/15'},
-    {name:'Occlusion cuff — standing calf raise', dose:'4×25'},
-  ]
-};
-const SLED_MAIN = {
-  label:'Sled', items:[
-    {name:'Sled Pull — Backward', note:'foraminal decompression', dose:'4×20m'},
-    {name:'Sled pull — sideways', dose:'2×40m ea side'},
-  ]
-};
-const MCGILL_CORE = {
-  label:'Core — Home', items:[
-    {name:'Dead Bug — Contralateral Hold', dose:'3×8 ea'},
-    {name:'Bird Dog — Extended Hold', dose:'3×10s ea'},
-  ]
-};
-const MOBILITY_LIGHT = {
-  label:'Mobility — Slow Work', cls:'green', items:[
-    {name:'Quadruped Thoracic Rotation', dose:'2×10 ea'},
-    {name:'Supine Figure-4 Stretch', dose:'2×45s ea'},
-    {name:'Sciatic Nerve Floss', dose:'10 gentle reps'},
-    {name:'Child Pose Lateral Reach', dose:'2×30s ea side'},
-    {name:'Cat-Cow', dose:'2×10 slow'},
-    {name:'Thoracic Extension — Foam Roller', dose:'2×45s · mid-back · arms crossed · exhale into extension'},
-    {name:'Femoral Nerve Floss', dose:'10 reps ea · prone knee bend · L4 territory · stop at nerve symptom'},
-    {name:'Couch Stretch — Hip Flexor', dose:'2×45s ea · posterior pelvic tilt · psoas at length'},
-    {name:'Quadruped Hip CAR', note:'Spina · slow full-circle hip rotation · transverse + frontal + sagittal · zero lumbar movement', dose:'5 reps ea · slow controlled'},
-    {name:'Hip PAILs — Flexion End-Range', note:'Spina/FRC · iso contraction AT end of hip flexion range · strength at end-of-range · safe L4-L5 · no lumbar rotation', dose:'2×10–20s ea · build to end-range gently'},
-  ]
-};
-const ANKLE_HOPS = {
-  label:'Ankle Hop Protocol — Baar', cls:'accent', items:[
-    {name:'Stiff Ankle Hops', note:'hot coals · minimal knee bend · collagen 45 min ago', dose:'3–5 min · stop at any nerve response'},
-  ]
-};
-
-const ISO_TENDON = {
-  label:'Yielding Iso Block', cls:'accent', items:[
-    {name:'Goblet Squat with Iso Hold', dose:'3×10 · 3s pause at bottom'},
-    {name:'Seated Hip Flexion Hold', dose:'2×30s ea · end-range strength'},
-    {name:'Side-Lying Hip Abduction — End-Range ISO Hold', note:'frontal plane glute med · hold at top of range · Ward/Spina · safe L4-L5', dose:'2×30s ea · slow raise · hold end-range'},
-    {name:'Dead Hang', dose:'3×30s · post-session decompression'},
-  ]
-};
 // ─────────────────────────────────────────
 // WEEK DATA
 // ─────────────────────────────────────────
@@ -1583,24 +1290,23 @@ const WEEKS = [
             {name:'Trap Bar Deadlift — Elevated Start', note:'3×5 · back off 15–20% from W3 peak · stop if back loads', dose:'3×5'},
             {name:'Step-Up — Weighted', note:'controlled — no spinal compression', dose:'3×10 ea'},
             {name:'Single-leg glute bridge', note:'bent knee on raised leg', dose:'3×10/side · 3s pause'},
-            {name:'Backward Walk/Jog — Matrix Treadmill', note:'foraminal decompression · 3.5–4.5 mph · let pace dictate', dose:'10–15 min'},
+            {name:'Sled Pull — Backward', note:'foraminal decompression', dose:'4×20m'},
           ]},
           { label:'McGill Core', items:[
             {name:'Bird Dog — Extended Hold', dose:'3×10s ea'},
             {name:'Side Plank — Full', dose:'2×20s ea'},
             {name:'Dead Bug — Contralateral Hold', dose:'3×8 ea'},
           ]},
-          ISO_TENDON,
         ]
       },
-      { name:'Tuesday', type:'A', intent:'Canal + Yari', sub:'Forward running. Ankle hops if collagen timed. Band circuit.',
-        collagen:true,
+      { name:'Tuesday', type:'A', intent:'Canal + Yari', sub:'Run intervals only. Decompressive. No circuits, no home work.',
+        collagen:false,
         blocks:[
-          { label:'Foot Yoga', cls:'green', items: FOOT_YOGA_SHORT },
-          CANAL_RUN_BLOCK,
-          ANKLE_HOPS,
-          BAND_CIRCUIT_TUE,
-          MCGILL_CORE,
+          { label:'Canal Session', items:[
+            {name:'Dynamic warmup', dose:'5 min'},
+            {name:'Rock work + eyes-closed balance', note:'proprioceptive — both legs', dose:'2×20s ea'},
+            {name:'Curved run intervals', note:'forward · work = higher knees / rest = gentle curves · 1.25 mi total · break halfway', dose:'×4–6'},
+          ]},
         ]
       },
       { name:'Wednesday', type:'A', intent:'Strength — Light', sub:'Gym. Single-leg focus. Back stays out of it.',
@@ -1620,249 +1326,57 @@ const WEEKS = [
             {name:'Bird Dog — Extended Hold', dose:'3×10s ea'},
             {name:'Side Plank — Full', dose:'2×20s ea'},
           ]},
-          ISO_TENDON,
         ]
       },
-      { name:'Thursday', type:'A', intent:'Canal + Sled', sub:'Forward run + sled. Decompression priority.',
+      { name:'Thursday', type:'A', intent:'Canal + Sled', sub:'Run intervals + sled. Decompressive. No circuits.',
         collagen:true,
         blocks:[
-          { label:'Foot Yoga', cls:'green', items: FOOT_YOGA_SHORT },
-          CANAL_RUN_SLED,
-          ANKLE_HOPS,
-          SLED_MAIN,
+          { label:'Canal Session', items:[
+            {name:'Dynamic warmup', dose:'5 min'},
+            {name:'Rock work + eyes-closed balance', note:'proprioceptive — both legs', dose:'2×20s ea'},
+            {name:'Curved run intervals', note:'forward · work = higher knees / rest = gentle curves · 1.25 mi total · break halfway', dose:'×4–6'},
+          ]},
+          { label:'Sled', items:[
+            {name:'Sled Pull — Backward', note:'foraminal decompression — non-negotiable', dose:'4×20m'},
+          ]},
         ]
       },
-      { name:'Friday', type:'C', intent:'Recovery — Active Rest', sub:'Mon–Thu load accumulates. Walk only today. No strength, no intervals. Back to gym tomorrow.',
+      { name:'Friday', type:'C', intent:'Active Recovery — Long Walk', sub:'No gym. Walk 30–60 min at comfortable pace. Decompress.',
         collagen:false,
         blocks:[
           { label:'Active Recovery', cls:'green', items:[
-            {name:'Easy Walk', dose:'20–30 min · flat ground · conversational pace'},
-            {name:'Cat-Cow', dose:'2×10 slow'},
-            {name:'Supine Figure-4 Stretch', dose:'2×45s ea'},
-            {name:'Child Pose Lateral Reach', dose:'2×30s ea side'},
+            {name:'Walking — Extended Duration', note:'30–60 min · comfortable pace · no target', dose:'1×'},
+            {name:'Heel Rock — Calcaneal Mobility', note:'optional · 2 min gentle', dose:'2×10 ea'},
           ]},
         ]
       },
-      { name:'Saturday', type:'A', intent:'Strength — Third Gym Session', sub:'Third gym session of the week — back and fatigue guide the load. Autoregulate down if needed.',
+      { name:'Saturday', type:'A', intent:'Strength — Gym', sub:'Third gym day. Same structure as Mon/Wed. Autoregulate on feel.',
         collagen:true,
         blocks:[
-          { label:'Foot Yoga', cls:'green', items: FOOT_YOGA_FULL },
+          { label:'Foot Yoga', cls:'green', items:[
+            {name:'Heel Rock — Calcaneal Mobility', dose:'2×10 ea'},
+            {name:'Short Foot Exercise', dose:'2×10s ea'},
+            {name:'Toe Spread and Lift', dose:'2×10'},
+            {name:'Ankle Dorsiflexion Mob — Weight-Bearing', dose:'5 ea side'},
+          ]},
           { label:'Main Block', items:[
-            {name:'Trap Bar Deadlift — Elevated Start', note:'Match Wednesday or -10% · third session of week · back decides', dose:'3×5'},
+            {name:'Trap Bar Deadlift — Elevated Start', note:'3×5 · autoregulate · back guides', dose:'3×5'},
             {name:'Step-Up — Weighted', dose:'3×10 ea'},
             {name:'Single-leg glute bridge', note:'bent knee on raised leg', dose:'3×12/side · 3s pause'},
-            {name:'Backward Walk/Jog — Matrix Treadmill', note:'foraminal decompression · 3.5–4.5 mph', dose:'10 min'},
+            {name:'Sled Pull — Backward', dose:'3×20m'},
           ]},
           { label:'McGill Core', items:[
             {name:'Bird Dog — Extended Hold', dose:'3×10s ea'},
             {name:'Dead Bug — Contralateral Hold', dose:'3×8 ea'},
           ]},
-          ISO_TENDON,
         ]
       },
-      { name:'Sunday', type:'C', intent:'Rest + Mobility', sub:'Full rest. Gabapentin taper — note warmth vs pain. Slow mobility only.',
+      { name:'Sunday', type:'C', intent:'Rest', sub:'Full rest. Note any nerve warmth vs pain change from week start.',
         collagen:false,
         blocks:[
-          { label:'Gentle', cls:'green', items:[
+          { label:'Rest', cls:'green', items:[
             {name:'Ankle Circles + Dorsiflexion', dose:'5 min gentle'},
           ]},
-          MOBILITY_LIGHT,
-        ]
-      },
-    ]
-  },
-
-  // ── BRIDGE W6 — Apr 27–May 3 ──────────────────────────────────────
-  {
-    label:'Bridge · W6', dates:'Apr 27–May 3', phase:'Bridge Phase',
-    focus:'Steady state continues. Forward running primary. Ankle hops building. Mobility anchored on rest days.',
-    days:[
-      { name:'Monday', type:'A', intent:'Strength', sub:'Gym. Autoregulate from W5.',
-        collagen:true,
-        blocks:[
-          { label:'Foot Yoga', cls:'green', items: FOOT_YOGA_FULL },
-          { label:'Main Block', items:[
-            {name:'Trap Bar Deadlift — Elevated Start', note:'3×5 · match W5 or +5 lbs if back clean', dose:'3×5'},
-            {name:'Step-Up — Weighted', dose:'3×10 ea'},
-            {name:'Single-leg glute bridge', note:'bent knee on raised leg', dose:'3×10/side · 3s pause'},
-            {name:'Backward Walk/Jog — Matrix Treadmill', note:'foraminal decompression · 3.5–4.5 mph · let pace dictate', dose:'10–15 min'},
-          ]},
-          { label:'McGill Core', items:[
-            {name:'Bird Dog — Extended Hold', dose:'3×10s ea'},
-            {name:'Side Plank — Full', dose:'2×20s ea'},
-            {name:'Dead Bug — Contralateral Hold', dose:'3×8 ea'},
-          ]},
-        ]
-      },
-      { name:'Tuesday', type:'A', intent:'Canal + Yari', sub:'Forward running. Ankle hops if collagen timed. Band circuit.',
-        collagen:true,
-        blocks:[
-          { label:'Foot Yoga', cls:'green', items: FOOT_YOGA_SHORT },
-          CANAL_RUN_BLOCK,
-          ANKLE_HOPS,
-          BAND_CIRCUIT_TUE,
-          OCCLUSION_FINISHER,
-          MCGILL_CORE,
-        ]
-      },
-      { name:'Wednesday', type:'A', intent:'Strength — Light', sub:'Gym. Hip and posterior chain.',
-        collagen:false,
-        blocks:[
-          { label:'Foot Yoga', cls:'green', items: FOOT_YOGA_SHORT },
-          { label:'Main Block', items:[
-            {name:'Romanian Deadlift (RDL)', note:'hinge not load · 2×10 moderate', dose:'2×10'},
-            {name:'Step-Up — Weighted', dose:'3×10 ea'},
-            {name:'Single-leg glute bridge', note:'bent knee on raised leg', dose:'3×12/side'},
-            {name:'Cable Pull-Through', dose:'3×12'},
-          ]},
-          { label:'McGill Core', items:[
-            {name:'Bird Dog — Extended Hold', dose:'3×10s ea'},
-            {name:'Side Plank — Full', dose:'2×20s ea'},
-          ]},
-        ]
-      },
-      { name:'Thursday', type:'A', intent:'Canal + Sled', sub:'Forward run + sled. Decompression priority.',
-        collagen:true,
-        blocks:[
-          { label:'Foot Yoga', cls:'green', items: FOOT_YOGA_SHORT },
-          CANAL_RUN_SLED,
-          ANKLE_HOPS,
-          SLED_MAIN,
-        ]
-      },
-      { name:'Friday', type:'C', intent:'Recovery — Active Rest', sub:'Mon–Thu load accumulates. Walk only today. No strength, no intervals. Back to gym tomorrow.',
-        collagen:false,
-        blocks:[
-          { label:'Active Recovery', cls:'green', items:[
-            {name:'Easy Walk', dose:'20–30 min · flat ground · conversational pace'},
-            {name:'Cat-Cow', dose:'2×10 slow'},
-            {name:'Supine Figure-4 Stretch', dose:'2×45s ea'},
-            {name:'Child Pose Lateral Reach', dose:'2×30s ea side'},
-          ]},
-        ]
-      },
-      { name:'Saturday', type:'A', intent:'Strength — Third Gym Session', sub:'Third gym session of the week — back and fatigue guide the load. Autoregulate down if needed.',
-        collagen:true,
-        blocks:[
-          { label:'Foot Yoga', cls:'green', items: FOOT_YOGA_FULL },
-          { label:'Main Block', items:[
-            {name:'Trap Bar Deadlift — Elevated Start', note:'Match Wednesday or -10% · third session of week · back decides', dose:'3×5'},
-            {name:'Step-Up — Weighted', dose:'3×10 ea'},
-            {name:'Single-leg glute bridge', note:'bent knee on raised leg', dose:'3×12/side · 3s pause'},
-            {name:'Backward Walk/Jog — Matrix Treadmill', note:'foraminal decompression · 3.5–4.5 mph', dose:'10 min'},
-          ]},
-          { label:'McGill Core', items:[
-            {name:'Bird Dog — Extended Hold', dose:'3×10s ea'},
-            {name:'Dead Bug — Contralateral Hold', dose:'3×8 ea'},
-          ]},
-          ISO_TENDON,
-        ]
-      },
-      { name:'Sunday', type:'C', intent:'Rest + Mobility', sub:'Full rest. Slow mobility only.',
-        collagen:false,
-        blocks:[
-          { label:'Gentle', cls:'green', items:[
-            {name:'Ankle Circles + Dorsiflexion', dose:'5 min gentle'},
-          ]},
-          MOBILITY_LIGHT,
-        ]
-      },
-    ]
-  },
-
-  // ── BRIDGE W7 — May 4–10 ──────────────────────────────────────
-  {
-    label:'Bridge · W7', dates:'May 4–10', phase:'Bridge Phase',
-    focus:'Progress forward run volume. Curves sharper. Ankle hops building to 5 min. June 5 consult approaching.',
-    days:[
-      { name:'Monday', type:'A', intent:'Strength', sub:'Gym. Progress trap bar if back clear.',
-        collagen:true,
-        blocks:[
-          { label:'Foot Yoga', cls:'green', items: FOOT_YOGA_FULL },
-          { label:'Main Block', items:[
-            {name:'Trap Bar Deadlift — Elevated Start', note:'3×5 · +5–10 lbs from W6 if gate clean', dose:'3×5'},
-            {name:'Step-Up — Weighted', dose:'3×10 ea'},
-            {name:'Single-leg glute bridge', note:'bent knee on raised leg', dose:'3×12/side · 3s pause'},
-            {name:'Backward Walk/Jog — Matrix Treadmill', note:'foraminal decompression · 3.5–4.5 mph · let pace dictate', dose:'10–15 min'},
-          ]},
-          { label:'McGill Core', items:[
-            {name:'Bird Dog — Extended Hold', dose:'3×10s ea'},
-            {name:'Side Plank — Full', dose:'2×20s ea'},
-            {name:'Dead Bug — Contralateral Hold', dose:'3×8 ea'},
-          ]},
-        ]
-      },
-      { name:'Tuesday', type:'A', intent:'Canal + Yari', sub:'Forward run volume up. Ankle hops 4–5 min target.',
-        collagen:true,
-        blocks:[
-          { label:'Foot Yoga', cls:'green', items: FOOT_YOGA_SHORT },
-          CANAL_RUN_BLOCK,
-          ANKLE_HOPS,
-          BAND_CIRCUIT_TUE,
-          OCCLUSION_FINISHER,
-          MCGILL_CORE,
-        ]
-      },
-      { name:'Wednesday', type:'A', intent:'Strength — Light', sub:'Gym. Hip and posterior chain.',
-        collagen:false,
-        blocks:[
-          { label:'Foot Yoga', cls:'green', items: FOOT_YOGA_SHORT },
-          { label:'Main Block', items:[
-            {name:'Romanian Deadlift (RDL)', note:'hinge not load · progress 5 lbs if W6 clean', dose:'2×10'},
-            {name:'Step-Up — Weighted', dose:'3×10 ea'},
-            {name:'Single-leg glute bridge', note:'bent knee on raised leg', dose:'3×12/side'},
-            {name:'Cable Pull-Through', dose:'3×12'},
-          ]},
-          { label:'McGill Core', items:[
-            {name:'Bird Dog — Extended Hold', dose:'3×10s ea'},
-            {name:'Side Plank — Full', dose:'2×20s ea'},
-          ]},
-        ]
-      },
-      { name:'Thursday', type:'A', intent:'Canal + Sled', sub:'Forward run + sled. June 5 in four weeks.',
-        collagen:true,
-        blocks:[
-          { label:'Foot Yoga', cls:'green', items: FOOT_YOGA_SHORT },
-          CANAL_RUN_SLED,
-          ANKLE_HOPS,
-          SLED_MAIN,
-        ]
-      },
-      { name:'Friday', type:'C', intent:'Recovery — Active Rest', sub:'Mon–Thu load accumulates. Walk only today. No strength, no intervals. Back to gym tomorrow.',
-        collagen:false,
-        blocks:[
-          { label:'Active Recovery', cls:'green', items:[
-            {name:'Easy Walk', dose:'20–30 min · flat ground · conversational pace'},
-            {name:'Cat-Cow', dose:'2×10 slow'},
-            {name:'Supine Figure-4 Stretch', dose:'2×45s ea'},
-            {name:'Child Pose Lateral Reach', dose:'2×30s ea side'},
-          ]},
-        ]
-      },
-      { name:'Saturday', type:'A', intent:'Strength — Third Gym Session', sub:'Third gym session of the week — back and fatigue guide the load. Autoregulate down if needed.',
-        collagen:true,
-        blocks:[
-          { label:'Foot Yoga', cls:'green', items: FOOT_YOGA_FULL },
-          { label:'Main Block', items:[
-            {name:'Trap Bar Deadlift — Elevated Start', note:'Match Wednesday or -10% · third session of week · back decides', dose:'3×5'},
-            {name:'Step-Up — Weighted', dose:'3×10 ea'},
-            {name:'Single-leg glute bridge', note:'bent knee on raised leg', dose:'3×12/side · 3s pause'},
-            {name:'Hip Thrust — Barbell', note:'add load if W6/W7 clean', dose:'3×10'},
-          ]},
-          { label:'McGill Core', items:[
-            {name:'Bird Dog — Extended Hold', dose:'3×10s ea'},
-            {name:'Dead Bug — Contralateral Hold', dose:'3×8 ea'},
-          ]},
-          ISO_TENDON,
-        ]
-      },
-      { name:'Sunday', type:'C', intent:'Rest + Mobility', sub:'Full rest. Slow mobility only.',
-        collagen:false,
-        blocks:[
-          { label:'Gentle', cls:'green', items:[
-            {name:'Ankle Circles + Dorsiflexion', dose:'5 min gentle'},
-          ]},
-          MOBILITY_LIGHT,
         ]
       },
     ]
@@ -1898,24 +1412,34 @@ const WEEKS = [
           ]},
         ]
       },
-      { name:'Tuesday', type:'B', intent:'Canal + Yari — Upgraded',
-        sub:'Forward run primary. A-March enters. Band circuit upgraded.',
-        collagen:true,
+      { name:'Tuesday', type:'B', intent:'Day B — Canal + Bands Upgraded',
+        sub:'Canal with Yari. Lateral band walks under load. A-March enters.',
+        collagen:false,
         blocks:[
-          { label:'Foot Yoga', cls:'green', items: FOOT_YOGA_SHORT },
-          CANAL_RUN_BLOCK,
-          ANKLE_HOPS,
+          { label:'Foot Yoga — Pre-Run', cls:'green', items:[
+            {name:'Heel Rock — Calcaneal Mobility', dose:'2×10 ea'},
+            {name:'Short Foot Exercise', dose:'2×10s ea'},
+            {name:'Toe Spread and Lift', dose:'2×10'},
+            {name:'Ankle Circles + Dorsiflexion', dose:'10 ea direction'},
+          ]},
+          { label:'Canal Work', cls:'accent', items:[
+            {name:'Proprioceptive walk — uneven terrain', dose:'5–10 min warmup'},
+            {name:'Backward jog intervals', dose:'1–1.5 mi'},
+            {name:'A-March', dose:'3×20m — intro'},
+          ]},
           { label:'Band Circuit — Upgraded', items:[
-            {name:'Band Lateral Shuffle', dose:'3×15 ea loaded'},
-            {name:'Monster Walk — Banded Forward/Backward', dose:'3×20 steps'},
+            {name:'Banded side shuffle', dose:'3×15/dir loaded'},
+            {name:'Monster walks', dose:'3×20m'},
             {name:'Clamshells — banded', dose:'3×15/side'},
-            {name:'Isometric Wall Sit — Mid Angle', note:'nerve check · 3×45s', dose:'3×45s'},
           ]},
-          OCCLUSION_FINISHER,
-          { label:'A-March — Intro', cls:'accent', items:[
-            {name:'A-March', dose:'3×20m'},
+          { label:'Occlusion Finisher', cls:'accent', items:[
+            {name:'Occlusion cuff — leg press or leg extension', dose:'30/15/15/15'},
+            {name:'Occlusion cuff — standing calf raise', dose:'4×25'},
           ]},
-          MCGILL_CORE,
+          { label:'Core', items:[
+            {name:'Dead bug', dose:'3×10/side'},
+            {name:'Bird dog', dose:'3×8'},
+          ]},
         ]
       },
       { name:'Wednesday', type:'C', intent:'Day C — Cardio Build',
@@ -1932,14 +1456,21 @@ const WEEKS = [
           ]},
         ]
       },
-      { name:'Thursday', type:'B', intent:'Canal + Sled — Reload',
-        sub:'Forward run + sled resets to 80 lbs and rebuilds.',
-        collagen:true,
+      { name:'Thursday', type:'B', intent:'Day B — Canal + Sled Reload',
+        sub:'Canal with Yari. Sled resets to 80 lbs and rebuilds.',
+        collagen:false,
         blocks:[
-          { label:'Foot Yoga', cls:'green', items: FOOT_YOGA_SHORT },
-          CANAL_RUN_SLED,
-          ANKLE_HOPS,
-          { label:'Sled Work — Reload', cls:'accent', items:[
+          { label:'Foot Yoga — Pre-Run', cls:'green', items:[
+            {name:'Heel Rock — Calcaneal Mobility', dose:'2×10 ea'},
+            {name:'Short Foot Exercise', dose:'2×10s ea'},
+            {name:'Toe Spread and Lift', dose:'2×10'},
+            {name:'Ankle Circles + Dorsiflexion', dose:'10 ea direction'},
+          ]},
+          { label:'Canal Work', cls:'accent', items:[
+            {name:'Proprioceptive walk — uneven terrain', dose:'5–10 min warmup'},
+            {name:'Backward jog intervals', dose:'1–1.5 mi'},
+          ]},
+          { label:'Sled Work', cls:'accent', items:[
             {name:'Sled pull — backward', dose:'3×40m · 80 lbs reset'},
             {name:'Sled pull — sideways', dose:'3×40m · 80 lbs'},
           ]},
@@ -1969,15 +1500,13 @@ const WEEKS = [
           ]},
         ]
       },
-      { name:'Saturday', type:'C', intent:'Active Recovery + Mobility',
-        sub:'Bike + walk. Slow mobility work.',
+      { name:'Saturday', type:'C', intent:'Active Recovery',
+        sub:'Bike + walk.',
         collagen:false,
         blocks:[
           { label:'Recovery', cls:'green', items:[
             {name:'Stationary bike', dose:'25 min easy'},
-            {name:'Walking — Extended Duration', dose:'20 min easy'},
           ]},
-          MOBILITY_LIGHT,
         ]
       },
       { name:'Sunday', type:'rest', intent:'Rest', sub:'Full rest.', collagen:false, rest:true, blocks:[] },
@@ -2646,116 +2175,6 @@ async function init(){
 }
 
 init();
-// ─────────────────────────────────────────
-// INJURY LOG MODAL
-// ─────────────────────────────────────────
-let injuryLogs = [];
-let selectedInjuryRegion = null;
-let selectedInjurySeverity = null;
-
-function openInjuryModal(){
-  selectedInjuryRegion = null;
-  selectedInjurySeverity = null;
-  document.querySelectorAll('[id^="ireg-"]').forEach(b => b.classList.remove('active'));
-  document.querySelectorAll('#injury-score-grid .score-btn').forEach(b => b.classList.remove('selected'));
-  document.getElementById('injury-desc').value = '';
-  const today = new Date().toLocaleDateString('en-US',{weekday:'long',month:'short',day:'numeric'});
-  document.getElementById('injury-date-label').textContent = today;
-  document.getElementById('injury-modal').classList.add('open');
-}
-
-function closeInjuryModal(){
-  document.getElementById('injury-modal').classList.remove('open');
-}
-
-function selectInjuryRegion(r){
-  selectedInjuryRegion = r;
-  document.querySelectorAll('[id^="ireg-"]').forEach(b => b.classList.remove('active'));
-  document.getElementById('ireg-'+r).classList.add('active');
-}
-
-function selectInjurySeverity(n){
-  selectedInjurySeverity = n;
-  document.querySelectorAll('#injury-score-grid .score-btn').forEach(b => {
-    b.classList.toggle('selected', parseInt(b.dataset.v)===n);
-  });
-}
-
-async function saveInjuryLog(){
-  if(!selectedInjuryRegion || !selectedInjurySeverity) return;
-  const desc = document.getElementById('injury-desc').value.trim();
-  const entry = {
-    date: todayStr(),
-    region: selectedInjuryRegion,
-    description: desc,
-    severity: selectedInjurySeverity,
-    ts: Date.now()
-  };
-  injuryLogs.push(entry);
-  localStorage.setItem(ATHLETE_ID + '_injuries', JSON.stringify(injuryLogs));
-  try {
-    await sbFetch('/rest/v1/injury_logs', {
-      method: 'POST',
-      prefer: 'return=representation',
-      body: JSON.stringify({
-        athlete_id: ATHLETE_ID,
-        date: entry.date,
-        region: entry.region,
-        description: entry.description,
-        severity: entry.severity
-      })
-    });
-    showSyncBadge('ok');
-  } catch(e){ showSyncBadge('offline'); }
-  closeInjuryModal();
-  updateInjuryGate();
-}
-
-function getActiveInjuryPhase(){
-  const now = Date.now();
-  const recent = injuryLogs.filter(l => {
-    const age = (now - new Date(l.date).getTime()) / 86400000;
-    return age <= 7 && l.severity >= 3;
-  });
-  if(!recent.length) return null;
-  if(recent.some(l => ['knee','shin','foot'].includes(l.region))) return 'phase-rehab,phase-bridge';
-  if(recent.some(l => l.severity >= 4)) return 'phase-rehab,phase-bridge';
-  return 'phase-bridge,phase-gpp';
-}
-
-function updateInjuryGate(){
-  const override = getActiveInjuryPhase();
-  const brwBtns = document.querySelectorAll('.browse-btn');
-  brwBtns.forEach(btn => {
-    if(override){
-      const url = btn.href;
-      const base = url.split('?')[0];
-      btn.href = base + '?phase=' + override + '&quality=quality-gpp,quality-isometric&hidespinal=1';
-      btn.style.borderColor = 'rgba(200,80,60,0.5)';
-      btn.style.color = '#c8503c';
-      btn.title = '⚠ Active injury — Library filtered to rehab/bridge';
-    } else {
-      btn.style.borderColor = '';
-      btn.style.color = '';
-      btn.title = '';
-    }
-  });
-}
-
-async function loadInjuryLogs(){
-  const cached = localStorage.getItem(ATHLETE_ID + '_injuries');
-  if(cached) try { injuryLogs = JSON.parse(cached); } catch(e){}
-  try {
-    const cutoff = sbDateStr(new Date(Date.now() - 7*86400000));
-    const rows = await sbFetch('/rest/v1/injury_logs?athlete_id=eq.' + ATHLETE_ID + '&date=gte.' + cutoff + '&order=date.desc');
-    if(rows && rows.length){ injuryLogs = rows; localStorage.setItem(ATHLETE_ID + '_injuries', JSON.stringify(rows)); }
-  } catch(e){}
-  updateInjuryGate();
-}
-
-document.getElementById('injury-modal').addEventListener('click', function(e){ if(e.target===this) closeInjuryModal(); });
-
-
 </script>
 <footer style="padding:1.5rem 1.25rem 1rem;border-top:1px solid var(--border);text-align:center;">
   <button id="migrate-btn" onclick="migrateLocalToSupabase()"
