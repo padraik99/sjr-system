@@ -950,8 +950,7 @@ const CANAL_RUN_BLOCK = {
     {name:'Dynamic warmup', dose:'5 min'},
     {name:'Backward jog intervals', note:'warmup role · easy pace', dose:'~0.25 mi'},
     {name:'VO2 Max Intervals — 4×4', note:'HR monitor · target >90% HRmax · HR frequently >160 bpm · aerobic base + VO2 max stimulus', dose:'4 min work / 3 min rest × 4 rounds · ~2 mi total'},
-    {name:'Curved run intervals', note:'sharpen curve radius over weeks', dose:'×4–6'},
-    {name:'Rock work + eyes-closed balance', note:'post-run proprioception', dose:'3×20s ea'},
+    {name:'Rock work + eyes-closed balance', note:'post-run proprioception · curves happen naturally within 4×4', dose:'3×20s ea'},
   ]
 };
 const CANAL_RUN_SLED = {
@@ -959,7 +958,6 @@ const CANAL_RUN_SLED = {
     {name:'Dynamic warmup', dose:'5 min'},
     {name:'Backward jog intervals', note:'warmup role · easy pace', dose:'~0.25 mi'},
     {name:'VO2 Max Intervals — 4×4', note:'HR monitor · target >90% HRmax · HR frequently >160 bpm · aerobic base + VO2 max stimulus', dose:'4 min work / 3 min rest × 4 rounds · ~2 mi total'},
-    {name:'Curved run intervals', note:'sharpen curve radius', dose:'×3–4'},
     {name:'Rock work + eyes-closed balance', dose:'3×20s ea'},
   ]
 };
@@ -1006,7 +1004,7 @@ const MOBILITY_LIGHT = {
 };
 const ANKLE_HOPS = {
   label:'Ankle Hop Protocol — Baar', cls:'accent', items:[
-    {name:'Stiff Ankle Hops', note:'hot coals · minimal knee bend · collagen 45 min ago', dose:'3–5 min · stop at any nerve response'},
+    {name:'Stiff Ankle Hops', note:'hot coals · minimal knee bend · collagen 45 min ago · CNS must be ready — Thu only, post-sled', dose:'2×20–30s · current tolerance · build toward 3–5 min over weeks · stop at any nerve response'},
   ]
 };
 
@@ -1591,16 +1589,14 @@ const WEEKS = [
             {name:'Dead Bug — Contralateral Hold', dose:'3×8 ea'},
           ]},
           ISO_TENDON,
+          ANKLE_HOPS,
         ]
       },
-      { name:'Tuesday', type:'A', intent:'Canal + Yari', sub:'Forward running. Ankle hops if collagen timed. Band circuit.',
+      { name:'Tuesday', type:'C', intent:'Canal + Yari — VO2 Max Only', sub:'VO2 max 4×4 drains significantly in heat. This is the full stimulus. Nothing after.',
         collagen:true,
         blocks:[
           { label:'Foot Yoga', cls:'green', items: FOOT_YOGA_SHORT },
           CANAL_RUN_BLOCK,
-          ANKLE_HOPS,
-          BAND_CIRCUIT_TUE,
-          MCGILL_CORE,
         ]
       },
       { name:'Wednesday', type:'A', intent:'Strength — Light', sub:'Gym. Single-leg focus. Back stays out of it.',
@@ -1628,7 +1624,6 @@ const WEEKS = [
         blocks:[
           { label:'Foot Yoga', cls:'green', items: FOOT_YOGA_SHORT },
           CANAL_RUN_SLED,
-          ANKLE_HOPS,
           SLED_MAIN,
         ]
       },
@@ -1692,17 +1687,14 @@ const WEEKS = [
             {name:'Side Plank — Full', dose:'2×20s ea'},
             {name:'Dead Bug — Contralateral Hold', dose:'3×8 ea'},
           ]},
+          ANKLE_HOPS,
         ]
       },
-      { name:'Tuesday', type:'A', intent:'Canal + Yari', sub:'Forward running. Ankle hops if collagen timed. Band circuit.',
+      { name:'Tuesday', type:'C', intent:'Canal + Yari — VO2 Max Only', sub:'VO2 max 4×4 drains significantly in heat. This is the full stimulus. Nothing after.',
         collagen:true,
         blocks:[
           { label:'Foot Yoga', cls:'green', items: FOOT_YOGA_SHORT },
           CANAL_RUN_BLOCK,
-          ANKLE_HOPS,
-          BAND_CIRCUIT_TUE,
-          OCCLUSION_FINISHER,
-          MCGILL_CORE,
         ]
       },
       { name:'Wednesday', type:'A', intent:'Strength — Light', sub:'Gym. Hip and posterior chain.',
@@ -1726,7 +1718,6 @@ const WEEKS = [
         blocks:[
           { label:'Foot Yoga', cls:'green', items: FOOT_YOGA_SHORT },
           CANAL_RUN_SLED,
-          ANKLE_HOPS,
           SLED_MAIN,
         ]
       },
@@ -1790,17 +1781,14 @@ const WEEKS = [
             {name:'Side Plank — Full', dose:'2×20s ea'},
             {name:'Dead Bug — Contralateral Hold', dose:'3×8 ea'},
           ]},
+          ANKLE_HOPS,
         ]
       },
-      { name:'Tuesday', type:'A', intent:'Canal + Yari', sub:'Forward run volume up. Ankle hops 4–5 min target.',
+      { name:'Tuesday', type:'C', intent:'Canal + Yari — VO2 Max Only', sub:'VO2 max 4×4 drains significantly in heat. This is the full stimulus. Nothing after.',
         collagen:true,
         blocks:[
           { label:'Foot Yoga', cls:'green', items: FOOT_YOGA_SHORT },
           CANAL_RUN_BLOCK,
-          ANKLE_HOPS,
-          BAND_CIRCUIT_TUE,
-          OCCLUSION_FINISHER,
-          MCGILL_CORE,
         ]
       },
       { name:'Wednesday', type:'A', intent:'Strength — Light', sub:'Gym. Hip and posterior chain.',
@@ -1824,7 +1812,6 @@ const WEEKS = [
         blocks:[
           { label:'Foot Yoga', cls:'green', items: FOOT_YOGA_SHORT },
           CANAL_RUN_SLED,
-          ANKLE_HOPS,
           SLED_MAIN,
         ]
       },
