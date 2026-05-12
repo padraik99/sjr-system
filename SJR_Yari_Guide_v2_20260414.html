@@ -842,6 +842,14 @@ footer .accent{color:var(--accent)}
 </div>
 
 <script>
+// Daily cache-bust — redirect with today's date if stale; invisible to user
+(function(){
+  const t = new Date();
+  const tag = t.getFullYear() + String(t.getMonth()+1).padStart(2,'0') + String(t.getDate()).padStart(2,'0');
+  const params = new URLSearchParams(window.location.search);
+  if(params.get('t') !== tag) window.location.replace(window.location.pathname + '?t=' + tag);
+})();
+
 // ── SUPABASE ─────────────────────────────────────────────────────
 const SUPA_URL = 'https://jedsnurnnwmpcbdvtlbs.supabase.co';
 const SUPA_KEY = 'sb_publishable_3WGolnM5dOK88Y4WdKCFGA_Hi6wj-_z';

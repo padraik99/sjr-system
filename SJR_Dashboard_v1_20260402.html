@@ -733,6 +733,14 @@ function download(csv, filename){
 document.getElementById('inj-date').value = todayStr();
 
 loadAll();
+
+// Cache-bust nav links daily — appends ?t=YYYYMMDD so guide pages always load fresh
+// Supabase state is keyed by athlete_id, not URL — query string has no side effects
+(function(){
+  const t = new Date();
+  const tag = t.getFullYear() + String(t.getMonth()+1).padStart(2,'0') + String(t.getDate()).padStart(2,'0');
+  document.querySelectorAll('a.nav-link[href$=".html"]').forEach(a => {
+    a.href = a.getAttribute('href').split('?')[0] + '?t=' + tag;
+  });
+})();
 </script>
-</body>
-</html>
