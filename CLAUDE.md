@@ -61,9 +61,9 @@ async async function saveGateLog(){ }  // never stack async keywords
 | `SJR_WeeklyGuide_Patrick_v5_20260402.html` | v5.7 | Supabase · 4-metric pain log · shared canal/iso/mobility constants · W5–W7 Bridge weeks · canal → VO2 max 4×4 intervals · W5–W7 Fri→Recovery, Sat→Gym · ISO_TENDON + Side-Lying Hip Abduction · MOBILITY_LIGHT + Hip CAR + PAILs · EX_INFO entries added |
 | `shaylan_weekly_v3_20260402.html` | v3.2 | Supabase · expandable EX_INFO panels · SHIN_COMP maintenance block · MULTIPLANAR_LOWER (Lateral Lunge + Side-Lying Hip Abduction ISO) added W1+W2 comp Mondays · EX_INFO entries added |
 | `Cadence_Weekly_v3_20260402.html` | v3.2 | Supabase · expandable EX_INFO panels · SHIN_COMP maintenance block · MULTIPLANAR_LOWER (Lateral Lunge + Side-Lying Hip Abduction ISO) added all 3 comp Mondays · EX_INFO entries added |
-| `SJR_Yari_Guide_v2_20260414.html` | v2.3 | Supabase-wired · ACL rehab · W6 deload + Phase 3 May Gate + W3 Aerobic Build + W4 Anaerobic Intro · Side-Lying Hip Abduction ISO + Lateral Step-Up ISO added all Phase 3 Strength Blocks · RSA intro (6×30m 80%) W3 Sat · RSA progression (8×30m 85–90%) W4 Sat · VO2 max 4×4 canal Tue/Thu W3–W4 |
+| `SJR_Yari_Guide_v2_20260414.html` | v2.4 | Supabase-wired · ACL rehab · W6 deload + Phase 3 May Gate + W3 Aerobic Build + W4 Anaerobic Intro · Side-Lying Hip Abduction ISO + Lateral Step-Up ISO added all Phase 3 Strength Blocks · RSA intro (6×30m 80%) W3 Sat · RSA progression (8×30m 85–90%) W4 Sat · VO2 max 4×4 canal Tue/Thu W3–W4 · date numbers on FAB bar day tabs |
 | `SJR_Library_Master_v4_20260402.html` | v4.1 | 80 cards · quality tags · 6-quality filter · spinal filter UI removed · absolute Browse URLs |
-| `SJR_Dashboard_v2_20260408.html` | v2.2 | All 4 athletes · auto-refresh · injury log · CSV export · **security patch 2026-04-16**: stored XSS fixed (renderInjuryTable → DOM/textContent), input validation added (maxlength + JS guards), e.message innerHTML→textContent, setInterval moved to init · **schema fix 2026-04-21**: injury_logs column `location`→`region` to match athlete guide writes; Yari link updated to v2 |
+| `SJR_Dashboard_v1_20260402.html` | v1.3 | All 4 athletes · auto-refresh · injury log · CSV export · **security patch 2026-04-16**: stored XSS fixed · **schema fix 2026-04-21**: injury_logs `location`→`region` · **2026-05-12**: sbFetch Authorization:Bearer removed (sb_publishable_ keys require apikey header only) |
 | `patrick_protocol_v2_20260402.html` | v2 | Floating This Week button |
 | `SJR_Periodization_Master_v2_20260313.html` | v2 | Library links fixed to absolute URL v4.1 |
 
@@ -228,13 +228,15 @@ git -C "C:/Users/padra/Documents/GitHub/sjr-system" log --oneline -20
 ### Recent Commit Log (May 2026)
 | Hash | Message |
 |------|---------|
-| e6e1e7d | Patrick v5.6: Mon sled → Matrix treadmill · 90/90 removed · Built from Broken additions (thoracic ext, femoral nerve floss, couch stretch) in MOBILITY_LIGHT |
-| (pending push) | CLAUDE.md + Shaylan/Cadence v3.1: research pipeline · shin health block · v5.6 file state |
-| d5f0e2f | Yari v2.2: split squat iso hold + toe progression + supine hamstring pulses — W6 deload intro, Phase 3 ramp |
-| (pending push) | Yari Assessment v1.1: delete button on history cards · remove debug logs |
-| (pending push) | Yari Assessment v1: fix sbFetch — remove Authorization:Bearer, align with working guides |
+| 0e0f850 | Restore from upload conflict · Patrick v5.7 + Yari v2.4 + Dashboard sbFetch fix |
+| 6ca4a13 | Patrick v5.7: 6 missing EX_INFO entries — Matrix Treadmill, Couch Stretch, Easy Walk, Femoral Nerve Floss, Hip Thrust, Thoracic Ext |
+| cbacfd2 | Scheduled task: multi-planar blocks · Patrick Fri=recovery/Sat=gym · 4×4 VO2 max canal · Yari RSA anaerobic prep (June 9 RTP) |
+| 00d0cdb | CLAUDE.md: session orientation + research pipeline · Shaylan/Cadence v3.1 SHIN_COMP · Yari Assessment: delete button + sbFetch fix |
+| e6e1e7d | Patrick v5.6: Mon sled → Matrix treadmill · 90/90 removed · MOBILITY_LIGHT Built from Broken additions |
+| d5f0e2f | Yari v2.2: split squat iso + toe progression + supine hamstring pulses |
 
-*Note: "pending push" commits are staged locally — Patrick pushes via GitHub Desktop. Update hashes here after push if significant for future reference.*
+### Upload conflict note (2026-05-12)
+Patrick uploaded a guide from an older chat session via GitHub Desktop, landing *after* Cowork session commits and overwriting 1,271 lines of EX_INFO + breaking Yari's HTML. Restored from `6ca4a13` / `cbacfd2`. **Rule: the sjr-system folder is the only source of truth — delete all old copies outside it.**
 
 ## Security Audit — Status (updated 2026-04-16)
 
