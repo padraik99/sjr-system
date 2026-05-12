@@ -614,10 +614,10 @@ main{padding:1.25rem}
 </div>
 
 <script>
-// Daily cache-bust — redirect with today's date if stale; invisible to user
+// Hourly cache-bust — redirect if ?t= doesn't match current YYYYMMDDHH; invisible to user
 (function(){
   const t = new Date();
-  const tag = t.getFullYear() + String(t.getMonth()+1).padStart(2,'0') + String(t.getDate()).padStart(2,'0');
+  const tag = t.getFullYear() + String(t.getMonth()+1).padStart(2,'0') + String(t.getDate()).padStart(2,'0') + String(t.getHours()).padStart(2,'0');
   const params = new URLSearchParams(window.location.search);
   if(params.get('t') !== tag) window.location.replace(window.location.pathname + '?t=' + tag);
 })();
