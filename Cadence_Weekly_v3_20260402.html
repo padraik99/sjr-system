@@ -614,12 +614,10 @@ main{padding:1.25rem}
 </div>
 
 <script>
-// Hourly cache-bust — redirect if ?t= doesn't match current YYYYMMDDHH; invisible to user
+// Cache-bust: if no ?t= param, redirect with Date.now() — always a unique URL the CDN hasn't cached
 (function(){
-  const t = new Date();
-  const tag = t.getFullYear() + String(t.getMonth()+1).padStart(2,'0') + String(t.getDate()).padStart(2,'0') + String(t.getHours()).padStart(2,'0');
-  const params = new URLSearchParams(window.location.search);
-  if(params.get('t') !== tag) window.location.replace(window.location.pathname + '?t=' + tag);
+  if(!new URLSearchParams(window.location.search).get('t'))
+    window.location.replace(window.location.pathname + '?t=' + Date.now());
 })();
 
 // ─────────────────────────────────────────
