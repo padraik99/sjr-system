@@ -28,7 +28,7 @@ body {
   background:var(--bg); color:var(--text);
   font-family:'IBM Plex Sans',sans-serif;
   font-weight:300; line-height:1.7;
-  min-height:100vh; padding-bottom:6rem;
+  min-height:100vh; padding-bottom:2rem;
   font-size:15px;
 }
 
@@ -351,23 +351,16 @@ main { padding:1.25rem; max-width:700px; margin:0 auto; }
 .log-timing { font-family:'IBM Plex Mono',monospace; font-size:0.58rem; color:var(--dim); }
 
 /* WEEK NAV */
-.week-nav {
-  display:flex; justify-content:space-between; align-items:center;
-  padding:0.75rem 1.25rem;
-  border-top:1px solid var(--border);
-  position:fixed; bottom:0; left:0; right:0;
-  background:rgba(15,15,14,0.97); backdrop-filter:blur(12px); z-index:50;
+.week-inline-nav {
+  display:flex; align-items:center; gap:0.25rem;
 }
-.week-nav-info { text-align:center; }
-.week-nav-label { font-family:'IBM Plex Mono',monospace; font-size:0.6rem; letter-spacing:0.12em; text-transform:uppercase; color:var(--muted); }
-.week-nav-week { font-family:'Playfair Display',serif; font-size:1rem; font-weight:700; color:var(--text); line-height:1; }
-.nav-arrow {
-  background:var(--surface2); border:1px solid var(--border);
-  border-radius:6px; width:38px; height:38px;
-  display:flex; align-items:center; justify-content:center;
-  font-size:1rem; cursor:pointer; color:var(--muted); transition:all 0.15s;
+.nav-arrow-inline {
+  background:none; border:none; padding:0.15rem 0.3rem;
+  font-size:0.9rem; cursor:pointer; color:var(--muted);
+  border-radius:3px; transition:color 0.15s; line-height:1;
 }
-.nav-arrow:hover { border-color:var(--accent); color:var(--accent); }
+.nav-arrow-inline:hover:not(:disabled) { color:var(--accent); }
+.nav-arrow-inline:disabled { opacity:0.22; cursor:default; }
 .nav-arrow:disabled { opacity:0.3; cursor:default; }
 
 @media(max-width:360px) {
@@ -391,7 +384,7 @@ main { padding:1.25rem; max-width:700px; margin:0 auto; }
 
 /* ── REFRESH FAB ── */
 #refresh-fab{
-  position:fixed;bottom:4.5rem;right:1rem;z-index:500;
+  position:fixed;bottom:1rem;right:1rem;z-index:500;
   background:var(--surface2);border:1px solid var(--accent);
   border-radius:50%;width:2.6rem;height:2.6rem;
   display:flex;align-items:center;justify-content:center;
@@ -408,9 +401,13 @@ main { padding:1.25rem; max-width:700px; margin:0 auto; }
   <div class="hdr-top">
     <div>
       <div class="hdr-name">Patrick</div>
-      <div class="hdr-sub">L4–L5 · Return to Athletic Life · v5.4</div>
+      <div class="hdr-sub">L4–L5 · Return to Athletic Life · v5.9</div>
     </div>
-    <div class="phase-badge" id="phase-badge">Bridge · W1<span>Mar 24–30</span></div>
+    <div class="week-inline-nav">
+      <button class="nav-arrow-inline" id="prev-week" onclick="changeWeek(-1)" disabled>‹</button>
+      <div class="phase-badge" id="phase-badge">Bridge · W1<span>Mar 24–30</span></div>
+      <button class="nav-arrow-inline" id="next-week" onclick="changeWeek(1)">›</button>
+    </div>
   </div>
   <div class="metric-strip" id="metric-strip">
     <div class="metric-item">
@@ -550,15 +547,7 @@ main { padding:1.25rem; max-width:700px; margin:0 auto; }
   </div>
 </div>
 
-<!-- WEEK NAV -->
-<div class="week-nav">
-  <button class="nav-arrow" id="prev-week" onclick="changeWeek(-1)" disabled>←</button>
-  <div class="week-nav-info">
-    <div class="week-nav-label" id="nav-phase-label">Bridge Phase</div>
-    <div class="week-nav-week" id="nav-week-label">Week 1</div>
-  </div>
-  <button class="nav-arrow" id="next-week" onclick="changeWeek(1)">→</button>
-</div>
+
 
 <script>
 // Cache-bust: if no ?t= param, redirect with Date.now() — always a unique URL the CDN hasn't cached
@@ -1069,34 +1058,12 @@ const WEEKS = [
           ]},
         ]
       },
-      { name:'Tuesday', type:'B', intent:'Day B — Canal + Bands',
-        sub:'Canal with Yari. Backward jog → proprioceptive work → band circuit → occlusion finisher.',
-        collagen:false,
+      { name:'Tuesday', type:'C', intent:'Canal + Yari — VO2 Max Only',
+        sub:'VO2 max 4×4 drains significantly in heat. This is the full stimulus. Nothing after.',
+        collagen:true,
         blocks:[
-          { label:'Foot Yoga — Pre-Run', cls:'green', items:[
-            {name:'Heel Rock — Calcaneal Mobility', dose:'2×10 ea'},
-            {name:'Short Foot Exercise', dose:'2×10s ea'},
-            {name:'Toe Spread and Lift', dose:'2×10'},
-            {name:'Ankle Circles + Dorsiflexion', dose:'10 ea direction'},
-          ]},
-          { label:'Canal Work', cls:'accent', items:[
-            {name:'Proprioceptive walk — uneven terrain', dose:'5–10 min warmup'},
-            {name:'Backward jog intervals', dose:'1–2 mi total · mixed intervals'},
-          ]},
-          { label:'Band Circuit', items:[
-            {name:'Banded side shuffle', dose:'3×12/dir'},
-            {name:'Monster walks', dose:'2×15m fwd + back'},
-            {name:'Clamshells — banded', dose:'3×15/side'},
-            {name:'Banded hip abduction', dose:'2×10/side'},
-          ]},
-          { label:'Occlusion Finisher', cls:'accent', items:[
-            {name:'Occlusion cuff — leg press or leg extension', dose:'30/15/15/15'},
-            {name:'Occlusion cuff — standing calf raise', dose:'4×25'},
-          ]},
-          { label:'Core — McGill', items:[
-            {name:'Dead bug', dose:'2×10/side'},
-            {name:'Bird dog', dose:'2×8 · 3s hold'},
-          ]},
+          { label:'Foot Yoga', cls:'green', items: FOOT_YOGA_SHORT },
+          CANAL_RUN_BLOCK,
         ]
       },
       { name:'Wednesday', type:'C', intent:'Day C — Recovery or Light Gym',
@@ -1120,28 +1087,12 @@ const WEEKS = [
           ]},
         ]
       },
-      { name:'Thursday', type:'B', intent:'Day B — Canal + Sled',
-        sub:'Canal with Yari. Backward jog → sled pulls → iso finishers.',
-        collagen:false,
+      { name:'Thursday', type:'A', intent:'Canal + Sled', sub:'4×4 VO2 max + sled. Decompression priority.',
+        collagen:true,
         blocks:[
-          { label:'Foot Yoga — Pre-Run', cls:'green', items:[
-            {name:'Heel Rock — Calcaneal Mobility', dose:'2×10 ea'},
-            {name:'Short Foot Exercise', dose:'2×10s ea'},
-            {name:'Toe Spread and Lift', dose:'2×10'},
-            {name:'Ankle Circles + Dorsiflexion', dose:'10 ea direction'},
-          ]},
-          { label:'Canal Work', cls:'accent', items:[
-            {name:'Proprioceptive walk — uneven terrain', dose:'5–10 min warmup'},
-            {name:'Backward jog intervals', dose:'1–2 mi total · mixed intervals'},
-          ]},
-          { label:'Sled Work', cls:'accent', items:[
-            {name:'Sled pull — backward', dose:'3×40m · 90–100 lbs'},
-            {name:'Sled pull — sideways', dose:'2×40m · 100 lbs ea side'},
-          ]},
-          { label:'Iso Finisher', items:[
-            {name:'Wall sit isometric', dose:'3×45s'},
-            {name:'Side plank from knees', dose:'2×25s ea'},
-          ]},
+          { label:'Foot Yoga', cls:'green', items: FOOT_YOGA_SHORT },
+          CANAL_RUN_SLED,
+          SLED_MAIN,
         ]
       },
       { name:'Friday', type:'A', intent:'Day A or Rest',
@@ -1211,35 +1162,12 @@ const WEEKS = [
           ]},
         ]
       },
-      { name:'Tuesday', type:'B', intent:'Day B — Canal + Bands',
-        sub:'Canal with Yari. Band circuit volume up.',
-        collagen:false,
+      { name:'Tuesday', type:'C', intent:'Canal + Yari — VO2 Max Only',
+        sub:'VO2 max 4×4 drains significantly in heat. This is the full stimulus. Nothing after.',
+        collagen:true,
         blocks:[
-          { label:'Foot Yoga — Pre-Run', cls:'green', items:[
-            {name:'Heel Rock — Calcaneal Mobility', dose:'2×10 ea'},
-            {name:'Short Foot Exercise', dose:'2×10s ea'},
-            {name:'Toe Spread and Lift', dose:'2×10'},
-            {name:'Ankle Circles + Dorsiflexion', dose:'10 ea direction'},
-          ]},
-          { label:'Canal Work', cls:'accent', items:[
-            {name:'Proprioceptive walk — uneven terrain', dose:'5–10 min warmup'},
-            {name:'Backward jog intervals', dose:'1–1.5 mi total'},
-          ]},
-          { label:'Band Circuit', items:[
-            {name:'Banded side shuffle', dose:'3×15/dir'},
-            {name:'Monster walks', dose:'3×20m'},
-            {name:'Clamshells — banded', dose:'3×15 · ankle weight if ready'},
-            {name:'Banded hip abduction', dose:'2×10/side'},
-          ]},
-          { label:'Occlusion Finisher', cls:'accent', items:[
-            {name:'Occlusion cuff — leg press or leg extension', dose:'30/15/15/15'},
-            {name:'Occlusion cuff — standing calf raise', dose:'4×25'},
-          ]},
-          { label:'Core — McGill', items:[
-            {name:'Dead bug', dose:'3×10/side'},
-            {name:'Bird dog', dose:'3×8 · 3s hold'},
-            {name:'Side plank from knees', dose:'2×30s ea'},
-          ]},
+          { label:'Foot Yoga', cls:'green', items: FOOT_YOGA_SHORT },
+          CANAL_RUN_BLOCK,
         ]
       },
       { name:'Wednesday', type:'C', intent:'Day C — Recovery or Light Gym',
@@ -1263,28 +1191,12 @@ const WEEKS = [
           ]},
         ]
       },
-      { name:'Thursday', type:'B', intent:'Day B — Canal + Sled',
-        sub:'Canal with Yari. Sled volume increases this week.',
-        collagen:false,
+      { name:'Thursday', type:'A', intent:'Canal + Sled', sub:'4×4 VO2 max + sled. Decompression priority.',
+        collagen:true,
         blocks:[
-          { label:'Foot Yoga — Pre-Run', cls:'green', items:[
-            {name:'Heel Rock — Calcaneal Mobility', dose:'2×10 ea'},
-            {name:'Short Foot Exercise', dose:'2×10s ea'},
-            {name:'Toe Spread and Lift', dose:'2×10'},
-            {name:'Ankle Circles + Dorsiflexion', dose:'10 ea direction'},
-          ]},
-          { label:'Canal Work', cls:'accent', items:[
-            {name:'Proprioceptive walk — uneven terrain', dose:'5–10 min warmup'},
-            {name:'Backward jog intervals', dose:'1–1.5 mi total'},
-          ]},
-          { label:'Sled Work', cls:'accent', items:[
-            {name:'Sled pull — backward', dose:'3×40m · 100 lbs'},
-            {name:'Sled pull — sideways', dose:'2×40m · 100 lbs'},
-          ]},
-          { label:'Iso Finisher', items:[
-            {name:'Wall sit isometric', dose:'4×45s'},
-            {name:'Side plank from knees', dose:'3×30s ea'},
-          ]},
+          { label:'Foot Yoga', cls:'green', items: FOOT_YOGA_SHORT },
+          CANAL_RUN_SLED,
+          SLED_MAIN,
         ]
       },
       { name:'Friday', type:'A', intent:'Day A or Rest',
@@ -1355,34 +1267,12 @@ const WEEKS = [
           ]},
         ]
       },
-      { name:'Tuesday', type:'B', intent:'Day B — Canal + Bands',
-        sub:'Canal with Yari. Occlusion load increases if last week held.',
-        collagen:false,
+      { name:'Tuesday', type:'C', intent:'Canal + Yari — VO2 Max Only',
+        sub:'VO2 max 4×4 drains significantly in heat. This is the full stimulus. Nothing after.',
+        collagen:true,
         blocks:[
-          { label:'Foot Yoga — Pre-Run', cls:'green', items:[
-            {name:'Heel Rock — Calcaneal Mobility', dose:'2×10 ea'},
-            {name:'Short Foot Exercise', dose:'2×10s ea'},
-            {name:'Toe Spread and Lift', dose:'2×10'},
-            {name:'Ankle Circles + Dorsiflexion', dose:'10 ea direction'},
-          ]},
-          { label:'Canal Work', cls:'accent', items:[
-            {name:'Proprioceptive walk — uneven terrain', dose:'5–10 min warmup'},
-            {name:'Backward jog intervals', dose:'1.5–2 mi total'},
-          ]},
-          { label:'Band Circuit', items:[
-            {name:'Banded side shuffle', dose:'3×15/dir'},
-            {name:'Monster walks', dose:'3×20m'},
-            {name:'Clamshells — banded', dose:'3×15/side'},
-          ]},
-          { label:'Occlusion Finisher', cls:'accent', items:[
-            {name:'Occlusion cuff — leg press or leg extension', dose:'30/15/15/15 · add load if easy'},
-            {name:'Occlusion cuff — standing calf raise', dose:'4×25'},
-          ]},
-          { label:'Core — McGill', items:[
-            {name:'Dead bug', dose:'3×10/side'},
-            {name:'Bird dog', dose:'3×8'},
-            {name:'Side plank from knees', dose:'3×30s ea'},
-          ]},
+          { label:'Foot Yoga', cls:'green', items: FOOT_YOGA_SHORT },
+          CANAL_RUN_BLOCK,
         ]
       },
       { name:'Wednesday', type:'C', intent:'Day C — Recovery or Light Gym',
@@ -1404,28 +1294,12 @@ const WEEKS = [
           ]},
         ]
       },
-      { name:'Thursday', type:'B', intent:'Day B — Canal + Sled',
-        sub:'Canal with Yari. Sled target: 100 lbs consistently.',
-        collagen:false,
+      { name:'Thursday', type:'A', intent:'Canal + Sled', sub:'4×4 VO2 max + sled. Decompression priority.',
+        collagen:true,
         blocks:[
-          { label:'Foot Yoga — Pre-Run', cls:'green', items:[
-            {name:'Heel Rock — Calcaneal Mobility', dose:'2×10 ea'},
-            {name:'Short Foot Exercise', dose:'2×10s ea'},
-            {name:'Toe Spread and Lift', dose:'2×10'},
-            {name:'Ankle Circles + Dorsiflexion', dose:'10 ea direction'},
-          ]},
-          { label:'Canal Work', cls:'accent', items:[
-            {name:'Proprioceptive walk — uneven terrain', dose:'5–10 min warmup'},
-            {name:'Backward jog intervals', dose:'1.5–2 mi total'},
-          ]},
-          { label:'Sled Work', cls:'accent', items:[
-            {name:'Sled pull — backward', dose:'3×40m · 100 lbs'},
-            {name:'Sled pull — sideways', dose:'3×40m · 100 lbs'},
-          ]},
-          { label:'Iso Finisher', items:[
-            {name:'Wall sit isometric', dose:'4×45s'},
-            {name:'Plank', dose:'2×45s'},
-          ]},
+          { label:'Foot Yoga', cls:'green', items: FOOT_YOGA_SHORT },
+          CANAL_RUN_SLED,
+          SLED_MAIN,
         ]
       },
       { name:'Friday', type:'A', intent:'Day A or Rest',
@@ -1494,27 +1368,12 @@ const WEEKS = [
           ]},
         ]
       },
-      { name:'Tuesday', type:'B', intent:'Day B — Canal + Bands Light',
-        sub:'Canal with Yari but easy. Deload volume.',
-        collagen:false,
+      { name:'Tuesday', type:'C', intent:'Canal + Yari — VO2 Max Only',
+        sub:'VO2 max 4×4 drains significantly in heat. This is the full stimulus. Nothing after.',
+        collagen:true,
         blocks:[
-          { label:'Foot Yoga — Pre-Run', cls:'green', items:[
-            {name:'Heel Rock — Calcaneal Mobility', dose:'2×10 ea'},
-            {name:'Short Foot Exercise', dose:'2×10s ea'},
-            {name:'Ankle Circles + Dorsiflexion', dose:'10 ea direction'},
-          ]},
-          { label:'Canal Work', cls:'accent', items:[
-            {name:'Proprioceptive walk — uneven terrain', dose:'5–10 min warmup'},
-            {name:'Backward jog intervals', dose:'0.5–1 mi easy'},
-          ]},
-          { label:'Band Circuit — Light', items:[
-            {name:'Banded side shuffle', dose:'2×12/dir'},
-            {name:'Clamshells — banded', dose:'2×12/side'},
-          ]},
-          { label:'Core', items:[
-            {name:'Dead bug', dose:'2×10/side'},
-            {name:'Bird dog', dose:'2×8'},
-          ]},
+          { label:'Foot Yoga', cls:'green', items: FOOT_YOGA_SHORT },
+          CANAL_RUN_BLOCK,
         ]
       },
       { name:'Wednesday', type:'C', intent:'Day C — Easy',
@@ -1531,26 +1390,12 @@ const WEEKS = [
           ]},
         ]
       },
-      { name:'Thursday', type:'B', intent:'Day B — Canal + Sled Light',
-        sub:'Canal with Yari. Sled at 80 lbs — deload.',
-        collagen:false,
+      { name:'Thursday', type:'A', intent:'Canal + Sled', sub:'4×4 VO2 max + sled. Decompression priority.',
+        collagen:true,
         blocks:[
-          { label:'Foot Yoga — Pre-Run', cls:'green', items:[
-            {name:'Heel Rock — Calcaneal Mobility', dose:'2×10 ea'},
-            {name:'Short Foot Exercise', dose:'2×10s ea'},
-            {name:'Ankle Circles + Dorsiflexion', dose:'10 ea direction'},
-          ]},
-          { label:'Canal Work', cls:'accent', items:[
-            {name:'Proprioceptive walk — uneven terrain', dose:'5–10 min warmup'},
-            {name:'Backward jog intervals', dose:'0.5–1 mi easy'},
-          ]},
-          { label:'Sled Work — Light', cls:'accent', items:[
-            {name:'Sled pull — backward', dose:'2×40m · 80 lbs'},
-            {name:'Sled pull — sideways', dose:'2×40m · 80 lbs'},
-          ]},
-          { label:'Iso Finisher', items:[
-            {name:'Wall sit isometric', dose:'3×45s'},
-          ]},
+          { label:'Foot Yoga', cls:'green', items: FOOT_YOGA_SHORT },
+          CANAL_RUN_SLED,
+          SLED_MAIN,
         ]
       },
       { name:'Friday', type:'C', intent:'Rest / Walk',
@@ -1871,6 +1716,339 @@ const WEEKS = [
       },
     ]
   },
+
+  // ── BRIDGE W8 — May 11–17 ──────────────────────────────────────
+  {
+    label:'Bridge · W8', dates:'May 11–17', phase:'Bridge Phase',
+    focus:'Steady state. VO2 max building. June 5 consult in 3½ weeks. Hold trap bar load.',
+    days:[
+      { name:'Monday', type:'A', intent:'Strength', sub:'Gym. Match W7 trap bar or +5 if back gate clean.',
+        collagen:true,
+        blocks:[
+          { label:'Foot Yoga', cls:'green', items: FOOT_YOGA_FULL },
+          { label:'Main Block', items:[
+            {name:'Trap Bar Deadlift — Elevated Start', note:'match W7 or +5 lbs if gate clean', dose:'3×5'},
+            {name:'Step-Up — Weighted', dose:'3×10 ea'},
+            {name:'Single-leg glute bridge', note:'bent knee on raised leg', dose:'3×12/side · 3s pause'},
+            {name:'Backward Walk/Jog — Matrix Treadmill', note:'foraminal decompression · 3.5–4.5 mph', dose:'10–15 min'},
+          ]},
+          { label:'McGill Core', items:[
+            {name:'Bird Dog — Extended Hold', dose:'3×10s ea'},
+            {name:'Side Plank — Full', dose:'2×20s ea'},
+            {name:'Dead Bug — Contralateral Hold', dose:'3×8 ea'},
+          ]},
+          ANKLE_HOPS,
+        ]
+      },
+      { name:'Tuesday', type:'C', intent:'Canal + Yari — VO2 Max Only', sub:'VO2 max 4×4 drains significantly in heat. This is the full stimulus. Nothing after.',
+        collagen:true,
+        blocks:[
+          { label:'Foot Yoga', cls:'green', items: FOOT_YOGA_SHORT },
+          CANAL_RUN_BLOCK,
+        ]
+      },
+      { name:'Wednesday', type:'A', intent:'Strength — Light', sub:'Gym. Hip and posterior chain. Same load as W7.',
+        collagen:false,
+        blocks:[
+          { label:'Foot Yoga', cls:'green', items: FOOT_YOGA_SHORT },
+          { label:'Main Block', items:[
+            {name:'Romanian Deadlift (RDL)', dose:'2×10'},
+            {name:'Step-Up — Weighted', dose:'3×10 ea'},
+            {name:'Single-leg glute bridge', note:'bent knee on raised leg', dose:'3×12/side'},
+            {name:'Cable Pull-Through', dose:'3×12'},
+          ]},
+          { label:'McGill Core', items:[
+            {name:'Bird Dog — Extended Hold', dose:'3×10s ea'},
+            {name:'Side Plank — Full', dose:'2×20s ea'},
+          ]},
+        ]
+      },
+      { name:'Thursday', type:'A', intent:'Canal + Sled', sub:'4×4 VO2 max + sled. June 5 in 3 weeks.',
+        collagen:true,
+        blocks:[
+          { label:'Foot Yoga', cls:'green', items: FOOT_YOGA_SHORT },
+          CANAL_RUN_SLED,
+          SLED_MAIN,
+        ]
+      },
+      { name:'Friday', type:'C', intent:'Recovery — Active Rest', sub:'Walk only. Let the VO2 max days accumulate.',
+        collagen:false,
+        blocks:[
+          { label:'Active Recovery', cls:'green', items:[
+            {name:'Easy Walk', dose:'20–30 min · flat ground · conversational pace'},
+            {name:'Cat-Cow', dose:'2×10 slow'},
+            {name:'Supine Figure-4 Stretch', dose:'2×45s ea'},
+            {name:'Child Pose Lateral Reach', dose:'2×30s ea side'},
+          ]},
+        ]
+      },
+      { name:'Saturday', type:'A', intent:'Strength — Third Gym Session', sub:'Third gym session. Back and fatigue guide the load.',
+        collagen:true,
+        blocks:[
+          { label:'Foot Yoga', cls:'green', items: FOOT_YOGA_FULL },
+          { label:'Main Block', items:[
+            {name:'Trap Bar Deadlift — Elevated Start', note:'match Wed or -10% · back decides', dose:'3×5'},
+            {name:'Step-Up — Weighted', dose:'3×10 ea'},
+            {name:'Single-leg glute bridge', note:'bent knee on raised leg', dose:'3×12/side · 3s pause'},
+            {name:'Hip Thrust — Barbell', dose:'3×10'},
+          ]},
+          { label:'McGill Core', items:[
+            {name:'Bird Dog — Extended Hold', dose:'3×10s ea'},
+            {name:'Dead Bug — Contralateral Hold', dose:'3×8 ea'},
+          ]},
+          ISO_TENDON,
+        ]
+      },
+      { name:'Sunday', type:'C', intent:'Rest + Mobility', sub:'Full rest. Slow mobility only.',
+        collagen:false,
+        blocks:[
+          { label:'Gentle', cls:'green', items:[
+            {name:'Ankle Circles + Dorsiflexion', dose:'5 min gentle'},
+          ]},
+          MOBILITY_LIGHT,
+        ]
+      },
+    ]
+  },
+
+  // ── BRIDGE W9 — May 18–24 ──────────────────────────────────────
+  {
+    label:'Bridge · W9', dates:'May 18–24', phase:'Bridge Phase',
+    focus:'Peak load week. Progress trap bar. June 5 consult in 2½ weeks. No heroics — grease the groove.',
+    days:[
+      { name:'Monday', type:'A', intent:'Strength', sub:'Gym. Peak load attempt — gate decides. Back is the ceiling.',
+        collagen:true,
+        blocks:[
+          { label:'Foot Yoga', cls:'green', items: FOOT_YOGA_FULL },
+          { label:'Main Block', items:[
+            {name:'Trap Bar Deadlift — Elevated Start', note:'+5–10 lbs from W8 if gate clean · this is peak bridge load', dose:'3×5'},
+            {name:'Step-Up — Weighted', dose:'3×10 ea'},
+            {name:'Single-leg glute bridge', note:'bent knee on raised leg', dose:'3×12/side · 3s pause'},
+            {name:'Backward Walk/Jog — Matrix Treadmill', note:'foraminal decompression', dose:'10–15 min'},
+          ]},
+          { label:'McGill Core', items:[
+            {name:'Bird Dog — Extended Hold', dose:'3×10s ea'},
+            {name:'Side Plank — Full', dose:'2×20s ea'},
+            {name:'Dead Bug — Contralateral Hold', dose:'3×8 ea'},
+          ]},
+          ANKLE_HOPS,
+        ]
+      },
+      { name:'Tuesday', type:'C', intent:'Canal + Yari — VO2 Max Only', sub:'VO2 max 4×4 drains significantly in heat. This is the full stimulus. Nothing after.',
+        collagen:true,
+        blocks:[
+          { label:'Foot Yoga', cls:'green', items: FOOT_YOGA_SHORT },
+          CANAL_RUN_BLOCK,
+        ]
+      },
+      { name:'Wednesday', type:'A', intent:'Strength — Light', sub:'Gym. Hinge emphasis. No PR attempts — preserve for consult.',
+        collagen:false,
+        blocks:[
+          { label:'Foot Yoga', cls:'green', items: FOOT_YOGA_SHORT },
+          { label:'Main Block', items:[
+            {name:'Romanian Deadlift (RDL)', dose:'2×10 · match W8'},
+            {name:'Step-Up — Weighted', dose:'3×10 ea'},
+            {name:'Single-leg glute bridge', note:'bent knee on raised leg', dose:'3×12/side'},
+            {name:'Cable Pull-Through', dose:'3×12'},
+          ]},
+          { label:'McGill Core', items:[
+            {name:'Bird Dog — Extended Hold', dose:'3×10s ea'},
+            {name:'Side Plank — Full', dose:'2×20s ea'},
+          ]},
+        ]
+      },
+      { name:'Thursday', type:'A', intent:'Canal + Sled', sub:'4×4 VO2 max + sled. June 5 in 2 weeks.',
+        collagen:true,
+        blocks:[
+          { label:'Foot Yoga', cls:'green', items: FOOT_YOGA_SHORT },
+          CANAL_RUN_SLED,
+          SLED_MAIN,
+        ]
+      },
+      { name:'Friday', type:'C', intent:'Recovery — Active Rest', sub:'Walk only. Nothing extra.',
+        collagen:false,
+        blocks:[
+          { label:'Active Recovery', cls:'green', items:[
+            {name:'Easy Walk', dose:'20–30 min · flat ground · conversational pace'},
+            {name:'Cat-Cow', dose:'2×10 slow'},
+            {name:'Supine Figure-4 Stretch', dose:'2×45s ea'},
+            {name:'Child Pose Lateral Reach', dose:'2×30s ea side'},
+          ]},
+        ]
+      },
+      { name:'Saturday', type:'A', intent:'Strength — Third Gym Session', sub:'Third session. Autoregulate down from Mon. Back and fatigue guide.',
+        collagen:true,
+        blocks:[
+          { label:'Foot Yoga', cls:'green', items: FOOT_YOGA_FULL },
+          { label:'Main Block', items:[
+            {name:'Trap Bar Deadlift — Elevated Start', note:'match Wed or -10%', dose:'3×5'},
+            {name:'Step-Up — Weighted', dose:'3×10 ea'},
+            {name:'Single-leg glute bridge', note:'bent knee on raised leg', dose:'3×12/side · 3s pause'},
+            {name:'Hip Thrust — Barbell', dose:'3×10'},
+          ]},
+          { label:'McGill Core', items:[
+            {name:'Bird Dog — Extended Hold', dose:'3×10s ea'},
+            {name:'Dead Bug — Contralateral Hold', dose:'3×8 ea'},
+          ]},
+          ISO_TENDON,
+        ]
+      },
+      { name:'Sunday', type:'C', intent:'Rest + Mobility', sub:'Full rest. Mobility only.',
+        collagen:false,
+        blocks:[
+          { label:'Gentle', cls:'green', items:[
+            {name:'Ankle Circles + Dorsiflexion', dose:'5 min gentle'},
+          ]},
+          MOBILITY_LIGHT,
+        ]
+      },
+    ]
+  },
+
+  // ── BRIDGE W10 — May 25–31 ──────────────────────────────────────
+  {
+    label:'Bridge · W10', dates:'May 25–31', phase:'Bridge Phase',
+    focus:'Deload week. Volume -20%. Arrive at June 5 consult in best possible state. No PRs.',
+    days:[
+      { name:'Monday', type:'A', intent:'Strength — Deload', sub:'Pull back 15–20%. Supercompensation from W9 is still happening.',
+        collagen:true,
+        blocks:[
+          { label:'Foot Yoga', cls:'green', items: FOOT_YOGA_FULL },
+          { label:'Main Block', items:[
+            {name:'Trap Bar Deadlift — Elevated Start', note:'-15–20% from W9 peak · 2×5 only', dose:'2×5'},
+            {name:'Step-Up — Weighted', dose:'2×10 ea'},
+            {name:'Single-leg glute bridge', note:'bent knee on raised leg', dose:'2×12/side'},
+            {name:'Backward Walk/Jog — Matrix Treadmill', dose:'10 min'},
+          ]},
+          { label:'McGill Core', items:[
+            {name:'Bird Dog — Extended Hold', dose:'2×10s ea'},
+            {name:'Dead Bug — Contralateral Hold', dose:'2×8 ea'},
+          ]},
+          ANKLE_HOPS,
+        ]
+      },
+      { name:'Tuesday', type:'C', intent:'Canal + Yari — VO2 Max Only', sub:'VO2 max 4×4 — same stimulus, full recovery afterward.',
+        collagen:true,
+        blocks:[
+          { label:'Foot Yoga', cls:'green', items: FOOT_YOGA_SHORT },
+          CANAL_RUN_BLOCK,
+        ]
+      },
+      { name:'Wednesday', type:'A', intent:'Strength — Light', sub:'Deload. Same movements, half the sets.',
+        collagen:false,
+        blocks:[
+          { label:'Foot Yoga', cls:'green', items: FOOT_YOGA_SHORT },
+          { label:'Main Block', items:[
+            {name:'Romanian Deadlift (RDL)', dose:'1×10 easy'},
+            {name:'Step-Up — Weighted', dose:'2×10 ea'},
+            {name:'Single-leg glute bridge', note:'bent knee on raised leg', dose:'2×12/side'},
+          ]},
+          { label:'McGill Core', items:[
+            {name:'Bird Dog — Extended Hold', dose:'2×10s ea'},
+          ]},
+        ]
+      },
+      { name:'Thursday', type:'A', intent:'Canal + Sled', sub:'VO2 max + sled. June 5 consult in 1 week.',
+        collagen:true,
+        blocks:[
+          { label:'Foot Yoga', cls:'green', items: FOOT_YOGA_SHORT },
+          CANAL_RUN_SLED,
+          SLED_MAIN,
+        ]
+      },
+      { name:'Friday', type:'C', intent:'Recovery — Active Rest', sub:'Walk only. Extra sleep priority this week.',
+        collagen:false,
+        blocks:[
+          { label:'Active Recovery', cls:'green', items:[
+            {name:'Easy Walk', dose:'20–30 min · flat ground · conversational pace'},
+            {name:'Cat-Cow', dose:'2×10 slow'},
+            {name:'Supine Figure-4 Stretch', dose:'2×45s ea'},
+          ]},
+        ]
+      },
+      { name:'Saturday', type:'A', intent:'Strength — Light', sub:'Very light third session. No fatigue going into consult week.',
+        collagen:false,
+        blocks:[
+          { label:'Foot Yoga', cls:'green', items: FOOT_YOGA_SHORT },
+          { label:'Main Block', items:[
+            {name:'Trap Bar Deadlift — Elevated Start', note:'very light · 60% · 2×5', dose:'2×5'},
+            {name:'Glute bridge — bilateral', dose:'2×15'},
+          ]},
+          ISO_TENDON,
+        ]
+      },
+      { name:'Sunday', type:'C', intent:'Rest + Mobility', sub:'Full rest. Sleep priority. Consult week starts tomorrow.',
+        collagen:false,
+        blocks:[
+          { label:'Gentle', cls:'green', items:[
+            {name:'Ankle Circles + Dorsiflexion', dose:'5 min gentle'},
+          ]},
+          MOBILITY_LIGHT,
+        ]
+      },
+    ]
+  },
+
+  // ── BRIDGE W11 — Jun 1–7 — PRE-CONSULT ──────────────────────────
+  {
+    label:'Bridge · W11 — Pre-Consult', dates:'Jun 1–7', phase:'Bridge Phase',
+    focus:'Consult week. June 5 Friday — ESI vs radiofrequency decision gate. Walk-only Mon–Thu. Arrive fresh.',
+    days:[
+      { name:'Monday', type:'C', intent:'Walk Only', sub:'Consult in 5 days. Walk only this week. No gym load.',
+        collagen:false,
+        blocks:[
+          { label:'Foot Yoga', cls:'green', items: FOOT_YOGA_SHORT },
+          { label:'Movement Only', cls:'green', items:[
+            {name:'Easy Walk', dose:'20–30 min · easy pace'},
+            {name:'Stationary bike', dose:'15 min easy'},
+          ]},
+        ]
+      },
+      { name:'Tuesday', type:'C', intent:'Canal — Easy Walk Only', sub:'Canal walk with Yari. No intervals. Easy movement.',
+        collagen:false,
+        blocks:[
+          { label:'Foot Yoga', cls:'green', items: FOOT_YOGA_SHORT },
+          { label:'Canal — Easy', cls:'green', items:[
+            {name:'Proprioceptive walk — uneven terrain', dose:'20–30 min easy'},
+            {name:'Rock work + eyes-closed balance', dose:'2×20s ea'},
+          ]},
+        ]
+      },
+      { name:'Wednesday', type:'C', intent:'Walk + Mobility', sub:'Arrive at Friday consult in optimal state.',
+        collagen:false,
+        blocks:[
+          { label:'Foot Yoga', cls:'green', items: FOOT_YOGA_SHORT },
+          { label:'Movement Only', cls:'green', items:[
+            {name:'Easy Walk', dose:'20 min'},
+            {name:'Stationary bike', dose:'15 min easy'},
+          ]},
+          MOBILITY_LIGHT,
+        ]
+      },
+      { name:'Thursday', type:'C', intent:'Rest / Gentle Walk', sub:'Tomorrow is the consult. Conserve.',
+        collagen:false,
+        blocks:[
+          { label:'Gentle', cls:'green', items:[
+            {name:'Easy Walk', dose:'15–20 min · flat · no hills'},
+            {name:'Cat-Cow', dose:'2×10 slow'},
+          ]},
+        ]
+      },
+      { name:'Friday', type:'rest', intent:'June 5 — Pain Clinic Consult', sub:'ESI vs radiofrequency ablation decision gate. Rest day. Document outcome and proceed to Unlock W1.',
+        collagen:false, rest:true, blocks:[]
+      },
+      { name:'Saturday', type:'C', intent:'Post-Consult Rest', sub:'Rest. Let today’s decision settle. Note any procedure effects.',
+        collagen:false,
+        blocks:[
+          { label:'Gentle', cls:'green', items:[
+            {name:'Easy Walk', dose:'15 min gentle'},
+          ]},
+        ]
+      },
+      { name:'Sunday', type:'rest', intent:'Rest', sub:'Full rest.', collagen:false, rest:true, blocks:[] },
+    ]
+  },
+
 
   {
     label:'Unlock · W1', dates:'Post June 5 consult', phase:'Unlock / GPP',
@@ -2617,8 +2795,6 @@ function changeWeek(dir){
 function updateWeekUI(){
   const w = WEEKS[currentWeek];
   document.getElementById('phase-badge').innerHTML = `${w.label}<span>${w.dates}</span>`;
-  document.getElementById('nav-phase-label').textContent = w.phase;
-  document.getElementById('nav-week-label').textContent = w.focus.split(' · ')[0];
   document.getElementById('prev-week').disabled = currentWeek === 0;
   document.getElementById('next-week').disabled = currentWeek === WEEKS.length - 1;
 }
