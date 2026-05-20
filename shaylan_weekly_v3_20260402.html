@@ -1572,6 +1572,220 @@ const WEEKS = [
       REST_DAY,
     ]
   },
+  // ── W11: OFF-WEEK / TRANSITION — May 18–24 ──────────────────────
+  {
+    label:'W11 · Off-Week', dates:'May 18–24', phase:'Transition',
+    focus:'State is done. State champion in the 100. This week is yours — move when you want, rest when you need. No structure, no pressure.',
+    days:[
+      { name:'Monday May 18', intent:'Rest + Move', sub:'Congratulations on State. Do what feels good today — walk, easy bike, or nothing. No track.',
+        collagen:false, rest:false,
+        blocks:[
+          { label:'Non-Negotiables', items: TRACK_A_SHORT },
+          { label:'Optional Movement', items:[
+            {name:'Easy walk or bike', dose:'20–30 min · whatever feels good · no pace target'},
+          ]},
+        ]
+      },
+      { name:'Tuesday May 19', intent:'Light Mobility', sub:'Hip and ankle focus. Nothing loaded.',
+        collagen:false, rest:false,
+        blocks:[
+          { label:'Non-Negotiables', items: TRACK_A_FULL },
+          { label:'Hip Mobility', items:[
+            {name:'Hip 90/90 Transitions', dose:'2 min each side · slow · no forcing'},
+            {name:'Supine Figure-4 Stretch', dose:'2×45s ea'},
+            {name:'Lateral Lunge — Bodyweight', note:'frontal plane · slow · feel the hip', dose:'2×8 ea'},
+          ]},
+          SHIN_COMP,
+        ]
+      },
+      { name:'Wednesday May 20', intent:'Core + Shin', sub:'McGill + shin maintenance. 30 min max.',
+        collagen:false, rest:false,
+        blocks:[
+          { label:'Non-Negotiables', items: TRACK_A_FULL },
+          { label:'Core — McGill', items: MCGILL },
+          SHIN_COMP,
+        ]
+      },
+      { name:'Thursday May 21', intent:'Easy Jog', sub:'First jog since State. Easy pace only. If shins flag, walk.',
+        collagen:false, rest:false,
+        blocks:[
+          { label:'Non-Negotiables', items: TRACK_A_FULL },
+          { label:'Easy Run', items:[
+            {name:'Easy jog', note:'flat surface · conversational pace · no watch pressure', dose:'15–20 min · stop if shins > 2/10'},
+          ]},
+          SHIN_COMP,
+        ]
+      },
+      { name:'Friday May 22', intent:'Rest or Walk', sub:'Rest day. Walk if you feel like it.',
+        collagen:false, rest:false,
+        blocks:[
+          { label:'Non-Negotiables', items: TRACK_A_SHORT },
+          { label:'Optional', items:[
+            {name:'Easy walk', dose:'20 min · no agenda'},
+          ]},
+        ]
+      },
+      { name:'Saturday May 23', intent:'Move Freely', sub:'Easy jog + full mobility. No drills, no reps, no pressure.',
+        collagen:false, rest:false,
+        blocks:[
+          { label:'Non-Negotiables', items: TRACK_A_FULL },
+          { label:'Easy Run', items:[
+            {name:'Easy jog', dose:'20–25 min · flat · easy pace'},
+          ]},
+          { label:'Full Mobility', items:[
+            {name:'Hip 90/90', dose:'2 min each side'},
+            {name:'Supine Figure-4 Stretch', dose:'2×45s ea'},
+            {name:'Lateral Lunge', dose:'2×8 ea slow'},
+            {name:'Calf + Achilles Stretch', dose:'2×45s ea'},
+          ]},
+          SHIN_COMP,
+        ]
+      },
+      REST_DAY,
+    ]
+  },
+
+  // ── W12: RETURN-TO-FORM — May 25–31 ──────────────────────────────
+  {
+    label:'W12 · Return to Form', dates:'May 25–31', phase:'Transition / Prep',
+    focus:'Sacramento possible June 2–3. Light speed reintro — drills, short accelerations, penultimate. Shins guide the load.',
+    days:[
+      { name:'Monday May 25', intent:'Drills + Short Accelerations', sub:'Back on the track. Drills + 3×30m build-ups only. Feel the legs.',
+        collagen:true,
+        blocks:[
+          { label:'Non-Negotiables', items: TRACK_A_FULL },
+          { label:'Sprint Prep Drills', items:[
+            {name:'A-Skip', dose:'3×20m'},
+            {name:'B-Skip', dose:'3×20m'},
+            {name:'High Knee Run', dose:'3×20m'},
+            {name:'Ankle Pops — Straight Leg', dose:'2×20m'},
+          ]},
+          { label:'Accelerations', gold:true, items:[
+            {name:'30m Build-Up — 70%', dose:'3 reps · full recovery · feel only'},
+          ]},
+          SHIN_COMP,
+          { label:'Core', items: MCGILL },
+        ]
+      },
+      { name:'Tuesday May 26', intent:'Mobility + Shin Day', sub:'No speed. Hips, ankles, McGill.',
+        collagen:false, rest:false,
+        blocks:[
+          { label:'Non-Negotiables', items: TRACK_A_FULL },
+          { label:'Hip Mobility', items:[
+            {name:'Hip 90/90 Transitions', dose:'2 min each side'},
+            {name:'Lateral Lunge', dose:'2×8 ea'},
+            {name:'Supine Figure-4', dose:'2×45s ea'},
+          ]},
+          SHIN_COMP,
+          { label:'Core', items: MCGILL },
+        ]
+      },
+      { name:'Wednesday May 28', intent:'Speed — Short + Sharp', sub:'60m reps at 85–90%. Penultimate entries if feeling good.',
+        collagen:true,
+        blocks:[
+          { label:'Non-Negotiables', items: TRACK_A_FULL },
+          { label:'Drills', items:[
+            {name:'A-Skip', dose:'3×20m'},
+            {name:'Build-Up Runs', dose:'3×40m · 80%'},
+          ]},
+          { gold:true, label:'Speed Block', items:[
+            {name:'60m Sprint — 85–90%', dose:'4 reps · full recovery · shin check between reps'},
+          ]},
+          { label:'Penultimate — Optional', items:[
+            {name:'Penultimate Step Drill — Short Approach', note:'only if legs feel sharp · 4 reps max', dose:'4 reps'},
+          ]},
+          SHIN_COMP,
+        ]
+      },
+      { name:'Thursday May 29', intent:'Rest', sub:'Rest day. Walk if restless.',
+        collagen:false, rest:false,
+        blocks:[
+          { label:'Non-Negotiables', items: TRACK_A_SHORT },
+        ]
+      },
+      { name:'Friday May 30', intent:'Sharp Activation', sub:'4–5 short reps. Feel fast. Nothing more.',
+        collagen:true,
+        blocks:[
+          { label:'Non-Negotiables', items: TRACK_A_FULL },
+          { label:'Drills', items:[
+            {name:'A-Skip + B-Skip', dose:'2×20m each'},
+          ]},
+          { gold:true, label:'Activation Sprints', items:[
+            {name:'30m Sprint — 90%', dose:'4–5 reps · full recovery · feel sharp not tired'},
+          ]},
+          SHIN_COMP,
+        ]
+      },
+      { name:'Saturday May 31', intent:'Rest — Pre-Sacramento', sub:'If Sacramento is confirmed tomorrow or Monday, full rest today.',
+        collagen:false, rest:false,
+        blocks:[
+          { label:'Non-Negotiables', items: TRACK_A_SHORT },
+          { label:'Optional Light Mobility', items:[
+            {name:'Easy walk', dose:'15–20 min'},
+            {name:'Hip 90/90', dose:'1 min each side'},
+          ]},
+        ]
+      },
+      REST_DAY,
+    ]
+  },
+
+  // ── W13: SACRAMENTO — Jun 1–7 ─────────────────────────────────────
+  {
+    label:'W13 · Sacramento', dates:'Jun 1–7', phase:'Competition',
+    focus:'Sacramento meet ~Jun 2–3 if confirmed. Treat like any comp week — contrast warmup, gate log, trust the fitness.',
+    days:[
+      { name:'Monday Jun 1', intent:'Travel / Activation', sub:'Drills + 3 short reps if not traveling. If traveling, Track A only.',
+        collagen:false, rest:false,
+        blocks:[
+          { label:'Non-Negotiables', items: TRACK_A_FULL },
+          { label:'Activation Only', items:[
+            {name:'A-Skip', dose:'3×20m'},
+            {name:'30m Build-Up — 70%', dose:'3 reps'},
+          ]},
+        ]
+      },
+      { name:'Tuesday Jun 2', intent:'Compete or Rest', sub:'Sacramento Day 1 if confirmed. Contrast warmup. Gate log.',
+        collagen:true, rest:false,
+        blocks:[
+          { label:'Pre-Session — Non-Negotiables', items: TRACK_A_FULL },
+          CONTRAST,
+          GATE_POST,
+        ]
+      },
+      { name:'Wednesday Jun 3', intent:'Compete or Easy', sub:'Sacramento Day 2 if double. Otherwise easy movement.',
+        collagen:true, rest:false,
+        blocks:[
+          { label:'Non-Negotiables', items: TRACK_A_FULL },
+          CONTRAST,
+          GATE_POST,
+        ]
+      },
+      { name:'Thursday Jun 4', intent:'Rest', sub:'Post-meet rest.', collagen:false, rest:false,
+        blocks:[
+          { label:'Non-Negotiables', items: TRACK_A_SHORT },
+        ]
+      },
+      { name:'Friday Jun 5', intent:'Easy Movement', sub:'Light jog or walk. Shins first.',
+        collagen:false, rest:false,
+        blocks:[
+          { label:'Non-Negotiables', items: TRACK_A_FULL },
+          { label:'Easy', items:[
+            {name:'Easy jog', dose:'15 min · conversational'},
+          ]},
+          SHIN_COMP,
+        ]
+      },
+      { name:'Saturday Jun 6', intent:'Rest or Easy', sub:'Week is done. Berkeley in September.',
+        collagen:false, rest:false,
+        blocks:[
+          { label:'Non-Negotiables', items: TRACK_A_SHORT },
+        ]
+      },
+      REST_DAY,
+    ]
+  },
+
 ];
 
 function detectCurrentWeek(){
