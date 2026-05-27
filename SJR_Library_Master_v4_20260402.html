@@ -580,6 +580,25 @@
   </ul>
 </nav>
 
+
+<!-- FILTER HOW-TO -->
+<div id="filter-howto" style="background:#1a1a18;border-bottom:1px solid #2a2a28;padding:0.6rem 1.5rem;font-family:'IBM Plex Mono',monospace;">
+  <button onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='none'?'block':'none';this.textContent=this.textContent.includes('▸')?'▾  How to use filters':'▸  How to use filters';" style="background:none;border:none;color:#888;font-family:inherit;font-size:0.62rem;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;padding:0;">▸  How to use filters</button>
+  <div style="display:none;margin-top:0.75rem;font-size:0.72rem;color:#aaa;line-height:1.7;max-width:780px;">
+    <p style="margin:0 0 0.6rem;"><strong style="color:#e8e4dc;">AND across groups, OR within group.</strong> Selecting filters from multiple rows narrows results to exercises that match all groups. Selecting multiple tags in the same row broadens to show anything tagged with either.</p>
+    <p style="margin:0 0 0.5rem;color:#888;font-size:0.65rem;letter-spacing:0.04em;text-transform:uppercase;">Starter combinations for each phase</p>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.5rem 1.5rem;">
+      <div><span style="color:#c8341a;">Comp / SPP</span> — Phase: Competition or SPP · Quality: Strength or Power · Intensity: Submaximal to start</div>
+      <div><span style="color:#2a5c7a;">GPP / Base build</span> — Phase: GPP · Quality: GPP or Hypertrophy · Intensity: Submaximal</div>
+      <div><span style="color:#5a7a5a;">Isometric / Tendon</span> — Quality: Isometric · any Phase · shows wall sits, split squats, all ISO holds</div>
+      <div><span style="color:#2a7a4a;">Transition / Maint</span> — Phase: Transition or Maintenance · Intensity: Submaximal · keeps volume low</div>
+      <div><span style="color:#5a2a7a;">Max power / Velocity</span> — Phase: SPP or Comp · Quality: Power or Velocity · Intensity: Maximal</div>
+      <div><span style="color:#4a6a8a;">ACL / Rehab return</span> — Phase: Bridge or GPP · Quality: Isometric then Strength · Intensity: Submaximal</div>
+    </div>
+    <p style="margin:0.6rem 0 0;color:#666;font-size:0.62rem;">Tip: start with Phase only to see the full menu for your training block, then add Quality to narrow. Clear filters with the ✕ button to reset.</p>
+  </div>
+</div>
+
 <!-- FILTER BAR -->
 <div class="filter-bar" id="filter-bar">
   <div class="filter-row">

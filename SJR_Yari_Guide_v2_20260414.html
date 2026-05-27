@@ -290,6 +290,7 @@ footer .accent{color:var(--accent)}
     <li><a href="#ramp">Phase Ramp</a></li>
     <li><a href="#rsi">ACL-RSI</a></li>
     <li><a href="SJR_Yari_Assessment_v1_20260505.html" target="_blank">Gate Assessment ↗</a></li>
+    <li><a href="SJR_Library_Master_v4_20260402.html">Exercise Library →</a></li>
     <li><a href="#refs">Research</a></li>
   </ul>
 </nav>
@@ -899,6 +900,11 @@ const WEEKS = [
   { label:'Phase 3 · May Gate', range:'Apr 27–May 3', note:'May gate week — hop test re-run, ACL-RSI, full load assessment' },
   { label:'Phase 3 · Aerobic Build', range:'May 11–17', note:'VO2 max 4×4 Tue+Thu canal · RSA intro Saturday · aerobic ceiling first · anaerobic overlay next week' },
   { label:'Phase 3 · Anaerobic Intro', range:'May 18–24', note:'RSA 8×30m Sat at 85–90% · VO2 max 4×4 Tue · mixed Tue+Thu canal · June 9 RTP target approaching' },
+  { label:'Phase 3 · RSA Build', range:'May 18–24', note:'RSA 8×30m + COD agility entering · joint prep daily · 3 weeks to June 9 RTP' },
+  { label:'Phase 3 · RSA Peak', range:'May 25–31', note:'RSA agility/COD progression · strength volume eases · joint articulations daily · 2 weeks out' },
+  { label:'Phase 3 · Final Week', range:'Jun 1–7', note:'Taper · light RSA maintenance · joint prep emphasis · June 9 departure' },
+  { label:'Phase 3 · Extended Stay', range:'Jun 8–14', note:'Independent training · joint prep daily · light strength maintenance · own the protocol' },
+  { label:'Phase 3 · Club Prep', range:'Jun 15–21', note:'Prep for team training · movement quality · full joint articulation daily · hand-off week' },
 ];
 
 // detectCurrentWeek declared AFTER getWeekStart AND AFTER WEEKS (CLAUDE.md spec)
@@ -1939,6 +1945,913 @@ const DAYS_BY_WEEK = [
     },
   ],
 
+
+  // ── WEEK 5: May 18–24 (Phase 3 · RSA Build) ──────────────────────────────────
+  [
+    { name:'Monday', collagen:true, rest:false, intent:'Session A — Strength P3',
+      sub:'W5 strength. Hold W4 loads — this week is about adding joint prep, not adding load.',
+      blocks:[
+        { label:'ROM Block', items:[
+          {name:'Heel Slide',      dose:'3×15 right · 2s hold'},
+          {name:'Prone Knee Hang', dose:'2×2 min'},
+          {name:'TRX Strap Squat', dose:'2×10'},
+          {name:'Wall Slide',      dose:'2×12 right'},
+        ]},
+        { label:'Joint Prep — Multi-Planar', items:[
+          {name:'Hip CARs', note:'Spina · full controlled articular rotation · own every degree · active ROM, not passive stretch', dose:'5 circles ea direction · each hip · slow'},
+          {name:'Ankle CARs', note:'soccer ankle health · full circle through all planes · inversion, eversion, dorsiflex, plantarflex', dose:'8 circles ea direction · each ankle'},
+          {name:'90/90 Hip Switch', note:'Spina · loads hip IR + ER at end-range · the rotational plane where ACL mechanisms live · sit tall, no lean', dose:'5 switches ea direction · 3s hold at end-range'},
+          {name:'Half-Kneeling Adductor Rock', note:'hip IR + adductor end-range · rock slowly into inner hip · press into floor at end-range — PAILs principle', dose:'2×8 ea side · 2s end-range press'},
+          {name:'Copenhagen Plank — Short Lever', note:'Harøy et al. 2019 · 41% groin injury reduction in soccer · bent knee on bench · adductor + hip stabilizer ISO · progress to long lever when 30s is easy', dose:'3×20–30s ea side · hips level · straight line head to knee'},
+          {name:'Glute Med — Anterior Fibers', note:'Harris · fire hydrant position · hip abduction in hip flexion · targets anterior + superior glute med · different fiber angle from side-lying work', dose:'2×15 ea · slow controlled arc'},
+          {name:'Glute Med — Posterior Fibers', note:'Harris · hip extension + abduction · all fours or prone · posterior glute med fibers · closes the arc the fire hydrant opens', dose:'2×12 ea · slow + full extension · squeeze at top'},
+        ]},
+        { label:'Layer 1', items:[
+          {name:'Single-Leg Stance — Eyes Closed', dose:'3×45s each'},
+          {name:'Short Foot + Toe Yoga',           dose:'2×12 each'},
+        ]},
+        { label:'Strength Block', items:[
+          {name:'Trap Bar DL',                           dose:'4×4–5 · hold W4 load'},
+          {name:'Bulgarian Split Squat',                 dose:'3×8 each'},
+          {name:'Hip Thrust — Single-Leg',           dose:'3×8 each'},
+          {name:'Nordic Curl — Eccentric',           dose:'3×5 · 5s descent'},
+          {name:'Single-Leg RDL — Contralateral DB', dose:'3×8 each'},
+          {name:'Wall Sit',                              dose:'3×45s'},
+          {name:'Side-Lying Hip Abduction — End-Range ISO Hold', note:'Ward/Spina · frontal plane glute med', dose:'2×30s ea'},
+          {name:'Lateral Step-Up — ISO Hold at Top',             note:'frontal plane knee/hip · ACL valgus control', dose:'2×8 ea · hold 3s at top'},
+          {name:'Split Squat — Isometric Hold',      dose:'3×45s ea'},
+          {name:'Supine Extended Leg Pulse — Hamstring', dose:'3×10 pulses ea'},
+        ]},
+        { gold:true, label:'BFR Supplement', items:[
+          {name:'BFR Squat or Extension', dose:'1×30 / 3×15 · 20–30%'},
+        ]},
+      ]
+    },
+    { name:'Tuesday', collagen:false, rest:false, intent:'Canal — VO2 Max 4×4 (with Patrick)',
+      sub:'4×4 primary aerobic stimulus. Joint prep in rock block. COD agility intro after main intervals if green.',
+      blocks:[
+        { label:'ROM Block (brief)', items:[
+          {name:'Heel Slide', dose:'3×15 right'},
+          {name:'Wall Slide',  dose:'2×12 right'},
+        ]},
+        { label:'Dynamic Warmup', items:[
+          {name:'Hip circles + leg swings', dose:'10 each'},
+          {name:'Walking lunges',            dose:'2×10 each'},
+          {name:'Lateral shuffle',           dose:'2×10m each direction'},
+        ]},
+        { label:'Rock / Proprioceptive + Joint Prep', items:[
+          {name:'Single-Leg Stance — Eyes Closed',  dose:'3×45s each · uneven surface'},
+          {name:'Terrain Walk — Eyes Closed', note:'Patrick voice-guides direction only · one arm nearby not supporting · probe each foothold before weight transfer · reactive ISO holds on stance leg while searching', dose:'3–4 passes × ~10m · pause and hold each step'},
+          {name:'Hip CARs', note:'on the rocks · standing single-leg · small base of support amplifies the challenge', dose:'3 circles ea direction · each hip · slow'},
+          {name:'Ankle CARs', dose:'5 circles ea direction · each ankle'},
+        ]},
+        { gold:true, label:'VO2 Max Intervals — 4×4', items:[
+          {name:'4×4 Interval Rounds', note:'HR monitor · target >90% HRmax', dose:'4 min work / 3 min rest × 4 rounds'},
+        ]},
+        { label:'Band + Isometric', items:[
+          {name:'Wall Sit',                       dose:'3×45s'},
+          {name:'Band Perturbation — Single Leg', dose:'3×10 each'},
+        ]},
+      ]
+    },
+    { name:'Wednesday', collagen:true, rest:false, intent:'Session A — Strength P3',
+      sub:'Mid-week strength. Match Monday. Joint prep included.',
+      blocks:[
+        { label:'ROM Block', items:[
+          {name:'Heel Slide',      dose:'3×15 right'},
+          {name:'Prone Knee Hang', dose:'2×2 min'},
+          {name:'TRX Strap Squat', dose:'2×10'},
+          {name:'Wall Slide',      dose:'2×12 right'},
+        ]},
+        { label:'Joint Prep — Multi-Planar', items:[
+          {name:'Hip CARs',                dose:'5 circles ea direction · each hip'},
+          {name:'Ankle CARs',              dose:'8 circles ea direction · each ankle'},
+          {name:'90/90 Hip Switch',        note:'Spina · IR + ER end-range · sit tall', dose:'5 switches ea direction · 3s hold'},
+          {name:'Half-Kneeling Adductor Rock', dose:'2×8 ea · 2s press at end-range'},
+          {name:'Copenhagen Plank — Short Lever', note:'Harøy et al. 2019 · 41% groin injury reduction in soccer · bent knee on bench · adductor + hip stabilizer ISO · progress to long lever when 30s is easy', dose:'3×20–30s ea side · hips level · straight line head to knee'},
+          {name:'Glute Med — Anterior Fibers', note:'Harris · fire hydrant position · hip abduction in hip flexion · targets anterior + superior glute med · different fiber angle from side-lying work', dose:'2×15 ea · slow controlled arc'},
+          {name:'Glute Med — Posterior Fibers', note:'Harris · hip extension + abduction · all fours or prone · posterior glute med fibers · closes the arc the fire hydrant opens', dose:'2×12 ea · slow + full extension · squeeze at top'},
+        ]},
+        { label:'Layer 1', items:[
+          {name:'Single-Leg Stance — Eyes Closed', dose:'3×45s each'},
+          {name:'Short Foot + Toe Yoga',           dose:'2×12 each'},
+        ]},
+        { label:'Strength Block', items:[
+          {name:'Trap Bar DL',                           dose:'4×4–5 · match Monday'},
+          {name:'Bulgarian Split Squat',                 dose:'3×8 each'},
+          {name:'Hip Thrust — Single-Leg',           dose:'3×8 each'},
+          {name:'Nordic Curl',                           dose:'3×5 · 5s descent'},
+          {name:'Single-Leg RDL — Contralateral',    dose:'3×8 each'},
+          {name:'Wall Sit',                              dose:'3×30s · conserve pre-Sat'},
+          {name:'Side-Lying Hip Abduction — End-Range ISO Hold', dose:'2×30s ea'},
+          {name:'Lateral Step-Up — ISO Hold at Top',             dose:'2×8 ea · hold 3s'},
+          {name:'Split Squat — Isometric Hold',      dose:'3×30s ea · conserve'},
+          {name:'Supine Extended Leg Pulse — Hamstring', dose:'3×10 pulses ea'},
+        ]},
+      ]
+    },
+    { name:'Thursday', collagen:false, rest:false, intent:'Canal + Sled — Aerobic Maintenance',
+      sub:'Sled + short aerobic. Volume down from Tuesday — conserve for Saturday RSA.',
+      blocks:[
+        { label:'ROM Block (brief)', items:[
+          {name:'Heel Slide', dose:'3×15 right'},
+          {name:'Wall Slide',  dose:'2×12 right'},
+        ]},
+        { label:'Dynamic Warmup', items:[
+          {name:'Hip circles + leg swings', dose:'10 each'},
+          {name:'Walking lunges',            dose:'2×10 each'},
+        ]},
+        { label:'Sled Complex', items:[
+          {name:'Backward Sled Drag', dose:'4×30m'},
+          {name:'Lateral Sled Drag',  dose:'3×15m each'},
+        ]},
+        { gold:true, label:'Reduced Aerobic — Pre-RSA', items:[
+          {name:'Easy Run Intervals', note:'conversational pace — not VO2 max effort', dose:'2×4 min easy · full rest between'},
+        ]},
+        { label:'Rock / Proprioceptive Work', items:[
+          {name:'Single-Leg Stance — Eyes Closed', dose:'2×30s each · brief'},
+          {name:'Terrain Walk — Eyes Closed',      dose:'3–4 passes × ~10m'},
+          {name:'Hip CARs',  dose:'3 circles ea direction · each hip'},
+          {name:'Ankle CARs', dose:'5 circles ea direction · each ankle'},
+        ]},
+        { label:'Band + Isometric', items:[
+          {name:'Wall Sit',                       dose:'3×30s'},
+          {name:'Band Perturbation — Single Leg', dose:'3×10 each'},
+        ]},
+      ]
+    },
+    { name:'Friday', collagen:true, rest:false, intent:'RSA Prep — Light Activation',
+      sub:'Short and sharp. RSA + COD tomorrow. Activation only today.',
+      blocks:[
+        { label:'ROM Block', items:[
+          {name:'Heel Slide',      dose:'3×15 right'},
+          {name:'Prone Knee Hang', dose:'2×2 min'},
+          {name:'TRX Strap Squat', dose:'2×10'},
+        ]},
+        { label:'Joint Prep', items:[
+          {name:'Hip CARs',         dose:'5 circles ea direction · each hip'},
+          {name:'Ankle CARs',       dose:'8 circles ea direction · each ankle'},
+          {name:'90/90 Hip Switch', dose:'5 switches ea direction · 3s hold'},
+        ]},
+        { label:'Layer 1', items:[
+          {name:'Single-Leg Stance — Eyes Closed', dose:'3×45s each'},
+          {name:'Short Foot + Toe Yoga',           dose:'2×12 each'},
+        ]},
+        { label:'Activation Block — Light', items:[
+          {name:'Trap Bar DL',          dose:'3×5 · RPE 6 · activation only'},
+          {name:'Bulgarian Split Squat', dose:'2×6 each · light'},
+          {name:'Hip Thrust — Single-Leg', dose:'2×6 each'},
+          {name:'Wall Sit',             dose:'2×30s'},
+          {name:'Supine Extended Leg Pulse', dose:'2×10 ea'},
+        ]},
+      ]
+    },
+    { name:'Saturday', collagen:false, rest:false, intent:'RSA + COD Introduction',
+      sub:'8×30m 85–90% + COD intro if gate clear. Right knee ≤2/10 and ACL-RSI ≥65 are go-criteria.',
+      blocks:[
+        { label:'ROM + Layer 1', items:[
+          {name:'Heel Slide',                      dose:'3×15 right'},
+          {name:'TRX Strap Squat',                 dose:'2×10'},
+          {name:'Hip CARs',                        dose:'5 circles ea direction · each hip'},
+          {name:'Single-Leg Stance — Eyes Closed', dose:'3×45s each'},
+        ]},
+        { gold:true, label:'RSA — Straight Line', items:[
+          {name:'Dynamic Warmup — Sprint Prep', dose:'10 min · leg swings, A-skips, build-ups ×3'},
+          {name:'Straight-Line Sprint — 30m', note:'85–90% · 2–3 min full recovery · assess right knee plant every rep', dose:'8 reps · stop at ache >3/10 or plant asymmetry'},
+        ]},
+        { label:'COD — Only if RSA Clean', items:[
+          {name:'45° Cut — Walk Speed First', note:'ACL-RSI ≥65 AND knee ≤2/10 after all 8 RSA reps required. Walk → jog progression only. Patrick assesses plant mechanics.', dose:'4×4 reps ea direction · walk then jog'},
+        ]},
+        { label:'Recovery', items:[
+          {name:'Easy Walk',   dose:'10 min'},
+          {name:'Soft Tissue', dose:'quads, hams, right knee surround'},
+        ]},
+      ]
+    },
+    { name:'Sunday', collagen:false, rest:true, intent:'Rest + Recovery',
+      sub:'Layer 1 + joint prep. Canal walk. 3 weeks to June 9.',
+      blocks:[
+        { label:'Joint Prep', items:[
+          {name:'Hip CARs',                dose:'5 circles ea direction · each hip'},
+          {name:'Ankle CARs',              dose:'8 circles ea direction · each ankle'},
+          {name:'90/90 Hip Switch',        dose:'5 switches ea direction · 3s hold'},
+          {name:'Half-Kneeling Adductor Rock', dose:'2×8 ea'},
+          {name:'Copenhagen Plank — Short Lever', note:'Harøy 2019 · bent knee on bench · adductor + hip stabilizer ISO · rest day dose', dose:'2×20s ea side'},
+          {name:'Glute Med — Anterior Fibers', note:'Harris · fire hydrant · anterior + superior glute med', dose:'2×12 ea'},
+          {name:'Glute Med — Posterior Fibers', note:'Harris · hip ext + abd · posterior glute med', dose:'2×10 ea'},
+        ]},
+        { label:'Layer 1', items:[
+          {name:'Single-Leg Stance — Eyes Closed', dose:'3×45s each · barefoot'},
+          {name:'Short Foot',                          dose:'2×12 each'},
+          {name:'Banded Ankle Circles',                dose:'10 each direction'},
+          {name:'Toe Yoga',                            dose:'2×10 each'},
+          {name:'Slow Eccentric Calf Raise',           dose:'2×10 · 3s down'},
+        ]},
+        { gold:true, label:'Recovery', items:[
+          {name:'Canal Walk',  dose:'25–30 min'},
+          {name:'Soft Tissue', dose:'10 min · quads, hams, calves'},
+        ]},
+      ]
+    },
+  ],
+
+  // ── WEEK 6: May 25–31 (Phase 3 · RSA Peak) ───────────────────────────────
+  [
+    { name:'Monday', collagen:true, rest:false, intent:'Session A — Strength (Volume Easing)',
+      sub:'Start stepping down volume. Load quality stays, set counts reduce. Joint prep before everything.',
+      blocks:[
+        { label:'ROM Block', items:[
+          {name:'Heel Slide',      dose:'3×15 right'},
+          {name:'Prone Knee Hang', dose:'2×2 min'},
+          {name:'Wall Slide',      dose:'2×12 right'},
+        ]},
+        { label:'Joint Prep — Multi-Planar', items:[
+          {name:'Hip CARs', note:'Spina · 5 slow controlled circles ea direction · each hip · notice any range asymmetry right vs left', dose:'5 circles ea direction · each hip'},
+          {name:'Ankle CARs', dose:'8 circles ea direction · each ankle'},
+          {name:'90/90 Hip Switch', note:'Spina · IR + ER at end-range · no compensatory lean · quality over speed', dose:'5 switches ea direction · 3s hold'},
+          {name:'Lateral Lunge — End-Range Hold', note:'Ward/Gray · frontal plane load at end-range · knee tracks over 2nd toe · adductor + glute med loaded simultaneously · bodyweight only this week', dose:'2×8 ea · 2s hold at depth'},
+          {name:'Half-Kneeling Adductor Rock', dose:'2×8 ea · 2s end-range press'},
+          {name:'Copenhagen Plank — Short Lever', note:'Harøy et al. 2019 · 41% groin injury reduction in soccer · bent knee on bench · adductor + hip stabilizer ISO · progress to long lever when 30s is easy', dose:'3×20–30s ea side · hips level · straight line head to knee'},
+          {name:'Glute Med — Anterior Fibers', note:'Harris · fire hydrant position · hip abduction in hip flexion · targets anterior + superior glute med · different fiber angle from side-lying work', dose:'2×15 ea · slow controlled arc'},
+          {name:'Glute Med — Posterior Fibers', note:'Harris · hip extension + abduction · all fours or prone · posterior glute med fibers · closes the arc the fire hydrant opens', dose:'2×12 ea · slow + full extension · squeeze at top'},
+        ]},
+        { label:'Layer 1', items:[
+          {name:'Single-Leg Stance — Eyes Closed', dose:'3×45s each'},
+          {name:'Short Foot + Toe Yoga',           dose:'2×12 each'},
+        ]},
+        { label:'Strength Block — Volume Down 15%', items:[
+          {name:'Trap Bar DL',                           dose:'3×4–5 · RPE 7–8 · quality reps only'},
+          {name:'Bulgarian Split Squat',                 dose:'3×7 each'},
+          {name:'Hip Thrust — Single-Leg',           dose:'3×7 each'},
+          {name:'Nordic Curl — Eccentric',           dose:'2×4 · 5s descent'},
+          {name:'Single-Leg RDL — Contralateral',    dose:'3×7 each'},
+          {name:'Wall Sit',                              dose:'3×45s'},
+          {name:'Side-Lying Hip Abduction — End-Range ISO Hold', dose:'2×30s ea'},
+          {name:'Lateral Step-Up — ISO Hold at Top',             dose:'2×8 ea · hold 3s'},
+          {name:'Supine Extended Leg Pulse — Hamstring',         dose:'2×10 pulses ea'},
+        ]},
+      ]
+    },
+    { name:'Tuesday', collagen:false, rest:false, intent:'Canal — VO2 Max 4×4 + Joint Prep',
+      sub:'4×4 main aerobic work. Joint prep integrated into rock block. 2 weeks out.',
+      blocks:[
+        { label:'ROM Block (brief)', items:[
+          {name:'Heel Slide', dose:'3×15 right'},
+          {name:'Wall Slide',  dose:'2×12 right'},
+        ]},
+        { label:'Dynamic Warmup', items:[
+          {name:'Hip circles + leg swings', dose:'10 each'},
+          {name:'Walking lunges',            dose:'2×10 each'},
+          {name:'Lateral shuffle',           dose:'2×10m each direction'},
+        ]},
+        { label:'Rock / Proprioceptive + Joint Prep', items:[
+          {name:'Single-Leg Stance — Eyes Closed',  dose:'3×45s each · uneven surface'},
+          {name:'Terrain Walk — Eyes Closed', note:'Patrick voice-guides · reactive ISO holds on each step', dose:'3–4 passes × ~10m'},
+          {name:'Hip CARs',  dose:'5 circles ea direction · each hip · standing on rocks'},
+          {name:'Ankle CARs', dose:'5 circles ea direction · each ankle'},
+          {name:'90/90 Hip Switch', note:'find a stable flat spot · sit and work the end-range', dose:'5 switches ea direction · 3s hold'},
+        ]},
+        { gold:true, label:'VO2 Max Intervals — 4×4', items:[
+          {name:'4×4 Interval Rounds', note:'HR monitor · target >90% HRmax', dose:'4 min work / 3 min rest × 4 rounds'},
+        ]},
+        { label:'Band + Isometric', items:[
+          {name:'Wall Sit',                       dose:'3×45s'},
+          {name:'Band Perturbation — Single Leg', dose:'3×10 each'},
+        ]},
+      ]
+    },
+    { name:'Wednesday', collagen:true, rest:false, intent:'Session A — Strength (Volume Down)',
+      sub:'Match Monday volume. Nothing extra. Save it for Saturday COD work.',
+      blocks:[
+        { label:'ROM Block', items:[
+          {name:'Heel Slide',      dose:'3×15 right'},
+          {name:'Prone Knee Hang', dose:'2×2 min'},
+          {name:'Wall Slide',      dose:'2×12 right'},
+        ]},
+        { label:'Joint Prep', items:[
+          {name:'Hip CARs',                dose:'5 circles ea direction · each hip'},
+          {name:'Ankle CARs',              dose:'8 circles ea direction · each ankle'},
+          {name:'90/90 Hip Switch',        dose:'5 switches ea direction · 3s hold'},
+          {name:'Lateral Lunge — End-Range Hold', dose:'2×8 ea · 2s hold at depth'},
+        ]},
+        { label:'Layer 1', items:[
+          {name:'Single-Leg Stance — Eyes Closed', dose:'3×45s each'},
+          {name:'Short Foot + Toe Yoga',           dose:'2×12 each'},
+        ]},
+        { label:'Strength Block', items:[
+          {name:'Trap Bar DL',                           dose:'3×4 · match Monday'},
+          {name:'Bulgarian Split Squat',                 dose:'3×7 each'},
+          {name:'Hip Thrust — Single-Leg',           dose:'3×7 each'},
+          {name:'Nordic Curl',                           dose:'2×4 · 5s descent'},
+          {name:'Single-Leg RDL',                        dose:'3×7 each'},
+          {name:'Wall Sit',                              dose:'2×30s · conserve pre-Sat'},
+          {name:'Side-Lying Hip Abduction — End-Range ISO Hold', dose:'2×30s ea'},
+          {name:'Lateral Step-Up — ISO Hold at Top',             dose:'2×8 ea · hold 3s'},
+          {name:'Supine Extended Leg Pulse — Hamstring',         dose:'2×10 ea'},
+        ]},
+      ]
+    },
+    { name:'Thursday', collagen:false, rest:false, intent:'Canal + Sled — Maintenance',
+      sub:'Sled + easy aerobic. Joint prep brief. Conserve CNS for Saturday.',
+      blocks:[
+        { label:'ROM (brief) + Joint Prep', items:[
+          {name:'Heel Slide', dose:'3×15 right'},
+          {name:'Wall Slide',  dose:'2×12 right'},
+          {name:'Hip CARs',   dose:'5 circles ea direction · each hip'},
+          {name:'Ankle CARs', dose:'5 circles ea direction · each ankle'},
+        ]},
+        { label:'Dynamic Warmup', items:[
+          {name:'Hip circles + leg swings', dose:'10 each'},
+          {name:'Walking lunges',            dose:'2×10 each'},
+        ]},
+        { label:'Sled Complex', items:[
+          {name:'Backward Sled Drag', dose:'4×30m'},
+          {name:'Lateral Sled Drag',  dose:'3×15m each'},
+        ]},
+        { gold:true, label:'Easy Aerobic — Maintenance', items:[
+          {name:'Easy Run Intervals', note:'conversational pace only', dose:'2×4 min easy · full rest between'},
+        ]},
+        { label:'Rock + Proprioception', items:[
+          {name:'Single-Leg Stance — Eyes Closed',  dose:'2×30s each · brief'},
+          {name:'Terrain Walk — Eyes Closed',       dose:'2–3 passes × ~10m · brief today'},
+        ]},
+        { label:'Band + Isometric', items:[
+          {name:'Wall Sit',                       dose:'3×30s'},
+          {name:'Band Perturbation — Single Leg', dose:'2×10 each'},
+        ]},
+      ]
+    },
+    { name:'Friday', collagen:true, rest:false, intent:'RSA Prep — Activation + Joint Prep',
+      sub:'Activation only. Big COD day tomorrow. Feel fast, not fatigued.',
+      blocks:[
+        { label:'Joint Prep — Full Sequence', items:[
+          {name:'Hip CARs',                      dose:'5 circles ea direction · each hip'},
+          {name:'Ankle CARs',                    dose:'8 circles ea direction · each ankle'},
+          {name:'90/90 Hip Switch',              dose:'5 switches ea direction · 3s hold'},
+          {name:'Lateral Lunge — End-Range Hold', note:'feel the frontal plane load · this is hip prep for cutting tomorrow', dose:'2×6 ea · hold 2s'},
+          {name:'Half-Kneeling Adductor Rock',   dose:'2×6 ea'},
+          {name:'Copenhagen Plank — Short Lever', note:'Harøy et al. 2019 · 41% groin injury reduction in soccer · bent knee on bench · adductor + hip stabilizer ISO · progress to long lever when 30s is easy', dose:'3×20–30s ea side · hips level · straight line head to knee'},
+          {name:'Glute Med — Anterior Fibers', note:'Harris · fire hydrant position · hip abduction in hip flexion · targets anterior + superior glute med · different fiber angle from side-lying work', dose:'2×15 ea · slow controlled arc'},
+          {name:'Glute Med — Posterior Fibers', note:'Harris · hip extension + abduction · all fours or prone · posterior glute med fibers · closes the arc the fire hydrant opens', dose:'2×12 ea · slow + full extension · squeeze at top'},
+        ]},
+        { label:'Layer 1', items:[
+          {name:'Single-Leg Stance — Eyes Closed', dose:'3×45s each'},
+          {name:'Short Foot + Toe Yoga',           dose:'2×12 each'},
+        ]},
+        { label:'Activation — Light', items:[
+          {name:'Trap Bar DL',          dose:'3×4 · RPE 6 · feel the hip load, not the weight'},
+          {name:'Hip Thrust — Single-Leg', dose:'2×6 each'},
+          {name:'Wall Sit',             dose:'2×30s'},
+          {name:'Supine Extended Leg Pulse', dose:'2×10 ea'},
+        ]},
+      ]
+    },
+    { name:'Saturday', collagen:false, rest:false, intent:'RSA + COD Progression',
+      sub:'COD agility progression. Right plant mechanics are the training variable — not speed. Build the pattern, then add pace.',
+      blocks:[
+        { label:'ROM + Joint Prep', items:[
+          {name:'Heel Slide',                      dose:'3×15 right'},
+          {name:'TRX Strap Squat',                 dose:'2×10'},
+          {name:'Hip CARs',                        dose:'5 circles ea direction · each hip'},
+          {name:'Ankle CARs',                      dose:'5 circles ea direction · each ankle'},
+          {name:'Single-Leg Stance — Eyes Closed', dose:'3×45s each'},
+        ]},
+        { gold:true, label:'RSA + COD — Progression', items:[
+          {name:'Dynamic Warmup — Sprint Prep', dose:'10 min · A-skips, build-ups, lateral shuffle'},
+          {name:'Straight-Line Sprint — 30m', note:'85–90% · right knee plant assessed each rep', dose:'6 reps · full recovery · warm the pattern'},
+          {name:'45° COD — Walk → Jog → Run', note:'Patrick assesses plant mechanics at each speed level before progressing. Right knee ≤2/10 required to step up pace. This is the movement pattern Caleb cleared.', dose:'3×4 ea direction · walk first, jog second, run third only if clean'},
+          {name:'T-Drill or L-Drill — Light', note:'only if 45° COD at jog is clean. Low-speed exploration only.', dose:'3 reps · 60–70% · no chasing the clock'},
+        ]},
+        { label:'Recovery', items:[
+          {name:'Easy Walk',   dose:'10 min'},
+          {name:'Soft Tissue — Right Knee Surround', dose:'10 min · quad, VMO, calf'},
+          {name:'90/90 Hip Switch',    note:'post-session when the hip is warm', dose:'5 switches ea direction'},
+        ]},
+      ]
+    },
+    { name:'Sunday', collagen:false, rest:true, intent:'Rest + Articulation Focus',
+      sub:'Full joint prep. No loading. Canal walk. 2 weeks to June 9.',
+      blocks:[
+        { label:'Joint Prep — Full Sequence', items:[
+          {name:'Hip CARs',                      dose:'5 circles ea direction · each hip · unhurried'},
+          {name:'Ankle CARs',                    dose:'8 circles ea direction · each ankle'},
+          {name:'90/90 Hip Switch',              dose:'5 switches ea direction · 3s hold'},
+          {name:'Lateral Lunge — End-Range Hold', dose:'2×8 ea · hold 2s'},
+          {name:'Half-Kneeling Adductor Rock',   dose:'2×8 ea'},
+          {name:'Copenhagen Plank — Short Lever', note:'Harøy 2019 · rest day dose · bent knee on bench', dose:'2×20s ea side'},
+          {name:'Glute Med — Anterior Fibers', note:'Harris · fire hydrant · anterior glute med', dose:'2×12 ea'},
+          {name:'Glute Med — Posterior Fibers', note:'Harris · hip ext + abd · posterior glute med', dose:'2×10 ea'},
+        ]},
+        { label:'Layer 1', items:[
+          {name:'Single-Leg Stance — Eyes Closed', dose:'3×45s each · barefoot'},
+          {name:'Short Foot',                          dose:'2×12 each'},
+          {name:'Banded Ankle Circles',                dose:'10 each direction'},
+          {name:'Toe Yoga',                            dose:'2×10 each'},
+          {name:'Slow Eccentric Calf Raise',           dose:'2×10 · 3s down'},
+        ]},
+        { gold:true, label:'Recovery', items:[
+          {name:'Canal Walk',  dose:'25–30 min'},
+          {name:'Soft Tissue', dose:'10 min · full lower body'},
+        ]},
+      ]
+    },
+  ],
+
+  // ── WEEK 7: Jun 1–7 (Phase 3 · Final Week · Taper) ───────────────────────
+  [
+    { name:'Monday', collagen:true, rest:false, intent:'Taper Strength — Quality Over Volume',
+      sub:'Load stays, sets drop to 2–3. Feel the pattern, not the fatigue. Arriving in Mexico fresh matters.',
+      blocks:[
+        { label:'ROM Block', items:[
+          {name:'Heel Slide',      dose:'3×15 right'},
+          {name:'Prone Knee Hang', dose:'2×2 min'},
+          {name:'Wall Slide',      dose:'2×12 right'},
+        ]},
+        { label:'Joint Prep — Full Sequence', items:[
+          {name:'Hip CARs',                      note:'Spina · make this a daily ritual you take with you to Mexico', dose:'5 circles ea direction · each hip'},
+          {name:'Ankle CARs',                    dose:'8 circles ea direction · each ankle'},
+          {name:'90/90 Hip Switch',              dose:'5 switches ea direction · 3s hold'},
+          {name:'Lateral Lunge — End-Range Hold', note:'Ward · frontal plane · take it deep, own the range', dose:'2×8 ea · 2s hold'},
+          {name:'Half-Kneeling Adductor Rock',   dose:'2×8 ea'},
+          {name:'Copenhagen Plank — Short Lever', note:'Harøy 2019 · 41% groin injury reduction · bent knee on bench · adductor + hip stabilizer ISO', dose:'3×25s ea side · hips level'},
+          {name:'Glute Med — Anterior Fibers', note:'Harris · fire hydrant · anterior + superior glute med', dose:'2×15 ea'},
+          {name:'Glute Med — Posterior Fibers', note:'Harris · hip ext + abd · posterior glute med · complete the arc', dose:'2×12 ea · slow + full extension'},
+          {name:'Half-Kneeling Chop', note:'Boyle · transverse plane core · band at shoulder height, chop across body · resist lumbar rotation, drive thoracic rotation · soccer-specific movement prep', dose:'2×10 ea side · controlled'},
+        ]},
+        { label:'Layer 1', items:[
+          {name:'Single-Leg Stance — Eyes Closed', dose:'3×45s each'},
+          {name:'Short Foot + Toe Yoga',           dose:'2×12 each'},
+        ]},
+        { label:'Taper Strength — 2–3 sets, hold load', items:[
+          {name:'Trap Bar DL',                           dose:'2×4 · hold W6 load · quality reps'},
+          {name:'Bulgarian Split Squat',                 dose:'2×6 each'},
+          {name:'Hip Thrust — Single-Leg',           dose:'2×6 each'},
+          {name:'Nordic Curl — Eccentric',           dose:'2×4 · 5s descent'},
+          {name:'Single-Leg RDL',                        dose:'2×6 each'},
+          {name:'Wall Sit',                              dose:'2×45s'},
+          {name:'Side-Lying Hip Abduction — End-Range ISO Hold', dose:'2×30s ea'},
+          {name:'Supine Extended Leg Pulse — Hamstring',         dose:'2×10 ea'},
+        ]},
+      ]
+    },
+    { name:'Tuesday', collagen:false, rest:false, intent:'Canal — Easy Run + Joint Prep',
+      sub:'No 4×4 today. Easy conversational run. Joint prep is the main work this week.',
+      blocks:[
+        { label:'ROM + Joint Prep', items:[
+          {name:'Heel Slide', dose:'3×15 right'},
+          {name:'Wall Slide',  dose:'2×12 right'},
+          {name:'Hip CARs',   dose:'5 circles ea direction · each hip'},
+          {name:'Ankle CARs', dose:'8 circles ea direction · each ankle'},
+          {name:'90/90 Hip Switch', dose:'5 switches ea direction · 3s hold'},
+        ]},
+        { label:'Dynamic Warmup', items:[
+          {name:'Hip circles + leg swings', dose:'10 each'},
+          {name:'Walking lunges',            dose:'2×10 each'},
+        ]},
+        { label:'Rock / Proprioceptive Work', items:[
+          {name:'Single-Leg Stance — Eyes Closed',  dose:'3×45s each · uneven surface'},
+          {name:'Terrain Walk — Eyes Closed',       dose:'3–4 passes × ~10m'},
+        ]},
+        { gold:true, label:'Easy Canal Run — Taper Aerobic', items:[
+          {name:'Easy Continuous Run', note:'conversational pace · no intervals · enjoy the canal · this may be one of the last ones', dose:'20–25 min easy'},
+        ]},
+        { label:'Band + Isometric — Brief', items:[
+          {name:'Wall Sit',                       dose:'2×45s'},
+          {name:'Band Perturbation — Single Leg', dose:'2×8 each'},
+        ]},
+      ]
+    },
+    { name:'Wednesday', collagen:true, rest:false, intent:'Taper Strength — Match Monday',
+      sub:'Match Monday exactly. No new PRs. Joint prep before everything.',
+      blocks:[
+        { label:'ROM Block', items:[
+          {name:'Heel Slide',      dose:'3×15 right'},
+          {name:'Prone Knee Hang', dose:'2×2 min'},
+          {name:'Wall Slide',      dose:'2×12 right'},
+        ]},
+        { label:'Joint Prep', items:[
+          {name:'Hip CARs',                      dose:'5 circles ea direction · each hip'},
+          {name:'Ankle CARs',                    dose:'8 circles ea direction · each ankle'},
+          {name:'90/90 Hip Switch',              dose:'5 switches ea direction · 3s hold'},
+          {name:'Lateral Lunge — End-Range Hold', dose:'2×8 ea · 2s hold'},
+          {name:'Half-Kneeling Chop',            note:'Boyle · transverse plane core · band at shoulder height, chop across body', dose:'2×10 ea side'},
+        ]},
+        { label:'Layer 1', items:[
+          {name:'Single-Leg Stance — Eyes Closed', dose:'3×45s each'},
+          {name:'Short Foot + Toe Yoga',           dose:'2×12 each'},
+        ]},
+        { label:'Taper Strength — Match Monday', items:[
+          {name:'Trap Bar DL',             dose:'2×4 · match Monday load'},
+          {name:'Bulgarian Split Squat',   dose:'2×6 each'},
+          {name:'Hip Thrust — Single-Leg', dose:'2×6 each'},
+          {name:'Nordic Curl',             dose:'2×4'},
+          {name:'Single-Leg RDL',          dose:'2×6 each'},
+          {name:'Wall Sit',                dose:'2×45s'},
+          {name:'Side-Lying Hip Abduction — End-Range ISO Hold', dose:'2×30s ea'},
+        ]},
+      ]
+    },
+    { name:'Thursday', collagen:false, rest:false, intent:'Easy Canal — Mobility Focus',
+      sub:'No sled today. Easy movement, joint prep. Let the body settle.',
+      blocks:[
+        { label:'Joint Prep — Full Sequence', items:[
+          {name:'Hip CARs',                      dose:'5 circles ea direction · each hip'},
+          {name:'Ankle CARs',                    dose:'8 circles ea direction · each ankle'},
+          {name:'90/90 Hip Switch',              dose:'5 switches ea direction · 3s hold'},
+          {name:'Lateral Lunge — End-Range Hold', dose:'2×8 ea'},
+          {name:'Half-Kneeling Adductor Rock',   dose:'2×8 ea'},
+          {name:'Half-Kneeling Chop',            dose:'2×10 ea side'},
+        ]},
+        { label:'Easy Canal Movement', items:[
+          {name:'Easy Walk + Light Jog', note:'canal · conversational · no structure · just move', dose:'20–25 min'},
+          {name:'Single-Leg Stance — Eyes Closed',  dose:'2×30s each · on rocks'},
+          {name:'Terrain Walk — Eyes Closed',       dose:'2–3 passes'},
+        ]},
+        { label:'Band + Isometric — Maintenance', items:[
+          {name:'Wall Sit', dose:'2×45s'},
+        ]},
+      ]
+    },
+    { name:'Friday', collagen:true, rest:false, intent:'Final RSA Prep — Activation Only',
+      sub:'Short. Sharp. RSA tomorrow. Feel the explosiveness, not the effort.',
+      blocks:[
+        { label:'Joint Prep', items:[
+          {name:'Hip CARs',   dose:'5 circles ea direction · each hip'},
+          {name:'Ankle CARs', dose:'8 circles ea direction · each ankle'},
+          {name:'90/90 Hip Switch', dose:'5 switches ea direction · 3s hold'},
+          {name:'Lateral Lunge', dose:'2×6 ea · feel the frontal plane prep'},
+        ]},
+        { label:'Layer 1', items:[
+          {name:'Single-Leg Stance — Eyes Closed', dose:'3×45s each'},
+          {name:'Short Foot + Toe Yoga',           dose:'2×12 each'},
+        ]},
+        { label:'Activation — Very Light', items:[
+          {name:'Trap Bar DL',          dose:'2×4 · RPE 5 · just feel the hinge'},
+          {name:'Hip Thrust — Single-Leg', dose:'2×6 each · light'},
+          {name:'Wall Sit',             dose:'2×30s'},
+        ]},
+      ]
+    },
+    { name:'Saturday', collagen:false, rest:false, intent:'Final RSA — Light Maintenance',
+      sub:'Final sprint session. Quality mechanics, not volume. You’re wrapping up, not building up.',
+      blocks:[
+        { label:'ROM + Joint Prep', items:[
+          {name:'Heel Slide',   dose:'3×15 right'},
+          {name:'Hip CARs',     dose:'5 circles ea direction · each hip'},
+          {name:'Ankle CARs',   dose:'5 circles ea direction · each ankle'},
+          {name:'Single-Leg Stance — Eyes Closed', dose:'3×45s each'},
+        ]},
+        { gold:true, label:'RSA — Maintenance', items:[
+          {name:'Dynamic Warmup — Sprint Prep', dose:'10 min · full prep'},
+          {name:'Straight-Line Sprint — 30m', note:'80–85% · feel good, not maximal · right knee plant clean every rep · finish knowing you’re ready', dose:'6 reps · full 2–3 min recovery'},
+          {name:'COD — Light', note:'45° cuts at jog-to-run pace · confirmation of the pattern, not a new challenge', dose:'3×3 ea direction · 75% effort'},
+        ]},
+        { label:'Final Assessment Notes', items:[
+          {name:'Right Knee — Subjective Rating',   note:'ache score + confidence score · write it down', dose:'1–10 both'},
+          {name:'ACL-RSI — Quick Gut Check', note:'items 1, 4, 9, 12 from the form · overall confidence', dose:'how do you feel about the right knee for game play?'},
+        ]},
+        { label:'Recovery', items:[
+          {name:'Easy Walk',       dose:'15 min'},
+          {name:'Soft Tissue',     dose:'full lower body · take your time'},
+          {name:'90/90 Hip Switch', note:'final session ritual · take this to Mexico', dose:'5 switches ea direction · hold the end-range'},
+        ]},
+      ]
+    },
+    { name:'Sunday', collagen:false, rest:true, intent:'Rest — Departure Week Begins',
+      sub:'June 9 departure. Full Layer 1 + joint prep. Canal walk. You built something here.',
+      blocks:[
+        { label:'Joint Prep — Daily Ritual for Mexico', items:[
+          {name:'Hip CARs',                      note:'take this with you · do it every morning before training in Mexico', dose:'5 circles ea direction · each hip'},
+          {name:'Ankle CARs',                    dose:'8 circles ea direction · each ankle'},
+          {name:'90/90 Hip Switch',              note:'Spina protocol · takes 3 min · worth it every day', dose:'5 switches ea direction · 3s hold'},
+          {name:'Lateral Lunge — End-Range Hold', note:'Ward · frontal plane warm-up · 5 min total · do before every practice', dose:'2×8 ea'},
+          {name:'Half-Kneeling Chop',            note:'Boyle · transverse plane · band or bodyweight', dose:'2×10 ea side'},
+        ]},
+        { label:'Layer 1', items:[
+          {name:'Single-Leg Stance — Eyes Closed', dose:'3×45s each · barefoot'},
+          {name:'Short Foot',                          dose:'2×12 each'},
+          {name:'Banded Ankle Circles',                dose:'10 each direction'},
+          {name:'Toe Yoga',                            dose:'2×10 each'},
+          {name:'Slow Eccentric Calf Raise',           dose:'2×10 · 3s down'},
+        ]},
+        { gold:true, label:'Recovery', items:[
+          {name:'Canal Walk', note:'probably your last one with Patrick for a while', dose:'30 min · no rush'},
+          {name:'Soft Tissue', dose:'10 min · full lower body'},
+        ]},
+      ]
+    },
+  ],
+
+  // ── WEEK 8: Jun 8–14 (Phase 3 · Extended Stay) ───────────────────────────
+  [
+    { name:'Monday', collagen:true, rest:false, intent:'Maintenance Strength — Independent Capable',
+      sub:'Hold W7 taper loads. This week is about confirming you can run this protocol on your own.',
+      blocks:[
+        { label:'Joint Prep — Full Sequence', items:[
+          {name:'Hip CARs', note:'Spina · daily ritual · take this to Mexico', dose:'5 circles ea direction · each hip'},
+          {name:'Ankle CARs', dose:'8 circles ea direction · each ankle'},
+          {name:'90/90 Hip Switch', dose:'5 switches ea direction · 3s hold'},
+          {name:'Lateral Lunge — End-Range Hold', dose:'2×8 ea · 2s hold'},
+          {name:'Half-Kneeling Adductor Rock', dose:'2×8 ea'},
+          {name:'Copenhagen Plank — Short Lever', note:'Harøy 2019 · 41% groin injury reduction · bent knee on bench', dose:'3×25s ea side'},
+          {name:'Glute Med — Anterior Fibers', note:'Harris · fire hydrant position · anterior + superior glute med', dose:'2×15 ea'},
+          {name:'Glute Med — Posterior Fibers', note:'Harris · hip ext + abduction · posterior fibers · complete the arc', dose:'2×12 ea'},
+          {name:'Half-Kneeling Chop', note:'Boyle · transverse plane', dose:'2×10 ea side'},
+        ]},
+        { label:'Layer 1', items:[
+          {name:'Single-Leg Stance — Eyes Closed', dose:'3×45s each'},
+          {name:'Short Foot + Toe Yoga',           dose:'2×12 each'},
+        ]},
+        { label:'Maintenance Strength — 2 sets, hold load', items:[
+          {name:'Trap Bar DL',           dose:'2×4 · hold W7 load'},
+          {name:'Bulgarian Split Squat', dose:'2×6 each'},
+          {name:'Hip Thrust — Single-Leg', dose:'2×6 each'},
+          {name:'Nordic Curl',           dose:'2×4 · 5s descent'},
+          {name:'Single-Leg RDL',        dose:'2×6 each'},
+          {name:'Wall Sit',              dose:'2×45s'},
+          {name:'Side-Lying Hip Abduction — End-Range ISO Hold', dose:'2×30s ea'},
+        ]},
+      ]
+    },
+    { name:'Tuesday', collagen:false, rest:false, intent:'Easy Run + Joint Prep',
+      sub:'Easy movement. Keep the aerobic engine ticking. Joint prep is the anchor.',
+      blocks:[
+        { label:'Joint Prep', items:[
+          {name:'Hip CARs',         dose:'5 circles ea direction · each hip'},
+          {name:'Ankle CARs',       dose:'8 circles ea direction · each ankle'},
+          {name:'90/90 Hip Switch', dose:'5 switches ea direction · 3s hold'},
+          {name:'Copenhagen Plank — Short Lever', dose:'3×25s ea side'},
+          {name:'Glute Med — Anterior Fibers', note:'fire hydrant', dose:'2×15 ea'},
+          {name:'Glute Med — Posterior Fibers', note:'hip ext + abd', dose:'2×12 ea'},
+        ]},
+        { label:'Easy Run', items:[
+          {name:'Easy Continuous Run', note:'conversational pace · 20–25 min · no structure', dose:'20–25 min'},
+          {name:'Single-Leg Balance — Eyes Closed', dose:'3×45s each'},
+        ]},
+      ]
+    },
+    { name:'Wednesday', collagen:true, rest:false, intent:'Maintenance Strength — Match Monday',
+      sub:'Match Monday. No chasing load.',
+      blocks:[
+        { label:'Joint Prep', items:[
+          {name:'Hip CARs',   dose:'5 circles ea direction · each hip'},
+          {name:'Ankle CARs', dose:'8 circles ea direction · each ankle'},
+          {name:'90/90 Hip Switch', dose:'5 switches ea direction · 3s hold'},
+          {name:'Lateral Lunge — End-Range Hold', dose:'2×8 ea · 2s hold'},
+          {name:'Half-Kneeling Adductor Rock', dose:'2×8 ea'},
+          {name:'Copenhagen Plank — Short Lever', dose:'3×25s ea side'},
+          {name:'Glute Med — Anterior Fibers', dose:'2×15 ea'},
+          {name:'Glute Med — Posterior Fibers', dose:'2×12 ea'},
+          {name:'Half-Kneeling Chop', dose:'2×10 ea side'},
+        ]},
+        { label:'Layer 1', items:[
+          {name:'Single-Leg Stance — Eyes Closed', dose:'3×45s each'},
+          {name:'Short Foot + Toe Yoga',           dose:'2×12 each'},
+        ]},
+        { label:'Maintenance Strength', items:[
+          {name:'Trap Bar DL',           dose:'2×4 · match Monday'},
+          {name:'Bulgarian Split Squat', dose:'2×6 each'},
+          {name:'Hip Thrust — Single-Leg', dose:'2×6 each'},
+          {name:'Nordic Curl',           dose:'2×4 · 5s descent'},
+          {name:'Single-Leg RDL',        dose:'2×6 each'},
+          {name:'Wall Sit',              dose:'2×45s'},
+        ]},
+      ]
+    },
+    { name:'Thursday', collagen:false, rest:false, intent:'Easy Canal — Joint Prep Focus',
+      sub:'Mostly joint prep and easy movement today.',
+      blocks:[
+        { label:'Joint Prep — Full Sequence', items:[
+          {name:'Hip CARs',   dose:'5 circles ea direction · each hip'},
+          {name:'Ankle CARs', dose:'8 circles ea direction · each ankle'},
+          {name:'90/90 Hip Switch', dose:'5 switches ea direction · 3s hold'},
+          {name:'Copenhagen Plank — Short Lever → Long Lever', note:'try long lever if 25s short feels easy · top leg straight on bench', dose:'3×20–25s ea · choose appropriate lever'},
+          {name:'Glute Med — Anterior Fibers', dose:'2×15 ea'},
+          {name:'Glute Med — Posterior Fibers', dose:'2×12 ea'},
+          {name:'Lateral Lunge — End-Range Hold', dose:'2×8 ea'},
+        ]},
+        { label:'Easy Canal Movement', items:[
+          {name:'Easy Walk + Jog', dose:'20 min · no structure'},
+          {name:'Single-Leg Stance — Eyes Closed', dose:'2×30s each'},
+          {name:'Terrain Walk — Eyes Closed', note:'if Patrick available · otherwise careful solo on rocks', dose:'2–3 passes'},
+        ]},
+        { label:'Isometric Maintenance', items:[
+          {name:'Wall Sit', dose:'2×45s'},
+          {name:'Band Perturbation — Single Leg', dose:'2×8 each'},
+        ]},
+      ]
+    },
+    { name:'Friday', collagen:true, rest:false, intent:'Activation + Joint Prep',
+      sub:'Light activation. COD tomorrow if doing a final session.',
+      blocks:[
+        { label:'Joint Prep', items:[
+          {name:'Hip CARs',         dose:'5 circles ea direction · each hip'},
+          {name:'Ankle CARs',       dose:'8 circles ea direction · each ankle'},
+          {name:'90/90 Hip Switch', dose:'5 switches ea direction · 3s hold'},
+          {name:'Copenhagen Plank', dose:'3×25s ea side'},
+          {name:'Glute Med — Anterior Fibers', dose:'2×15 ea'},
+          {name:'Glute Med — Posterior Fibers', dose:'2×12 ea'},
+        ]},
+        { label:'Layer 1', items:[
+          {name:'Single-Leg Stance — Eyes Closed', dose:'3×45s each'},
+          {name:'Short Foot + Toe Yoga',           dose:'2×12 each'},
+        ]},
+        { label:'Light Activation', items:[
+          {name:'Trap Bar DL',          dose:'2×4 · RPE 5 · feel the movement'},
+          {name:'Hip Thrust — Single-Leg', dose:'2×6 each'},
+          {name:'Wall Sit',             dose:'2×30s'},
+        ]},
+      ]
+    },
+    { name:'Saturday', collagen:false, rest:false, intent:'Optional COD + Movement Quality',
+      sub:'Light sprint quality + COD. Optional — only if you feel sharp. This may be the last formal session.',
+      blocks:[
+        { label:'Joint Prep + Warmup', items:[
+          {name:'Hip CARs',   dose:'5 circles ea direction · each hip'},
+          {name:'Ankle CARs', dose:'8 circles ea direction · each ankle'},
+          {name:'90/90 Hip Switch', dose:'5 switches ea direction · 3s hold'},
+          {name:'Single-Leg Stance — Eyes Closed', dose:'3×45s each'},
+        ]},
+        { gold:true, label:'Optional Sprint + COD Quality', items:[
+          {name:'Dynamic Warmup', dose:'10 min full prep'},
+          {name:'Straight-Line Sprint — 30m', note:'80% · 4–6 reps · feel good not maximal', dose:'4–6 reps · full 2 min recovery'},
+          {name:'45° COD — Jog to Run', note:'confirm the pattern is dialed in · right knee plant clean', dose:'3×3 ea direction · 75–80%'},
+        ]},
+        { label:'Recovery', items:[
+          {name:'Easy Walk',       dose:'15 min'},
+          {name:'Soft Tissue',     dose:'full lower body'},
+          {name:'Copenhagen Plank — Long Lever Attempt', note:'progress check · if 25s each side clean, long lever is next', dose:'2×20s ea'},
+          {name:'90/90 Hip Switch — Extended Hold', note:'end of session when warm · 5s holds', dose:'5 switches ea direction · 5s hold'},
+        ]},
+      ]
+    },
+    { name:'Sunday', collagen:false, rest:true, intent:'Rest',
+      sub:'Full joint prep. Rest everything else.',
+      blocks:[
+        { label:'Joint Prep — Daily Ritual', items:[
+          {name:'Hip CARs',   dose:'5 circles ea direction · each hip · unhurried'},
+          {name:'Ankle CARs', dose:'8 circles ea direction · each ankle'},
+          {name:'90/90 Hip Switch', dose:'5 switches ea direction · 3s hold'},
+          {name:'Copenhagen Plank', dose:'3×25s ea side'},
+          {name:'Glute Med — Anterior Fibers', dose:'2×15 ea'},
+          {name:'Glute Med — Posterior Fibers', dose:'2×12 ea'},
+          {name:'Lateral Lunge — End-Range Hold', dose:'2×8 ea'},
+          {name:'Half-Kneeling Chop', dose:'2×10 ea side'},
+        ]},
+        { label:'Layer 1', items:[
+          {name:'Single-Leg Stance — Eyes Closed', dose:'3×45s each · barefoot'},
+          {name:'Short Foot',             dose:'2×12 each'},
+          {name:'Banded Ankle Circles',   dose:'10 each direction'},
+          {name:'Slow Eccentric Calf Raise', dose:'2×10 · 3s down'},
+        ]},
+        { gold:true, label:'Recovery', items:[
+          {name:'Canal Walk', dose:'30 min'},
+          {name:'Soft Tissue', dose:'10 min · full lower body'},
+        ]},
+      ]
+    },
+  ],
+
+  // ── WEEK 9: Jun 15–21 (Phase 3 · Club Prep) ──────────────────────────────
+  [
+    { name:'Monday', collagen:true, rest:false, intent:'Club Prep — Joint Prep + Light Strength',
+      sub:'Maintain what you built. This protocol travels with you. Keep the joint prep daily.',
+      blocks:[
+        { label:'Joint Prep — Full Protocol', items:[
+          {name:'Hip CARs', note:'every morning before training · non-negotiable · takes 3 min', dose:'5 circles ea direction · each hip'},
+          {name:'Ankle CARs', dose:'8 circles ea direction · each ankle'},
+          {name:'90/90 Hip Switch', note:'Spina · IR + ER end-range daily', dose:'5 switches ea direction · 3s hold'},
+          {name:'Lateral Lunge — End-Range Hold', note:'Ward · frontal plane daily prep · do before every practice session', dose:'2×8 ea · 2s hold'},
+          {name:'Half-Kneeling Adductor Rock', dose:'2×8 ea'},
+          {name:'Copenhagen Plank — Long Lever', note:'Harøy 2019 · top leg straight on bench · full adductor + hip stabilizer challenge', dose:'3×20–25s ea side · progress when 25s easy'},
+          {name:'Glute Med — Anterior Fibers', note:'Harris · fire hydrant · anterior glute med', dose:'2×15 ea'},
+          {name:'Glute Med — Posterior Fibers', note:'Harris · hip ext + abd · posterior glute med', dose:'2×12 ea'},
+          {name:'Half-Kneeling Chop', note:'Boyle · transverse plane daily prep', dose:'2×10 ea side'},
+        ]},
+        { label:'Layer 1', items:[
+          {name:'Single-Leg Stance — Eyes Closed', dose:'3×45s each'},
+          {name:'Short Foot + Toe Yoga',           dose:'2×12 each'},
+        ]},
+        { label:'Light Strength — Club Supplement', items:[
+          {name:'Trap Bar DL or Goblet Squat', note:'whatever equipment available · maintain the pattern', dose:'2×5 · moderate load'},
+          {name:'Hip Thrust or Glute Bridge', dose:'2×8 each leg'},
+          {name:'Nordic Curl',                dose:'2×4 · 5s eccentric'},
+          {name:'Single-Leg RDL',             dose:'2×6 each'},
+          {name:'Wall Sit',                   dose:'2×45s'},
+          {name:'Side-Lying Hip Abduction — End-Range ISO Hold', dose:'2×30s ea'},
+        ]},
+      ]
+    },
+    { name:'Tuesday', collagen:false, rest:false, intent:'Team Training / Easy Independent Run',
+      sub:'Integrate with club if started. If independent: easy run + joint prep.',
+      blocks:[
+        { label:'Pre-Training Joint Prep', items:[
+          {name:'Hip CARs',         dose:'5 circles ea direction · each hip'},
+          {name:'Ankle CARs',       dose:'8 circles ea direction · each ankle'},
+          {name:'90/90 Hip Switch', dose:'5 switches ea direction · 3s hold'},
+          {name:'Copenhagen Plank', dose:'3×20–25s ea side'},
+          {name:'Glute Med — Anterior Fibers', dose:'2×12 ea'},
+          {name:'Glute Med — Posterior Fibers', dose:'2×12 ea'},
+        ]},
+        { gold:true, label:'Training or Easy Run', items:[
+          {name:'Club Training or Easy 20 min Run', note:'if club training started, this replaces the structured run', dose:'per club schedule or 20 min easy'},
+        ]},
+      ]
+    },
+    { name:'Wednesday', collagen:true, rest:false, intent:'Light Strength + Joint Prep',
+      sub:'Match Monday. The joint prep sequence is yours now — run it independently.',
+      blocks:[
+        { label:'Joint Prep — Full Protocol', items:[
+          {name:'Hip CARs',   dose:'5 circles ea direction · each hip'},
+          {name:'Ankle CARs', dose:'8 circles ea direction · each ankle'},
+          {name:'90/90 Hip Switch', dose:'5 switches ea direction · 3s hold'},
+          {name:'Lateral Lunge — End-Range Hold', dose:'2×8 ea · 2s hold'},
+          {name:'Copenhagen Plank — Long Lever', dose:'3×20–25s ea side'},
+          {name:'Glute Med — Anterior Fibers', dose:'2×15 ea'},
+          {name:'Glute Med — Posterior Fibers', dose:'2×12 ea'},
+          {name:'Half-Kneeling Chop', dose:'2×10 ea side'},
+        ]},
+        { label:'Light Strength', items:[
+          {name:'Trap Bar DL or Goblet Squat', dose:'2×5 · moderate'},
+          {name:'Hip Thrust or Glute Bridge',  dose:'2×8 each'},
+          {name:'Nordic Curl',                 dose:'2×4'},
+          {name:'Single-Leg RDL',              dose:'2×6 each'},
+          {name:'Wall Sit',                    dose:'2×45s'},
+        ]},
+      ]
+    },
+    { name:'Thursday', collagen:false, rest:false, intent:'Active Recovery',
+      sub:'Easy movement. Joint prep. No loading.',
+      blocks:[
+        { label:'Joint Prep + Active Recovery', items:[
+          {name:'Hip CARs',   dose:'5 circles ea direction · each hip'},
+          {name:'Ankle CARs', dose:'8 circles ea direction · each ankle'},
+          {name:'90/90 Hip Switch', dose:'5 switches ea direction · 3s hold'},
+          {name:'Copenhagen Plank', dose:'2×20s ea · maintenance'},
+          {name:'Glute Med — Anterior Fibers', dose:'2×12 ea'},
+          {name:'Glute Med — Posterior Fibers', dose:'2×10 ea'},
+        ]},
+        { label:'Easy Movement', items:[
+          {name:'Easy Walk + Light Jog', dose:'20 min · conversational'},
+          {name:'Single-Leg Balance — Eyes Closed', dose:'2×30s each'},
+        ]},
+      ]
+    },
+    { name:'Friday', collagen:true, rest:false, intent:'Pre-Match / Pre-Training Prep',
+      sub:'Joint prep only. Save everything for match or training.',
+      blocks:[
+        { label:'Joint Prep — Pre-Match', items:[
+          {name:'Hip CARs',   dose:'5 circles ea direction · each hip · every match day'},
+          {name:'Ankle CARs', dose:'5 circles ea direction · each ankle'},
+          {name:'90/90 Hip Switch', dose:'5 switches ea direction · 3s hold'},
+          {name:'Lateral Lunge — End-Range Hold', note:'frontal plane prep before match play', dose:'2×6 ea · feel it'},
+          {name:'Glute Med — Anterior Fibers', dose:'1×12 ea · activation'},
+          {name:'Glute Med — Posterior Fibers', dose:'1×10 ea · activation'},
+        ]},
+        { label:'Layer 1 — Brief', items:[
+          {name:'Single-Leg Stance — Eyes Closed', dose:'2×30s each'},
+          {name:'Short Foot + Toe Yoga',           dose:'1×12 each'},
+          {name:'Wall Sit', dose:'1×45s · mental warm-up'},
+        ]},
+      ]
+    },
+    { name:'Saturday', collagen:false, rest:false, intent:'Match or Training',
+      sub:'You built this. Go play.',
+      blocks:[
+        { label:'Pre-Match Activation', items:[
+          {name:'Hip CARs',   dose:'5 circles ea direction · quick · before warmup'},
+          {name:'Ankle CARs', dose:'5 circles ea direction'},
+          {name:'Lateral Lunge — End-Range Hold', dose:'2×6 ea · frontal plane prime'},
+          {name:'Single-Leg Stance — Eyes Closed', dose:'2×20s each · confidence check'},
+        ]},
+        { gold:true, label:'Match or Team Training', items:[
+          {name:'Club Schedule', note:'the 12 weeks built the foundation. Trust it.', dose:'per club program'},
+        ]},
+        { label:'Post-Match', items:[
+          {name:'Easy Walk',       dose:'10–15 min'},
+          {name:'Soft Tissue',     dose:'quad, hamstring, right knee, calf'},
+          {name:'90/90 Hip Switch — Post Match', note:'when the hip is warm · feel the range', dose:'5 switches ea direction · hold 3s'},
+        ]},
+      ]
+    },
+    { name:'Sunday', collagen:false, rest:true, intent:'Rest',
+      sub:'Full rest. You earned it.',
+      blocks:[
+        { label:'Joint Prep — Ritual', items:[
+          {name:'Hip CARs',   dose:'5 circles ea direction · each hip'},
+          {name:'Ankle CARs', dose:'8 circles ea direction · each ankle'},
+          {name:'90/90 Hip Switch', dose:'5 switches ea direction · 3s hold'},
+          {name:'Copenhagen Plank', dose:'2×20s ea · maintenance'},
+          {name:'Glute Med — Anterior Fibers', dose:'2×12 ea'},
+          {name:'Glute Med — Posterior Fibers', dose:'2×10 ea'},
+        ]},
+        { gold:true, label:'Recovery Only', items:[
+          {name:'Easy Walk',   dose:'20–30 min'},
+          {name:'Soft Tissue', dose:'full lower body'},
+        ]},
+      ]
+    },
+  ],
 ]; // end DAYS_BY_WEEK
 
 // ── UI ───────────────────────────────────────────────────────────
