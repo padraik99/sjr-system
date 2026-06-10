@@ -19,10 +19,10 @@ Canal days (Tue/Thu with Yari): VO2 max 4×4 intervals replacing forward run int
 ## Athletes
 | Athlete | Sport | Injury | Status | Target |
 |---------|-------|--------|--------|--------|
-| Patrick | Volleyball | L4-L5 spinal rehab (foraminal stenosis) | Bridge-to-load phase | King of the Court, Summer 2026 |
-| Shaylan | Sprint/Jump (MJC → Berkeley) | Knee rehab + shin splints | Active — comp phase | Conference, State · 11.29 100m PR (top 40 US, all D1 included, May 2026) · 6.08m LJ scratched |
-| Cadence | Sprint/Jump (Cal Poly) | Plantar fascia + shin load intolerance | Active | Commonwealth Games Glasgow, July 2026 |
-| Yari | Soccer (professional) | ACL rehab | Active — Phase 3 · RSA progression underway | Return to Mexico June 9, 2026 · RSA intro W3 · full anaerobic W4 |
+| Patrick | Volleyball | L4-L5 spinal rehab (foraminal stenosis) | Bridge W8 · medial branch block pending · **primary app user going forward** | King of the Court, Summer 2026 |
+| Shaylan | Sprint/Jump (MJC → **UC Berkeley fall 2026**) | Knee rehab + shin splints | Post-season · off-week · Sacramento TBD (Canadian TF Fed reg issue) | 11.29 100m PR · State champion 100m · 2nd 200m + LJ |
+| Cadence | Sprint/Jump (Cal Poly — **graduated**) | Plantar fascia + shin load intolerance | Commonwealth Games prep · future training situation TBD | Commonwealth Games Glasgow, July 2026 |
+| Yari | Soccer (professional) | ACL rehab | **Phase 3 complete · returning Mexico June 9+ (possibly 12–15)** · "never felt stronger/faster" | Club integration Jun 15–21 (W9) · report: strongest/fastest she's felt |
 | Rosanne | General fitness | None | On hold — build deferred | — |
 
 ## Supabase
@@ -58,12 +58,12 @@ async async function saveGateLog(){ }  // never stack async keywords
 ## File Inventory (canonical — May 2026)
 | File | Version | Notes |
 |------|---------|-------|
-| `SJR_WeeklyGuide_Patrick_v5_20260402.html` | v5.7 | Supabase · 4-metric pain log · shared canal/iso/mobility constants · W5–W7 Bridge weeks · canal → VO2 max 4×4 intervals · W5–W7 Fri→Recovery, Sat→Gym · ISO_TENDON + Side-Lying Hip Abduction · MOBILITY_LIGHT + Hip CAR + PAILs · EX_INFO entries added |
-| `shaylan_weekly_v3_20260402.html` | v3.2 | Supabase · expandable EX_INFO panels · SHIN_COMP maintenance block · MULTIPLANAR_LOWER (Lateral Lunge + Side-Lying Hip Abduction ISO) added W1+W2 comp Mondays · EX_INFO entries added |
-| `Cadence_Weekly_v3_20260402.html` | v3.2 | Supabase · expandable EX_INFO panels · SHIN_COMP maintenance block · MULTIPLANAR_LOWER (Lateral Lunge + Side-Lying Hip Abduction ISO) added all 3 comp Mondays · EX_INFO entries added |
-| `SJR_Yari_Guide_v2_20260414.html` | v2.4 | Supabase-wired · ACL rehab · W6 deload + Phase 3 May Gate + W3 Aerobic Build + W4 Anaerobic Intro · Side-Lying Hip Abduction ISO + Lateral Step-Up ISO added all Phase 3 Strength Blocks · RSA intro (6×30m 80%) W3 Sat · RSA progression (8×30m 85–90%) W4 Sat · VO2 max 4×4 canal Tue/Thu W3–W4 · date numbers on FAB bar day tabs |
-| `SJR_Library_Master_v4_20260402.html` | v4.1 | 80 cards · quality tags · 6-quality filter · spinal filter UI removed · absolute Browse URLs |
-| `SJR_Dashboard_v1_20260402.html` | v1.3 | All 4 athletes · auto-refresh · injury log · CSV export · **security patch 2026-04-16**: stored XSS fixed · **schema fix 2026-04-21**: injury_logs `location`→`region` · **2026-05-12**: sbFetch Authorization:Bearer removed (sb_publishable_ keys require apikey header only) |
+| `SJR_WeeklyGuide_Patrick_v5_20260402.html` | **v5.9** | W1–W4 Tue/Thu → VO2 max 4×4 structure · W8–W11 Bridge weeks added · inline week nav (removed bottom bar) · upper body W8–W10: Bench 2×10 + Row 3×15 + Pallof 2×10s (supine/pull-dominant, zero axial compression) |
+| `shaylan_weekly_v3_20260402.html` | **v3.3** | W11 off-week + W12 return-to-form + W13 Sacramento (conditional) added |
+| `Cadence_Weekly_v3_20260402.html` | v3.2 | Supabase · SHIN_COMP · MULTIPLANAR_LOWER · EX_INFO entries |
+| `SJR_Yari_Guide_v2_20260414.html` | **v2.7** | W5–W9 added (May 18–June 21) · Hip CARs + Ankle CARs + 90/90 Hip Switch + Lateral Lunge + Copenhagen Plank (Harøy 2019) + Conor Harris glute med (ant/post fibers) + Half-Kneeling Chop across all new weeks · Library nav link added |
+| `SJR_Library_Master_v4_20260402.html` | **v4.1** | 80 cards · quality tags · filter FAQ panel added (collapsible "How to use filters" with phase/quality combo examples for self-directed use) |
+| `SJR_Dashboard_v1_20260402.html` | **v1.3** | All 4 athletes · auto-refresh · Yari Gate Assessment nav link added · sbFetch Authorization:Bearer removed |
 | `patrick_protocol_v2_20260402.html` | v2 | Floating This Week button |
 | `SJR_Periodization_Master_v2_20260313.html` | v2 | Library links fixed to absolute URL v4.1 |
 
@@ -225,15 +225,19 @@ At the start of any session, run `git log --oneline -20` to see recent commits b
 git -C "C:/Users/padra/Documents/GitHub/sjr-system" log --oneline -20
 ```
 
-### Recent Commit Log (May 2026)
+### Recent Commit Log (May–June 2026)
 | Hash | Message |
 |------|---------|
+| pending | Yari v2.7: W8–W9 extended stay/club prep · Copenhagen Plank + Harris glute med all W5–W9 |
+| pending | Yari v2.6: W5–W9 added · Joint Prep multi-planar · Library nav link |
+| pending | Library v4.1: filter FAQ panel |
+| pending | Dashboard v1.3: Yari Gate Assessment nav link |
+| pending | Patrick v5.9: W8–W11 Bridge weeks + inline nav + upper body W8–W10 |
+| pending | Shaylan v3.3: W11 off-week + W12 return-to-form + W13 Sacramento |
+| pending | Patrick v5.8: W1–W4 Tue/Thu → VO2 max 4×4 structure |
 | 0e0f850 | Restore from upload conflict · Patrick v5.7 + Yari v2.4 + Dashboard sbFetch fix |
-| 6ca4a13 | Patrick v5.7: 6 missing EX_INFO entries — Matrix Treadmill, Couch Stretch, Easy Walk, Femoral Nerve Floss, Hip Thrust, Thoracic Ext |
-| cbacfd2 | Scheduled task: multi-planar blocks · Patrick Fri=recovery/Sat=gym · 4×4 VO2 max canal · Yari RSA anaerobic prep (June 9 RTP) |
-| 00d0cdb | CLAUDE.md: session orientation + research pipeline · Shaylan/Cadence v3.1 SHIN_COMP · Yari Assessment: delete button + sbFetch fix |
-| e6e1e7d | Patrick v5.6: Mon sled → Matrix treadmill · 90/90 removed · MOBILITY_LIGHT Built from Broken additions |
-| d5f0e2f | Yari v2.2: split squat iso + toe progression + supine hamstring pulses |
+| 6ca4a13 | Patrick v5.7: 6 missing EX_INFO entries |
+| cbacfd2 | Scheduled task: multi-planar blocks · Patrick Fri=recovery/Sat=gym · 4×4 VO2 max canal |
 
 ### Upload conflict note (2026-05-12)
 Patrick uploaded a guide from an older chat session via GitHub Desktop, landing *after* Cowork session commits and overwriting 1,271 lines of EX_INFO + breaking Yari's HTML. Restored from `6ca4a13` / `cbacfd2`. **Rule: the sjr-system folder is the only source of truth — delete all old copies outside it.**
@@ -349,7 +353,7 @@ Research to dig into:
 - **Hip CARs in athletic populations**: Controlled Articular Rotations as daily joint health practice — what's the evidence base, what frequency, and does it transfer to athletic performance?
 - **Frontal plane loading and lumbar spinal stenosis**: Any contraindication data? Lateral lunge creates frontal plane hip load but may also create some lateral lumbar shear — need to review before programming for Patrick.
 
-*Implementation note (May 2026 — partially implemented): Patrick: Hip CAR + PAILs Flexion End-Range added to MOBILITY_LIGHT · Side-Lying Hip Abduction ISO added to ISO_TENDON · EX_INFO entries added. Shaylan/Cadence: MULTIPLANAR_LOWER block (Lateral Lunge + Side-Lying Hip Abduction ISO) added after SHIN_COMP in comp Mondays. Yari: Side-Lying Hip Abduction ISO + Lateral Step-Up ISO Hold added to all Phase 3 Strength Blocks. Remaining: Patrick frontal plane lateral lunge deferred (lateral lumbar shear contraindication review needed). Thoracic transverse plane strength (beyond passive rotation) not yet built.*
+*Implementation note (June 2026 — substantially implemented): Patrick: Hip CAR + PAILs + Side-Lying Hip Abduction ISO + MOBILITY_LIGHT additions. Shaylan/Cadence: MULTIPLANAR_LOWER (Lateral Lunge + Side-Lying Hip Abduction ISO) on comp Mondays. Yari: Full Joint Prep block (Hip CARs + Ankle CARs + 90/90 Hip Switch + Lateral Lunge + Copenhagen Plank + Harris glute med anterior/posterior + Half-Kneeling Chop) in all W5–W9 days. Remaining: Patrick frontal plane lateral lunge deferred (lateral lumbar shear contraindication review needed). Thoracic transverse plane active strength not yet built.*
 
 ### Key Journals to Monitor
 - British Journal of Sports Medicine (BJSM) — tendinopathy, ACL, return to sport
@@ -362,3 +366,79 @@ Research to dig into:
 Frans Bosch (sprint coordination) · Stuart McGill (spine) · Keith Baar (tendon/collagen) · Ebonie Rio (isometric analgesia) · Nick Winkelman (motor learning) · Mike Boyle (joint-by-joint) · Greg Rose / TPI model (rotational athletes) · Tim Gabbett (load management, AMS ratio) · Ben Peterson (hamstring) · Michael Fredericson (bone stress)
 
 *Note: When a research question becomes a programming decision, search BJSM and PubMed first, then cross-reference with practitioner application. Flag any finding that contradicts current protocols before applying.*
+
+---
+
+## Working With Patrick
+
+### How Patrick communicates
+- Verbal descriptions of what's changed are **directionally accurate but may omit details**. Always cross-reference with `git log` and actual file state before accepting his summary as ground truth.
+- He thinks out loud — half-formed ideas are invitations to push back or develop, not instructions to execute blindly.
+- "I don't know if we can..." is an opening for a real answer, not a rhetorical softener.
+
+### Interaction preferences
+- **Pushback is welcome and expected.** Don't validate wrong moves or bulldoze over mistakes. If a proposal has a problem, name it directly.
+- **Act on obvious moves, ask on genuinely ambiguous ones.** Don't ask permission for things that have one clearly right answer.
+- **Prose over bullets** in explanations. Use lists only for code, step-by-step sequences, or when Patrick explicitly requests them.
+- **Short on well-understood topics.** If Patrick knows the domain, don't re-explain the foundation.
+- **Analogies are good.** Abstract concepts land better with a concrete parallel.
+- **Research-backed over pop explanations.** Cite the mechanism or the paper when it matters. Ignore Instagram/TikTok as sources.
+- **Humor when the opening is there.** Don't force it, but don't avoid it.
+- **Monitor context.** Prepare a carryover prompt when approaching 80% and 90% of token limit. Don't let a session die mid-task without a handoff.
+
+### New session opener template
+Paste this at the start of any new session:
+```
+Read CLAUDE.md (sjr-system and StudyLab). Run: git -C "C:/Users/padra/Documents/GitHub/sjr-system" log --oneline -10
+Today is [DATE]. Here's what I want to work on: [TASK]
+```
+
+---
+
+## Key Decisions Log
+
+Rationale for non-obvious choices — so the next model inherits the reasoning, not just the outcome.
+
+| Decision | Rationale |
+|----------|-----------|
+| Rejected Tabata for Yari sprint/agility work (June 2026) | CNS cost is real; mechanics degrade rounds 6–8; original Tabata was cycle ergometer at 170% VO2max — not transferable to field work 3 weeks from return. Current RSA + 4×4 covers the same adaptations more safely. Pool/bike Tabata remains valid for central CV stimulus. |
+| 1:3 work:rest for RSA agility intro (15s efforts) | Sub-maximal "high tempo" intensity; partial PCr depletion across reps is the RSA stimulus. 1:4 if true sprint velocity. Earned by progressive decel work post-4×4: 5-step → 3-step → side stops → slope finishers, all under neuromuscular fatigue. |
+| Copenhagen Plank introduced W5 (should have been Phase 2) | Adductor gap identified late. Harøy 2019: 41% groin injury reduction in soccer at modest dose. Short lever → long lever progression. Now in all W5–W9 gym days. |
+| Patrick upper body: supine-only, pull-dominant | Zero axial spinal compression (supine bench). Bench 2×10 "vitamin" dose — maintenance not training. Row 3:2 pull:push ratio to counter guarding/flexion pattern. Pallof press for transverse plane anti-rotation. |
+| Patrick inline week nav (removed bottom bar) | Patrick wanted arrows "right where weeks are displayed." Phase-badge in header was the correct target — not a new element. |
+| Copenhagen + Harris glute med over standard side-lying only | Side-lying hits mid-fibers. Fire hydrant (hip abduction in flexion) = anterior/superior fibers. Hip extension + abduction = posterior fibers. Lateral Step-Up ISO stays for valgus control. Together = complete glute med arc. |
+| Patrick W8–W11 Bridge added | Guide was showing "Unlock W1" on May 12 — correct behavior, wrong content. May 11–June 4 had no defined weeks. Added 4 Bridge weeks; Unlock W1 pushed to index 11 (June 8+). |
+
+---
+
+## App Roadmap — Patrick as Primary User
+
+As Shaylan moves to Berkeley, Yari to Mexico, and Cadence's situation TBD, Patrick becomes the primary active user. These are the next development directions in rough priority:
+
+### Expert pool — candidates to vet
+- **P3 Applied Sport Science (Marcus Elliott)** — biomechanics profiling, asymmetry management, force plate / RSI data. Patrick wants to add as a reference. *Pending: review Gemini chat Patrick will provide.*
+- **Conor Harris** — glute med fiber-specific programming. Already applied in Yari W5–W9. Add to expert table.
+- Others TBD as research pipeline develops.
+
+### Velocity Based Training (VBT)
+- Potential integration for Patrick's autoregulation. Bar velocity correlates to readiness — a velocity drop on a warm-up set tells you to back off before loading up. Especially useful with spinal rehab where some days are not what they look like subjectively.
+- Smartphone-based options (Metric, My Lift) are accessible and free/cheap.
+- Key researchers: Bryan Mann, Gonzalez-Badillo, Daniel Baker.
+- Implementation: could add a "Today's readiness" VBT check-in at session start in Patrick's guide.
+
+### Video demos — curated over generic
+- Current approach: YouTube `?search_query=` links → generic, inconsistent quality.
+- Better: Patrick maintains a list of specific video IDs (unlisted or public YT) per exercise. App stores them and links directly.
+- Feature: per-exercise "save my preferred demo" — stores a YouTube URL in localStorage; falls back to search link if none saved.
+- Patrick already has private YouTube playlists with preferred demos — need to make these unlisted (not private) for embedding.
+
+### Day-of exercise customization
+- Feature request: add or remove exercises on a given day without permanently altering the program.
+- Implementation: localStorage-based daily overrides keyed by `[weekIdx]-[dayIdx]`. Resets to base program next day.
+- UI: small +/– buttons per exercise, plus an "Add exercise" field at the bottom of each block.
+
+### Hard data integration (P3-style)
+- Currently tracking: pain scores, gate checks, subjective ratings.
+- Missing: performance metrics — RSI (reactive strength index), hop test LSI, force asymmetry, velocity data.
+- A simple manual entry screen for key metrics at gate assessments would significantly upgrade the clinical value of the system.
+- Patrick's motto: *"Do what I can with what I have in the moment."* The system should reflect that — data informing decisions, not replacing them.
