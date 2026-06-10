@@ -183,8 +183,8 @@ https://padraik99.github.io/sjr-system/SJR_Library_Master_v4_20260402.html?phase
 | Isometric | 5×45s (Rio analgesia) or 20–30s (Baar collagen) | Different durations, different mechanisms |
 | GPP | Volume over intensity | Tissue tolerance is the goal |
 
-## Expert Reference Pool (19)
-Baar · Grey · Ward · Natera · Barr · Schexnayder · McGill · Alfredson · Rio · Uthoff · Bosch · Dietz · Winkelman · Zourdos · Spina · Boyle · Cressey · Shepherd · Mack
+## Expert Reference Pool (26)
+Baar · Grey · Ward · Natera · Barr · Schexnayder · McGill · Alfredson · Rio · Uthoff · Bosch · Dietz · Winkelman · Zourdos · Spina · Boyle · Cressey · Shepherd · Mack · Elliott · Harris · Verkhoshansky · Zatsiorsky · Gabbett · Sims · Pfaff
 
 | Expert | Scope |
 |--------|-------|
@@ -207,6 +207,13 @@ Baar · Grey · Ward · Natera · Barr · Schexnayder · McGill · Alfredson · 
 | Cressey | Hip mobility, 90/90 transition, shoulder health, baseball athletes |
 | Shepherd | LJ run-up mechanics, resisted sprint methodology, drop jump progressions |
 | Mack | Movement elasticity, scapular motor control, NHL/NBA applied practice |
+| Elliott (P3) | Deceleration as primary injury mechanism, force absorption, force-plate asymmetry screening — complements the production-focused pool |
+| Harris | Glute med fiber-specific programming — fire hydrant = anterior/superior fibers, hip extension+abduction = posterior fibers (applied Yari W5–W9) |
+| Verkhoshansky | Shock method / plyometrics theory, amortization phase as the actual training target — theoretical basis for what Elliott measures |
+| Zatsiorsky | Force-velocity curve, strength zone classification — foundation for VBT autoregulation (Mann, Gonzalez-Badillo built on his framework) |
+| Gabbett | ACWR — load spike vs. absolute load as injury predictor; sweet spot 0.8–1.3, >1.5 danger zone; session RPE×duration (AU) method |
+| Sims | Female athlete physiology, menstrual cycle periodization, hormonal effects on tissue vulnerability — 3 of 4 athletes are female |
+| Pfaff | Sprint/jump ground contact mechanics, approach run, elite load management — more current and technically detailed than Schexnayder |
 
 ## Commit Message Convention
 `[scope]: what changed + why`
@@ -226,18 +233,22 @@ git -C "C:/Users/padra/Documents/GitHub/sjr-system" log --oneline -20
 ```
 
 ### Recent Commit Log (May–June 2026)
+All previously pending commits are pushed — branch in sync with origin/main as of June 9 2026.
+
 | Hash | Message |
 |------|---------|
-| pending | Yari v2.7: W8–W9 extended stay/club prep · Copenhagen Plank + Harris glute med all W5–W9 |
-| pending | Yari v2.6: W5–W9 added · Joint Prep multi-planar · Library nav link |
-| pending | Library v4.1: filter FAQ panel |
-| pending | Dashboard v1.3: Yari Gate Assessment nav link |
-| pending | Patrick v5.9: W8–W11 Bridge weeks + inline nav + upper body W8–W10 |
-| pending | Shaylan v3.3: W11 off-week + W12 return-to-form + W13 Sacramento |
-| pending | Patrick v5.8: W1–W4 Tue/Thu → VO2 max 4×4 structure |
-| 0e0f850 | Restore from upload conflict · Patrick v5.7 + Yari v2.4 + Dashboard sbFetch fix |
-| 6ca4a13 | Patrick v5.7: 6 missing EX_INFO entries |
-| cbacfd2 | Scheduled task: multi-planar blocks · Patrick Fri=recovery/Sat=gym · 4×4 VO2 max canal |
+| 58eb32c | Update CLAUDE.md |
+| a61d062 | Yari v2.7: W8–W9 extended stay/club prep · Copenhagen Plank + Harris glute med all W5–W9 · Library v4.1: filter FAQ panel (combined commit) |
+| 7ae7344 | Dashboard v1.3: Yari Gate Assessment nav link |
+| c850728 | Patrick v5.9: upper body W8–W10 · bench+row (Mon/Sat) · row+Pallof (Wed) · deload scaled W10 |
+| 20cb803 | Shaylan v3.3: W11 off-week + W12 return-to-form + W13 Sacramento (conditional) |
+| b974b50 | Yari v2.5: Terrain Walk Eyes-Closed added W3–W4 Tue/Thu canal days |
+| fceebee | Patrick v5.9: W8–W11 Bridge weeks + inline week nav |
+| c287f01 / 46d35c9 / 0ef59e6 / 84a39ad | Cache-bust iterations |
+| 19f46e3 | All guides + dashboard: daily cache-bust redirect — bookmarks always load latest |
+| 46c2d6f | Patrick v5.8: Tue/Thu canal = VO2 max only · ankle hops → Mon gym · curved runs removed |
+
+Note: Yari v2.6 never landed as a separate commit — its content (W5–W9, Joint Prep multi-planar, Library nav link) shipped inside a61d062/earlier commits.
 
 ### Upload conflict note (2026-05-12)
 Patrick uploaded a guide from an older chat session via GitHub Desktop, landing *after* Cowork session commits and overwriting 1,271 lines of EX_INFO + breaking Yari's HTML. Restored from `6ca4a13` / `cbacfd2`. **Rule: the sjr-system folder is the only source of truth — delete all old copies outside it.**
@@ -415,10 +426,15 @@ Rationale for non-obvious choices — so the next model inherits the reasoning, 
 
 As Shaylan moves to Berkeley, Yari to Mexico, and Cadence's situation TBD, Patrick becomes the primary active user. These are the next development directions in rough priority:
 
-### Expert pool — candidates to vet
-- **P3 Applied Sport Science (Marcus Elliott)** — biomechanics profiling, asymmetry management, force plate / RSI data. Patrick wants to add as a reference. *Pending: review Gemini chat Patrick will provide.*
-- **Conor Harris** — glute med fiber-specific programming. Already applied in Yari W5–W9. Add to expert table.
-- Others TBD as research pipeline develops.
+### Expert pool — status
+- Elliott (P3), Harris, Verkhoshansky, Zatsiorsky, Gabbett, Sims, Pfaff added to Expert Reference Pool table June 9 2026.
+- **Sims flagged as significant blind spot** — female athlete physiology / cycle periodization, 3 of 4 athletes female. Deeper review pending (ties to existing estrogen-LOX pipeline item).
+
+### ACWR session logger (Gabbett)
+- End-of-session RPE×duration (AU) logger with rolling 4-week average → acute:chronic workload ratio.
+- Sweet spot 0.8–1.3 · >1.5 danger zone. Load *spikes* predict injury, not high absolute load.
+- Separate spinal vs. general load tracking for Patrick.
+- Candidate feature for Patrick's guide.
 
 ### Velocity Based Training (VBT)
 - Potential integration for Patrick's autoregulation. Bar velocity correlates to readiness — a velocity drop on a warm-up set tells you to back off before loading up. Especially useful with spinal rehab where some days are not what they look like subjectively.
