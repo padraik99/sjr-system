@@ -58,7 +58,8 @@ async async function saveGateLog(){ }  // never stack async keywords
 ## File Inventory (canonical — May 2026)
 | File | Version | Notes |
 |------|---------|-------|
-| `SJR_WeeklyGuide_Patrick_v5_20260402.html` | **v5.9** | W1–W4 Tue/Thu → VO2 max 4×4 structure · W8–W11 Bridge weeks added · inline week nav (removed bottom bar) · upper body W8–W10: Bench 2×10 + Row 3×15 + Pallof 2×10s (supine/pull-dominant, zero axial compression) |
+| `SJR_WeeklyGuide_Patrick_v5_20260402.html` | **v5.10** | VBT readiness panel (velocity vs rolling baseline + proxy fallback, traffic light) · per-exercise saved demo URLs (`pt_demos`) · day-of add/remove overrides (`pt_dayover`, today-only, auto-prune) · P3 metrics modal (RSI/LSI/MV/custom, `pt_metrics`, CSV export w/ confirm) · **injury modal restored** (markup lost in May 12 conflict; fixed dead refs: todayStr→todayDateStr, showSyncBadge→showSyncStatus, added sbDateStr, loadInjuryLogs now called in init) |
+| `SJR_VBT_Tracker_v1_20260609.html` | **v1.0 NEW** | Optical VBT: phone camera tracks lime-green bar marker, scale from known ⌀, mean concentric velocity per rep, 20% velocity-loss audio cutoff, auto-writes `pt_vbt_today` → guide readiness panel reads it (same-origin localStorage) |
 | `shaylan_weekly_v3_20260402.html` | **v3.3** | W11 off-week + W12 return-to-form + W13 Sacramento (conditional) added |
 | `Cadence_Weekly_v3_20260402.html` | v3.2 | Supabase · SHIN_COMP · MULTIPLANAR_LOWER · EX_INFO entries |
 | `SJR_Yari_Guide_v2_20260414.html` | **v2.7** | W5–W9 added (May 18–June 21) · Hip CARs + Ankle CARs + 90/90 Hip Switch + Lateral Lunge + Copenhagen Plank (Harøy 2019) + Conor Harris glute med (ant/post fibers) + Half-Kneeling Chop across all new weeks · Library nav link added |
@@ -278,7 +279,7 @@ Full audit report: `SJR_Security_Audit_20260416.md` (in repo root)
 - [ ] MEDIUM: Weekly guides (Patrick/Shaylan/Cadence/Yari) — innerHTML for WEEKS/phase-badge → DOM construction
 - [ ] MEDIUM: Library -1 suffix artifact — confirm canonical file exists, remove duplicate
 - [ ] MEDIUM: Document localStorage plaintext health data risk in codebase
-- [ ] LOW: CSV export confirmation prompt before download
+- [~] LOW: CSV export confirmation prompt before download — done for Patrick guide metrics CSV (v5.10); Dashboard injury CSV still open
 - [ ] LOW: Consider self-hosting Google Fonts
 
 ### Active session rules
@@ -419,6 +420,10 @@ Rationale for non-obvious choices — so the next model inherits the reasoning, 
 | Patrick inline week nav (removed bottom bar) | Patrick wanted arrows "right where weeks are displayed." Phase-badge in header was the correct target — not a new element. |
 | Copenhagen + Harris glute med over standard side-lying only | Side-lying hits mid-fibers. Fire hydrant (hip abduction in flexion) = anterior/superior fibers. Hip extension + abduction = posterior fibers. Lateral Step-Up ISO stays for valgus control. Together = complete glute med arc. |
 | Patrick W8–W11 Bridge added | Guide was showing "Unlock W1" on May 12 — correct behavior, wrong content. May 11–June 4 had no defined weeks. Added 4 Bridge weeks; Unlock W1 pushed to index 11 (June 8+). |
+| VBT tracker as separate file, not in-guide (June 2026) | Camera permission prompts don't belong in the daily training guide; keeps guide lean and the one-script rule intact. Same-origin localStorage is the bridge — no backend needed. |
+| Day-of overrides keyed by date, not [week]-[day] | Date key self-expires (prune anything ≠ today on load). Week/day index would persist a Tuesday override into every future Tuesday view. |
+| P3 metrics localStorage-first | Patrick is sole user, single primary device; ship now, zero backend work. Supabase table when the metric set stabilizes. CSV export is the interim escape hatch. |
+| Readiness thresholds 95/85% of baseline MV | ~10% MV drop on fixed warm-up load is the consensus meaningful readiness signal; 95% green is deliberately conservative for spinal rehab, 85% red is a loud alarm. Baseline = last 5 same-load (±10%) entries, ≥3 required. |
 
 ---
 
@@ -436,25 +441,21 @@ As Shaylan moves to Berkeley, Yari to Mexico, and Cadence's situation TBD, Patri
 - Separate spinal vs. general load tracking for Patrick.
 - Candidate feature for Patrick's guide.
 
-### Velocity Based Training (VBT)
-- Potential integration for Patrick's autoregulation. Bar velocity correlates to readiness — a velocity drop on a warm-up set tells you to back off before loading up. Especially useful with spinal rehab where some days are not what they look like subjectively.
-- Smartphone-based options (Metric, My Lift) are accessible and free/cheap.
-- Key researchers: Bryan Mann, Gonzalez-Badillo, Daniel Baker.
-- Implementation: could add a "Today's readiness" VBT check-in at session start in Patrick's guide.
+### Velocity Based Training (VBT) — ✅ SHIPPED v5.10 (June 9 2026)
+- Readiness panel in Patrick's guide: warm-up MV @ load vs rolling baseline (last 5 entries within ±10% load, min 3). ≥95% green / 85–95% amber (−10–20% load) / <85% red (Day C). ~10% MV drop is the meaningful signal (Jovanović & Flanagan 2014).
+- Proxy fallback (sleep/soreness/warm-up feel, 0–6 score) for non-barbell days.
+- **`SJR_VBT_Tracker_v1_20260609.html`** — browser port of the OpenCV VBT-Barbell-Tracker concept (Patrick provided README; My Lift paywalled VBT). Lime-green marker of known diameter → mm/px scale → MCV = displacement/time. requestVideoFrameCallback, EMA smoothing, rep state machine (V_START 0.06 / V_STOP 0.02 m/s), min ROM 250mm default, 20% velocity-loss double-buzz (Pareja-Blanco 2017), wake lock, 2-min auto-reset.
+- Handoff: tracker writes `pt_vbt_today` {date, mv, load, reps}; guide auto-fills on init (same-origin localStorage across padraik99.github.io).
+- Deliberately skipped: fisheye calibration (trend tool, not research), instantaneous velocity (mean is noise-robust at 30fps and is what the load-velocity literature uses).
 
-### Video demos — curated over generic
-- Current approach: YouTube `?search_query=` links → generic, inconsistent quality.
-- Better: Patrick maintains a list of specific video IDs (unlisted or public YT) per exercise. App stores them and links directly.
-- Feature: per-exercise "save my preferred demo" — stores a YouTube URL in localStorage; falls back to search link if none saved.
-- Patrick already has private YouTube playlists with preferred demos — need to make these unlisted (not private) for embedding.
+### Video demos — ✅ SHIPPED v5.10
+- Per-exercise "＋ Save my demo" in detail panel → `pt_demos` {name: url}, http(s) validated, escaped on render. Falls back to search link. ✎ to change, empty to remove.
+- Still open: Patrick's private YT playlists → make unlisted, then save links per exercise.
 
-### Day-of exercise customization
-- Feature request: add or remove exercises on a given day without permanently altering the program.
-- Implementation: localStorage-based daily overrides keyed by `[weekIdx]-[dayIdx]`. Resets to base program next day.
-- UI: small +/– buttons per exercise, plus an "Add exercise" field at the bottom of each block.
+### Day-of exercise customization — ✅ SHIPPED v5.10
+- `pt_dayover` keyed by **date string** (not week/day index) — only today's key is read, stale keys pruned on load. "✎ Edit today" → − per exercise (strikethrough + ↩ restore in edit mode), add row with datalist autocomplete from EX_INFO keys. User-entered names/doses escaped (escHtml) per security rules.
 
-### Hard data integration (P3-style)
-- Currently tracking: pain scores, gate checks, subjective ratings.
-- Missing: performance metrics — RSI (reactive strength index), hop test LSI, force asymmetry, velocity data.
-- A simple manual entry screen for key metrics at gate assessments would significantly upgrade the clinical value of the system.
+### Hard data integration (P3-style) — ✅ SHIPPED v5.10 (localStorage-first)
+- 📊 Data modal: RSI (flight÷contact), SL Hop LSI (auto side-lag callout, ≥90/95% gates), Bar MV @ load, Custom. `pt_metrics`, 8-entry history with trend arrows, CSV export with confirm prompt (closes audit LOW item for this file).
+- Next step when metric set stabilizes: migrate to Supabase `performance_metrics` table for cross-device sync.
 - Patrick's motto: *"Do what I can with what I have in the moment."* The system should reflect that — data informing decisions, not replacing them.

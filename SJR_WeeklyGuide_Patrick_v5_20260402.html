@@ -382,6 +382,34 @@ main { padding:1.25rem; max-width:700px; margin:0 auto; }
 ::-webkit-scrollbar-track { background:var(--bg); }
 ::-webkit-scrollbar-thumb { background:var(--border); border-radius:2px; }
 
+/* ── v5.10: READINESS · EDIT DAY · METRICS ── */
+.vbt-panel{margin:.6rem 1.25rem 0;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);}
+.vbt-head{display:flex;align-items:center;gap:.55rem;padding:.6rem .8rem;cursor:pointer;}
+.vbt-light{width:.65rem;height:.65rem;border-radius:50%;background:var(--dim);flex-shrink:0;}
+.vbt-light.green{background:var(--green);box-shadow:0 0 8px rgba(126,184,126,.6);}
+.vbt-light.amber{background:var(--yellow);box-shadow:0 0 8px rgba(200,180,110,.6);}
+.vbt-light.red{background:var(--red);box-shadow:0 0 8px rgba(200,126,126,.6);}
+.vbt-light.info{background:var(--accent2);}
+.vbt-title{font-family:'IBM Plex Mono',monospace;font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);}
+.vbt-verdict{flex:1;text-align:right;font-size:.66rem;color:var(--dim);font-family:'IBM Plex Mono',monospace;}
+.vbt-body{padding:.1rem .8rem .8rem;border-top:1px solid var(--border);}
+.vbt-grid{display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin:.7rem 0 .35rem;}
+.vbt-field label{display:block;font-family:'IBM Plex Mono',monospace;font-size:.56rem;letter-spacing:.08em;text-transform:uppercase;color:var(--dim);margin-bottom:.25rem;}
+.vbt-input{width:100%;box-sizing:border-box;background:var(--surface2);border:1px solid var(--border);border-radius:4px;padding:.45rem .6rem;font-family:'IBM Plex Mono',monospace;font-size:.85rem;color:var(--text);outline:none;}
+.vbt-input:focus{border-color:var(--accent2);}
+.vbt-note{font-family:'IBM Plex Mono',monospace;font-size:.6rem;color:var(--dim);margin:.2rem 0 .4rem;line-height:1.5;}
+.proxy-row{display:grid;grid-template-columns:repeat(3,1fr);gap:.35rem;margin:.3rem 0;}
+.exov-btn{background:var(--surface2);border:1px solid var(--border);color:var(--red);border-radius:3px;width:1.6rem;height:1.6rem;line-height:1;cursor:pointer;font-size:1rem;flex-shrink:0;padding:0;}
+.exov-btn.restore{color:var(--green);font-size:.8rem;}
+.ex-row.removed{opacity:.35;}
+.ex-row.removed .ex-name{text-decoration:line-through;}
+.editday-bar{margin:.9rem 0 .3rem;display:flex;justify-content:flex-end;}
+.addex-row{display:grid;grid-template-columns:1.4fr 1fr auto;gap:.4rem;margin:.4rem 0 .8rem;}
+.demo-set-btn{background:none;cursor:pointer;}
+.metric-help{font-family:'IBM Plex Mono',monospace;font-size:.6rem;color:var(--muted);line-height:1.6;}
+.mhist-row{display:flex;justify-content:space-between;gap:.5rem;font-family:'IBM Plex Mono',monospace;font-size:.66rem;padding:.28rem 0;border-bottom:1px solid var(--border);color:var(--muted);}
+.mhist-row .mh-val{color:var(--text);}
+
 /* ── REFRESH FAB ── */
 #refresh-fab{
   position:fixed;bottom:1rem;right:1rem;z-index:500;
@@ -401,7 +429,7 @@ main { padding:1.25rem; max-width:700px; margin:0 auto; }
   <div class="hdr-top">
     <div>
       <div class="hdr-name">Patrick</div>
-      <div class="hdr-sub">L4–L5 · Return to Athletic Life · v5.9</div>
+      <div class="hdr-sub">L4–L5 · Return to Athletic Life · v5.10</div>
     </div>
     <div class="week-inline-nav">
       <button class="nav-arrow-inline" id="prev-week" onclick="changeWeek(-1)" disabled>‹</button>
@@ -437,7 +465,55 @@ main { padding:1.25rem; max-width:700px; margin:0 auto; }
     <strong>Autoregulation Gates</strong>
     AM ≤2/10 · Nerve ≤2.5/10 · Ankle spot — log and track
   </div>
-  <div style="display:flex;gap:.5rem;"><button class="gate-log-btn" onclick="openModal()" style="flex:1;">Log</button><button class="gate-log-btn" style="flex:1;background:var(--surface2);border-color:rgba(200,80,60,0.3);color:#c8503c;" onclick="openInjuryModal()">⚠ Issue</button></div>
+  <div style="display:flex;flex-direction:column;gap:.4rem;">
+    <div style="display:flex;gap:.5rem;"><button class="gate-log-btn" onclick="openModal()" style="flex:1;">Log</button><button class="gate-log-btn" style="flex:1;background:var(--surface2);border-color:rgba(200,80,60,0.3);color:#c8503c;" onclick="openInjuryModal()">⚠ Issue</button></div>
+    <div style="display:flex;gap:.5rem;"><button class="gate-log-btn" style="flex:1;background:var(--surface2);" onclick="toggleReadiness()">🎯 Ready</button><button class="gate-log-btn" style="flex:1;background:var(--surface2);" onclick="openMetricsModal()">📊 Data</button></div>
+  </div>
+</div>
+
+<!-- VBT READINESS PANEL (v5.10) -->
+<div class="vbt-panel" id="vbt-panel">
+  <div class="vbt-head" onclick="toggleReadiness()">
+    <span class="vbt-light" id="vbt-light"></span>
+    <span class="vbt-title">Session Readiness</span>
+    <span class="vbt-verdict" id="vbt-verdict">tap to check in</span>
+    <span class="ex-chevron" id="vbt-chev" style="font-size:.6rem;color:var(--dim)">▼</span>
+  </div>
+  <div class="vbt-body" id="vbt-body" style="display:none">
+    <div class="vbt-grid">
+      <div class="vbt-field">
+        <label>Warm-up MV (m/s)</label>
+        <input class="vbt-input" id="vbt-mv" type="number" step="0.01" min="0" max="3" inputmode="decimal" placeholder="0.00" oninput="updateVbtPreview()"/>
+      </div>
+      <div class="vbt-field">
+        <label>@ Load (lbs)</label>
+        <input class="vbt-input" id="vbt-load" type="number" step="5" min="0" max="500" inputmode="numeric" placeholder="65" oninput="updateVbtPreview()"/>
+      </div>
+    </div>
+    <div class="vbt-note" id="vbt-src" style="display:none"></div>
+    <div class="vbt-note" id="vbt-baseline">Same warm-up load each session. Baseline builds after 3 entries.</div>
+    <div class="score-label" style="margin:.6rem 0 .2rem;">No bar today? Quick check:</div>
+    <div class="proxy-row">
+      <button class="timing-btn" id="px-sleep-2" onclick="selectProxy('sleep',2)">😴 Slept well</button>
+      <button class="timing-btn" id="px-sleep-1" onclick="selectProxy('sleep',1)">Sleep OK</button>
+      <button class="timing-btn" id="px-sleep-0" onclick="selectProxy('sleep',0)">Sleep poor</button>
+    </div>
+    <div class="proxy-row">
+      <button class="timing-btn" id="px-sore-2" onclick="selectProxy('sore',2)">Fresh</button>
+      <button class="timing-btn" id="px-sore-1" onclick="selectProxy('sore',1)">Some soreness</button>
+      <button class="timing-btn" id="px-sore-0" onclick="selectProxy('sore',0)">Beat up</button>
+    </div>
+    <div class="proxy-row">
+      <button class="timing-btn" id="px-feel-2" onclick="selectProxy('feel',2)">Warm-up snappy</button>
+      <button class="timing-btn" id="px-feel-1" onclick="selectProxy('feel',1)">Normal</button>
+      <button class="timing-btn" id="px-feel-0" onclick="selectProxy('feel',0)">Slow / heavy</button>
+    </div>
+    <button class="modal-save" style="width:100%;margin:.6rem 0 .45rem;" onclick="saveReadiness()">Save check-in</button>
+    <div style="display:flex;justify-content:space-between;align-items:center;">
+      <a class="ex-video-link" href="https://padraik99.github.io/sjr-system/SJR_VBT_Tracker_v1_20260609.html">▶ Open Bar Tracker</a>
+      <span class="vbt-note" id="vbt-thresholds" style="margin:0;">≥95% green · 85–95% −10–20% load · &lt;85% Day C</span>
+    </div>
+  </div>
 </div>
 
 <!-- DAY SELECTOR -->
@@ -547,7 +623,97 @@ main { padding:1.25rem; max-width:700px; margin:0 auto; }
   </div>
 </div>
 
+<!-- INJURY LOG MODAL (restored v5.10 — markup was lost in May 12 upload conflict) -->
+<div class="modal-bg" id="injury-modal">
+  <div class="modal">
+    <div class="modal-title">Log an Issue</div>
+    <div class="modal-sub" id="injury-date-label">Today</div>
 
+    <div style="margin-bottom:.85rem;">
+      <div class="score-label" style="margin-bottom:.4rem;">Region</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:.35rem;">
+        <button class="timing-btn" id="ireg-back" onclick="selectInjuryRegion('back')">Back</button>
+        <button class="timing-btn" id="ireg-hip" onclick="selectInjuryRegion('hip')">Hip</button>
+        <button class="timing-btn" id="ireg-knee" onclick="selectInjuryRegion('knee')">Knee</button>
+        <button class="timing-btn" id="ireg-shin" onclick="selectInjuryRegion('shin')">Shin/Calf</button>
+        <button class="timing-btn" id="ireg-foot" onclick="selectInjuryRegion('foot')">Foot/Ankle</button>
+        <button class="timing-btn" id="ireg-shoulder" onclick="selectInjuryRegion('shoulder')">Shoulder</button>
+        <button class="timing-btn" id="ireg-other" onclick="selectInjuryRegion('other')" style="grid-column:1/-1;">Other</button>
+      </div>
+    </div>
+
+    <div style="margin-bottom:.85rem;">
+      <div class="score-label" style="margin-bottom:.4rem;">Description</div>
+      <input id="injury-desc" type="text" maxlength="200" placeholder="Brief description..."
+        style="width:100%;box-sizing:border-box;background:var(--surface2);border:1px solid var(--border);
+        border-radius:4px;padding:.5rem .75rem;font-family:'IBM Plex Mono',monospace;
+        font-size:.72rem;color:var(--text);outline:none;"/>
+    </div>
+
+    <div style="margin-bottom:1rem;">
+      <div class="score-label" style="margin-bottom:.25rem;">Severity</div>
+      <div class="score-legend" style="margin-bottom:.4rem;">
+        <span>1–2 = Monitor</span><span>3 = Modify</span><span>4–5 = Stop</span>
+      </div>
+      <div class="score-grid" id="injury-score-grid">
+        <button class="score-btn" data-v="1" onclick="selectInjurySeverity(1)">1</button>
+        <button class="score-btn" data-v="2" onclick="selectInjurySeverity(2)">2</button>
+        <button class="score-btn" data-v="3" onclick="selectInjurySeverity(3)">3</button>
+        <button class="score-btn" data-v="4" onclick="selectInjurySeverity(4)">4</button>
+        <button class="score-btn" data-v="5" onclick="selectInjurySeverity(5)">5</button>
+      </div>
+    </div>
+
+    <div style="margin-bottom:.45rem;">
+      <button class="modal-save" style="width:100%;" onclick="saveInjuryLog()">Save Issue</button>
+    </div>
+    <button class="modal-cancel" onclick="closeInjuryModal()">Cancel</button>
+  </div>
+</div>
+
+<!-- METRICS MODAL (v5.10 — P3-style hard data) -->
+<div class="modal-bg" id="metrics-modal">
+  <div class="modal">
+    <div class="modal-title">Performance Data</div>
+    <div class="modal-sub" id="metrics-date-label">Today</div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:.35rem;margin-bottom:.85rem;">
+      <button class="timing-btn active" id="mt-rsi" onclick="selectMetricType('rsi')">RSI — Drop Jump</button>
+      <button class="timing-btn" id="mt-hop" onclick="selectMetricType('hop')">SL Hop — LSI</button>
+      <button class="timing-btn" id="mt-vel" onclick="selectMetricType('vel')">Bar Velocity</button>
+      <button class="timing-btn" id="mt-custom" onclick="selectMetricType('custom')">Custom</button>
+    </div>
+
+    <div class="metric-help" id="metric-help"></div>
+
+    <div class="vbt-grid" style="margin:.3rem 0 .5rem;">
+      <div class="vbt-field">
+        <label id="mf-a-label">Flight time (s)</label>
+        <input class="vbt-input" id="mf-a" type="number" step="0.01" inputmode="decimal" oninput="updateMetricPreview()"/>
+      </div>
+      <div class="vbt-field">
+        <label id="mf-b-label">Contact time (s)</label>
+        <input class="vbt-input" id="mf-b" type="number" step="0.01" inputmode="decimal" oninput="updateMetricPreview()"/>
+      </div>
+    </div>
+    <div class="vbt-field" id="mf-name-wrap" style="display:none;margin-bottom:.5rem;">
+      <label>Metric name</label>
+      <input class="vbt-input" id="mf-name" type="text" maxlength="40" placeholder="e.g. Wall sit hold (s)"/>
+    </div>
+
+    <div class="vbt-note" id="metric-preview" style="min-height:1.1rem;"></div>
+
+    <div id="metric-history" style="margin:.6rem 0 .9rem;"></div>
+
+    <div style="margin-bottom:.45rem;">
+      <button class="modal-save" style="width:100%;" onclick="saveMetric()">Save entry</button>
+    </div>
+    <div style="display:flex;gap:.5rem;">
+      <button class="modal-cancel" style="flex:1;" onclick="exportMetricsCSV()">⬇ CSV</button>
+      <button class="modal-cancel" style="flex:1;" onclick="closeMetricsModal()">Close</button>
+    </div>
+  </div>
+</div>
 
 <script>
 // Cache-bust: if no ?t= param, redirect with Date.now() — always a unique URL the CDN hasn't cached
@@ -2560,6 +2726,7 @@ function selectDay(idx){
 // RENDER
 // ─────────────────────────────────────────
 function renderDay(idx){
+  RENDER_NAMES = [];
   const week = WEEKS[currentWeek];
   const day = week.days[idx];
   const breaches = getBreaches();
@@ -2613,7 +2780,33 @@ function renderDay(idx){
       html += buildBlocksHtml(cBlocks, idx);
     }
   } else {
-    html += buildBlocksHtml(day.blocks, idx);
+    // v5.10 — day-of overrides apply only to TODAY's actual date
+    const isToday = dateStr === todayDateStr();
+    const ov = isToday ? dayOverrides[dateStr] : null;
+    let blocks = day.blocks;
+    const removedNames = ov ? ov.removed : [];
+    if(ov){
+      if(!editDayMode){
+        blocks = blocks.map(b => Object.assign({}, b, {items: b.items.filter(it => !ov.removed.includes(it.name))}))
+                       .filter(b => b.items.length);
+      }
+      if(ov.added.length){
+        blocks = blocks.concat([{label:'Added Today', cls:'accent', items: ov.added, userAdded:true}]);
+      }
+    }
+    html += buildBlocksHtml(blocks, idx, {editable: isToday && editDayMode, removed: removedNames});
+    if(isToday){
+      html += `<div class="editday-bar"><button class="ex-video-link" onclick="toggleEditDay()">${editDayMode ? '✓ Done editing' : '✎ Edit today'}</button></div>`;
+      if(editDayMode){
+        html += `<div class="addex-row">
+          <input class="vbt-input" id="addex-name" list="ex-names" placeholder="Exercise name" maxlength="60"/>
+          <input class="vbt-input" id="addex-dose" placeholder="Dose (3×10)" maxlength="40"/>
+          <button class="modal-save" style="padding:.45rem .8rem;" onclick="addExToday()">＋</button>
+        </div>
+        <div class="vbt-note">Changes apply to today only — tomorrow resets to the program.</div>
+        <datalist id="ex-names">${Object.keys(EX_INFO).map(k => `<option value="${escHtml(k)}">`).join('')}</datalist>`;
+      }
+    }
   }
 
   // History
@@ -2639,7 +2832,9 @@ function renderDay(idx){
   document.getElementById('main-content').innerHTML = html;
 }
 
-function buildBlocksHtml(blocks, dayIdx){
+function buildBlocksHtml(blocks, dayIdx, opts){
+  opts = opts || {};
+  const removed = opts.removed || [];
   let html = '';
   blocks.forEach(block => {
     const lblCls = 'block-label' + (block.cls ? ' ' + block.cls : '');
@@ -2648,12 +2843,24 @@ function buildBlocksHtml(blocks, dayIdx){
       const info = EX_INFO[ex.name];
       const uid = `ex-${currentWeek}-${dayIdx}-${ei}-${block.label.slice(0,3).replace(/\s/g,'')}`;
       const doseCls = block.cls === 'accent' ? 'ex-dose accent' : block.cls === 'green' ? 'ex-dose green' : 'ex-dose';
+      const nameIdx = RENDER_NAMES.push(ex.name) - 1;
+      const isRemoved = removed.includes(ex.name);
+      const rowCls = isRemoved ? ' removed' : '';
+      // names/doses may be user-entered (Added Today) — always escape
+      const safeName = escHtml(ex.name);
+      const safeDose = escHtml(ex.dose);
+      const ovBtn = opts.editable
+        ? (isRemoved
+          ? `<button class="exov-btn restore" onclick="event.stopPropagation();restoreExToday(${nameIdx})" title="Restore">↩</button>`
+          : `<button class="exov-btn" onclick="event.stopPropagation();removeExToday(${nameIdx})" title="Remove today">−</button>`)
+        : '';
       if(info){
         html += `
-        <div class="ex-row" onclick="toggleDetail('${uid}')" id="row-${uid}">
-          <div class="ex-name">${ex.name}${ex.note ? `<small>${ex.note}</small>` : ''}</div>
+        <div class="ex-row${rowCls}" onclick="toggleDetail('${uid}')" id="row-${uid}">
+          <div class="ex-name">${safeName}${ex.note ? `<small>${ex.note}</small>` : ''}</div>
           <div style="display:flex;align-items:center;gap:0.3rem;flex-shrink:0">
-            <div class="${doseCls}">${ex.dose}</div>
+            <div class="${doseCls}">${safeDose}</div>
+            ${ovBtn}
             <span class="ex-chevron">▼</span>
           </div>
         </div>
@@ -2662,10 +2869,10 @@ function buildBlocksHtml(blocks, dayIdx){
           <div class="ex-detail-text">${info.setup}</div>
           <div class="ex-detail-label accent">Cue</div>
           <div class="ex-detail-text">${info.cue}</div>
-          ${info.url ? `<a class="ex-video-link" href="${info.url}" target="_blank">▶ Search Demo</a>` : ''}
+          ${demoLinkHtml(nameIdx, info)}
         </div>`;
       } else {
-        html += `<div class="ex-row" style="cursor:default"><div class="ex-name">${ex.name}</div><div class="${doseCls}">${ex.dose}</div></div>`;
+        html += `<div class="ex-row${rowCls}" style="cursor:default"><div class="ex-name">${safeName}</div><div style="display:flex;align-items:center;gap:0.3rem;flex-shrink:0"><div class="${doseCls}">${safeDose}</div>${ovBtn}</div></div>`;
       }
     });
     html += `</div>`;
@@ -2876,6 +3083,10 @@ async function init(){
   if(detected !== null){
     selectDay(detected.day);
   }
+
+  // 4. v5.10 — injury logs (was never called — feature dead since May), readiness panel
+  await loadInjuryLogs();
+  initVbtFeatures();
 }
 
 init();
@@ -2918,7 +3129,7 @@ async function saveInjuryLog(){
   if(!selectedInjuryRegion || !selectedInjurySeverity) return;
   const desc = document.getElementById('injury-desc').value.trim();
   const entry = {
-    date: todayStr(),
+    date: todayDateStr(),
     region: selectedInjuryRegion,
     description: desc,
     severity: selectedInjurySeverity,
@@ -2938,8 +3149,8 @@ async function saveInjuryLog(){
         severity: entry.severity
       })
     });
-    showSyncBadge('ok');
-  } catch(e){ showSyncBadge('offline'); }
+    showSyncStatus('saved');
+  } catch(e){ showSyncStatus('offline'); }
   closeInjuryModal();
   updateInjuryGate();
 }
@@ -2988,6 +3199,379 @@ async function loadInjuryLogs(){
 
 document.getElementById('injury-modal').addEventListener('click', function(e){ if(e.target===this) closeInjuryModal(); });
 
+// ═════════════════════════════════════════
+// v5.10 FEATURES
+// VBT readiness · saved demos · day-of overrides · P3 metrics
+// ═════════════════════════════════════════
+
+function escHtml(s){
+  return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+// House-convention local date formatter (CLAUDE.md) — also fixes loadInjuryLogs(), which calls this
+function sbDateStr(d){
+  return d.getFullYear() + '-' +
+    String(d.getMonth()+1).padStart(2,'0') + '-' +
+    String(d.getDate()).padStart(2,'0');
+}
+
+// ── Render-pass name registry (index-addressed to avoid quoting names in onclick) ──
+let RENDER_NAMES = [];
+
+// ─────────────────────────────────────────
+// CURATED VIDEO DEMOS — pt_demos {exerciseName: url}
+// ─────────────────────────────────────────
+let demoOverrides = {};
+try { demoOverrides = JSON.parse(localStorage.getItem('pt_demos') || '{}'); } catch(e){ demoOverrides = {}; }
+
+function demoLinkHtml(nameIdx, info){
+  const name = RENDER_NAMES[nameIdx];
+  const saved = demoOverrides[name];
+  let html = '<div style="display:flex;align-items:center;gap:.4rem;flex-wrap:wrap;">';
+  if(saved && /^https?:\/\//.test(saved)){
+    html += `<a class="ex-video-link" href="${escHtml(saved)}" target="_blank" onclick="event.stopPropagation()">▶ My Demo</a>`;
+    html += `<button class="ex-video-link demo-set-btn" onclick="event.stopPropagation();setDemo(${nameIdx})" title="Change saved demo">✎</button>`;
+  } else {
+    if(info && info.url) html += `<a class="ex-video-link" href="${info.url}" target="_blank" onclick="event.stopPropagation()">▶ Search Demo</a>`;
+    html += `<button class="ex-video-link demo-set-btn" onclick="event.stopPropagation();setDemo(${nameIdx})">＋ Save my demo</button>`;
+  }
+  return html + '</div>';
+}
+
+function setDemo(nameIdx){
+  const name = RENDER_NAMES[nameIdx];
+  if(!name) return;
+  const current = demoOverrides[name] || '';
+  const url = prompt('Preferred demo URL for:\n' + name + '\n\n(Paste YouTube link · leave empty to remove)', current);
+  if(url === null) return;
+  const trimmed = url.trim();
+  if(trimmed === ''){
+    delete demoOverrides[name];
+  } else if(/^https?:\/\//.test(trimmed) && trimmed.length <= 300){
+    demoOverrides[name] = trimmed;
+  } else {
+    alert('Needs a full http(s):// link.');
+    return;
+  }
+  localStorage.setItem('pt_demos', JSON.stringify(demoOverrides));
+  renderDay(selectedDay);
+}
+
+// ─────────────────────────────────────────
+// DAY-OF OVERRIDES — pt_dayover {dateStr: {removed:[names], added:[{name,dose}]}}
+// Keyed by date · only today's key is ever read · stale keys pruned on load
+// ─────────────────────────────────────────
+let dayOverrides = {};
+try { dayOverrides = JSON.parse(localStorage.getItem('pt_dayover') || '{}'); } catch(e){ dayOverrides = {}; }
+let editDayMode = false;
+
+function saveDayOverrides(){ localStorage.setItem('pt_dayover', JSON.stringify(dayOverrides)); }
+
+function pruneDayOverrides(){
+  const today = todayDateStr();
+  let changed = false;
+  Object.keys(dayOverrides).forEach(k => { if(k !== today){ delete dayOverrides[k]; changed = true; } });
+  if(changed) saveDayOverrides();
+}
+
+function ovForToday(){
+  const today = todayDateStr();
+  if(!dayOverrides[today]) dayOverrides[today] = {removed:[], added:[]};
+  return dayOverrides[today];
+}
+
+function toggleEditDay(){
+  editDayMode = !editDayMode;
+  renderDay(selectedDay);
+}
+
+function removeExToday(nameIdx){
+  const name = RENDER_NAMES[nameIdx];
+  if(!name) return;
+  const ov = ovForToday();
+  // user-added items are deleted outright; program items are marked removed
+  const ai = ov.added.findIndex(it => it.name === name);
+  if(ai >= 0) ov.added.splice(ai, 1);
+  else if(!ov.removed.includes(name)) ov.removed.push(name);
+  saveDayOverrides();
+  renderDay(selectedDay);
+}
+
+function restoreExToday(nameIdx){
+  const name = RENDER_NAMES[nameIdx];
+  const ov = ovForToday();
+  ov.removed = ov.removed.filter(n => n !== name);
+  saveDayOverrides();
+  renderDay(selectedDay);
+}
+
+function addExToday(){
+  const nameEl = document.getElementById('addex-name');
+  const doseEl = document.getElementById('addex-dose');
+  if(!nameEl) return;
+  const name = nameEl.value.trim().slice(0, 60);
+  const dose = doseEl.value.trim().slice(0, 40) || '—';
+  if(!name) return;
+  const ov = ovForToday();
+  if(!ov.added.some(it => it.name === name)) ov.added.push({name: name, dose: dose});
+  saveDayOverrides();
+  renderDay(selectedDay);
+}
+
+// ─────────────────────────────────────────
+// VBT READINESS — pt_vbt [{date, ts, mv?, load?, proxy?, light}]
+// Tracker handoff: pt_vbt_today {date, mv, load, reps} written by SJR_VBT_Tracker
+// Thresholds: MV ≥95% of baseline = green · 85–95% = amber (−10–20% load) ·
+// <85% = red (Day C). ~10% MV drop on a fixed warm-up load is the meaningful
+// readiness signal (Jovanović & Flanagan 2014); 85% is a deliberately loud alarm.
+// ─────────────────────────────────────────
+let vbtLog = [];
+try { vbtLog = JSON.parse(localStorage.getItem('pt_vbt') || '[]'); } catch(e){ vbtLog = []; }
+let proxySel = {sleep:null, sore:null, feel:null};
+
+function toggleReadiness(){
+  const b = document.getElementById('vbt-body');
+  const open = b.style.display !== 'none';
+  b.style.display = open ? 'none' : 'block';
+  document.getElementById('vbt-chev').textContent = open ? '▼' : '▲';
+  if(!open) document.getElementById('vbt-panel').scrollIntoView({behavior:'smooth', block:'nearest'});
+}
+
+function vbtBaseline(load){
+  if(!load) return null;
+  const today = todayDateStr();
+  const hits = vbtLog.filter(e => e.mv && e.load && e.date !== today &&
+    Math.abs(e.load - load) / load <= 0.10).slice(-5);
+  if(hits.length < 3) return null;
+  return { mv: hits.reduce((s,e) => s + e.mv, 0) / hits.length, n: hits.length };
+}
+
+function vbtSimilarCount(load){
+  if(!load) return 0;
+  const today = todayDateStr();
+  return vbtLog.filter(e => e.mv && e.load && e.date !== today &&
+    Math.abs(e.load - load) / load <= 0.10).length;
+}
+
+function computeReadiness(){
+  const mv = parseFloat(document.getElementById('vbt-mv').value);
+  const load = parseFloat(document.getElementById('vbt-load').value);
+  if(mv > 0 && load > 0){
+    const base = vbtBaseline(load);
+    if(base){
+      const pct = mv / base.mv;
+      if(pct >= 0.95) return {light:'green', verdict:'Proceed as planned · ' + Math.round(pct*100) + '% of baseline'};
+      if(pct >= 0.85) return {light:'amber', verdict:'Reduce load 10–20% or drop a set · ' + Math.round(pct*100) + '%'};
+      return {light:'red', verdict:'Switch to Day C recovery content · ' + Math.round(pct*100) + '%'};
+    }
+    return {light:'info', verdict:'Logged — baseline at 3 entries (' + vbtSimilarCount(load) + '/3 @ this load)'};
+  }
+  if(proxySel.sleep !== null && proxySel.sore !== null && proxySel.feel !== null){
+    const score = proxySel.sleep + proxySel.sore + proxySel.feel;
+    if(score >= 5) return {light:'green', verdict:'Proceed as planned · check ' + score + '/6'};
+    if(score >= 3) return {light:'amber', verdict:'Reduce load 10–20% today · check ' + score + '/6'};
+    return {light:'red', verdict:'Recovery work only today · check ' + score + '/6'};
+  }
+  return null;
+}
+
+function paintReadiness(r){
+  const lightEl = document.getElementById('vbt-light');
+  lightEl.className = 'vbt-light' + (r ? ' ' + r.light : '');
+  document.getElementById('vbt-verdict').textContent = r ? r.verdict : 'tap to check in';
+}
+
+function updateVbtPreview(){
+  const load = parseFloat(document.getElementById('vbt-load').value);
+  const mv = parseFloat(document.getElementById('vbt-mv').value);
+  const el = document.getElementById('vbt-baseline');
+  if(load > 0){
+    const base = vbtBaseline(load);
+    if(base) el.textContent = 'Baseline @ ~' + Math.round(load) + ' lbs: ' + base.mv.toFixed(2) + ' m/s (last ' + base.n + ')' +
+      (mv > 0 ? ' → today ' + Math.round(mv / base.mv * 100) + '%' : '');
+    else el.textContent = 'Building baseline: ' + vbtSimilarCount(load) + '/3 entries @ this load.';
+  } else {
+    el.textContent = 'Same warm-up load each session. Baseline builds after 3 entries.';
+  }
+  const r = computeReadiness();
+  if(r) paintReadiness(r);
+}
+
+function selectProxy(dim, val){
+  proxySel[dim] = (proxySel[dim] === val) ? null : val;
+  [0,1,2].forEach(v => {
+    const btn = document.getElementById('px-' + dim + '-' + v);
+    if(btn) btn.classList.toggle('active', proxySel[dim] === v);
+  });
+  const r = computeReadiness();
+  if(r) paintReadiness(r);
+}
+
+function saveReadiness(){
+  const r = computeReadiness();
+  if(!r){
+    document.getElementById('vbt-verdict').textContent = 'enter velocity+load, or all 3 quick checks';
+    return;
+  }
+  const mv = parseFloat(document.getElementById('vbt-mv').value);
+  const load = parseFloat(document.getElementById('vbt-load').value);
+  const entry = {date: todayDateStr(), ts: Date.now(), light: r.light};
+  if(mv > 0 && load > 0){ entry.mv = mv; entry.load = load; }
+  if(proxySel.sleep !== null && proxySel.sore !== null && proxySel.feel !== null) entry.proxy = Object.assign({}, proxySel);
+  // one check-in per day — replace earlier same-day entries
+  vbtLog = vbtLog.filter(e => e.date !== entry.date);
+  vbtLog.push(entry);
+  if(vbtLog.length > 90) vbtLog = vbtLog.slice(-90);
+  localStorage.setItem('pt_vbt', JSON.stringify(vbtLog));
+  paintReadiness(r);
+  toggleReadiness(); // collapse — verdict stays visible in the header strip
+}
+
+function initVbtFeatures(){
+  pruneDayOverrides();
+  // pull today's tracker result if present
+  try {
+    const t = JSON.parse(localStorage.getItem('pt_vbt_today') || 'null');
+    if(t && t.date === todayDateStr() && t.mv > 0){
+      document.getElementById('vbt-mv').value = t.mv;
+      if(t.load > 0) document.getElementById('vbt-load').value = t.load;
+      const src = document.getElementById('vbt-src');
+      src.style.display = 'block';
+      src.textContent = '⟲ pulled from bar tracker' + (t.reps ? ' · ' + t.reps + ' reps' : '');
+    }
+  } catch(e){}
+  // restore today's saved check-in
+  const todayEntry = vbtLog.filter(e => e.date === todayDateStr()).slice(-1)[0];
+  if(todayEntry){
+    if(todayEntry.mv) document.getElementById('vbt-mv').value = todayEntry.mv;
+    if(todayEntry.load) document.getElementById('vbt-load').value = todayEntry.load;
+    if(todayEntry.proxy) Object.keys(todayEntry.proxy).forEach(dim => {
+      if(todayEntry.proxy[dim] !== null){ proxySel[dim] = todayEntry.proxy[dim];
+        const btn = document.getElementById('px-' + dim + '-' + todayEntry.proxy[dim]);
+        if(btn) btn.classList.add('active');
+      }
+    });
+    paintReadiness({light: todayEntry.light, verdict: 'checked in — tap to revise'});
+  }
+  updateVbtPreview();
+}
+
+// ─────────────────────────────────────────
+// P3-STYLE METRICS — pt_metrics [{date, ts, type, a, b, val, name?}]
+// ─────────────────────────────────────────
+let metricsLog = [];
+try { metricsLog = JSON.parse(localStorage.getItem('pt_metrics') || '[]'); } catch(e){ metricsLog = []; }
+let metricType = 'rsi';
+
+const METRIC_DEFS = {
+  rsi: { label:'RSI', aLabel:'Flight time (s)', bLabel:'Contact time (s)',
+    compute:(a,b) => (a > 0 && b > 0) ? a / b : null, fmt:v => v.toFixed(2),
+    help:'RSI = flight ÷ contact. Film drop jump in slo-mo (240fps), count frames on/off floor. Elliott’s lens: watch the landing, not the takeoff.' },
+  hop: { label:'SL Hop LSI', aLabel:'Left (cm)', bLabel:'Right (cm)',
+    compute:(a,b) => (a > 0 && b > 0) ? (Math.min(a,b) / Math.max(a,b)) * 100 : null, fmt:v => v.toFixed(0) + '%',
+    help:'LSI = weaker ÷ stronger × 100. ≥90% is the classic gate; ≥95% preferred (van Melick 2022). Notes which side lags.' },
+  vel: { label:'Bar MV', aLabel:'Load (lbs)', bLabel:'Mean velocity (m/s)',
+    compute:(a,b) => (b > 0) ? b : null, fmt:v => v.toFixed(2) + ' m/s',
+    help:'Archive of velocity at load — builds your load-velocity profile over time (Zatsiorsky’s F-V curve, point by point).' },
+  custom: { label:'Custom', aLabel:'Value', bLabel:'— (unused)',
+    compute:(a,b) => isNaN(a) ? null : a, fmt:v => String(Math.round(v * 100) / 100),
+    help:'Anything worth tracking: ISO hold seconds, broad jump distance, ankle dorsiflexion inches…' }
+};
+
+function openMetricsModal(){
+  document.getElementById('metrics-date-label').textContent =
+    new Date().toLocaleDateString('en-US',{weekday:'long',month:'short',day:'numeric'});
+  selectMetricType(metricType);
+  document.getElementById('metrics-modal').classList.add('open');
+}
+function closeMetricsModal(){ document.getElementById('metrics-modal').classList.remove('open'); }
+
+function selectMetricType(t){
+  metricType = t;
+  const def = METRIC_DEFS[t];
+  ['rsi','hop','vel','custom'].forEach(k => document.getElementById('mt-' + k).classList.toggle('active', k === t));
+  document.getElementById('mf-a-label').textContent = def.aLabel;
+  document.getElementById('mf-b-label').textContent = def.bLabel;
+  document.getElementById('mf-b').style.display = (t === 'custom') ? 'none' : 'block';
+  document.getElementById('mf-b-label').style.display = (t === 'custom') ? 'none' : 'block';
+  document.getElementById('mf-name-wrap').style.display = (t === 'custom') ? 'block' : 'none';
+  document.getElementById('metric-help').textContent = def.help;
+  document.getElementById('mf-a').value = '';
+  document.getElementById('mf-b').value = '';
+  document.getElementById('metric-preview').textContent = '';
+  renderMetricHistory();
+}
+
+function updateMetricPreview(){
+  const def = METRIC_DEFS[metricType];
+  const a = parseFloat(document.getElementById('mf-a').value);
+  const b = parseFloat(document.getElementById('mf-b').value);
+  const val = def.compute(a, b);
+  const el = document.getElementById('metric-preview');
+  if(val === null){ el.textContent = ''; return; }
+  let extra = '';
+  if(metricType === 'hop' && a > 0 && b > 0 && a !== b) extra = ' · ' + (a < b ? 'LEFT' : 'RIGHT') + ' lags';
+  el.textContent = '→ ' + def.label + ': ' + def.fmt(val) + extra;
+}
+
+function saveMetric(){
+  const def = METRIC_DEFS[metricType];
+  const a = parseFloat(document.getElementById('mf-a').value);
+  const b = parseFloat(document.getElementById('mf-b').value);
+  const val = def.compute(a, b);
+  if(val === null) return;
+  const entry = {date: todayDateStr(), ts: Date.now(), type: metricType, a: a || null, b: b || null, val: Math.round(val * 1000) / 1000};
+  if(metricType === 'custom'){
+    const name = document.getElementById('mf-name').value.trim().slice(0, 40);
+    if(!name) return;
+    entry.name = name;
+  }
+  metricsLog.push(entry);
+  if(metricsLog.length > 300) metricsLog = metricsLog.slice(-300);
+  localStorage.setItem('pt_metrics', JSON.stringify(metricsLog));
+  document.getElementById('mf-a').value = '';
+  document.getElementById('mf-b').value = '';
+  document.getElementById('metric-preview').textContent = '✓ saved';
+  renderMetricHistory();
+}
+
+function renderMetricHistory(){
+  const wrap = document.getElementById('metric-history');
+  wrap.textContent = '';
+  const rows = metricsLog.filter(e => e.type === metricType).slice(-8).reverse();
+  if(!rows.length) return;
+  const def = METRIC_DEFS[metricType];
+  rows.forEach((e, i) => {
+    const div = document.createElement('div');
+    div.className = 'mhist-row';
+    const left = document.createElement('span');
+    left.textContent = e.date + (e.name ? ' · ' + e.name : '');
+    const right = document.createElement('span');
+    right.className = 'mh-val';
+    const prev = rows[i + 1];
+    const trend = prev ? (e.val > prev.val ? ' ▲' : e.val < prev.val ? ' ▼' : ' —') : '';
+    right.textContent = def.fmt(e.val) + trend;
+    div.appendChild(left); div.appendChild(right);
+    wrap.appendChild(div);
+  });
+}
+
+function exportMetricsCSV(){
+  if(!metricsLog.length) return;
+  if(!confirm('Download all performance data as CSV?')) return;
+  let csv = 'date,type,name,input_a,input_b,value\n';
+  metricsLog.forEach(e => {
+    const safe = s => '"' + String(s == null ? '' : s).replace(/"/g, '""') + '"';
+    csv += [e.date, e.type, safe(e.name || ''), e.a == null ? '' : e.a, e.b == null ? '' : e.b, e.val].join(',') + '\n';
+  });
+  const blob = new Blob([csv], {type: 'text/csv'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'patrick_metrics_' + todayDateStr() + '.csv';
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+
+document.getElementById('metrics-modal').addEventListener('click', function(e){ if(e.target === this) closeMetricsModal(); });
 
 </script>
 <footer style="padding:1.5rem 1.25rem 1rem;border-top:1px solid var(--border);text-align:center;">

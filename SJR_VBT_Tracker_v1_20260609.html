@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: blob:; media-src 'self' blob:; connect-src 'none';">
+<title>SJR — VBT Bar Tracker v1</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=IBM+Plex+Mono:wght@300;400;500&family=IBM+Plex+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0f0f0e;
+  --surface: #1a1a18;
+  --surface2: #222220;
+  --border: #2e2e2a;
+  --accent: #c8a96e;
+  --accent2: #7eb8a4;
+  --text: #e8e4dc;
+  --muted: #8a8680;
+  --dim: #5a5855;
+  --green: #7eb87e;
+  --yellow: #c8b46e;
+  --red: #c87e7e;
+  --radius: 4px;
+}
+* { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+body { background:var(--bg); color:var(--text); font-family:'IBM Plex Sans',sans-serif; font-weight:300; line-height:1.6; padding-bottom:2rem; }
+header { padding:1rem 1.25rem .6rem; display:flex; justify-content:space-between; align-items:baseline; }
+.hdr-name { font-family:'Playfair Display',serif; font-size:1.3rem; font-weight:700; }
+.hdr-sub { font-family:'IBM Plex Mono',monospace; font-size:.6rem; letter-spacing:.12em; text-transform:uppercase; color:var(--muted); }
+.back-link { font-family:'IBM Plex Mono',monospace; font-size:.62rem; color:var(--accent2); text-decoration:none; border:1px solid var(--border); border-radius:3px; padding:.25rem .6rem; }
+.stage { position:relative; margin:0 1.25rem; background:#000; border:1px solid var(--border); border-radius:var(--radius); overflow:hidden; aspect-ratio:3/4; max-height:52vh; }
+.stage video, .stage canvas { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; }
+.stage canvas { pointer-events:none; }
+.stage-msg { position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:.8rem; text-align:center; padding:1.5rem; background:var(--surface); }
+.stage-msg p { font-size:.78rem; color:var(--muted); max-width:30rem; }
+.status-line { margin:.5rem 1.25rem 0; font-family:'IBM Plex Mono',monospace; font-size:.62rem; letter-spacing:.06em; color:var(--dim); min-height:1rem; }
+.status-line.ok { color:var(--green); }
+.status-line.warn { color:var(--yellow); }
+.status-line.bad { color:var(--red); }
+.readouts { display:grid; grid-template-columns:repeat(4,1fr); gap:.5rem; margin:.7rem 1.25rem 0; }
+.ro { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:.55rem .4rem; text-align:center; }
+.ro .ro-label { font-family:'IBM Plex Mono',monospace; font-size:.52rem; letter-spacing:.1em; text-transform:uppercase; color:var(--dim); }
+.ro .ro-val { font-family:'IBM Plex Mono',monospace; font-size:1.15rem; color:var(--text); }
+.ro .ro-val.big { color:var(--accent); }
+.ro .ro-val.green { color:var(--green); }
+.ro .ro-val.red { color:var(--red); }
+.controls { display:flex; gap:.5rem; margin:.7rem 1.25rem 0; flex-wrap:wrap; }
+.btn { flex:1; min-width:7rem; background:var(--surface2); border:1px solid var(--border); color:var(--text); font-family:'IBM Plex Mono',monospace; font-size:.68rem; letter-spacing:.08em; text-transform:uppercase; padding:.6rem .5rem; border-radius:var(--radius); cursor:pointer; }
+.btn.primary { border-color:var(--accent2); color:var(--accent2); }
+.btn.danger { color:var(--red); }
+.settings { display:grid; grid-template-columns:repeat(3,1fr); gap:.5rem; margin:.7rem 1.25rem 0; }
+.set-field label { display:block; font-family:'IBM Plex Mono',monospace; font-size:.54rem; letter-spacing:.08em; text-transform:uppercase; color:var(--dim); margin-bottom:.25rem; }
+.set-field input { width:100%; box-sizing:border-box; background:var(--surface2); border:1px solid var(--border); border-radius:4px; padding:.45rem .5rem; font-family:'IBM Plex Mono',monospace; font-size:.85rem; color:var(--text); outline:none; }
+.rep-list { margin:.8rem 1.25rem 0; }
+.rep-row { display:flex; justify-content:space-between; gap:.5rem; font-family:'IBM Plex Mono',monospace; font-size:.7rem; padding:.3rem 0; border-bottom:1px solid var(--border); color:var(--muted); }
+.rep-row .rv { color:var(--text); }
+.rep-row .rl-ok { color:var(--green); }
+.rep-row .rl-warn { color:var(--yellow); }
+.rep-row .rl-bad { color:var(--red); }
+.note { margin:1rem 1.25rem 0; font-size:.7rem; color:var(--muted); line-height:1.7; }
+.note strong { color:var(--text); font-weight:500; }
+.sent-badge { font-family:'IBM Plex Mono',monospace; font-size:.6rem; color:var(--green); margin:.4rem 1.25rem 0; min-height:.9rem; }
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <div class="hdr-name">Bar Tracker</div>
+    <div class="hdr-sub">Optical VBT · Mean Concentric Velocity · v1</div>
+  </div>
+  <a class="back-link" href="https://padraik99.github.io/sjr-system/SJR_WeeklyGuide_Patrick_v5_20260402.html">← Guide</a>
+</header>
+
+<div class="stage" id="stage">
+  <video id="cam" playsinline muted></video>
+  <canvas id="overlay"></canvas>
+  <div class="stage-msg" id="stage-msg">
+    <p><strong>Setup:</strong> tape a lime-green circle (sticky note works) to the end of the bar, facing the phone. Prop the phone ~6–10 ft away, camera square to the bar path. Enter the circle's diameter below, then start.</p>
+    <button class="btn primary" style="flex:0 0 auto;min-width:10rem;" onclick="startCamera()">▶ Start Camera</button>
+  </div>
+</div>
+
+<div class="status-line" id="status">camera off</div>
+
+<div class="readouts">
+  <div class="ro"><div class="ro-label">Rep</div><div class="ro-val" id="ro-rep">0</div></div>
+  <div class="ro"><div class="ro-label">Last m/s</div><div class="ro-val big" id="ro-last">—</div></div>
+  <div class="ro"><div class="ro-label">Best m/s</div><div class="ro-val" id="ro-best">—</div></div>
+  <div class="ro"><div class="ro-label">Loss</div><div class="ro-val" id="ro-loss">—</div></div>
+</div>
+
+<div class="settings">
+  <div class="set-field"><label>Marker ⌀ (mm)</label><input id="set-dia" type="number" inputmode="numeric" step="1" min="20" max="150" value="50"/></div>
+  <div class="set-field"><label>Min ROM (mm)</label><input id="set-rom" type="number" inputmode="numeric" step="10" min="100" max="900" value="250"/></div>
+  <div class="set-field"><label>Load (lbs)</label><input id="set-load" type="number" inputmode="numeric" step="5" min="0" max="500" value="65"/></div>
+</div>
+
+<div class="controls">
+  <button class="btn" onclick="recalibrate()">⌖ Recalibrate</button>
+  <button class="btn danger" onclick="resetSet()">↺ Reset Set</button>
+</div>
+<div class="sent-badge" id="sent-badge"></div>
+
+<div class="rep-list" id="rep-list"></div>
+
+<div class="note">
+  <strong>How it reads:</strong> each upward bar movement past the minimum ROM logs a rep with its mean concentric velocity (displacement ÷ time — robust at 30fps).
+  High beep = within 5% of your session best. Low double-buzz = velocity loss past 20% — terminate the set (Pareja-Blanco 2017: more fatigue, no extra gain).
+  Best rep auto-sends to the guide's readiness panel. Set resets after 2 min of stillness.
+</div>
+
+<script>
+// ─────────────────────────────────────────
+// SJR VBT BAR TRACKER v1
+// Optical green-marker tracking — browser port of the
+// VBT-Barbell-Tracker concept (OpenCV → canvas pixel scan).
+// Scale from known marker diameter · MCV = displacement/time.
+// Writes pt_vbt_today {date, mv, load, reps} for the guide.
+// ─────────────────────────────────────────
+
+const PROC_W = 480;            // processing width (px)
+const GREEN_MIN = 50;          // min green channel value
+const GREEN_RATIO = 1.30;      // g must beat r and b by this factor
+const MIN_BLOB_PX = 20;        // min matching samples to accept marker
+const V_START = 0.06;          // m/s — ascent begins
+const V_STOP = 0.02;           // m/s — ascent ends
+const STOP_GRACE_MS = 150;     // sustained below V_STOP to end rep
+const IDLE_RESET_MS = 120000;  // 2 min stillness → reset set
+const LOSS_CUTOFF = 20;        // % velocity loss → terminate signal
+
+let stream = null, video, overlay, octx, proc, pctx;
+let mmPerPx = null;
+let calibSamples = [];
+let lastY = null, lastT = null, smoothY = null, smoothV = 0;
+let repPhase = 'idle';         // idle | ascent
+let ascentStartY = 0, ascentStartT = 0, belowStopSince = null, peakY = 0;
+let reps = [];
+let trail = [];
+let lastMoveT = 0;
+let wakeLock = null;
+let audioCtx = null;
+
+function $(id){ return document.getElementById(id); }
+function setStatus(msg, cls){ const el = $('status'); el.textContent = msg; el.className = 'status-line' + (cls ? ' ' + cls : ''); }
+
+function todayDateStr(){
+  const t = new Date();
+  return t.getFullYear() + '-' + String(t.getMonth()+1).padStart(2,'0') + '-' + String(t.getDate()).padStart(2,'0');
+}
+
+// settings persist
+['set-dia','set-rom','set-load'].forEach(id => {
+  const saved = localStorage.getItem('vbtt_' + id);
+  if(saved) $(id).value = saved;
+  $(id).addEventListener('change', () => localStorage.setItem('vbtt_' + id, $(id).value));
+});
+
+function beep(freq, dur, when){
+  try {
+    if(!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    const t0 = audioCtx.currentTime + (when || 0);
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.frequency.value = freq;
+    osc.type = 'sine';
+    gain.gain.setValueAtTime(0.25, t0);
+    gain.gain.exponentialRampToValueAtTime(0.001, t0 + dur);
+    osc.connect(gain); gain.connect(audioCtx.destination);
+    osc.start(t0); osc.stop(t0 + dur);
+  } catch(e){}
+}
+
+async function startCamera(){
+  try {
+    stream = await navigator.mediaDevices.getUserMedia({
+      video: { facingMode: 'environment', width: {ideal: 1280}, height: {ideal: 720} },
+      audio: false
+    });
+  } catch(e){
+    setStatus('camera permission denied — check browser settings', 'bad');
+    return;
+  }
+  video = $('cam');
+  video.srcObject = stream;
+  await video.play();
+  $('stage-msg').style.display = 'none';
+
+  overlay = $('overlay');
+  octx = overlay.getContext('2d');
+  proc = document.createElement('canvas');
+  pctx = proc.getContext('2d', { willReadFrequently: true });
+
+  try { wakeLock = await navigator.wakeLock.request('screen'); } catch(e){}
+
+  lastMoveT = performance.now();
+  recalibrate();
+
+  if('requestVideoFrameCallback' in HTMLVideoElement.prototype){
+    const loop = (now, meta) => { processFrame(meta.mediaTime * 1000); video.requestVideoFrameCallback(loop); };
+    video.requestVideoFrameCallback(loop);
+  } else {
+    const loop = () => { processFrame(performance.now()); requestAnimationFrame(loop); };
+    requestAnimationFrame(loop);
+  }
+}
+
+function recalibrate(){
+  mmPerPx = null;
+  calibSamples = [];
+  smoothY = null; lastY = null; lastT = null;
+  repPhase = 'idle';
+  setStatus('calibrating — hold the bar still…', 'warn');
+}
+
+function resetSet(){
+  reps = [];
+  repPhase = 'idle';
+  $('ro-rep').textContent = '0';
+  $('ro-last').textContent = '—';
+  $('ro-best').textContent = '—';
+  $('ro-loss').textContent = '—';
+  $('ro-loss').className = 'ro-val';
+  $('rep-list').textContent = '';
+  $('sent-badge').textContent = '';
+  setStatus(mmPerPx ? 'tracking — set reset' : 'camera off');
+}
+
+function findMarker(){
+  const vw = video.videoWidth, vh = video.videoHeight;
+  if(!vw) return null;
+  const pw = PROC_W, ph = Math.round(vh * (PROC_W / vw));
+  if(proc.width !== pw){ proc.width = pw; proc.height = ph; }
+  pctx.drawImage(video, 0, 0, pw, ph);
+  const data = pctx.getImageData(0, 0, pw, ph).data;
+  let sx = 0, sy = 0, n = 0;
+  for(let y = 0; y < ph; y += 2){
+    const rowOff = y * pw * 4;
+    for(let x = 0; x < pw; x += 2){
+      const i = rowOff + x * 4;
+      const r = data[i], g = data[i+1], b = data[i+2];
+      if(g > GREEN_MIN && g >= r * GREEN_RATIO && g >= b * GREEN_RATIO){
+        sx += x; sy += y; n++;
+      }
+    }
+  }
+  if(n < MIN_BLOB_PX) return null;
+  // sampled every 2nd px both axes → blob area ≈ n*4 proc-px²
+  const radiusPx = Math.sqrt((n * 4) / Math.PI);
+  return { cx: sx / n, cy: sy / n, radiusPx: radiusPx, pw: pw, ph: ph };
+}
+
+function processFrame(tMs){
+  const m = findMarker();
+  drawOverlay(m);
+  if(!m){
+    if(mmPerPx) setStatus('marker not visible', 'warn');
+    return;
+  }
+
+  // ── calibration: average marker radius over 30 frames at rest ──
+  if(!mmPerPx){
+    calibSamples.push(m.radiusPx);
+    if(calibSamples.length >= 30){
+      const avg = calibSamples.reduce((a,b) => a + b, 0) / calibSamples.length;
+      const diaMm = parseFloat($('set-dia').value) || 50;
+      mmPerPx = (diaMm / 2) / avg;
+      setStatus('tracking — scale ' + mmPerPx.toFixed(2) + ' mm/px', 'ok');
+    }
+    return;
+  }
+
+  // ── position & velocity (y up = positive, mm) ──
+  const yMm = -m.cy * mmPerPx;
+  if(smoothY === null){ smoothY = yMm; lastY = yMm; lastT = tMs; return; }
+  const dt = (tMs - lastT) / 1000;
+  if(dt <= 0 || dt > 0.5){ lastT = tMs; lastY = smoothY; return; }
+  smoothY = smoothY * 0.55 + yMm * 0.45;
+  const v = ((smoothY - lastY) / 1000) / dt;   // m/s, up positive
+  smoothV = smoothV * 0.5 + v * 0.5;
+  lastY = smoothY; lastT = tMs;
+
+  if(Math.abs(smoothV) > 0.04) lastMoveT = performance.now();
+  if(reps.length && performance.now() - lastMoveT > IDLE_RESET_MS){ resetSet(); return; }
+
+  // ── rep state machine ──
+  if(repPhase === 'idle'){
+    if(smoothV > V_START){
+      repPhase = 'ascent';
+      ascentStartY = smoothY; ascentStartT = tMs;
+      peakY = smoothY; belowStopSince = null;
+    }
+  } else if(repPhase === 'ascent'){
+    if(smoothY > peakY) peakY = smoothY;
+    if(smoothV < V_STOP){
+      if(belowStopSince === null) belowStopSince = tMs;
+      if(tMs - belowStopSince >= STOP_GRACE_MS){
+        finishRep(tMs - (tMs - belowStopSince));
+        repPhase = 'idle';
+      }
+    } else {
+      belowStopSince = null;
+    }
+  }
+}
+
+function finishRep(tEnd){
+  const dispMm = peakY - ascentStartY;
+  const minRom = parseFloat($('set-rom').value) || 250;
+  if(dispMm < minRom) return;                      // wiggle, not a rep
+  const durS = (tEnd - ascentStartT) / 1000;
+  if(durS <= 0.1) return;
+  const mcv = (dispMm / 1000) / durS;
+  if(mcv > 3) return;                              // tracking glitch guard
+  reps.push({ mcv: mcv, dispMm: dispMm });
+
+  const best = Math.max.apply(null, reps.map(r => r.mcv));
+  const loss = (1 - mcv / best) * 100;
+
+  $('ro-rep').textContent = String(reps.length);
+  $('ro-last').textContent = mcv.toFixed(2);
+  $('ro-best').textContent = best.toFixed(2);
+  const lossEl = $('ro-loss');
+  lossEl.textContent = Math.max(0, loss).toFixed(0) + '%';
+  lossEl.className = 'ro-val' + (loss >= LOSS_CUTOFF ? ' red' : loss >= 10 ? '' : ' green');
+
+  const row = document.createElement('div');
+  row.className = 'rep-row';
+  const left = document.createElement('span');
+  left.textContent = 'Rep ' + reps.length + ' · ' + Math.round(dispMm) + ' mm';
+  const right = document.createElement('span');
+  right.className = 'rv ' + (loss >= LOSS_CUTOFF ? 'rl-bad' : loss >= 10 ? 'rl-warn' : 'rl-ok');
+  right.textContent = mcv.toFixed(2) + ' m/s' + (loss > 0.5 ? ' · −' + loss.toFixed(0) + '%' : '');
+  row.appendChild(left); row.appendChild(right);
+  const list = $('rep-list');
+  list.insertBefore(row, list.firstChild);
+
+  if(loss >= LOSS_CUTOFF){
+    beep(220, 0.25); beep(180, 0.3, 0.3);
+    setStatus('velocity loss ' + loss.toFixed(0) + '% — terminate set', 'bad');
+  } else {
+    beep(mcv >= best * 0.95 ? 880 : 660, 0.12);
+    setStatus('tracking', 'ok');
+  }
+
+  sendToGuide(best);
+}
+
+function sendToGuide(bestMv){
+  const load = parseFloat($('set-load').value) || null;
+  try {
+    localStorage.setItem('pt_vbt_today', JSON.stringify({
+      date: todayDateStr(), mv: Math.round(bestMv * 100) / 100, load: load, reps: reps.length
+    }));
+    $('sent-badge').textContent = '✓ sent to guide — best ' + bestMv.toFixed(2) + ' m/s @ ' + (load || '?') + ' lbs';
+  } catch(e){}
+}
+
+function drawOverlay(m){
+  if(!overlay.width || overlay.width !== overlay.clientWidth){
+    overlay.width = overlay.clientWidth; overlay.height = overlay.clientHeight;
+  }
+  octx.clearRect(0, 0, overlay.width, overlay.height);
+  if(!m) { trail = []; return; }
+  // object-fit:cover mapping — scale proc coords to overlay
+  const scale = Math.max(overlay.width / m.pw, overlay.height / m.ph);
+  const offX = (overlay.width - m.pw * scale) / 2;
+  const offY = (overlay.height - m.ph * scale) / 2;
+  const x = m.cx * scale + offX, y = m.cy * scale + offY;
+  trail.push({x: x, y: y});
+  if(trail.length > 90) trail.shift();
+  octx.strokeStyle = 'rgba(126,184,164,0.8)';
+  octx.lineWidth = 2;
+  octx.beginPath();
+  trail.forEach((p, i) => { if(i === 0) octx.moveTo(p.x, p.y); else octx.lineTo(p.x, p.y); });
+  octx.stroke();
+  octx.strokeStyle = mmPerPx ? '#7eb87e' : '#c8b46e';
+  octx.lineWidth = 3;
+  octx.beginPath();
+  octx.arc(x, y, Math.max(6, m.radiusPx * scale), 0, Math.PI * 2);
+  octx.stroke();
+}
+
+document.addEventListener('visibilitychange', async () => {
+  if(document.visibilityState === 'visible' && stream && !wakeLock){
+    try { wakeLock = await navigator.wakeLock.request('screen'); } catch(e){}
+  }
+});
+</script>
+</body>
+</html>
