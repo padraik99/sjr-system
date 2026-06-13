@@ -410,6 +410,26 @@ main { padding:1.25rem; max-width:700px; margin:0 auto; }
 .mhist-row{display:flex;justify-content:space-between;gap:.5rem;font-family:'IBM Plex Mono',monospace;font-size:.66rem;padding:.28rem 0;border-bottom:1px solid var(--border);color:var(--muted);}
 .mhist-row .mh-val{color:var(--text);}
 
+/* ── v5.11: FLAREUP RECOVERY TRACKER ── */
+.flareup-panel{margin:.6rem 1.25rem 0;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);}
+.flareup-head{display:flex;align-items:center;gap:.55rem;padding:.6rem .8rem;cursor:pointer;}
+.flareup-badge{font-family:'IBM Plex Mono',monospace;font-size:.58rem;letter-spacing:.08em;text-transform:uppercase;padding:.15rem .45rem;border-radius:3px;background:rgba(200,126,126,0.1);color:var(--red);border:1px solid rgba(200,126,126,0.3);}
+.flareup-badge.improving{background:rgba(126,184,126,0.1);color:var(--green);border-color:rgba(126,184,126,0.3);}
+.flareup-badge.flat{background:rgba(90,90,85,0.15);color:var(--muted);border-color:var(--border);}
+.flareup-body-inner{padding:.1rem .8rem .8rem;}
+.fp-ep-row{display:flex;justify-content:space-between;align-items:baseline;padding:.35rem 0;border-bottom:1px solid rgba(46,46,42,0.4);}
+.fp-ep-row:last-child{border-bottom:none;}
+.fp-ep-date{font-family:'IBM Plex Mono',monospace;font-size:.66rem;color:var(--muted);}
+.fp-ep-days{font-family:'Playfair Display',serif;font-size:1.1rem;color:var(--text);}
+.fp-ep-days.active{color:var(--yellow);}
+.fp-ep-meta{font-family:'IBM Plex Mono',monospace;font-size:.58rem;color:var(--dim);}
+.fp-trend{display:flex;align-items:center;gap:.5rem;margin-top:.6rem;padding-top:.5rem;border-top:1px solid rgba(46,46,42,0.4);font-family:'IBM Plex Mono',monospace;font-size:.62rem;color:var(--muted);}
+.fp-trend-arrow{font-size:.9rem;}
+.fp-trend-arrow.down{color:var(--green);}
+.fp-trend-arrow.up{color:var(--red);}
+.fp-trend-arrow.flat{color:var(--muted);}
+.fp-empty{font-family:'IBM Plex Mono',monospace;font-size:.65rem;color:var(--dim);padding:.5rem 0 .25rem;}
+
 /* ── REFRESH FAB ── */
 #refresh-fab{
   position:fixed;bottom:1rem;right:1rem;z-index:500;
@@ -429,7 +449,7 @@ main { padding:1.25rem; max-width:700px; margin:0 auto; }
   <div class="hdr-top">
     <div>
       <div class="hdr-name">Patrick</div>
-      <div class="hdr-sub">L4–L5 · Return to Athletic Life · v5.10</div>
+      <div class="hdr-sub">L4–L5 · Return to Athletic Life · v5.11</div>
     </div>
     <div class="week-inline-nav">
       <button class="nav-arrow-inline" id="prev-week" onclick="changeWeek(-1)" disabled>‹</button>
@@ -512,6 +532,22 @@ main { padding:1.25rem; max-width:700px; margin:0 auto; }
     <div style="display:flex;justify-content:space-between;align-items:center;">
       <a class="ex-video-link" href="https://padraik99.github.io/sjr-system/SJR_VBT_Tracker_v1_20260609.html">▶ Open Bar Tracker</a>
       <span class="vbt-note" id="vbt-thresholds" style="margin:0;">≥95% green · 85–95% −10–20% load · &lt;85% Day C</span>
+    </div>
+  </div>
+</div>
+
+<!-- FLAREUP RECOVERY TRACKER (v5.11) -->
+<div class="flareup-panel" id="flareup-panel">
+  <div class="flareup-head" onclick="toggleFlareupPanel()">
+    <span class="vbt-title">Flareup Recovery</span>
+    <span style="flex:1"></span>
+    <span id="flareup-badge" class="flareup-badge flat">—</span>
+    <span class="ex-chevron" id="flareup-chev" style="font-size:.6rem;color:var(--dim);margin-left:.4rem;">▼</span>
+  </div>
+  <div id="flareup-body" style="display:none">
+    <div class="flareup-body-inner">
+      <div id="flareup-list"></div>
+      <div id="flareup-trend" class="fp-trend" style="display:none"></div>
     </div>
   </div>
 </div>
@@ -3087,6 +3123,8 @@ async function init(){
   // 4. v5.10 — injury logs (was never called — feature dead since May), readiness panel
   await loadInjuryLogs();
   initVbtFeatures();
+  // 5. v5.11 — flareup recovery tracker (depends on logs + injuryLogs both loaded)
+  initFlareupTracker();
 }
 
 init();
@@ -3572,6 +3610,204 @@ function exportMetricsCSV(){
 }
 
 document.getElementById('metrics-modal').addEventListener('click', function(e){ if(e.target === this) closeMetricsModal(); });
+
+// ─────────────────────────────────────────
+// v5.11 — FLAREUP RECOVERY TRACKER
+// Start trigger: morning score ≥3 OR injury log back/hip severity ≥3 (either/or)
+// Recovery: 2 consecutive logged morning days both ≤2
+// Date rules: local constructor only (CLAUDE.md)
+// ─────────────────────────────────────────
+
+function parseDateLocal(s){
+  var p = s.split('-');
+  return new Date(parseInt(p[0]), parseInt(p[1])-1, parseInt(p[2]));
+}
+
+function daysBetweenDates(a, b){
+  return Math.round((parseDateLocal(b) - parseDateLocal(a)) / 86400000);
+}
+
+function computeFlareupEpisodes(){
+  // Morning log lookup: date → highest score that day (conservative)
+  var morningByDate = {};
+  logs.filter(function(l){ return l.metric === 'morning'; }).forEach(function(l){
+    if(morningByDate[l.date] === undefined || l.score > morningByDate[l.date])
+      morningByDate[l.date] = l.score;
+  });
+
+  // Injury-triggered flare dates: back or hip, severity ≥3
+  var injuryFlareDates = new Set(
+    injuryLogs
+      .filter(function(l){ return ['back','hip'].includes(l.region) && l.severity >= 3; })
+      .map(function(l){ return l.date; })
+  );
+
+  // All known dates, sorted ascending
+  var allDates = Array.from(new Set(
+    Object.keys(morningByDate).concat(Array.from(injuryFlareDates))
+  )).sort();
+  if(!allDates.length) return [];
+
+  var episodes = [];
+  var flareStart = null;
+  var peakSev = 0;
+
+  for(var i = 0; i < allDates.length; i++){
+    var d = allDates[i];
+    var morning = morningByDate[d];
+    var injFlare = injuryFlareDates.has(d);
+    var isFlare = (morning !== undefined && morning >= 3) || injFlare;
+
+    if(!flareStart){
+      if(isFlare){
+        flareStart = d;
+        peakSev = morning !== undefined ? morning : 3;
+      }
+    } else {
+      if(morning !== undefined && morning > peakSev) peakSev = morning;
+      if(injFlare && peakSev < 3) peakSev = 3;
+
+      // Recovery: this logged morning ≤2 AND next logged morning ≤2
+      var nextD = allDates[i + 1];
+      var nextMorning = nextD !== undefined ? morningByDate[nextD] : undefined;
+
+      if(morning !== undefined && morning <= 2 &&
+         nextMorning !== undefined && nextMorning <= 2){
+        episodes.push({
+          start: flareStart,
+          end: nextD,
+          days: daysBetweenDates(flareStart, nextD),
+          peak: peakSev,
+          resolved: true
+        });
+        flareStart = null;
+        peakSev = 0;
+        i++;
+      }
+    }
+  }
+
+  // Ongoing episode
+  if(flareStart){
+    var today = sbDateStr(new Date());
+    episodes.push({
+      start: flareStart,
+      end: null,
+      days: daysBetweenDates(flareStart, today),
+      peak: peakSev,
+      resolved: false
+    });
+  }
+
+  return episodes;
+}
+
+function renderFlareupPanel(){
+  var episodes = computeFlareupEpisodes();
+  var badge    = document.getElementById('flareup-badge');
+  var list     = document.getElementById('flareup-list');
+  var trendEl  = document.getElementById('flareup-trend');
+  var MONTHS   = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+
+  list.textContent = '';
+  trendEl.style.display = 'none';
+
+  if(!episodes.length){
+    badge.textContent = 'no data';
+    badge.className = 'flareup-badge flat';
+    var empty = document.createElement('div');
+    empty.className = 'fp-empty';
+    empty.textContent = 'No flareups detected yet — data builds from morning logs + injury entries.';
+    list.appendChild(empty);
+    return;
+  }
+
+  var resolved = episodes.filter(function(e){ return e.resolved; });
+  var ongoing  = episodes.find(function(e){ return !e.resolved; });
+
+  if(ongoing){
+    badge.textContent = 'active · day ' + ongoing.days;
+    badge.className = 'flareup-badge';
+  } else if(resolved.length >= 2){
+    var diff = resolved[resolved.length-1].days - resolved[resolved.length-2].days;
+    if(diff < 0){ badge.textContent = diff + ' days'; badge.className = 'flareup-badge improving'; }
+    else if(diff > 0){ badge.textContent = '+' + diff + ' days'; badge.className = 'flareup-badge'; }
+    else { badge.textContent = 'stable'; badge.className = 'flareup-badge flat'; }
+  } else {
+    badge.textContent = '1 episode';
+    badge.className = 'flareup-badge flat';
+  }
+
+  // Episode rows — last 5, most recent first
+  episodes.slice(-5).reverse().forEach(function(ep){
+    var row = document.createElement('div');
+    row.className = 'fp-ep-row';
+
+    var leftDiv = document.createElement('div');
+    var dateEl = document.createElement('div');
+    dateEl.className = 'fp-ep-date';
+    var dp = parseDateLocal(ep.start);
+    dateEl.textContent = MONTHS[dp.getMonth()] + ' ' + dp.getDate();
+    var metaEl = document.createElement('div');
+    metaEl.className = 'fp-ep-meta';
+    metaEl.textContent = 'peak ' + ep.peak + '/5' + (ep.peak >= 4 ? ' ●' : '');
+    leftDiv.appendChild(dateEl);
+    leftDiv.appendChild(metaEl);
+
+    var rightDiv = document.createElement('div');
+    rightDiv.style.textAlign = 'right';
+    var daysEl = document.createElement('div');
+    daysEl.className = 'fp-ep-days' + (ep.resolved ? '' : ' active');
+    daysEl.textContent = ep.resolved
+      ? ep.days + (ep.days === 1 ? ' day' : ' days')
+      : 'day ' + ep.days;
+    var statusEl = document.createElement('div');
+    statusEl.className = 'fp-ep-meta';
+    statusEl.textContent = ep.resolved ? 'cleared' : 'ongoing';
+    rightDiv.appendChild(daysEl);
+    rightDiv.appendChild(statusEl);
+
+    row.appendChild(leftDiv);
+    row.appendChild(rightDiv);
+    list.appendChild(row);
+  });
+
+  // Trend line: first vs last resolved episode
+  if(resolved.length >= 2){
+    var first = resolved[0].days;
+    var last  = resolved[resolved.length-1].days;
+    var tdiff = last - first;
+    trendEl.style.display = 'flex';
+    trendEl.textContent = '';
+
+    var arrowEl = document.createElement('span');
+    arrowEl.className = 'fp-trend-arrow ' + (tdiff < 0 ? 'down' : tdiff > 0 ? 'up' : 'flat');
+    arrowEl.textContent = tdiff < 0 ? '↓' : tdiff > 0 ? '↑' : '—';
+
+    var textEl = document.createElement('span');
+    if(tdiff < 0)
+      textEl.textContent = 'Recovery shortening — ' + first + ' → ' + last + ' days. Tissue tolerance building.';
+    else if(tdiff > 0)
+      textEl.textContent = 'Recovery lengthening — ' + first + ' → ' + last + ' days. Monitor load.';
+    else
+      textEl.textContent = 'Recovery time stable at ' + last + ' days.';
+
+    trendEl.appendChild(arrowEl);
+    trendEl.appendChild(textEl);
+  }
+}
+
+function toggleFlareupPanel(){
+  var body = document.getElementById('flareup-body');
+  var chev = document.getElementById('flareup-chev');
+  var opening = body.style.display === 'none';
+  body.style.display = opening ? 'block' : 'none';
+  chev.style.transform = opening ? 'rotate(180deg)' : '';
+}
+
+function initFlareupTracker(){
+  renderFlareupPanel();
+}
 
 </script>
 <footer style="padding:1.5rem 1.25rem 1rem;border-top:1px solid var(--border);text-align:center;">
