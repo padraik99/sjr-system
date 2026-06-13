@@ -627,7 +627,7 @@
     <button class="filter-btn" data-group="quality" data-filter="quality-isometric" style="--btn-active-bg:rgba(90,122,90,0.2);--btn-active-color:#5a7a5a;--btn-active-border:rgba(90,122,90,0.5);">Isometric</button>
   </div>
   <div class="filter-actions">
-    <span id="filter-summary" class="filter-summary">All 80 exercises shown</span>
+    <span id="filter-summary" class="filter-summary">All 81 exercises shown</span>
     <button id="clear-filters" class="clear-btn" style="display:none;">✕ Clear filters</button>
   </div>
 </div>
@@ -1069,7 +1069,7 @@
   <div class="cat-header">
     <div class="cat-number">04</div>
     <div class="cat-title">Isometric Holds</div>
-    <div class="cat-count">11 exercises</div>
+    <div class="cat-count">12 exercises</div>
   </div>
   <div class="ex-grid">
 
@@ -1085,6 +1085,23 @@
         <span class="tag tag-bridge">Bridge</span>
         <span class="tag tag-sub">Submaximal</span>
       
+        <span class="tag" style="background:rgba(0,0,0,0.15);color:#5a7a5a;border:1px solid #5a7a5a40;">Isometric</span>
+      </div>
+    </div>
+
+    <div class="ex-card" data-tags="intensity-sub intensity-max phase-bridge phase-gpp phase-rehab phase-spp quality-isometric quality-strength sl-low">
+      <div class="ex-name">Wall Sit Progression — Co-Contraction Ladder</div>
+      <div class="ex-rationale">Grey's staple, built as a ladder rather than a single hold: double-leg → single-leg → heel-elevated (biases the knee extensors, since you're weakest and most loaded in the top range) → add dorsiflexion or external load. The organising principle is the knee as an isometric strut: lock the joint angle and the calf and hamstring are forced to co-contract with the quad, the same stance pattern that lets the glute drive hip extension instead of the quad extending the knee early. Dose by goal — Rio 5×45s for analgesia, longer holds (Baar) for collagen/tendon stiffness, higher intensity for capacity. Spine-safe for Patrick: trunk stays neutral against the wall, zero axial compression, no lumbar extension. Grey caveat: progress one rung at a time — a single- or double-leg wall sit can flare a patellar tendon that isn't ready, so it earns intensity, it isn't handed it. Mechanism is well-supported sprint biomechanics; the "train to delay knee extension" intervention is a sound coaching heuristic, not RCT-proven.</div>
+      <div class="ex-source">Grey · Rio · Baar</div>
+      <a class="ex-video-link" href="https://www.youtube.com/results?search_query=David+Grey+wall+sit+progression+co-contraction+knee" target="_blank">Search Demo</a>
+      <div class="ex-tags">
+        <span class="tag tag-sl-low">Spinal: Low</span>
+        <span class="tag tag-joint">Knee · Hip · Ankle</span>
+        <span class="tag tag-rehab">Rehab</span>
+        <span class="tag tag-bridge">Bridge</span>
+        <span class="tag tag-perf">Performance</span>
+        <span class="tag tag-sub">Submaximal</span>
+
         <span class="tag" style="background:rgba(0,0,0,0.15);color:#5a7a5a;border:1px solid #5a7a5a40;">Isometric</span>
       </div>
     </div>
@@ -2265,64 +2282,4 @@
     if (hasPhase)     params.set('phase',     [...activeFilters.phase].join(','));
     if (hasSpinal)    params.set('spinal',    [...activeFilters.spinal].join(','));
     if (hasIntensity) params.set('intensity', [...activeFilters.intensity].join(','));
-    if (hasQuality)   params.set('quality',   [...activeFilters.quality].join(','));
-    const newUrl = params.toString()
-      ? `${location.pathname}?${params.toString()}`
-      : location.pathname;
-    try {
-      history.replaceState(null, '', newUrl);
-    } catch(e) { /* sandboxed preview — URL sync unavailable, filters still work */ }
-  }
-
-  filterBtns.forEach(btn => {
-    btn.addEventListener('click', () => {
-      const group  = btn.dataset.group;
-      const filter = btn.dataset.filter;
-      if (!group || !filter) return;
-
-      if (activeFilters[group].has(filter)) {
-        activeFilters[group].delete(filter);
-        btn.classList.remove('active');
-      } else {
-        activeFilters[group].add(filter);
-        btn.classList.add('active');
-      }
-      applyFilters();
-    });
-  });
-
-  clearBtn.addEventListener('click', () => {
-    Object.keys(activeFilters).forEach(g => activeFilters[g].clear());
-    filterBtns.forEach(b => b.classList.remove('active'));
-    applyFilters();
-  });
-
-  // ── URL parameter support ──────────────────────────────────────────────────
-  // Allows Periodization Guide to link directly:
-  // exercise_library.html?phase=phase-bridge,phase-gpp&spinal=sl-low&intensity=intensity-sub
-  function loadFromURL() {
-    const params = new URLSearchParams(location.search);
-    const map = { phase: 'phase', spinal: 'spinal', intensity: 'intensity', quality: 'quality' };
-
-    Object.entries(map).forEach(([param, group]) => {
-      const val = params.get(param);
-      if (!val) return;
-      val.split(',').forEach(filter => {
-        filter = filter.trim();
-        if (!filter) return;
-        activeFilters[group].add(filter);
-        // Activate matching button
-        const btn = document.querySelector(`[data-group="${group}"][data-filter="${filter}"]`);
-        if (btn) btn.classList.add('active');
-      });
-    });
-
-    applyFilters();
-  }
-
-  loadFromURL();
-</script>
-
-
-</body>
-</html>
+    if (hasQuality)   params

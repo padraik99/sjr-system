@@ -19,7 +19,7 @@ Canal days (Tue/Thu with Yari): VO2 max 4×4 intervals replacing forward run int
 ## Athletes
 | Athlete | Sport | Injury | Status | Target |
 |---------|-------|--------|--------|--------|
-| Patrick | Volleyball | L4-L5 spinal rehab (foraminal stenosis) | Bridge W8 · medial branch block pending · **primary app user going forward** | King of the Court, Summer 2026 |
+| Patrick | Volleyball | L4-L5 spinal rehab (foraminal stenosis) | Bridge W8 · **MBB done Jun 5 → only ~30% relief ×4hr (NEGATIVE facet block)** · physio stumped · next doc consult **Jul 28** · left-side push-off flareup edge · **primary app user going forward** | King of the Court, Summer 2026 |
 | Shaylan | Sprint/Jump (MJC → **UC Berkeley fall 2026**) | Knee rehab + shin splints | Post-season · off-week · Sacramento TBD (Canadian TF Fed reg issue) | 11.29 100m PR · State champion 100m · 2nd 200m + LJ |
 | Cadence | Sprint/Jump (Cal Poly — **graduated**) | Plantar fascia + shin load intolerance | Commonwealth Games prep · future training situation TBD | Commonwealth Games Glasgow, July 2026 |
 | Yari | Soccer (professional) | ACL rehab | **Phase 3 complete · returning Mexico June 9+ (possibly 12–15)** · "never felt stronger/faster" | Club integration Jun 15–21 (W9) · report: strongest/fastest she's felt |
@@ -313,9 +313,16 @@ Full audit report: `SJR_Security_Audit_20260416.md` (in repo root)
 
 These are areas where evidence is evolving or where deeper review may update current practice. Not action items yet — flag when relevant to a programming decision.
 
-#### Spinal Rehab (Patrick)
+#### Spinal Rehab (Patrick) — ACTIVE EDGE: left-side push-off flareup (Jun 2026)
+- **Pattern**: mini-flareups, left side, on moderate-to-high-intensity single-leg push-off into sprint. ×2 in 2 weeks. Patrick's described mechanics: hip hinge (flexion) → knee flexion → external rotation → full extension. The terminal external-rotation + full-extension under high force is the aggravator.
+- **Mechanism (UPDATED post-MBB — now tilts foraminal/radicular)**: extension + same-side rotation + same-side side-bend both *closes the foramen* (→ nerve root irritation) AND loads the facet. The Jun 5 MBB was the discriminator between them. Result: **~30% relief for ~4hr — a NEGATIVE facet block** (diagnostic threshold is ≥50%, strict standard ≥80%; ≥80% predicts RFA success, <50% does not — Cohen 2008 / Spine Intervention Society). The 4hr window matching anesthetic half-life confirms the drug was active, so the 30% is real, not a technical miss. Read: **facets are at most a minor contributor (~the 30%); the dominant generator is more likely the nerve root / foramen**, which an MBB can't touch by design. This tilts the ESI-vs-RFA gate (below) toward **transforaminal ESI**, away from RFA. Caveat: poor MBB can also be false-negative (level/placement) or reflect mixed/neuropathic/central or extra-spinal sources (SI, hip) — "physio stumped" is consistent with a mixed picture. Not a verdict; this is the reasoning to bring to the **Jul 28 consult**.
+- **Grey tie-in**: this is the co-contraction failure mode in vivo. When the left side can't sequence propulsion through the hip (glute-driven extension, knee a stiff strut), force leaks into terminal lumbar extension-rotation — the spine finishes the push the hip didn't. Grey's "delay knee extension, drive through hip" is, for Patrick specifically, a spine-protection strategy.
+- **Edge / gate**: treat as a **hard autoregulation cutoff** to high-intensity single-leg push-off until post-procedure — NOT a push-to-4/10 situation. Rebuild biased toward hinged-forward, neutral-trunk propulsion: anti-rotation (Pallof, already carried), glute-driven hip extension, avoid terminal lumbar extension under speed. Wall Sit Co-Contraction Ladder (new Library card) is an on-ramp for the strut pattern.
+- **No near-term intervention**: MBB done and equivocal; next consult not until Jul 28, so any next injection (likely ESI) lands August+ at earliest. **Training IS the management through late summer** — the conservative gate above isn't a holding pattern waiting for a procedure to fix things, it's the actual plan. Build capacity, protect the foramen, hold the line on terminal extension-rotation under speed.
+
+#### Spinal Rehab (Patrick) — research bookmarks
 - **Foraminal stenosis — decompression loading specificity**: What direction and load magnitude optimally opens the L4-L5 foramen? Backward sled vs. backward treadmill vs. aquatic — comparative decompression studies limited. Worth tracking as Patrick transitions modes.
-- **ESI vs. radiofrequency ablation outcomes**: Comparative RCT data for foraminal stenosis specifically (vs. central stenosis, which is better studied). Cochrane reviews updated 2023–2024.
+- **ESI vs. radiofrequency ablation outcomes**: Comparative RCT data for foraminal stenosis specifically (vs. central stenosis, which is better studied). Cochrane reviews updated 2023–2024. **June 2026 update: the equivocal MBB (30%/4hr, negative) effectively argues this gate toward transforaminal ESI — RFA is poorly indicated when the diagnostic block is sub-50%. Confirm direction at Jul 28 consult.**
 - **Gabapentin taper and sensorimotor function**: Any evidence on proprioceptive blunting during/after gabapentin? Relevant to Patrick's balance and single-leg work timing.
 - **Kettlebell deadlift vs. trap bar for lumbar**: McGill's spinal load data on KB swings/deadlifts vs. trap bar. Trap bar elevated start currently used — confirm it remains lowest compressive option.
 
@@ -336,6 +343,14 @@ These are areas where evidence is evolving or where deeper review may update cur
 - **Penultimate step mechanics** (Shaylan LJ): Schexnayder's work on COM lowering strategy. Any recent 3D kinematics data on optimal penultimate step length-to-height ratio?
 - **Plantar fascia loading protocols** (Cadence): Rathleff et al. high-load strength training (single-leg heel raise with towel curl) — already partly applied. Baar collagen timing for PF specifically — less studied than Achilles.
 - **Nordic hamstring curl — hamstring strain prevention in sprinters**: Any evidence specific to LJ/sprint athletes vs. soccer? Dose and timing relative to competition.
+
+#### Co-Contraction & Movement Sequencing (Grey) ★ vetted June 2026
+- **Grey's knee-as-isometric-strut model**: at foot strike, calf + hamstring co-contract to hold the knee near-isometric so the glute drives hip extension, rather than the quad extending the knee early ("delayed knee extension"). Vetted against Coach Em Up Ep 60 + Jacked Athlete #124 (Feb 2025) + sprint biomechanics literature.
+- **Verdict**: the *descriptive* biomechanics hold up well — knee operates through tiny excursion in stance (stiff strut), high hamstring/gastroc co-activation is documented, hip extensors are primary propulsors. Aligns with Bosch's coordination model. The *intervention* claim ("train to delay knee extension → move better, fewer injuries") is a mechanistically sound coaching heuristic, NOT RCT-backed. Apply as a lens, flag as unproven — same bar as the rest of this pipeline.
+- **"For the tendon it's about load, not biomechanics"** — squarely consensus, no dispute.
+- **Isometric analgesia reality-check**: Rio 2015 (the 5×45s basis in our guides) was 6 in-season male volleyballers; Holden 2019/2020 + later meta-analyses found isometrics NOT reliably superior to isotonic for pain. Grey himself now chases *load without pain* over pain-as-progress and warns a wall sit can flare an unready patellar tendon — better aligned with the evidence than the protocol he's credited with. Keep isometrics as an option, not a magic switch.
+- **Applied**: Wall Sit Progression — Co-Contraction Ladder card added to Library (Isometric Holds, 81 cards). Direct relevance to Patrick (knee strut / spine-protective sequencing — see push-off flareup below) and the sprint athletes (stance co-contraction).
+- **Already in system**: Grey cited for skater squat (Library). Co-contraction appears in McGill side-plank / adductor contexts but the knee-strut framework was not explicit until now.
 
 #### Motor Learning & Coaching
 - **External vs. internal focus cueing** (Winkelman): Sprint mechanics cues that hold up under fatigue — research on dual-task degradation of internal cues. Relevant for meet-day vs. practice coaching approach.
