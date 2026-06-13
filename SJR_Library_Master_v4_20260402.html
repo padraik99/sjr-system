@@ -2282,4 +2282,64 @@
     if (hasPhase)     params.set('phase',     [...activeFilters.phase].join(','));
     if (hasSpinal)    params.set('spinal',    [...activeFilters.spinal].join(','));
     if (hasIntensity) params.set('intensity', [...activeFilters.intensity].join(','));
-    if (hasQuality)   params
+    if (hasQuality)   params.set('quality',   [...activeFilters.quality].join(','));
+    const newUrl = params.toString()
+      ? `${location.pathname}?${params.toString()}`
+      : location.pathname;
+    try {
+      history.replaceState(null, '', newUrl);
+    } catch(e) { /* sandboxed preview — URL sync unavailable, filters still work */ }
+  }
+
+  filterBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const group  = btn.dataset.group;
+      const filter = btn.dataset.filter;
+      if (!group || !filter) return;
+
+      if (activeFilters[group].has(filter)) {
+        activeFilters[group].delete(filter);
+        btn.classList.remove('active');
+      } else {
+        activeFilters[group].add(filter);
+        btn.classList.add('active');
+      }
+      applyFilters();
+    });
+  });
+
+  clearBtn.addEventListener('click', () => {
+    Object.keys(activeFilters).forEach(g => activeFilters[g].clear());
+    filterBtns.forEach(b => b.classList.remove('active'));
+    applyFilters();
+  });
+
+  // ── URL parameter support ──────────────────────────────────────────────────
+  // Allows Periodization Guide to link directly:
+  // exercise_library.html?phase=phase-bridge,phase-gpp&spinal=sl-low&intensity=intensity-sub
+  function loadFromURL() {
+    const params = new URLSearchParams(location.search);
+    const map = { phase: 'phase', spinal: 'spinal', intensity: 'intensity', quality: 'quality' };
+
+    Object.entries(map).forEach(([param, group]) => {
+      const val = params.get(param);
+      if (!val) return;
+      val.split(',').forEach(filter => {
+        filter = filter.trim();
+        if (!filter) return;
+        activeFilters[group].add(filter);
+        // Activate matching button
+        const btn = document.querySelector(`[data-group="${group}"][data-filter="${filter}"]`);
+        if (btn) btn.classList.add('active');
+      });
+    });
+
+    applyFilters();
+  }
+
+  loadFromURL();
+</script>
+
+
+</body>
+</html>
