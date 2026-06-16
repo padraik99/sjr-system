@@ -58,12 +58,12 @@ async async function saveGateLog(){ }  // never stack async keywords
 ## File Inventory (canonical — May 2026)
 | File | Version | Notes |
 |------|---------|-------|
-| `SJR_WeeklyGuide_Patrick_v5_20260402.html` | **v5.10** | VBT readiness panel (velocity vs rolling baseline + proxy fallback, traffic light) · per-exercise saved demo URLs (`pt_demos`) · day-of add/remove overrides (`pt_dayover`, today-only, auto-prune) · P3 metrics modal (RSI/LSI/MV/custom, `pt_metrics`, CSV export w/ confirm) · **injury modal restored** (markup lost in May 12 conflict; fixed dead refs: todayStr→todayDateStr, showSyncBadge→showSyncStatus, added sbDateStr, loadInjuryLogs now called in init) |
+| `SJR_WeeklyGuide_Patrick_v5_20260402.html` | **v5.12** | VBT readiness panel (velocity vs rolling baseline + proxy fallback, traffic light) · per-exercise saved demo URLs (`pt_demos`) · day-of add/remove overrides (`pt_dayover`, today-only, auto-prune) · P3 metrics modal (RSI/LSI/MV/custom, `pt_metrics`, CSV export w/ confirm) · **injury modal restored** (markup lost in May 12 conflict; fixed dead refs: todayStr→todayDateStr, showSyncBadge→showSyncStatus, added sbDateStr, loadInjuryLogs now called in init) · **v5.11**: Flareup Recovery Tracker (episode list + trend arrow, reads `pt_logs` morning + `pt_injuries`) · **v5.12**: Sciatic Nerve *Slider* — upgraded the old floss into a reciprocal glide (sliders-not-tensioners), wired to the crossed-leg/sock/pre-run neural-tension provocation; in MOBILITY_LIGHT |
 | `SJR_VBT_Tracker_v1_20260609.html` | **v1.0 NEW** | Optical VBT: phone camera tracks lime-green bar marker, scale from known ⌀, mean concentric velocity per rep, 20% velocity-loss audio cutoff, auto-writes `pt_vbt_today` → guide readiness panel reads it (same-origin localStorage) |
 | `shaylan_weekly_v3_20260402.html` | **v3.3** | W11 off-week + W12 return-to-form + W13 Sacramento (conditional) added |
 | `Cadence_Weekly_v3_20260402.html` | v3.2 | Supabase · SHIN_COMP · MULTIPLANAR_LOWER · EX_INFO entries |
 | `SJR_Yari_Guide_v2_20260414.html` | **v2.7** | W5–W9 added (May 18–June 21) · Hip CARs + Ankle CARs + 90/90 Hip Switch + Lateral Lunge + Copenhagen Plank (Harøy 2019) + Conor Harris glute med (ant/post fibers) + Half-Kneeling Chop across all new weeks · Library nav link added |
-| `SJR_Library_Master_v4_20260402.html` | **v4.1** | 80 cards · quality tags · filter FAQ panel added (collapsible "How to use filters" with phase/quality combo examples for self-directed use) |
+| `SJR_Library_Master_v4_20260402.html` | **v4.2** | 82 cards · quality tags · filter FAQ panel · +Wall Sit Co-Contraction Ladder (Grey) · +Sciatic Nerve Slider / Neural Glide (Mobility & Joint Prep) |
 | `SJR_Dashboard_v1_20260402.html` | **v1.3** | All 4 athletes · auto-refresh · Yari Gate Assessment nav link added · sbFetch Authorization:Bearer removed |
 | `patrick_protocol_v2_20260402.html` | v2 | Floating This Week button |
 | `SJR_Periodization_Master_v2_20260313.html` | v2 | Library links fixed to absolute URL v4.1 |
@@ -160,7 +160,7 @@ initApp();
 ```
 
 ## Library (v4.1)
-**80 cards** across 11 sections:
+**82 cards** across 11 sections:
 Posterior Chain · Anterior Chain · Single-Leg Complex · Isometric Holds · Hip & Glute · Upper Body · Mobility & Joint Prep · Sprint Drills · Jump & Bound · Ankle & Foot · Energy System
 
 **Filter groups (AND across groups, OR within group):**
@@ -234,10 +234,14 @@ git -C "C:/Users/padra/Documents/GitHub/sjr-system" log --oneline -20
 ```
 
 ### Recent Commit Log (May–June 2026)
-All previously pending commits are pushed — branch in sync with origin/main as of June 9 2026.
+Branch in sync with origin/main through `8bab5f7` (June 15 2026). The v5.12 / Library-v4.2 work below is **uncommitted** — push from GitHub Desktop. (Git index had corrupted mid-session via the sandbox; rebuilt with `git reset` June 15.)
 
 | Hash | Message |
 |------|---------|
+| _pending_ | **Patrick v5.12 + Library v4.2** (uncommitted): Sciatic Nerve Slider (neural glide, sliders-not-tensioners) + crossed-leg/sock provocation coaching · Library → 82 cards |
+| 8bab5f7 | Patrick v5.11: Flareup Recovery Tracker — episode list + trend arrow |
+| eaa6b65 | Library: Wall Sit Co-Contraction Ladder (Grey) → 81 cards |
+| 34d8fde | CLAUDE.md: MBB negative + push-off flareup + Grey co-contraction · Library +Wall Sit |
 | 58eb32c | Update CLAUDE.md |
 | a61d062 | Yari v2.7: W8–W9 extended stay/club prep · Copenhagen Plank + Harris glute med all W5–W9 · Library v4.1: filter FAQ panel (combined commit) |
 | 7ae7344 | Dashboard v1.3: Yari Gate Assessment nav link |
@@ -318,6 +322,7 @@ These are areas where evidence is evolving or where deeper review may update cur
 - **Mechanism (UPDATED post-MBB — now tilts foraminal/radicular)**: extension + same-side rotation + same-side side-bend both *closes the foramen* (→ nerve root irritation) AND loads the facet. The Jun 5 MBB was the discriminator between them. Result: **~30% relief for ~4hr — a NEGATIVE facet block** (diagnostic threshold is ≥50%, strict standard ≥80%; ≥80% predicts RFA success, <50% does not — Cohen 2008 / Spine Intervention Society). The 4hr window matching anesthetic half-life confirms the drug was active, so the 30% is real, not a technical miss. Read: **facets are at most a minor contributor (~the 30%); the dominant generator is more likely the nerve root / foramen**, which an MBB can't touch by design. This tilts the ESI-vs-RFA gate (below) toward **transforaminal ESI**, away from RFA. Caveat: poor MBB can also be false-negative (level/placement) or reflect mixed/neuropathic/central or extra-spinal sources (SI, hip) — "physio stumped" is consistent with a mixed picture. Not a verdict; this is the reasoning to bring to the **Jul 28 consult**.
 - **Grey tie-in**: this is the co-contraction failure mode in vivo. When the left side can't sequence propulsion through the hip (glute-driven extension, knee a stiff strut), force leaks into terminal lumbar extension-rotation — the spine finishes the push the hip didn't. Grey's "delay knee extension, drive through hip" is, for Patrick specifically, a spine-protection strategy.
 - **Edge / gate**: treat as a **hard autoregulation cutoff** to high-intensity single-leg push-off until post-procedure — NOT a push-to-4/10 situation. Rebuild biased toward hinged-forward, neutral-trunk propulsion: anti-rotation (Pallof, already carried), glute-driven hip extension, avoid terminal lumbar extension under speed. Wall Sit Co-Contraction Ladder (new Library card) is an on-ramp for the strut pattern.
+- **Neural-tension corollary (Jun 15 2026)**: Patrick reports a second provoker — left leg crossed over right, slightly flexed (sock, washing foot, pre-run stretch), felt in the *back*, worse the further he goes. That's a slump/SLR neural-tension position. Key insight: it looks like the opposite of the push-off flareup but it isn't — push-off (extension + rotation) *closes* the foramen and **compresses** the root; crossed-leg (flexion + reach) **tensions** the same root. Two opposite movements, one irritable nerve, from two directions — exactly the foraminal/radicular-dominant picture the negative MBB implied; the body echoing the block's verdict in movement form. Management: STOP forcing the crossed-leg stretch (it sensitizes), use sciatic **sliders** not tensioners (pain-free, stop if it peripheralizes down the leg), and build left-hip flexion/ER capacity so the spine stops borrowing range it should supply (hip-spine syndrome). Shipped to guide v5.12 + Library v4.2.
 - **No near-term intervention**: MBB done and equivocal; next consult not until Jul 28, so any next injection (likely ESI) lands August+ at earliest. **Training IS the management through late summer** — the conservative gate above isn't a holding pattern waiting for a procedure to fix things, it's the actual plan. Build capacity, protect the foramen, hold the line on terminal extension-rotation under speed.
 
 #### Spinal Rehab (Patrick) — research bookmarks
@@ -439,6 +444,7 @@ Rationale for non-obvious choices — so the next model inherits the reasoning, 
 | Day-of overrides keyed by date, not [week]-[day] | Date key self-expires (prune anything ≠ today on load). Week/day index would persist a Tuesday override into every future Tuesday view. |
 | P3 metrics localStorage-first | Patrick is sole user, single primary device; ship now, zero backend work. Supabase table when the metric set stabilizes. CSV export is the interim escape hatch. |
 | Readiness thresholds 95/85% of baseline MV | ~10% MV drop on fixed warm-up load is the consensus meaningful readiness signal; 95% green is deliberately conservative for spinal rehab, 85% red is a loud alarm. Baseline = last 5 same-load (±10%) entries, ≥3 required. |
+| Sciatic *slider*, not tensioner, for Patrick's neural-tension provoker (Jun 2026) | An irritable/foraminal root tolerates a *glide* (slider — one end loads as the other unloads, near-zero net tension) far better than a *tensioner* (both ends taut at once). Head-to-head RCT evidence is thin (Basson 2014 critical review), but the low-strain mechanism is sound for a sensitized nerve and matches McGill's "remove the provocateur first" — the crossed-leg stretch Patrick was doing was a self-administered tensioner. |
 
 ---
 
