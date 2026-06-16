@@ -382,6 +382,34 @@ main { padding:1.25rem; max-width:700px; margin:0 auto; }
 ::-webkit-scrollbar-track { background:var(--bg); }
 ::-webkit-scrollbar-thumb { background:var(--border); border-radius:2px; }
 
+/* ── v6: WAVE HEADLINE ── */
+.wave-headline{margin:.55rem 1.25rem .2rem;background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--dim);border-radius:var(--radius);padding:.7rem .85rem;}
+.wave-headline[data-tone="green"]{border-left-color:var(--green);}
+.wave-headline[data-tone="amber"]{border-left-color:var(--yellow);}
+.wave-headline[data-tone="red"]{border-left-color:var(--red);}
+.wave-headline[data-tone="canal"]{border-left-color:var(--accent2);}
+.wave-headline[data-tone="recovery"]{border-left-color:var(--accent2);}
+.wave-top{display:flex;align-items:center;gap:.5rem;}
+.wave-light{width:.6rem;height:.6rem;border-radius:50%;background:var(--dim);flex-shrink:0;}
+.wave-light.green{background:var(--green);box-shadow:0 0 8px rgba(126,184,126,.6);}
+.wave-light.amber{background:var(--yellow);box-shadow:0 0 8px rgba(200,180,110,.6);}
+.wave-light.red{background:var(--red);box-shadow:0 0 8px rgba(200,126,126,.6);}
+.wave-light.canal,.wave-light.recovery{background:var(--accent2);}
+.wave-pos{flex:1;font-family:'IBM Plex Mono',monospace;font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);}
+.wave-log{background:var(--surface2);border:1px solid var(--border);border-radius:5px;color:var(--text);font-size:.66rem;padding:.3rem .6rem;cursor:pointer;flex-shrink:0;}
+.wave-verdict{font-size:.92rem;line-height:1.32;color:var(--text);margin-top:.45rem;font-weight:500;}
+.wave-discipline{font-size:.76rem;line-height:1.4;color:var(--accent2);margin-top:.5rem;padding:.45rem .55rem;background:var(--surface2);border-radius:5px;}
+.wave-override{margin-top:.55rem;}
+.wave-ovr-btn{background:var(--surface2);border:1px dashed var(--border);border-radius:5px;color:var(--muted);font-size:.68rem;padding:.35rem .65rem;cursor:pointer;}
+.wave-ovr-btn.done{border-style:solid;color:var(--yellow);}
+.wave-ovr-note{font-size:.62rem;color:var(--dim);margin-top:.35rem;line-height:1.4;}
+.wave-why{background:none;border:none;color:var(--dim);font-size:.66rem;font-family:'IBM Plex Mono',monospace;cursor:pointer;margin-top:.5rem;padding:0;}
+.wave-why-body{margin-top:.4rem;border-top:1px solid var(--border);padding-top:.45rem;}
+.wave-why-row{display:flex;justify-content:space-between;font-size:.72rem;color:var(--muted);padding:.18rem 0;}
+.wave-why-row span:last-child{font-family:'IBM Plex Mono',monospace;color:var(--text);}
+.wave-why-foot{font-size:.64rem;color:var(--dim);margin-top:.4rem;line-height:1.4;}
+.carry-banner{margin:.2rem 0 .6rem;padding:.5rem .6rem;background:var(--surface2);border:1px dashed var(--border);border-radius:6px;font-size:.72rem;color:var(--muted);line-height:1.45;}
+
 /* ── v5.10: READINESS · EDIT DAY · METRICS ── */
 .vbt-panel{margin:.6rem 1.25rem 0;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);}
 .vbt-head{display:flex;align-items:center;gap:.55rem;padding:.6rem .8rem;cursor:pointer;}
@@ -458,7 +486,7 @@ main { padding:1.25rem; max-width:700px; margin:0 auto; }
   <div class="hdr-top">
     <div>
       <div class="hdr-name">Patrick</div>
-      <div class="hdr-sub">L4–L5 · Return to Athletic Life · v5.12</div>
+      <div class="hdr-sub">L4–L5 · Return to Athletic Life · v6.0</div>
     </div>
     <div class="week-inline-nav">
       <button class="nav-arrow-inline" id="prev-week" onclick="changeWeek(-1)" disabled>‹</button>
@@ -466,7 +494,7 @@ main { padding:1.25rem; max-width:700px; margin:0 auto; }
       <button class="nav-arrow-inline" id="next-week" onclick="changeWeek(1)">›</button>
     </div>
   </div>
-  <div class="metric-strip" id="metric-strip">
+  <div class="metric-strip" id="metric-strip" style="display:none">
     <div class="metric-item">
       <div class="metric-label">Back Pain</div>
       <div class="metric-name">AM Score</div>
@@ -486,6 +514,29 @@ main { padding:1.25rem; max-width:700px; margin:0 auto; }
     </div>
   </div>
 </header>
+
+<!-- WAVE HEADLINE (v6) -->
+<div class="wave-headline" id="wave-headline" data-tone="neutral">
+  <div class="wave-top">
+    <span class="wave-light" id="wave-light"></span>
+    <div class="wave-pos" id="wave-pos">—</div>
+    <button class="wave-log" onclick="openModal()">＋ Log</button>
+  </div>
+  <div class="wave-verdict" id="wave-verdict">Loading today's wave position…</div>
+  <div class="wave-discipline" id="wave-discipline" style="display:none"></div>
+  <div class="wave-override" id="wave-override" style="display:none">
+    <button class="wave-ovr-btn" id="wave-ovr-btn" onclick="overrideGovernor()">Override — proceed at plan</button>
+    <div class="wave-ovr-note" id="wave-ovr-note"></div>
+  </div>
+  <button class="wave-why" id="wave-why" onclick="toggleWaveWhy()">why ▾</button>
+  <div class="wave-why-body" id="wave-why-body" style="display:none">
+    <div class="wave-why-row"><span>Back · AM</span><span id="why-morning">—</span></div>
+    <div class="wave-why-row"><span>Nerve</span><span id="why-nerve">—</span></div>
+    <div class="wave-why-row"><span>Ankle</span><span id="why-ankle">—</span></div>
+    <div class="wave-why-row"><span>Readiness</span><span id="why-ready">—</span></div>
+    <div class="wave-why-foot" id="why-foot"></div>
+  </div>
+</div>
 
 <!-- GATE BANNER -->
 <div class="gate-banner" id="gate-banner">
@@ -2733,16 +2784,23 @@ function detectCurrentWeek(){
   for(let w = 0; w < WEEKS.length; w++){
     const ws = getWeekStart(w);
     for(let d = 0; d < 7; d++){
-      if(slotDateStr(ws, d) === today) return { week: w, day: d };
+      if(slotDateStr(ws, d) === today){ pastHorizon = false; liveMonday = null; return { week: w, day: d }; }
     }
   }
-  // Today is outside the schedule range — stay on currentWeek, pick day 0
+  // v6: today is PAST the authored horizon → don't freeze. Clamp content to the last
+  // authored week but drive dates + headline from the live wave. (Before W1 → null, unchanged.)
+  if(isTodayPastHorizon()){
+    pastHorizon = true; liveMonday = mondayOf(new Date());
+    const dow = new Date().getDay();
+    return { week: WEEKS.length - 1, day: (dow === 0 ? 6 : dow - 1), pastHorizon: true };
+  }
+  pastHorizon = false; liveMonday = null;
   return null;
 }
 
 function initDaySelector(){
   const today = todayDateStr();
-  const weekStart = getWeekStart(currentWeek);
+  const weekStart = currentWeekStart();
   const DAY_INIT = ['M','T','W','Th','F','Sa','Su'];
   let selectIdx = 0;
   document.querySelectorAll('.day-btn').forEach((btn,i) => {
@@ -2777,13 +2835,19 @@ function renderDay(idx){
   const breaches = getBreaches();
   const effectiveType = getDayType(day.type);
   const modifier = getLoadModifier();
-  const weekStart = getWeekStart(currentWeek);
+  const weekStart = currentWeekStart();
   const slotDate = new Date(weekStart);
   slotDate.setDate(slotDate.getDate() + idx);
   const dateStr = slotDateStr(weekStart, idx);
   const dateLabel = slotDate.toLocaleDateString('en-US',{weekday:'long',month:'short',day:'numeric'});
 
   let html = '';
+
+  // v6: past the authored plan — be honest that this content is carried forward
+  if(pastHorizon){
+    const wk = waveInfo(new Date());
+    html += `<div class="carry-banner">📋 Past your authored plan. The wave engine is live — this is a <strong>${wk.isDeload?'deload':wk.cycleLabel}</strong> week. Exercises below are carried from your last authored week (${escHtml(WEEKS[currentWeek].label)}); author the next block when you're ready and it'll take over.</div>`;
+  }
 
   // Type badge
   const badges = {A:'badge-a', B:'badge-b', C:'badge-c', D:'badge-d', rest:'badge-c'};
@@ -3079,6 +3143,7 @@ function saveLog(){
   localStorage.setItem('pt_logs', JSON.stringify(logs));
   closeModal();
   updateMetricDisplay();
+  renderWaveHeadline(); // pain just changed — re-govern
   initDaySelector();
 }
 
@@ -3088,6 +3153,17 @@ document.getElementById('gate-modal').addEventListener('click', function(e){ if(
 // WEEK NAV
 // ─────────────────────────────────────────
 function changeWeek(dir){
+  // v6: from live (past-horizon) view, ‹ steps back into the last authored week
+  if(pastHorizon){
+    if(dir < 0){ pastHorizon = false; liveMonday = null; currentWeek = WEEKS.length - 1;
+      localStorage.setItem('pt_week', currentWeek); updateWeekUI(); initDaySelector(); }
+    return; // › does nothing — nothing authored ahead
+  }
+  // forward off the last authored week, when today is past it → enter live mode
+  if(dir > 0 && currentWeek === WEEKS.length - 1 && isTodayPastHorizon()){
+    pastHorizon = true; liveMonday = mondayOf(new Date());
+    updateWeekUI(); initDaySelector(); return;
+  }
   const n = currentWeek + dir;
   if(n < 0 || n >= WEEKS.length) return;
   currentWeek = n;
@@ -3098,10 +3174,193 @@ function changeWeek(dir){
 }
 
 function updateWeekUI(){
-  const w = WEEKS[currentWeek];
-  document.getElementById('phase-badge').innerHTML = `${w.label}<span>${w.dates}</span>`;
-  document.getElementById('prev-week').disabled = currentWeek === 0;
-  document.getElementById('next-week').disabled = currentWeek === WEEKS.length - 1;
+  if(pastHorizon){
+    const wk = waveInfo(new Date());
+    const ms = currentWeekStart();
+    const me = new Date(ms.getFullYear(), ms.getMonth(), ms.getDate()+6);
+    const fmt = d => d.toLocaleDateString('en-US',{month:'short',day:'numeric'});
+    document.getElementById('phase-badge').innerHTML = `Live · ${wk.isDeload?'Deload':wk.cycleLabel}<span>${fmt(ms)}–${fmt(me)}</span>`;
+    document.getElementById('prev-week').disabled = false;   // step back into authored weeks
+    document.getElementById('next-week').disabled = true;    // nothing authored ahead
+  } else {
+    const w = WEEKS[currentWeek];
+    document.getElementById('phase-badge').innerHTML = `${w.label}<span>${w.dates}</span>`;
+    document.getElementById('prev-week').disabled = currentWeek === 0;
+    // allow stepping forward into live mode once you're on the last authored week and today is past it
+    document.getElementById('next-week').disabled = (currentWeek === WEEKS.length - 1) && !isTodayPastHorizon();
+  }
+  renderWaveHeadline();
+}
+
+// ═════════════════════════════════════════
+// WAVE ENGINE (v6) — date-driven undulation + downregulate-only governor
+// Stateless except reading logs/vbtLog. Local-date discipline throughout.
+// ═════════════════════════════════════════
+const WAVE_ANCHOR = new Date(2026, 2, 23); // Mon Mar 23 2026 — same base as Bridge W1
+let pastHorizon = false, liveMonday = null;
+let waveOverrides = {};
+try { waveOverrides = JSON.parse(localStorage.getItem('pt_wave_overrides') || '{}'); } catch(e){ waveOverrides = {}; }
+
+function mondayOf(d){
+  const x = new Date(d.getFullYear(), d.getMonth(), d.getDate());
+  const dow = x.getDay();                    // 0 Sun … 6 Sat
+  x.setDate(x.getDate() - (dow === 0 ? 6 : dow - 1));
+  return x;
+}
+function weekIndexFromDate(d){
+  const a = new Date(WAVE_ANCHOR.getFullYear(), WAVE_ANCHOR.getMonth(), WAVE_ANCHOR.getDate());
+  return Math.round((mondayOf(d) - a) / (7*86400000));
+}
+// DUP role by weekday — canonical schedule (Mon heavy · Wed moderate · Sat light-power · Tue/Thu canal · Fri/Sun recovery)
+const DUP_ROLE  = {1:'heavy', 3:'moderate', 6:'power', 2:'canal', 4:'canal', 5:'recovery', 0:'recovery'};
+const ROLE_BASE = {heavy:1.00, moderate:0.85, power:0.75, canal:null, recovery:null};
+
+function waveInfo(d){
+  const wi  = weekIndexFromDate(d);
+  const cyc = ((wi % 4) + 4) % 4;            // 0,1,2 build · 3 deload
+  const isDeload  = cyc === 3;
+  const buildStep = isDeload ? 0 : cyc;      // 0,1,2 rising across the build
+  const role = DUP_ROLE[d.getDay()];
+  const bump = isDeload ? -0.15 : buildStep*0.05;   // ≤+10% across 3 builds; deload −15%
+  const base = ROLE_BASE[role];
+  const plannedFactor = (base == null) ? null : Math.round(base*(1+bump)*100)/100;
+  return { weekIndex: wi, cycleWeek: isDeload ? 4 : buildStep+1, isDeload,
+           role, plannedFactor, cycleLabel: isDeload ? 'Deload' : ('Build '+(buildStep+1)+'/3') };
+}
+
+function isTodayPastHorizon(){
+  const lastWS = getWeekStart(WEEKS.length-1);
+  const lastSun = new Date(lastWS.getFullYear(), lastWS.getMonth(), lastWS.getDate()+6);
+  const now = new Date(); const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  return today > lastSun;
+}
+function currentWeekStart(){
+  return (pastHorizon && liveMonday) ? new Date(liveMonday) : getWeekStart(currentWeek);
+}
+
+// ── readiness + streak (reads saved vbt check-ins) ──
+function readingForDate(ds){
+  const e = vbtLog.filter(x => x.date === ds).slice(-1)[0];
+  return e ? e.light : null;
+}
+function greenStreak(){           // trailing consecutive green check-ins, excluding today
+  const today = todayDateStr();
+  const past = vbtLog.filter(e => e.date !== today).sort((a,b) => a.date < b.date ? -1 : 1);
+  let n = 0;
+  for(let i = past.length-1; i >= 0; i--){ if(past[i].light === 'green') n++; else break; }
+  return n;
+}
+
+// ── the governor: plan can only be held or cut, never raised by a good morning ──
+function governorVerdict(d){
+  const wk = waveInfo(d);
+  const ds = sbDateStr(d);
+  const isToday = ds === todayDateStr();
+  const breaches = isToday ? getBreaches() : {morning:false, morningReduce:false, nerve:false};
+  let light = isToday ? readingForDate(ds) : null;
+  if(light === 'info') light = null;
+  // pain overrides readiness — red dominates
+  if(breaches.morning) light = 'red';
+  else if(breaches.morningReduce && light !== 'red') light = (light === null || light === 'green') ? 'amber' : light;
+
+  const roleLabel = {heavy:'heavy', moderate:'moderate', power:'light-power'}[wk.role];
+  let action, headline, tone, discipline = null, earned = null;
+
+  if(wk.role === 'canal'){
+    action = 'aerobic'; tone = 'canal';
+    headline = 'Canal day — VO2 4×4. Governed on the separate aerobic track, not the lifting wave.';
+  } else if(wk.role === 'recovery'){
+    action = 'recovery'; tone = 'recovery';
+    headline = (d.getDay() === 5) ? 'Recovery — walk + easy movement only. Friday is not a bonus lifting day.'
+                                  : 'Rest + light mobility. The adaptation happens here.';
+  } else {
+    if(light === 'red'){
+      action = 'dayC'; tone = 'red';
+      headline = `Day C — recovery only. Plan called for a ${roleLabel} ${wk.cycleLabel} day; the read says no. Listen to it.`;
+    } else if(light === 'amber'){
+      action = 'trim'; tone = 'amber';
+      headline = `Trim 10–20% or drop a set. ${roleLabel.charAt(0).toUpperCase()+roleLabel.slice(1)} day (${wk.cycleLabel}), body a half-step back.`;
+    } else if(light === 'green'){
+      action = 'proceed'; tone = 'green';
+      headline = `Proceed at plan — ${roleLabel} day, ${wk.cycleLabel}${wk.plannedFactor ? ' (~'+Math.round(wk.plannedFactor*100)+'% reference)' : ''}.`;
+    } else {
+      action = 'proceed'; tone = 'neutral';
+      headline = `${roleLabel.charAt(0).toUpperCase()+roleLabel.slice(1)} day · ${wk.cycleLabel}. Check in to confirm readiness before loading.`;
+    }
+    // discipline message — the whole point: a good day is the plan working, not a license to push
+    if(action === 'proceed' && light === 'green' && !wk.isDeload){
+      const gs = greenStreak();
+      if(gs >= 2){
+        discipline = `You're ${gs} green sessions deep — that's the engine working. It buys next week's +5%, not today's ceiling test. Run the ${roleLabel} plan as written.`;
+        earned = '+5% unlocked for the next build week';
+      } else {
+        discipline = `Feeling good is the plan landing, not a reason to add load. Hold today at ${roleLabel}; the ceiling rises on the calendar, not on a good morning.`;
+      }
+    }
+  }
+  return { wave: wk, light, action, headline, tone, discipline, earned, breaches };
+}
+
+// ── headline render ──
+function ovrNoteText(){
+  return 'Soft cap — your override is logged. Hard ACWR floor is pending (needs session-load logging); until that ships, the engine can\'t verify this override stays under the 1.5 spike wall.';
+}
+function renderWaveHeadline(){
+  const v = governorVerdict(new Date());
+  const wk = v.wave;
+  const el = document.getElementById('wave-headline');
+  if(!el) return;
+  el.dataset.tone = v.tone;
+  document.getElementById('wave-light').className = 'wave-light ' + v.tone;
+  const roleTxt = {heavy:'Heavy', moderate:'Moderate', power:'Light-power', canal:'Canal / VO2', recovery:'Recovery'}[wk.role];
+  document.getElementById('wave-pos').textContent =
+    `Wave ${wk.isDeload ? 'Deload' : wk.cycleLabel} · ${roleTxt}${wk.plannedFactor ? ' · ~'+Math.round(wk.plannedFactor*100)+'%' : ''}`;
+  document.getElementById('wave-verdict').textContent = v.headline;
+  const disc = document.getElementById('wave-discipline');
+  if(v.discipline){ disc.style.display = 'block'; disc.textContent = '🪧 ' + v.discipline; }
+  else disc.style.display = 'none';
+  const ovr = document.getElementById('wave-override');
+  const overridden = (waveOverrides[todayDateStr()] != null);
+  if(v.action === 'trim' || v.action === 'dayC'){
+    ovr.style.display = 'block';
+    const btn = document.getElementById('wave-ovr-btn');
+    btn.classList.toggle('done', overridden);
+    btn.textContent = overridden ? '✓ Overridden — proceeding at plan (logged)' : 'Override — proceed at plan';
+    document.getElementById('wave-ovr-note').textContent = ovrNoteText();
+  } else ovr.style.display = 'none';
+  paintWhy(v);
+}
+function paintWhy(v){
+  const fmt = (m) => { const s = getLatestScore(m); return s === null ? '—' : s + '/10'; };
+  document.getElementById('why-morning').textContent = fmt('morning');
+  document.getElementById('why-nerve').textContent   = fmt('nerve');
+  document.getElementById('why-ankle').textContent   = fmt('ankle');
+  const rl = readingForDate(todayDateStr());
+  document.getElementById('why-ready').textContent = rl ? rl : 'not checked in';
+  const foot = document.getElementById('why-foot');
+  const gs = greenStreak();
+  let parts = [];
+  if(v.earned) parts.push(v.earned);
+  parts.push('Green streak: ' + gs + (gs === 1 ? ' session' : ' sessions'));
+  if(v.breaches.nerve) parts.push('⚡ nerve elevated — avoid loading to fatigue');
+  foot.textContent = parts.join(' · ');
+}
+function toggleWaveWhy(){
+  const b = document.getElementById('wave-why-body');
+  const open = b.style.display !== 'none';
+  b.style.display = open ? 'none' : 'block';
+  document.getElementById('wave-why').textContent = open ? 'why ▾' : 'why ▴';
+}
+function overrideGovernor(){
+  const today = todayDateStr();
+  if(waveOverrides[today] != null){             // toggle off
+    delete waveOverrides[today];
+  } else {
+    const v = governorVerdict(new Date());
+    waveOverrides[today] = { ts: Date.now(), governed: v.action, tone: v.tone };
+  }
+  try { localStorage.setItem('pt_wave_overrides', JSON.stringify(waveOverrides)); } catch(e){}
+  renderWaveHeadline();
 }
 
 // ─────────────────────────────────────────
@@ -3117,11 +3376,16 @@ async function init(){
     // Fall back: try Supabase-stored week, then localStorage
     await loadWeekFromSupabase();
   }
+  // v6: keep override store to today only (today-relevant, like pt_dayover)
+  Object.keys(waveOverrides).forEach(k => { if(k !== todayDateStr()) delete waveOverrides[k]; });
+  try { localStorage.setItem('pt_wave_overrides', JSON.stringify(waveOverrides)); } catch(e){}
+
   updateWeekUI();
 
   // 2. Load logs from Supabase (merges with localStorage cache)
   await loadLogsFromSupabase();
   updateMetricDisplay();
+  renderWaveHeadline(); // re-render now that pain logs are in
 
   // 3. Init day selector — if detected, pre-select today's day slot
   initDaySelector();
@@ -3132,11 +3396,14 @@ async function init(){
   // 4. v5.10 — injury logs (was never called — feature dead since May), readiness panel
   await loadInjuryLogs();
   initVbtFeatures();
+  renderWaveHeadline(); // re-render now that today's readiness check-in is loaded
   // 5. v5.11 — flareup recovery tracker (depends on logs + injuryLogs both loaded)
   initFlareupTracker();
 }
 
-init();
+// init() moved to the very end of the script (v6) — renderWaveHeadline now reads vbtLog
+// during init, so every top-level `let` (vbtLog, dayOverrides, proxySel…) must be
+// initialized first. Calling here would hit vbtLog in its temporal dead zone.
 // ─────────────────────────────────────────
 // INJURY LOG MODAL
 // ─────────────────────────────────────────
@@ -3470,6 +3737,7 @@ function saveReadiness(){
   if(vbtLog.length > 90) vbtLog = vbtLog.slice(-90);
   localStorage.setItem('pt_vbt', JSON.stringify(vbtLog));
   paintReadiness(r);
+  renderWaveHeadline(); // readiness just changed — re-govern the headline
   toggleReadiness(); // collapse — verdict stays visible in the header strip
 }
 
@@ -3818,6 +4086,8 @@ function initFlareupTracker(){
   renderFlareupPanel();
 }
 
+// v6: kick off AFTER all top-level state (vbtLog, dayOverrides, proxySel, metricsLog…) is initialized
+init();
 </script>
 <footer style="padding:1.5rem 1.25rem 1rem;border-top:1px solid var(--border);text-align:center;">
   <button id="migrate-btn" onclick="migrateLocalToSupabase()"
