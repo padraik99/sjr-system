@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#0a0a0f">
+<title>Shaylan — Boot Phase · NWB Navicular Block</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0a0a0f; --surface:#13131a; --surface2:#1c1c26; --border:#2a2a38;
+  --accent:#00e5ff; --gold:#ffd166; --text:#e8e8f0; --muted:#8888aa;
+  --success:#06d6a0; --warn:#ff6b35; --red:#ef233c; --radius:12px;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html{scroll-behavior:smooth}
+body{font-family:'IBM Plex Sans',sans-serif;background:var(--bg);color:var(--text);
+  font-size:15px;line-height:1.6;padding-bottom:4rem;max-width:780px;margin:0 auto}
+h1,h2,h3{line-height:1.2}
+a{color:var(--accent)}
+.mono{font-family:'IBM Plex Mono',monospace}
+
+header{background:rgba(10,10,15,0.97);backdrop-filter:blur(16px);
+  border-bottom:1px solid var(--border);padding:1.1rem 1.25rem .9rem;position:sticky;top:0;z-index:50}
+.hdr-top{display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;margin-bottom:.6rem}
+.hdr-name{font-family:'Bebas Neue',sans-serif;font-size:2.1rem;letter-spacing:.07em;color:var(--accent);line-height:1}
+.hdr-sub{font-family:'IBM Plex Mono',monospace;font-size:.62rem;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--muted);margin-top:.2rem}
+.phase-badge{background:var(--surface2);border:1px solid var(--warn);border-radius:6px;
+  padding:.35rem .65rem;font-family:'IBM Plex Mono',monospace;font-size:.6rem;
+  letter-spacing:.08em;text-transform:uppercase;color:var(--warn);white-space:nowrap}
+.chips{display:flex;flex-wrap:wrap;gap:.4rem;margin-top:.5rem}
+.chip{background:var(--surface2);border:1px solid var(--border);border-radius:20px;
+  padding:.25rem .7rem;font-size:.7rem;color:var(--muted)}
+.chip b{color:var(--text);font-weight:500}
+
+section{padding:1.25rem}
+.section-title{font-family:'Bebas Neue',sans-serif;font-size:1.35rem;letter-spacing:.05em;
+  color:var(--text);margin-bottom:.85rem;display:flex;align-items:center;gap:.5rem}
+.section-title::before{content:'';width:18px;height:2px;background:var(--accent)}
+
+.northstar{background:linear-gradient(135deg,rgba(0,229,255,.08),rgba(239,35,60,.06));
+  border:1px solid var(--accent);border-radius:var(--radius);padding:1.1rem 1.2rem;margin:1.25rem}
+.northstar .big{font-family:'Bebas Neue',sans-serif;font-size:1.5rem;letter-spacing:.04em;color:var(--accent);margin-bottom:.3rem}
+.northstar p{color:var(--text);font-size:.92rem}
+.northstar em{color:var(--gold);font-style:normal;font-weight:600}
+
+.timeline{display:flex;flex-direction:column;gap:.5rem}
+.tl-row{display:flex;gap:.75rem;align-items:flex-start;background:var(--surface);
+  border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:8px;padding:.7rem .85rem}
+.tl-row.now{border-left-color:var(--warn);background:var(--surface2)}
+.tl-wk{font-family:'IBM Plex Mono',monospace;font-size:.7rem;color:var(--muted);min-width:88px;padding-top:.1rem}
+.tl-body b{color:var(--text)} .tl-body{font-size:.88rem}
+.tl-tag{display:inline-block;font-family:'IBM Plex Mono',monospace;font-size:.58rem;text-transform:uppercase;
+  letter-spacing:.08em;padding:.1rem .4rem;border-radius:4px;margin-left:.4rem;vertical-align:middle}
+.tag-now{background:var(--warn);color:#000}
+
+.legend{display:flex;flex-wrap:wrap;gap:.6rem;margin-bottom:1rem}
+.lg{display:flex;align-items:center;gap:.45rem;font-size:.78rem;color:var(--muted)}
+.dot{width:11px;height:11px;border-radius:3px;flex:none}
+.dot.go{background:var(--success)} .dot.hold{background:var(--gold)}
+
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);
+  padding:1rem 1.1rem;margin-bottom:.9rem}
+.card.go{border-left:3px solid var(--success)}
+.card.hold{border-left:3px solid var(--gold)}
+.card h3{font-size:1rem;color:var(--text);margin-bottom:.15rem;display:flex;align-items:center;justify-content:space-between;gap:.5rem}
+.card .sub{font-family:'IBM Plex Mono',monospace;font-size:.62rem;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--muted);margin-bottom:.7rem}
+.pill{font-family:'IBM Plex Mono',monospace;font-size:.55rem;letter-spacing:.06em;text-transform:uppercase;
+  padding:.18rem .45rem;border-radius:5px;white-space:nowrap}
+.pill.go{background:rgba(6,214,160,.14);color:var(--success);border:1px solid var(--success)}
+.pill.hold{background:rgba(255,209,102,.12);color:var(--gold);border:1px solid var(--gold)}
+
+table{width:100%;border-collapse:collapse;font-size:.85rem;margin-top:.3rem}
+th,td{text-align:left;padding:.5rem .55rem;border-bottom:1px solid var(--border);vertical-align:top}
+th{font-family:'IBM Plex Mono',monospace;font-size:.6rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:500}
+td b{color:var(--text)} tbody tr:last-child td{border-bottom:none}
+.ex{color:var(--text)} .cue{display:block;font-size:.76rem;color:var(--muted);margin-top:.15rem}
+
+ul.clean{list-style:none;display:flex;flex-direction:column;gap:.5rem}
+ul.clean li{display:flex;gap:.55rem;font-size:.88rem;align-items:flex-start}
+ul.clean li::before{content:'▸';color:var(--accent);flex:none;line-height:1.5}
+ul.check li::before{content:'☐';color:var(--gold)}
+
+.box{border-radius:var(--radius);padding:1rem 1.1rem;margin-bottom:.9rem;font-size:.88rem}
+.box.warn{background:rgba(255,107,53,.07);border:1px solid var(--warn)}
+.box.gold{background:rgba(255,209,102,.07);border:1px solid var(--gold)}
+.box.fuel{background:rgba(6,214,160,.06);border:1px solid var(--success)}
+.box h3{font-size:.95rem;margin-bottom:.5rem;color:var(--text)}
+.box .lead{color:var(--gold);font-weight:600}
+
+.disclaimer{font-size:.76rem;color:var(--muted);border-top:1px solid var(--border);
+  padding:1.25rem;line-height:1.6}
+.disclaimer b{color:var(--warn)}
+footer{text-align:center;padding:1.5rem 1.25rem;color:var(--muted);font-size:.7rem;
+  font-family:'IBM Plex Mono',monospace;letter-spacing:.08em}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="hdr-top">
+    <div>
+      <div class="hdr-name">SHAYLAN</div>
+      <div class="hdr-sub">SJR · Boot Phase · NWB Navicular Block</div>
+    </div>
+    <div class="phase-badge">⚠ Strict NWB</div>
+  </div>
+  <div class="chips">
+    <span class="chip"><b>Injury:</b> R navicular stress fx (nondisplaced)</span>
+    <span class="chip"><b>MRI:</b> 6/15/26</span>
+    <span class="chip"><b>Boot + crutches:</b> 6 wks</span>
+    <span class="chip"><b>Reexam:</b> ~late July</span>
+    <span class="chip"><b>MD:</b> Falcocchia, DO · KP Sports Med</span>
+  </div>
+</header>
+
+<div class="northstar">
+  <div class="big">ONE RULE: NO WEIGHT THROUGH THE RIGHT FOOT</div>
+  <p>For six weeks the navicular gets total protection. It's a watershed-blood-supply bone, which means <em>pain-free is not the same as healed</em> — we protect it, we never test it. Every session below is built to load everything <strong>except</strong> that foot. The goal: arrive at Cal in September strong, conditioned, and un-detrained, with a fully healed bone.</p>
+</div>
+
+<section>
+  <div class="section-title">Where this fits</div>
+  <div class="timeline">
+    <div class="tl-row now">
+      <div class="tl-wk">Wk 1–6<br>now</div>
+      <div class="tl-body"><b>Strict NWB</b> — short boot + crutches.<span class="tl-tag tag-now">You are here</span><br>Train: core + controlled upper-body lifting. Protect the bone, preserve everything else.</div>
+    </div>
+    <div class="tl-row">
+      <div class="tl-wk">Wk 6</div>
+      <div class="tl-body"><b>MD reexam.</b> If clinically pain-free → begin weaning out of boot/crutches.</div>
+    </div>
+    <div class="tl-row">
+      <div class="tl-wk">Wk 6–8</div>
+      <div class="tl-body"><b>Progressive weight-bearing</b> as tolerated, over ~2 weeks.</div>
+    </div>
+    <div class="tl-row">
+      <div class="tl-wk">Wk 8–14</div>
+      <div class="tl-body"><b>PT return-to-run program</b> (~6 wks) — pain-free walk → jog → jump, per their protocol.</div>
+    </div>
+    <div class="tl-row">
+      <div class="tl-wk">~Wk 14</div>
+      <div class="tl-body"><b>Anticipated clearance to return to running</b> — roughly late September.</div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="section-title">How to read the work</div>
+  <div class="legend">
+    <span class="lg"><span class="dot go"></span><b style="color:var(--success)">CLEARED</b> — signed off: do it now</span>
+    <span class="lg"><span class="dot hold"></span><b style="color:var(--gold)">RECONFIRM</b> — verbally cleared; get it in writing at PT follow-up</span>
+  </div>
+  <div class="box warn">
+    <h3>Leg work: verbally cleared — get it in writing</h3>
+    The written note cleared <b>core + upper-body lifting</b>; the MD then <b>verbally cleared</b> left-leg loaded work and right-leg open-chain knee/iso work (zero foot/ankle load). That's enough to start now — just confirm it in writing at the PT follow-up so it's on the record.<br><br>
+    The guardrail that still holds regardless: open-chain <em>knee</em> work routes force through the shin, not the foot — but tibialis posterior <b>inserts on the navicular</b>, so anything resisting plantarflexion/inversion or loading the ankle stays out, cleared or not.
+  </div>
+</section>
+
+<section>
+  <div class="section-title">The weekly shape</div>
+  <p style="color:var(--muted);font-size:.88rem;margin-bottom:.9rem">4 sessions/week. You're NWB, not benched — upper body and core can be trained <em>hard</em>, and that's most of what keeps you an athlete through this. Rotate the four days; full rest or easy arm-bike on the others.</p>
+
+  <div class="card go">
+    <h3>Day 1 · Upper Push + Core <span class="pill go">Cleared</span></h3>
+    <div class="sub">Seated / supported · zero foot load</div>
+    <table><thead><tr><th>Movement</th><th>Sets × Reps</th></tr></thead><tbody>
+      <tr><td class="ex">Seated DB shoulder press<span class="cue">Back supported, feet of boot resting flat, no push-off</span></td><td>4 × 8–10</td></tr>
+      <tr><td class="ex">Flat / incline DB bench press<span class="cue">Bench gives you a stable base — no standing</span></td><td>4 × 8–10</td></tr>
+      <tr><td class="ex">Seated cable / band chest fly</td><td>3 × 12</td></tr>
+      <tr><td class="ex">Tricep rope pushdown (seated)</td><td>3 × 12–15</td></tr>
+      <tr><td class="ex">Pallof press + dead-bug<span class="cue">Anti-rotation core, lying/seated</span></td><td>3 × 10/side</td></tr>
+    </tbody></table>
+  </div>
+
+  <div class="card go">
+    <h3>Day 2 · NWB Conditioning + Core <span class="pill go">Cleared</span></h3>
+    <div class="sub">Keep the engine — arms do the work</div>
+    <table><thead><tr><th>Block</th><th>Prescription</th></tr></thead><tbody>
+      <tr><td class="ex">Arm ergometer (upper-body bike)<span class="cue">Your conditioning engine. Pool/aqua-jog is OUT — MD ruled it out (foot-push risk); the arm bike does the job.</span></td><td>warm 5 min</td></tr>
+      <tr><td class="ex">Intervals: hard / easy<span class="cue">Builds across the block (see progression)</span></td><td>8–12 × 30s/30s</td></tr>
+      <tr><td class="ex">Cool-down spin</td><td>5 min easy</td></tr>
+      <tr><td class="ex">Core circuit: hollow hold · side plank (top leg only / from hip) · cable woodchop</td><td>3 rounds</td></tr>
+    </tbody></table>
+  </div>
+
+  <div class="card go">
+    <h3>Day 3 · Upper Pull + Core <span class="pill go">Cleared</span></h3>
+    <div class="sub">Seated / chest-supported · zero foot load</div>
+    <table><thead><tr><th>Movement</th><th>Sets × Reps</th></tr></thead><tbody>
+      <tr><td class="ex">Lat pulldown (seated)</td><td>4 × 8–10</td></tr>
+      <tr><td class="ex">Chest-supported row<span class="cue">Pad takes your weight — no bracing through legs</span></td><td>4 × 10</td></tr>
+      <tr><td class="ex">Seated face pull / rear-delt</td><td>3 × 15</td></tr>
+      <tr><td class="ex">Seated DB curl</td><td>3 × 12</td></tr>
+      <tr><td class="ex">Suitcase / Pallof anti-side-bend (seated)</td><td>3 × 10/side</td></tr>
+    </tbody></table>
+  </div>
+
+  <div class="card go">
+    <h3>Day 4 · Upper Hypertrophy + Mobility <span class="pill go">Cleared</span></h3>
+    <div class="sub">Higher volume, lighter · finish with mobility</div>
+    <table><thead><tr><th>Movement</th><th>Sets × Reps</th></tr></thead><tbody>
+      <tr><td class="ex">Superset: DB press + DB row</td><td>3 × 12 each</td></tr>
+      <tr><td class="ex">Lateral raise + hammer curl</td><td>3 × 15 each</td></tr>
+      <tr><td class="ex">Overhead tricep + cable curl</td><td>3 × 15 each</td></tr>
+      <tr><td class="ex">Thoracic + hip mobility (seated/lying)<span class="cue">T-spine rotations, 90/90 hip switches done seated — keep the rest of you supple</span></td><td>8–10 min</td></tr>
+    </tbody></table>
+  </div>
+
+  <div class="card hold">
+    <h3>Leg Tier · append to Day 1 &amp; Day 3 <span class="pill hold">Verbally cleared · reconfirm</span></h3>
+    <div class="sub">MD cleared verbally — start now; confirm in writing at PT follow-up</div>
+    <table><thead><tr><th>Movement</th><th>Sets × Reps</th><th>Why it's safe</th></tr></thead><tbody>
+      <tr><td class="ex">Left-leg seated leg extension</td><td>3 × 12</td><td>Uninjured side; full loading fine</td></tr>
+      <tr><td class="ex">Left-leg seated/lying ham curl</td><td>3 × 12</td><td>Uninjured side</td></tr>
+      <tr><td class="ex">Left-leg seated calf raise</td><td>3 × 15</td><td>Uninjured side</td></tr>
+      <tr><td class="ex">Right-leg open-chain knee extension<span class="cue">Foot relaxed, boot on, ZERO ankle/foot resistance</span></td><td>2 × 12 light</td><td>Force at shin, not foot</td></tr>
+      <tr><td class="ex">Right quad / hamstring isometrics<span class="cue">Static set, no movement, no foot load</span></td><td>3 × 20s</td><td>No navicular load if foot stays unloaded</td></tr>
+      <tr><td class="ex">Banded right-knee terminal extension</td><td>2 × 15</td><td>Band at knee, never at foot</td></tr>
+    </tbody></table>
+  </div>
+</section>
+
+<section>
+  <div class="section-title">6-week progression</div>
+  <p style="color:var(--muted);font-size:.85rem;margin-bottom:.7rem">Same four days; the dial moves on volume and conditioning, not on the foot.</p>
+  <table><thead><tr><th>Week</th><th>Focus</th><th>Upper lifting</th><th>Arm-bike intervals</th></tr></thead><tbody>
+    <tr><td><b>1–2</b></td><td>Re-establish · groove movements, manage boot fatigue</td><td>3 sets, RPE 7</td><td>8 × 30/30</td></tr>
+    <tr><td><b>3–4</b></td><td>Build · add the 4th set, push volume</td><td>4 sets, RPE 8</td><td>10 × 30/30</td></tr>
+    <tr><td><b>5–6</b></td><td>Hold + sharpen · feel strong walking into reexam</td><td>4 sets, RPE 8</td><td>12 × 30/30</td></tr>
+  </tbody></table>
+</section>
+
+<section>
+  <div class="box fuel">
+    <h3>🦴 Fuel the bone</h3>
+    <p class="lead">Good news: the RED-S screen came back clear.</p>
+    <p style="margin-top:.4rem">A healing bone is hungry — this is a phase to eat <b>enough</b>, not less, even though training volume drops. Bone repair runs on adequate energy plus calcium, vitamin D, and protein. Keep meals regular and protein steady across the day. You've been referred to a <b>sports dietitian</b> for the D1 transition — bring the navicular up so they can dial in calcium / vitamin D specifically for bone healing. Trust their numbers over anything generic here.</p>
+  </div>
+</section>
+
+<section>
+  <div class="box gold">
+    <h3>NWB non-negotiables</h3>
+    <ul class="clean">
+      <li><b>Crutches every step.</b> No "quick hops" on the boot — one bad load can cost weeks on a high-risk bone.</li>
+      <li><b>Protect the good side.</b> Crutching overloads your hands, shoulders, and left leg — the upper work doubles as armor against compensation strain.</li>
+      <li><b>Move daily.</b> Even on off days: arm bike, mobility, get blood moving. Stillness is the enemy of morale, not of healing.</li>
+      <li><b>Sleep is rehab.</b> Bone remodels overnight — protect 8+ hours.</li>
+      <li><b>Any new foot pain at rest or sharp pain → stop and tell the care team.</b> Not a "push through" phase.</li>
+    </ul>
+  </div>
+</section>
+
+<section>
+  <div class="section-title">Take these to the 6-week reexam</div>
+  <ul class="clean check">
+    <li><b>Imaging before weight-bearing?</b> Is clearance purely clinical (pain-free), or do you want CT/MRI to confirm bony union first, given it's a high-risk navicular?</li>
+    <li><b>Leg tier (get it in writing):</b> confirm the verbal OK for left-leg loaded work + right-leg open-chain knee/iso (zero foot/ankle load).</li>
+    <li><b>Pool / aqua-jog:</b> MD ruled it out for now — anything aquatic the PT would clear later?</li>
+    <li><b>Return-to-run protocol:</b> can the PT team share their written progression so the coaching plan dovetails with it?</li>
+    <li><b>Bone-health labs:</b> were vitamin D / calcium checked, and is a DEXA worth it given a female athlete with a stress fracture?</li>
+  </ul>
+</section>
+
+<div class="disclaimer">
+  <b>This is a coaching plan, not medical advice.</b> It works within Dr. Falcocchia's clearances (NWB; core + upper-body lifting, plus a verbal OK for the non-foot-loading leg work) and defers every loading decision to Shaylan's medical and PT team. The amber "reconfirm" tier is cleared verbally — keep it within the stated limits (zero foot/ankle load) and get written confirmation at the PT follow-up. Pool work is ruled out for now. If anything here conflicts with the care team, the care team wins. Stop any movement that causes foot pain and report it.
+</div>
+
+<footer>SJR SYSTEM · SHAYLAN · BOOT PHASE v1 · 2026-06-16</footer>
+
+</body>
+</html>
