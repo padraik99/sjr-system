@@ -550,9 +550,12 @@ main { padding:1.25rem; max-width:700px; margin:0 auto; }
     <strong>Autoregulation Gates</strong>
     AM ≤2/10 · Nerve ≤2.5/10 · Ankle spot — log and track
   </div>
-  <div style="display:flex;flex-direction:column;gap:.4rem;">
-    <div style="display:flex;gap:.5rem;"><button class="gate-log-btn" onclick="openModal()" style="flex:1;">Log</button><button class="gate-log-btn" style="flex:1;background:var(--surface2);border-color:rgba(200,80,60,0.3);color:#c8503c;" onclick="openInjuryModal()">⚠ Issue</button></div>
-    <div style="display:flex;gap:.5rem;"><button class="gate-log-btn" style="flex:1;background:var(--surface2);" onclick="toggleReadiness()">🎯 Ready</button><button class="gate-log-btn" style="flex:1;background:var(--surface2);" onclick="openMetricsModal()">📊 Data</button></div>
+  <!-- v6.0.3: dropped duplicate "Log" (pain log now lives solely on the wave headline ＋Log,
+       line ~528); collapsed cluster to one row: Issue · Ready · Data -->
+  <div style="display:flex;gap:.5rem;">
+    <button class="gate-log-btn" style="flex:1;background:var(--surface2);border-color:rgba(200,80,60,0.3);color:#c8503c;" onclick="openInjuryModal()">⚠ Issue</button>
+    <button class="gate-log-btn" style="flex:1;background:var(--surface2);" onclick="toggleReadiness()">🎯 Ready</button>
+    <button class="gate-log-btn" style="flex:1;background:var(--surface2);" onclick="openMetricsModal()">📊 Data</button>
   </div>
 </div>
 
