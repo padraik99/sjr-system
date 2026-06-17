@@ -251,6 +251,11 @@ main { padding:1.25rem; max-width:700px; margin:0 auto; }
   background:var(--surface); border:1px solid var(--border);
   border-radius:12px 12px 0 0; width:100%; max-width:480px;
   padding:1.5rem 1.5rem 2.5rem;
+  /* v6.0.2: bottom-sheet was unbounded — tall content (Pain/Issue/Data) overflowed
+     off the TOP of the viewport, clipped under the backdrop blur and unreachable on
+     mobile until a resize. Cap height to the viewport and scroll the overflow. */
+  max-height:90vh; max-height:90dvh;
+  overflow-y:auto; -webkit-overflow-scrolling:touch;
 }
 .modal-title {
   font-family:'Playfair Display',serif; font-size:1.5rem;
@@ -3890,9 +3895,14 @@ document.getElementById('metrics-modal').addEventListener('click', function(e){ 
 
 // ─────────────────────────────────────────
 // v5.11 — FLAREUP RECOVERY TRACKER
-// Start trigger: morning score ≥3 OR injury log back/hip severity ≥3 (either/or)
-// Recovery: 2 consecutive logged morning days both ≤2
-// Date rules: local constructor only (CLAUDE.md)
+// v6.0.1 (Jun 16 2026): widened trigger from Back-only to ALL pain-log metrics.
+//   Start: any pain-log metric (Back/Nerve/Glute/Ankle) ≥3 on a day, OR an Issue
+//   log in a pain-relevant region (back/hip/knee/shin/foot) severity ≥3.
+//   Glute included deliberately — for Patrick a high glute reading is pain-driven
+//   guarding / arthrogenic inhibition, not just "weak" (his call, Jun 16). Nerve
+//   covers the lateral-ankle radicular territory; the Ankle metric is folded in too.
+//   Recovery: the day's MAX symptom score ≤2 on two consecutive *logged* days.
+//   Date rules: local constructor only (CLAUDE.md)
 // ─────────────────────────────────────────
 
 function parseDateLocal(s){
@@ -3904,24 +3914,39 @@ function daysBetweenDates(a, b){
   return Math.round((parseDateLocal(b) - parseDateLocal(a)) / 86400000);
 }
 
+// Pain-log metrics that count toward a flare (all four — see v6.0.1 note above)
+var FLARE_METRICS = ['morning', 'nerve', 'glute', 'ankle'];
+// Issue-log regions that count toward a flare (pain-relevant lower-quarter + spine)
+var FLARE_REGIONS = ['back', 'hip', 'knee', 'shin', 'foot'];
+
 function computeFlareupEpisodes(){
-  // Morning log lookup: date → highest score that day (conservative)
-  var morningByDate = {};
-  logs.filter(function(l){ return l.metric === 'morning'; }).forEach(function(l){
-    if(morningByDate[l.date] === undefined || l.score > morningByDate[l.date])
-      morningByDate[l.date] = l.score;
+  // Per-date max symptom score across ALL pain-log metrics (conservative = worst that day)
+  var symptomByDate = {};
+  logs.filter(function(l){ return FLARE_METRICS.includes(l.metric); }).forEach(function(l){
+    if(symptomByDate[l.date] === undefined || l.score > symptomByDate[l.date])
+      symptomByDate[l.date] = l.score;
   });
 
-  // Injury-triggered flare dates: back or hip, severity ≥3
-  var injuryFlareDates = new Set(
-    injuryLogs
-      .filter(function(l){ return ['back','hip'].includes(l.region) && l.severity >= 3; })
-      .map(function(l){ return l.date; })
-  );
+  // Per-date max Issue severity among pain-relevant regions (severity ≥3 only)
+  var injurySevByDate = {};
+  injuryLogs
+    .filter(function(l){ return FLARE_REGIONS.includes(l.region) && l.severity >= 3; })
+    .forEach(function(l){
+      if(injurySevByDate[l.date] === undefined || l.severity > injurySevByDate[l.date])
+        injurySevByDate[l.date] = l.severity;
+    });
+
+  // Helper: worst symptom magnitude on a date across both stores (0 if nothing logged)
+  function dayMax(d){
+    if(d === undefined) return undefined;
+    var s = symptomByDate[d], inj = injurySevByDate[d];
+    if(s === undefined && inj === undefined) return undefined;
+    return Math.max(s !== undefined ? s : 0, inj !== undefined ? inj : 0);
+  }
 
   // All known dates, sorted ascending
   var allDates = Array.from(new Set(
-    Object.keys(morningByDate).concat(Array.from(injuryFlareDates))
+    Object.keys(symptomByDate).concat(Object.keys(injurySevByDate))
   )).sort();
   if(!allDates.length) return [];
 
@@ -3931,25 +3956,22 @@ function computeFlareupEpisodes(){
 
   for(var i = 0; i < allDates.length; i++){
     var d = allDates[i];
-    var morning = morningByDate[d];
-    var injFlare = injuryFlareDates.has(d);
-    var isFlare = (morning !== undefined && morning >= 3) || injFlare;
+    var dm = dayMax(d);                 // defined for every date in allDates
+    var isFlare = dm >= 3;
 
     if(!flareStart){
       if(isFlare){
         flareStart = d;
-        peakSev = morning !== undefined ? morning : 3;
+        peakSev = dm;
       }
     } else {
-      if(morning !== undefined && morning > peakSev) peakSev = morning;
-      if(injFlare && peakSev < 3) peakSev = 3;
+      if(dm > peakSev) peakSev = dm;
 
-      // Recovery: this logged morning ≤2 AND next logged morning ≤2
+      // Recovery: this logged day's max ≤2 AND next logged day's max ≤2
       var nextD = allDates[i + 1];
-      var nextMorning = nextD !== undefined ? morningByDate[nextD] : undefined;
+      var nextMax = dayMax(nextD);
 
-      if(morning !== undefined && morning <= 2 &&
-         nextMorning !== undefined && nextMorning <= 2){
+      if(dm <= 2 && nextMax !== undefined && nextMax <= 2){
         episodes.push({
           start: flareStart,
           end: nextD,
@@ -3994,7 +4016,7 @@ function renderFlareupPanel(){
     badge.className = 'flareup-badge flat';
     var empty = document.createElement('div');
     empty.className = 'fp-empty';
-    empty.textContent = 'No flareups detected yet — data builds from morning logs + injury entries.';
+    empty.textContent = 'No flareups detected yet — data builds from pain logs (Back/Nerve/Glute/Ankle) + Issue entries.';
     list.appendChild(empty);
     return;
   }
