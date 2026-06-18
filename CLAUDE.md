@@ -74,6 +74,12 @@ async async function saveGateLog(){ }  // never stack async keywords
 - Bump **version number** for structural changes: v3 → v4
 - Overwrite via GitHub Desktop — never delete-then-upload on mobile
 
+### Naming convention — no underscores in FILE NAMES (Patrick's preference, Jun 2026)
+**Scope = the file names Patrick sees in his folder.** New files Claude creates should use hyphens, not underscores — kebab-case (`shay-crosseducation-evidence-20260617.md`), `-vN-YYYYMMDD` suffix for brand-new files. He finds underscores in filenames grating; everything else is fine.
+- **Behind-the-scenes underscores are totally fine** — code identifiers, CSS classes/IDs, localStorage keys (`pt_`, `sh_`…), Supabase tables/columns (`pain_logs`, `injury_logs`…), anything Patrick doesn't read as a filename. Use whatever's idiomatic. The "unless technically required" escape hatch still applies (e.g., Python snake_case).
+- **Forward-looking only** — do NOT rename existing files. Live filenames are on GitHub Pages; renaming breaks URLs/bookmarks and triggers the `(1)` duplicate on re-upload. Existing `_vN_YYYYMMDD` filenames keep their underscores.
+- Net: only *new file names* go hyphenated; the repo's existing names and all internal naming are untouched.
+
 ## Technical Standards
 
 ### Dates — strictly enforced
