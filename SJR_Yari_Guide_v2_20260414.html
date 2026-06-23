@@ -785,8 +785,8 @@ footer .accent{color:var(--accent)}
 </section>
 
 <footer>
-  <p>YARI &mdash; ACL Return to Sport Guide &middot; v2 &middot; Sprint Jump Resilience &middot; April 2026</p>
-  <p style="margin-top:.4rem">Built on research from <span class="accent">Baar &middot; Grey &middot; Ward &middot; Bosch &middot; Dietz &middot; Natera &middot; Uthoff &middot; Rio &middot; Petersen &middot; Grindem &middot; Ardern &middot; Filbay &middot; Hughes &middot; Mountjoy &middot; Hewett</span></p>
+  <p>YARI &mdash; ACL Return to Sport Guide &middot; v2.8 &middot; Sprint Jump Resilience &middot; W10 Power Expression (Jun 2026)</p>
+  <p style="margin-top:.4rem">Built on research from <span class="accent">Baar &middot; Grey &middot; Ward &middot; Bosch &middot; Dietz &middot; Natera &middot; Uthoff &middot; Rio &middot; Petersen &middot; Grindem &middot; Ardern &middot; Filbay &middot; Hughes &middot; Mountjoy &middot; Hewett &middot; Verkhoshansky &middot; Elliott &middot; Zatsiorsky</span></p>
 </footer>
 
 <!-- FAB -->
@@ -905,6 +905,7 @@ const WEEKS = [
   { label:'Phase 3 · Final Week', range:'Jun 1–7', note:'Taper · light RSA maintenance · joint prep emphasis · June 9 departure' },
   { label:'Phase 3 · Extended Stay', range:'Jun 8–14', note:'Independent training · joint prep daily · light strength maintenance · own the protocol' },
   { label:'Phase 3 · Club Prep', range:'Jun 15–21', note:'Prep for team training · movement quality · full joint articulation daily · hand-off week' },
+  { label:'Phase 3 · Power Expression', range:'Jun 22–28', note:'Bonus week before Friday departure · light-load power/velocity in the gym (Mon+Wed) · short ball-plyo Thursday · joint prep daily · low volume, maximal intent, full recovery — express what you built, do not grind it' },
 ];
 
 // detectCurrentWeek declared AFTER getWeekStart AND AFTER WEEKS (CLAUDE.md spec)
@@ -2852,6 +2853,152 @@ const DAYS_BY_WEEK = [
       ]
     },
   ],
+  // ── WEEK 10: Jun 22–28 (Phase 3 · Power Expression · final week here — departs Fri Jun 26) ──
+  [
+    { name:'Monday', collagen:true, rest:false, intent:'Power Day 1 — Light-Load Power (Gym)',
+      sub:'You said strongest and fastest you have ever felt — this week we cash it in. Power is low volume, max intent, full rest between sets. If a rep slows or a landing gets sloppy, the set is over. Quality, not fatigue.',
+      blocks:[
+        { label:'Joint Prep — Full Protocol', items:[
+          {name:'Hip CARs', note:'every morning before training · non-negotiable', dose:'5 circles ea direction · each hip'},
+          {name:'Ankle CARs', dose:'8 circles ea direction · each ankle'},
+          {name:'90/90 Hip Switch', note:'Spina · IR + ER end-range', dose:'5 switches ea direction · 3s hold'},
+          {name:'Lateral Lunge — End-Range Hold', note:'Ward · frontal plane prep', dose:'2×8 ea · 2s hold'},
+          {name:'Glute Med — Anterior Fibers', note:'Harris · fire hydrant', dose:'2×12 ea'},
+          {name:'Glute Med — Posterior Fibers', note:'Harris · hip ext + abd', dose:'2×12 ea'},
+        ]},
+        { label:'Layer 1', items:[
+          {name:'Single-Leg Stance — Eyes Closed', dose:'2×30s each'},
+          {name:'Pogo Hops', note:'ankle stiffness primer · quick, quiet contacts', dose:'3×10'},
+        ]},
+        { gold:true, label:'Light-Load Power — Bilateral & Ballistic', items:[
+          {name:'Trap Bar Jump — Light', note:'Zatsiorsky/Jovanović · ~30% 1RM is the peak-power load · max bar speed, full reset between reps · CNS work, NOT conditioning', dose:'4×3 · ~2 min rest'},
+          {name:'Kettlebell Swing', note:'hip-dominant ballistic power · explosive snap, float at top · spine-friendly', dose:'4×6 · explosive'},
+          {name:'Box Jump — Stick Landing', note:'Elliott · decel quality > height · soft, silent landing, knees tracking over toes (no valgus)', dose:'4×3 · full recovery'},
+          {name:'Med-Ball Rotational Throw', note:'transverse-plane power · soccer transfer', dose:'3×4 ea side · max intent'},
+        ]},
+        { label:'Strength — Light Maintenance', items:[
+          {name:'Single-Leg RDL', dose:'2×6 each · moderate'},
+          {name:'Nordic Curl', note:'Petersen · hamstring is the ACL co-protector — keep it', dose:'2×4 · 5s eccentric'},
+        ]},
+      ]
+    },
+    { name:'Tuesday', collagen:false, rest:false, intent:'Field / Canal — Easy Tempo + Strides',
+      sub:'Deliberately light between two power days. Aerobic flush plus a few fast strides to stay sharp — not a session to chase.',
+      blocks:[
+        { label:'Pre-Run Joint Prep', items:[
+          {name:'Hip CARs',         dose:'5 circles ea direction · each hip'},
+          {name:'Ankle CARs',       dose:'8 circles ea direction · each ankle'},
+          {name:'90/90 Hip Switch', dose:'5 switches ea direction · 3s hold'},
+          {name:'Glute Med — Anterior Fibers', dose:'2×12 ea'},
+          {name:'Glute Med — Posterior Fibers', dose:'2×10 ea'},
+        ]},
+        { gold:true, label:'Easy Tempo + Strides', items:[
+          {name:'Easy Run', note:'conversational · flush the legs', dose:'18–20 min easy'},
+          {name:'Strides', note:'build to ~85%, never maximal · relaxed, fast mechanics (Winkelman: stay external — think “run tall and light”)', dose:'5×20m · walk-back rest'},
+        ]},
+      ]
+    },
+    { name:'Wednesday', collagen:true, rest:false, intent:'Power Day 2 — Unilateral & Frontal-Plane (Gym)',
+      sub:'Same dose discipline as Monday, shifted to single-leg and lateral. Frontal plane is the ACL protection plane — every landing here is a rep of owning the knee, no caving in.',
+      blocks:[
+        { label:'Joint Prep — Full Protocol', items:[
+          {name:'Hip CARs',   dose:'5 circles ea direction · each hip'},
+          {name:'Ankle CARs', dose:'8 circles ea direction · each ankle'},
+          {name:'90/90 Hip Switch', dose:'5 switches ea direction · 3s hold'},
+          {name:'Lateral Lunge — End-Range Hold', dose:'2×8 ea · 2s hold'},
+          {name:'Copenhagen Plank — Long Lever', note:'Harøy 2019 · adductor + hip stabilizer', dose:'3×20–25s ea side'},
+          {name:'Glute Med — Anterior Fibers', dose:'2×15 ea'},
+          {name:'Glute Med — Posterior Fibers', dose:'2×12 ea'},
+        ]},
+        { gold:true, label:'Light-Load Power — Unilateral & Lateral', items:[
+          {name:'Jump Squat or Trap Bar Jump — Light', note:'~30% load · max bar speed · full reset', dose:'4×3 · ~2 min rest'},
+          {name:'Lateral Bound — Stick', note:'Elliott · single-leg frontal-plane decel · land and freeze 2s, knee stacked over foot — no valgus collapse', dose:'3×3 ea side'},
+          {name:'Single-Leg Box Hop — Stick Landing', note:'controlled landing under one-leg load', dose:'3×3 ea · silent landings'},
+          {name:'Hip Thrust — Speed Reps', note:'light load · drive the bar fast, squeeze, reset', dose:'4×3 · explosive'},
+          {name:'Med-Ball Overhead Throw', note:'triple-extension power', dose:'3×4 · max intent'},
+        ]},
+        { label:'Strength — Light Maintenance', items:[
+          {name:'Nordic Curl', dose:'2×4 · 5s eccentric'},
+          {name:'Wall Sit', dose:'2×45s'},
+        ]},
+      ]
+    },
+    { name:'Thursday', collagen:false, rest:false, intent:'★ Short Ball-Plyo — Reactive & Sport-Specific',
+      sub:'The fun one. Short and sharp: plyometrics with a ball in your hands or at your feet, so the spring transfers straight to the game. Low total contacts, full recovery, maximal intent. Quality is the whole point — the moment a landing gets soft or sloppy, you are done for the day.',
+      blocks:[
+        { label:'Pre-Plyo Joint Prep + Primer', items:[
+          {name:'Hip CARs',   dose:'5 circles ea direction · each hip'},
+          {name:'Ankle CARs', dose:'8 circles ea direction · each ankle'},
+          {name:'90/90 Hip Switch', dose:'5 switches ea direction · 3s hold'},
+          {name:'Lateral Lunge — End-Range Hold', dose:'2×6 ea'},
+          {name:'Pogo Hops', note:'wake up the ankle spring before the real contacts', dose:'2×10'},
+        ]},
+        { gold:true, label:'Ball-Integrated Plyometrics — ~45 quality contacts total', items:[
+          {name:'Setup note', note:'Verkhoshansky shock method — the goal is a fast, stiff amortization (the instant between landing and re-pushing), not big air. Full rest between sets (~60–90s). Partner toss or a wall/rebounder. Stop any drill the moment landing control fades.', dose:'read first'},
+          {name:'Broad Jump → First Touch', note:'jump out, land soft, then receive a tossed/rolled ball and settle it · land-then-task trains decel under a distraction', dose:'4×3'},
+          {name:'Single-Leg Lateral Hop → Header', note:'hop sideways, stick on one leg, head a tossed ball at the top · single-leg reactive landing with a sport task on top — the exact moment knees get exposed in a game', dose:'3×3 ea side'},
+          {name:'Depth Drop → Reactive Pass', note:'Elliott · step off a low box, stick the landing, then redirect a rolled ball · absorb first, react second', dose:'3×3'},
+          {name:'Lateral Shuffle → Plant → Cut with Ball', note:'shuffle, plant hard on the outside leg, change direction on the ball · own the cut, no knee cave', dose:'3×2 ea direction'},
+          {name:'Pogo Series — Finisher', note:'crisp ankle stiffness to close', dose:'2×10'},
+        ]},
+        { label:'Cool-Down', items:[
+          {name:'Easy Walk', dose:'8–10 min'},
+          {name:'90/90 Hip Switch — Warm', dose:'5 ea direction · feel the range'},
+        ]},
+      ]
+    },
+    { name:'Friday', collagen:true, rest:false, intent:'Send-Off — Light Primer (Last Day Here)',
+      sub:'Last day with us before you fly. Nothing to train today — just move well, feel springy, and pack the protocol in your bag. It is yours now. Go be a problem for defenders.',
+      blocks:[
+        { label:'Joint Prep — Full Ritual', items:[
+          {name:'Hip CARs',   dose:'5 circles ea direction · each hip'},
+          {name:'Ankle CARs', dose:'8 circles ea direction · each ankle'},
+          {name:'90/90 Hip Switch', dose:'5 switches ea direction · 3s hold'},
+          {name:'Lateral Lunge — End-Range Hold', dose:'2×6 ea'},
+          {name:'Glute Med — Anterior Fibers', dose:'1×12 ea · activation'},
+          {name:'Glute Med — Posterior Fibers', dose:'1×10 ea · activation'},
+        ]},
+        { gold:true, label:'Light Primer — Feel Springy, Then Stop', items:[
+          {name:'Easy Jog + Strides', dose:'12–15 min easy + 4×20m build to 80%'},
+          {name:'A Few Pogos + 2 Broad Jumps', note:'just to feel the spring — not to train it', dose:'2×8 pogos · 2 broad jumps'},
+        ]},
+        { label:'Hand-Off', items:[
+          {name:'The Protocol Travels', note:'joint prep daily, power 2×/wk light, one reactive/plyo session, play your matches · this is the whole system in your pocket', dose:'own it'},
+        ]},
+      ]
+    },
+    { name:'Saturday', collagen:false, rest:false, intent:'Travel / Club — Independent',
+      sub:'Travel day or back with the club. Keep the joint prep going wherever you are — Hip CARs work fine in an airport.',
+      blocks:[
+        { label:'Joint Prep — Ritual (Anywhere)', items:[
+          {name:'Hip CARs',   dose:'5 circles ea direction · each hip'},
+          {name:'Ankle CARs', dose:'8 circles ea direction · each ankle'},
+          {name:'90/90 Hip Switch', dose:'5 switches ea direction · 3s hold'},
+          {name:'Glute Med — Anterior Fibers', dose:'2×12 ea'},
+          {name:'Glute Med — Posterior Fibers', dose:'2×10 ea'},
+        ]},
+        { gold:true, label:'Movement Snacks', items:[
+          {name:'Walk + Easy Mobility', note:'break up travel sitting · hydrate', dose:'when you can'},
+          {name:'Match or Team Training', note:'if the club schedule has you playing', dose:'per club program'},
+        ]},
+      ]
+    },
+    { name:'Sunday', collagen:false, rest:true, intent:'Rest',
+      sub:'Full rest. Twelve-plus weeks from ACL rehab to strongest-ever — that is the work paying out. Recover proud.',
+      blocks:[
+        { label:'Joint Prep — Ritual', items:[
+          {name:'Hip CARs',   dose:'5 circles ea direction · each hip'},
+          {name:'Ankle CARs', dose:'8 circles ea direction · each ankle'},
+          {name:'90/90 Hip Switch', dose:'5 switches ea direction · 3s hold'},
+          {name:'Copenhagen Plank', dose:'2×20s ea · maintenance'},
+        ]},
+        { gold:true, label:'Recovery Only', items:[
+          {name:'Easy Walk',   dose:'20–30 min'},
+          {name:'Soft Tissue', dose:'full lower body'},
+        ]},
+      ]
+    },
+  ],
 ]; // end DAYS_BY_WEEK
 
 // ── UI ───────────────────────────────────────────────────────────
@@ -3029,6 +3176,8 @@ async function initApp(){
   } else {
     currentWeek = await loadWeekState();
   }
+  // guard: a stale/out-of-range stored week must never blank the day view
+  if(currentWeek == null || currentWeek < 0 || currentWeek >= WEEKS.length) currentWeek = WEEKS.length - 1;
   renderWeekHeader();
   initDayDates();
   const tabIdx = det ? det.day : new Date().getDay() === 0 ? 6 : new Date().getDay() - 1;
