@@ -97,6 +97,15 @@ ul.check li::before{content:'☐';color:var(--gold)}
 .disclaimer b{color:var(--warn)}
 footer{text-align:center;padding:1.5rem 1.25rem;color:var(--muted);font-size:.7rem;
   font-family:'IBM Plex Mono',monospace;letter-spacing:.08em}
+
+/* ── REFRESH FAB + DEMO LINKS ── */
+#refresh-fab{position:fixed;bottom:1.1rem;right:1rem;z-index:500;background:var(--surface2);border:1px solid var(--accent);border-radius:50%;width:2.6rem;height:2.6rem;display:flex;align-items:center;justify-content:center;font-size:1.1rem;cursor:pointer;opacity:.85;transition:opacity .2s,transform .15s;color:var(--accent);text-decoration:none}
+#refresh-fab:active{opacity:1;transform:rotate(180deg)}
+.demo-ctrl{display:inline-flex;gap:.3rem;align-items:center;margin-left:.5rem;vertical-align:middle}
+.demo-link{font-family:'IBM Plex Mono',monospace;font-size:.62rem;letter-spacing:.04em;color:var(--accent);text-decoration:none;border:1px solid var(--accent);border-radius:4px;padding:.06rem .35rem;white-space:nowrap}
+.demo-btn{font-family:'IBM Plex Mono',monospace;font-size:.62rem;letter-spacing:.04em;background:none;border:1px dashed var(--border);color:var(--muted);border-radius:4px;padding:.06rem .35rem;cursor:pointer;white-space:nowrap}
+.demo-btn.add{border-color:var(--accent);color:var(--accent)}
+.demo-search{font-size:.7rem;text-decoration:none;opacity:.6}
 </style>
 </head>
 <body>
@@ -330,7 +339,64 @@ footer{text-align:center;padding:1.5rem 1.25rem;color:var(--muted);font-size:.7r
   <b>This is a coaching plan, not medical advice.</b> It works within Dr. Falcocchia's clearances (NWB; core + upper-body lifting, and now a written leg-strengthening clearance plus band work and swimming) and defers every loading decision to Shaylan's medical and PT team. The right foot and ankle stay passive — that limit is unchanged. NMES, BFR and swim-kick mechanics are flagged “ask PT” until confirmed. If anything here conflicts with the care team, the care team wins. Stop any movement that causes foot pain and report it.
 </div>
 
-<footer>SJR SYSTEM · SHAYLAN · BOOT PHASE v1.2.2 · 2026-06-23 · +written clearance · daily core/glute · band/BFR/pool · equipment on hand · swim = ankle-strap no-kick</footer>
+<footer>SJR SYSTEM · SHAYLAN · BOOT PHASE v1.3 · 2026-06-23 · +self-serve demo links (＋save per exercise) · cache-bust refresh ↺</footer>
 
+<button id="refresh-fab" title="Load latest version" onclick="location.replace(location.pathname+'?t='+Date.now())">↺</button>
+<script>
+// Cache-bust: no ?t= param -> redirect once with Date.now() so the CDN always serves the freshest copy
+(function(){
+  if(!new URLSearchParams(location.search).get('t')){
+    location.replace(location.pathname + '?t=' + Date.now());
+    return;
+  }
+  // ---- Per-exercise demo links (self-serve, saved on this device) ----
+  var KEY='sh_demos', demos={};
+  try{ demos=JSON.parse(localStorage.getItem(KEY)||'{}'); }catch(e){ demos={}; }
+  function save(){ try{ localStorage.setItem(KEY,JSON.stringify(demos)); }catch(e){} }
+  function valid(u){ return /^https?:\/\//i.test(u); }
+  function nameOf(td){
+    var c=td.cloneNode(true);
+    c.querySelectorAll('.cue,.pill,.demo-ctrl').forEach(function(n){ n.remove(); });
+    return c.textContent.trim().replace(/\s+/g,' ');
+  }
+  function build(){
+    document.querySelectorAll('td.ex').forEach(function(td){
+      var name=nameOf(td); if(!name) return;
+      var ex=td.querySelector('.demo-ctrl'); if(ex) ex.remove();
+      var w=document.createElement('span'); w.className='demo-ctrl';
+      var url=demos[name];
+      if(url && valid(url)){
+        var a=document.createElement('a');
+        a.href=url; a.target='_blank'; a.rel='noopener'; a.className='demo-link'; a.textContent='▶ demo';
+        var e=document.createElement('button');
+        e.type='button'; e.className='demo-btn'; e.textContent='✎'; e.title='Change / remove';
+        e.addEventListener('click',function(ev){ ev.stopPropagation(); edit(name); });
+        w.appendChild(a); w.appendChild(e);
+      } else {
+        var b=document.createElement('button');
+        b.type='button'; b.className='demo-btn add'; b.textContent='＋ demo'; b.title='Save a demo video link';
+        b.addEventListener('click',function(ev){ ev.stopPropagation(); edit(name); });
+        var sr=document.createElement('a');
+        sr.href='https://www.youtube.com/results?search_query='+encodeURIComponent(name+' exercise');
+        sr.target='_blank'; sr.rel='noopener'; sr.className='demo-search'; sr.textContent='\ud83d\udd0d'; sr.title='Search YouTube';
+        w.appendChild(b); w.appendChild(sr);
+      }
+      td.appendChild(w);
+    });
+  }
+  function edit(name){
+    var cur=demos[name]||'';
+    var u=prompt('Demo video link for:\n'+name+'\n\nPaste a YouTube URL (e.g. from your unlisted playlist).\nLeave empty to remove.', cur);
+    if(u===null) return;
+    u=u.trim();
+    if(!u){ delete demos[name]; }
+    else if(valid(u)){ demos[name]=u; }
+    else { alert('Please paste a full http(s):// link.'); return; }
+    save(); build();
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded', build);
+  else build();
+})();
+</script>
 </body>
 </html>
