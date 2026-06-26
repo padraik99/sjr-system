@@ -25,6 +25,19 @@ L4–L5 foraminal stenosis, active rehab. Medial branch block Jun 5 2026 gave on
 - Med-safety note flagged to patient: baclofen + gabapentin are both sedating / can cause hypotension + dizziness; stacked the day after a syncopal episode (and potentially with diphenhydramine in Tylenol PM) raises fall/faint risk. Advised slow position changes, caution combining with the PM antihistamine, hydration/fueling, and to give the prescriber the full current med list on this week's call (gabapentin typically titrated, not resumed at prior dose abruptly).
 - **Syncope did NOT recur.** Following morning: same scenario (woke in pain at ~same hour, got up, walked, lay on floor) but **regular Tylenol only — no diphenhydramine**, better hydrated/fueled → **no pre-syncope, no faint.** I.e., reproducing the trigger with the aggravating variables removed produced no event — supports the situational/vasovagal one-off read. Patient's own assessment: one-off due to the stated circumstances (concur as reasonable).
 
+## Update — continued (~Jun 22–23): worsening + self-managed med stack
+- **Pain now WORSE than the original injury.** Excruciating on first waking / mornings; eases somewhat once moving, but standing tolerance *decreases* as the day goes on. **Cannot sit more than 5–10 min.**
+- Distribution intensified/peripheralized: **calf tight and cannot tolerate ANY pressure** (allodynia), back tight, **glute burns on movement — even light hip rotation or hip extension.** (Reads as an intensified L5/S1-type radicular chain, back→glute→calf.)
+- **Self-managed daily medication stack** (patient titrating to tolerability, may increase further; context — feels he was significantly under-treated for ~3 months in the original episode despite reporting severe pain, and has a high pain threshold):
+  - Gabapentin 300–400 mg/day
+  - Ibuprofen 1800 mg/day
+  - Acetaminophen (Tylenol) 3000 mg/day
+  - Baclofen 10–20 mg/day
+- **Safety points flagged to patient** (not medical advice; for the prescriber): acetaminophen already at the conservative daily ceiling (~3–4 g; hepatotoxicity risk, heightened by recent under-fueling) → **do not increase**; ibuprofen 1800 mg/day ongoing + recent dehydration → GI/renal watch (with food, hydrate); gabapentin + baclofen sedation → morning fall risk (cf. the syncope); avoid abrupt baclofen cessation; pressure-intolerant calf warrants in-person exam.
+- **Recommendation:** escalate to the care team **promptly, ahead of Jul 28** — pain exceeding the original injury + distal radicular progression + a recent witnessed syncope together cross from home-management into needs-assessment.
+- **Escalation ALREADY INITIATED (patient, ~Jun 22):** messaged his physiatrist directly with this update; she is out of town until the scheduled phone call, so it will be routed to **pain management** (the intended escalation chain — GP deliberately bypassed as it just gets passed along anyway). Patient is well aware of overmedication risks and states he will not exceed recommended daily limits of any agent; the sedative overlap is intentional (sleep/pain).
+- **Note on the calf:** the "can't tolerate a pillow" tenderness was **also present during the original injury** — consistent with his established pattern, not necessarily a novel finding.
+
 ## Change vs. ~2 weeks ago (the escalation worth noting)
 - **Markedly more sore.**
 - **Nerve pain now up in the CALF** — i.e., symptoms peripheralizing further down the leg vs. baseline. (Direction of concern: distal spread suggests increased nerve-root irritation; consistent with the foraminal/radicular picture.)
