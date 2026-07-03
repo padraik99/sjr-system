@@ -164,9 +164,9 @@
   p { color: var(--text-muted); margin-bottom: 0.75rem; font-size: 0.88rem; }
   strong { color: var(--text); font-weight: 500; }
 
-  ul.plain { margin: 0.5rem 0 0.75rem 1.25rem; }
-  ul.plain li { color: var(--text-muted); font-size: 0.85rem; margin-bottom: 0.35rem; }
-  ul.plain li strong { color: var(--text); }
+  ul.plain, ol.plain { margin: 0.5rem 0 0.75rem 1.25rem; }
+  ul.plain li, ol.plain li { color: var(--text-muted); font-size: 0.85rem; margin-bottom: 0.35rem; }
+  ul.plain li strong, ol.plain li strong { color: var(--text); }
 
   .clinical-box {
     background: var(--surface);
@@ -477,7 +477,8 @@
     <span class="status-pill pill-alert">L4–L5 / L5-S1 — Active Flare</span>
     <span class="status-pill pill-warn">Morning Pain 8–9/10</span>
     <span class="status-pill pill-warn">PM Wall 5:30–6:30pm</span>
-    <span class="status-pill pill-ok">No Tingling Yet</span>
+    <span class="status-pill pill-alert">Toe Tingling — New Jul 2</span>
+    <span class="status-pill pill-warn">Medrol Taper — Starts Jul 3</span>
     <span class="status-pill pill-alert">Bansal (GP) — Jul 8</span>
     <span class="status-pill pill-alert">Kataria (Pain Mgmt) — Jul 28</span>
   </div>
@@ -486,6 +487,8 @@
 <nav>
   <ul>
     <li><a href="#status">Status</a></li>
+    <li><a href="#tingling" style="color:var(--accent3);">⚠ Toe Tingling — New</a></li>
+    <li><a href="#medrol">Medrol Taper</a></li>
     <li><a href="#phase1">Phase 1 Protocol</a></li>
     <li><a href="#deadhang">Dead Hangs</a></li>
     <li><a href="#sciatic">Sciatic Glide</a></li>
@@ -503,17 +506,17 @@
     <div class="section-label">01 — Current Picture</div>
     <h2>Status</h2>
 
-    <p>Nine months post L4–L5 foraminal narrowing / L5-S1 nerve root compression (surfing incident, October 2025). A major re-flare hit June 19 from cumulative training load. This page governs training and self-care while the flare is active — it does not replace or override the clinical picture in the March protocol doc, which predates this flare and needs its own refresh once Bansal/Kataria weigh in.</p>
+    <p>Nine months post L4–L5 foraminal narrowing / L5-S1 nerve root compression (surfing incident, October 2025). A major re-flare hit June 19 from cumulative training load — coaching Yari, a soccer session, and sauna dehydration stacked in the same window. This followed real progress: training had advanced to VO2 max intervals and moderate lifting before the flare. This page governs training and self-care while the flare is active — it does not replace or override the clinical picture in the March protocol doc, which predates this flare and needs its own refresh once Bansal/Kataria weigh in.</p>
 
     <div class="clinical-box red">
       <div class="box-label">Pain Distribution</div>
       <ul class="plain">
-        <li><strong>Left glute / piriformis</strong> — burning, fiery</li>
-        <li><strong>Lateral + posterior calf</strong> — pressure, pre-cramp sensation</li>
-        <li><strong>Lateral malleolus</strong> — S1 dermatome</li>
-        <li><strong>Bilateral low back ache</strong> — secondary to leg pain, not primary</li>
+        <li><strong>Left glute / piriformis</strong> (primary) — burning, fiery</li>
+        <li><strong>Lateral + posterior calf</strong> (primary) — pressure, pre-cramp sensation</li>
+        <li><strong>Lateral malleolus</strong> (primary) — S1 dermatome band</li>
+        <li><strong>Bilateral low back ache</strong> (secondary) — right side is compensatory from left-side loading, not an independent problem</li>
       </ul>
-      <p style="margin-bottom:0;">No tingling as of this writing. Morning is worst (8–9/10); afternoon wall hits 5:30–6:30pm; sleep fragments with waking 2–3am nightly.</p>
+      <p style="margin-bottom:0;">No motor deficit changes. Morning is worst (8–9/10, forcing out of bed 5–6am); afternoon is manageable until the wall hits 5:30–6:30pm; sleep fragments with waking 2–3am nightly. <strong>That 2–3am wake is pain-driven, not urge-driven</strong> — don't let it get miscoded as nocturia when describing it to Bansal.</p>
     </div>
 
     <h3>Care Team &amp; Next Steps</h3>
@@ -523,29 +526,122 @@
       </thead>
       <tbody>
         <tr>
-          <td>Dr. Bansal</td>
-          <td>GP</td>
-          <td><strong>Jul 8</strong> — sleep aid request (cyclobenzaprine → amitriptyline → tizanidine, framed as replacing gabapentin, not stacking); syncope context; NSAID/LPR timing; bring med-timing screenshot + NexWave log</td>
-        </tr>
-        <tr>
           <td>Dr. Kataria</td>
           <td>Pain management</td>
-          <td><strong>Jul 28</strong></td>
+          <td>Performed the piriformis injection and the medial branch block (30% relief, 4hr — insufficient for RFA candidacy). <strong>Jul 28</strong></td>
+        </tr>
+        <tr>
+          <td>Dr. Bansal</td>
+          <td>GP</td>
+          <td><strong>Jul 8</strong> — full agenda below</td>
         </tr>
         <tr>
           <td>Matt</td>
           <td>PT</td>
-          <td>After Jul 28</td>
+          <td>After Jul 28 — waiting on Kataria's signal before resuming</td>
+        </tr>
+        <tr>
+          <td>NP friend</td>
+          <td>Informal bridge</td>
+          <td>Prescribed the Medrol dose pack as a bridge intervention</td>
         </tr>
       </tbody>
     </table>
 
     <div class="clinical-box blue">
       <div class="box-label">Note on the Covering Physician</div>
-      <p>Baclofen was re-upped; a sleep aid was declined over syncope/sedation concern — but that was a misunderstanding. The ask was to <strong>replace</strong> gabapentin's sleep role, not stack another sedative on top of it. Worth re-clarifying with Bansal directly on the 8th.</p>
+      <p>Baclofen was re-upped; a sleep aid was declined over syncope/sedation concern — but that was a misunderstanding. The ask was to <strong>replace</strong> gabapentin's sleep role, not stack another sedative on top of it. Currently baclofen + gabapentin are stacked as a result. Worth re-clarifying with Bansal directly on the 8th. The fragmented-care pattern here is a Kaiser-system reality — covering physicians won't have full context by default, so each handoff needs the explicit ask spelled out.</p>
     </div>
 
+    <div class="clinical-box">
+      <div class="box-label">Medication Evidence Base</div>
+      <p>Baclofen + gabapentin together have weak-to-absent guideline support specifically for radiculopathy. <strong>TCAs (amitriptyline) are the most guideline-supported pharmacological class for radiculopathy</strong> (Finnerup et al., <em>Lancet Neurology</em> 2015; NICE NG59) — which is the actual argument for the amitriptyline ask on the 8th, not just a sleep-aid swap.</p>
+    </div>
+
+    <div class="clinical-box blue">
+      <div class="box-label">Open Thread — Tamsulosin / Neurogenic Bladder</div>
+      <p>Tamsulosin is currently a symptomatic prescription only — no formal urodynamic workup has been done. Given the L4–L5 compression level, there's a plausible neurogenic component that's never been clinically explored. Raise with Kataria on the 28th; may warrant a urology referral.</p>
+    </div>
+
+    <h3>Jul 8 — Bansal Agenda</h3>
+    <ol class="plain" style="list-style:decimal;">
+      <li>Sleep aid: <strong>cyclobenzaprine 5–10mg</strong> preferred, amitriptyline 10–25mg second, tizanidine third — frame as <strong>replacing</strong> gabapentin, not stacking.</li>
+      <li>Syncope (Jun 20) was situational — dehydration, diphenhydramine, acute pain, empty stomach, early morning hypotension. No recurrence. Not a standing fall risk.</li>
+      <li>Baclofen + gabapentin stack carries more sedation risk than amitriptyline alone would.</li>
+      <li>Extended NSAID use with LPR — famotidine timing optimization, possible switch to naproxen.</li>
+      <li>Medrol course started Jul 3 — inform Bansal, bring response data.</li>
+      <li>Tamsulosin — was a neurogenic bladder component ever assessed given the L4–L5 level? Ask for a urology referral / urodynamic workup.</li>
+      <li>Bring Medisafe screenshots, June 19 forward.</li>
+    </ol>
+
+    <h3>Jul 28 — Kataria Agenda</h3>
+    <ol class="plain" style="list-style:decimal;">
+      <li>Medrol response data — did symptoms (including the new toe tingling) centralize during days 3–5? A positive response implies a significant nerve root edema component and makes ESI worth revisiting as targeted delivery of the same mechanism.</li>
+      <li>Neurogenic bladder question — urinary symptoms never connected to the spinal pathology. Request a urodynamic assessment or urology referral.</li>
+      <li>Sleep disruption severity — fragmented since Jun 19, actively amplifying pain perception. A clinical variable Kataria needs, not just a comfort complaint.</li>
+      <li>NexWave response data — bring the log.</li>
+      <li>PT pathway — Matt is waiting on Kataria's signal before resuming.</li>
+    </ol>
+
     <p style="font-size:0.8rem;">Full medication list and daily pain/response tracking now live in the <strong>Daily Log</strong> spreadsheet — that's the source of truth for trend data going into both appointments, not this page.</p>
+  </section>
+
+  <section id="tingling">
+    <div class="section-label">01b — New Development</div>
+    <h2>Toe Tingling <span style="color:var(--red);font-family:'IBM Plex Mono',monospace;font-size:0.6rem;letter-spacing:0.1em;">NEW · JUL 2</span></h2>
+
+    <div class="clinical-box red">
+      <div class="box-label">What's New</div>
+      <p>Toe tingling with sustained sitting — <strong>big toe primary (L5)</strong>, diffuse secondary (L5-S1 overlap). Position-dependent: resolves with standing. Consistent with the confirmed pathology, not a new diagnosis — but it's a <strong>progression marker</strong> since the June 19 flare, and needs to be reported to Bansal on Jul 8 explicitly as a new development, not folded quietly into the general pain update.</p>
+    </div>
+
+    <div class="clinical-box">
+      <div class="box-label">Rule</div>
+      <p>Tingling → <strong>stand immediately + 10 standing extensions.</strong> (Freeway excepted — use judgment, don't create a driving hazard.)</p>
+    </div>
+
+    <div class="clinical-box blue">
+      <div class="box-label">Why Track It Through the Medrol Course</div>
+      <p>If the tingling resolves during Medrol days 3–5, that's evidence the nerve root edema component is significant — and it's a direct argument for revisiting ESI with Kataria as targeted delivery of the same anti-inflammatory mechanism that worked in a systemic, lower-dose form. Log it daily against Medrol day number.</p>
+    </div>
+  </section>
+
+  <section id="medrol">
+    <div class="section-label">01c — Bridge Intervention</div>
+    <h2>Medrol Dose Pack</h2>
+
+    <table class="ex-table">
+      <thead>
+        <tr><th>Parameter</th><th>Detail</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Starts</td>
+          <td><strong>July 3, 2026</strong></td>
+        </tr>
+        <tr>
+          <td>Schedule</td>
+          <td>Standard 6-day taper — 6/5/4/3/2/1 tablets, all doses <strong>before noon</strong></td>
+        </tr>
+        <tr>
+          <td>Ibuprofen</td>
+          <td><span class="flag flag-hold">Suspended</span> for the duration of the course</td>
+        </tr>
+        <tr>
+          <td>Famotidine</td>
+          <td><span class="flag flag-keep">Continues</span> — GI protection stays in place</td>
+        </tr>
+        <tr>
+          <td>Prescriber</td>
+          <td>NP friend, informal bridge intervention</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="clinical-box blue">
+      <div class="box-label">What This Course Is Actually Testing</div>
+      <p>Beyond symptom relief, the Medrol taper is a diagnostic probe: if pain and toe tingling meaningfully centralize or resolve during days 3–5 (peak systemic effect), that points to nerve root edema as a real, treatable contributor — which strengthens the case for a targeted transforaminal ESI at the Jul 28 visit. If nothing changes, that's useful information too. <strong>Log response daily</strong> against Medrol day number in the Daily Log.</p>
+    </div>
   </section>
 
   <section id="phase1">
@@ -583,6 +679,12 @@
         </tr>
         <tr>
           <td>4</td>
+          <td>Sciatic Nerve Glide</td>
+          <td>5 reps ea side</td>
+          <td>Supine hook lying, tension not pain, left extra cautious — full instructions in the dedicated section below.</td>
+        </tr>
+        <tr>
+          <td>5</td>
           <td>Standing Extensions</td>
           <td>10 reps</td>
           <td>Hands on lower back.</td>
@@ -626,9 +728,6 @@
         </tr>
       </tbody>
     </table>
-
-    <h3>Once Daily <span style="color:var(--text-dim);font-weight:400;">— end of morning session</span></h3>
-    <p>Sciatic Nerve Glide — see dedicated section below. Left side extra cautious.</p>
   </section>
 
   <section id="deadhang">
@@ -693,23 +792,36 @@
       </thead>
       <tbody>
         <tr>
-          <td>Pad placement</td>
-          <td>4 pads — 2 lower back paraspinal at L4–L5, 2 left glute following the sciatic path</td>
+          <td>Pad placement — lumbar</td>
+          <td>2 lower back paraspinal at L4–L5 (upper CH1/CH2 pads drop to L3 level), 2 left glute following the sciatic path. Wife places the lumbar pads.</td>
+        </tr>
+        <tr>
+          <td>Pad placement — calf/ankle (Zone 3)</td>
+          <td>When the lateral malleolus is active: 3-pad setup — upper lateral calf, lower lateral calf, lateral malleolus (S1). All mirrored to the <strong>left</strong> side (Zones 2 &amp; 3).</td>
         </tr>
         <tr>
           <td>Mode</td>
-          <td>TENS, HMD</td>
+          <td>TENS, HMD — modulated frequency, prevents nerve accommodation</td>
         </tr>
         <tr>
           <td>Timer</td>
           <td>20–25 minutes</td>
         </tr>
         <tr>
-          <td>Deployment window</td>
+          <td>Primary window</td>
           <td><strong>4:00–4:30pm</strong> — before the afternoon pain wall, not after it</td>
+        </tr>
+        <tr>
+          <td>Secondary window</td>
+          <td>Morning, post-walk — optional</td>
         </tr>
       </tbody>
     </table>
+
+    <div class="clinical-box blue">
+      <div class="box-label">Electrode Reference</div>
+      <p>Diagrams generated via ChatGPT for pad placement — the horizontal-layout image is the best clinical reference on hand. Treat these as a placement aid, not a substitute for the manufacturer's own TENS-only guidance for radicular low-back-with-leg-pain presentations.</p>
+    </div>
 
     <p style="font-size:0.8rem;">Log before/after pain (/10) for each session in the Daily Log — this is the intervention data going to Kataria on Jul 28.</p>
   </section>
@@ -834,7 +946,7 @@
       <div class="gate-num">●</div>
       <div class="gate-content">
         <div class="gate-title">Red — Leg Pain Increases</div>
-        <div class="gate-desc">Stop that exercise or session. Peripheralization (symptoms moving distally, away from the spine) is the one signal that overrides everything else in this protocol. Back off, note what preceded it, and don't repeat that variable tomorrow without adjustment.</div>
+        <div class="gate-desc">Stop that exercise or session. Peripheralization (symptoms moving distally, away from the spine) is the one signal that overrides everything else in this protocol. Back off, note what preceded it, and don't repeat that variable tomorrow without adjustment. Toe tingling with sitting follows the same logic in miniature — <a href="#tingling" style="color:var(--accent);">see the stand-immediately rule</a>.</div>
       </div>
     </div>
   </section>
@@ -843,7 +955,7 @@
 
 <footer>
   <p>Patrick — Active Flare Protocol · Sprint Jump Resilience · July 2026</p>
-  <p>Cross-reference: March Recovery Protocol (pre-flare clinical map — due for refresh) · Daily Log spreadsheet (tracking source of truth) · Weekly Guide v6</p>
+  <p>Cross-reference: March Recovery Protocol (pre-flare clinical map — due for refresh) · Daily Log spreadsheet (tracking source of truth, incl. Medrol day # / centralization / toe tingling) · Weekly Guide v6 (⚠ FAB links back here)</p>
   <p style="color: rgba(200,126,126,0.5); margin-top:0.5rem;">Informational only. All clinical decisions should be reviewed with your treating physician.</p>
 </footer>
 
