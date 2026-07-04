@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lag &amp; Restraint — The Scalding Shower</title>
+<style>
+  :root {
+    --bg: #0c0f12;
+    --panel: #12161b;
+    --ink: #d6d3cd;
+    --ink-dim: #8a877f;
+    --ink-faint: #55524c;
+    --accent: #e8b16a;      /* warm trace */
+    --valve: #6a8ba8;       /* cool secondary trace */
+    --good: #7fae7f;
+    --warn: #d9a44a;
+    --bad: #c96a5a;
+    --grid: #1d2229;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font: 16px/1.6 Georgia, 'Times New Roman', serif;
+    display: flex;
+    justify-content: center;
+    padding: 48px 20px 80px;
+  }
+  main { width: 100%; max-width: 720px; }
+  .kicker {
+    font-family: ui-monospace, 'Cascadia Code', Consolas, monospace;
+    font-size: 11px;
+    letter-spacing: 0.25em;
+    color: var(--ink-faint);
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+  h1 {
+    font-size: 30px;
+    font-weight: normal;
+    letter-spacing: 0.01em;
+    margin-bottom: 14px;
+  }
+  .lede { color: var(--ink-dim); margin-bottom: 36px; max-width: 56ch; }
+
+  .stage {
+    background: var(--panel);
+    border: 1px solid var(--grid);
+    border-radius: 6px;
+    padding: 18px;
+    margin-bottom: 26px;
+  }
+  canvas { display: block; width: 100%; height: 260px; }
+
+  .statusbar {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 12px;
+    margin-top: 12px;
+    font-family: ui-monospace, Consolas, monospace;
+    font-size: 12px;
+  }
+  #regime {
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    font-size: 11px;
+  }
+  #regimeNote { color: var(--ink-dim); font-family: Georgia, serif; font-size: 13px; font-style: italic; text-align: right; }
+
+  .controls {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 28px;
+    margin-bottom: 14px;
+  }
+  @media (max-width: 560px) { .controls { grid-template-columns: 1fr; } }
+  .control label {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    font-family: ui-monospace, Consolas, monospace;
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-dim);
+    margin-bottom: 8px;
+  }
+  .control label output { color: var(--ink); }
+  input[type=range] {
+    width: 100%;
+    appearance: none;
+    height: 2px;
+    background: var(--ink-faint);
+    outline: none;
+  }
+  input[type=range]::-webkit-slider-thumb {
+    appearance: none;
+    width: 14px; height: 14px;
+    border-radius: 50%;
+    background: var(--ink);
+    cursor: pointer;
+    border: none;
+  }
+  input[type=range]::-moz-range-thumb {
+    width: 14px; height: 14px;
+    border-radius: 50%;
+    background: var(--ink);
+    cursor: pointer;
+    border: none;
+  }
+  .hint {
+    font-size: 12px;
+    color: var(--ink-faint);
+    font-style: italic;
+    margin-top: 6px;
+    font-family: Georgia, serif;
+    letter-spacing: 0;
+    text-transform: none;
+  }
+
+  .buttons { display: flex; gap: 10px; margin-bottom: 40px; }
+  button {
+    background: none;
+    border: 1px solid var(--ink-faint);
+    color: var(--ink-dim);
+    font: 12px ui-monospace, Consolas, monospace;
+    letter-spacing: 0.08em;
+    padding: 7px 14px;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  button:hover { color: var(--ink); border-color: var(--ink-dim); }
+
+  .takeaway {
+    border-top: 1px solid var(--grid);
+    padding-top: 24px;
+    max-width: 58ch;
+  }
+  .takeaway p { margin-bottom: 14px; }
+  .takeaway .quiet {
+    color: var(--ink-faint);
+    font-style: italic;
+    font-size: 14px;
+  }
+</style>
+</head>
+<body>
+<main>
+  <div class="kicker">Lag &amp; Restraint &nbsp;·&nbsp; 01</div>
+  <h1>The Scalding Shower</h1>
+  <p class="lede">You turn the tap. Nothing happens. So you turn it more. The hot water
+  was already coming — it just hadn't reached you yet. Drag the sliders and watch
+  the same shower go from comfortable to hunting to scald-and-freeze.</p>
+
+  <div class="controls">
+    <div class="control">
+      <label>Pipe delay <output id="delayOut">1.5 s</output></label>
+      <input type="range" id="delay" min="0.2" max="5" step="0.1" value="1.5">
+      <div class="hint">how long the water takes to reach your skin</div>
+    </div>
+    <div class="control">
+      <label>Reaction strength <output id="gainOut">patient</output></label>
+      <input type="range" id="gain" min="0.03" max="0.30" step="0.005" value="0.06">
+      <div class="hint">how hard you chase the temperature you feel</div>
+    </div>
+  </div>
+
+  <div class="buttons">
+    <button id="flush">someone flushes a toilet</button>
+    <button id="reset">start over, cold</button>
+  </div>
+
+  <div class="stage">
+    <canvas id="chart" width="1320" height="520"></canvas>
+    <div class="statusbar">
+      <span id="regime">—</span>
+      <span id="regimeNote"></span>
+    </div>
+  </div>
+
+  <div class="takeaway">
+    <p>Turning up reaction strength when the delay is long doesn't fix the shower —
+    it's what breaks it. There are only two ways out: shorten the lag, or soften
+    the response. That second option has a name. It's restraint.</p>
+    <p class="quiet">Restraint is respect for what you can't yet see.</p>
+  </div>
+</main>
+
+<script>
+(() => {
+  'use strict';
+
+  // ---- model constants -------------------------------------------------
+  const T_COLD = 10, T_HOT = 55, T_TARGET = 38;
+  const SPAN = T_HOT - T_COLD;          // 45 °C of valve authority
+  const DT = 0.02;                      // sim step, seconds
+  const TIME_SCALE = 2.0;               // sim runs 2x real time
+  const WINDOW = 30;                    // seconds of chart history
+  const MIX_TAU = 0.25;                 // small mixing smoothness
+  const MAX_DELAY = 5;
+  const E0 = 4;                         // °C of error where your hand hits full speed
+
+  // ---- state ------------------------------------------------------------
+  let tau, k, valve, temp, simTime, flushLeft;
+  let pipe;        // ring buffer of valve-outlet temps
+  let pipeLen, pipeIdx;
+  let history;     // [{t, temp, valve}]
+
+  function reset() {
+    tau = parseFloat(delayEl.value);
+    k = parseFloat(gainEl.value);
+    valve = 0;                 // tap fully cold
+    temp = T_COLD;             // standing under cold water
+    simTime = 0;
+    flushLeft = 0;
+    pipeLen = Math.max(1, Math.round(MAX_DELAY / DT));
+    pipe = new Float32Array(pipeLen).fill(T_COLD);
+    pipeIdx = 0;
+    history = [];
+  }
+
+  // ---- one simulation step ----------------------------------------------
+  function step() {
+    // valve outlet temperature (before the pipe)
+    let outlet = T_COLD + valve * SPAN;
+    if (flushLeft > 0) {           // toilet steals cold water: mix runs hot
+      outlet += 8 * Math.min(1, flushLeft / 0.5);
+      flushLeft -= DT;
+    }
+
+    // write into ring buffer, read the sample from tau seconds ago
+    pipe[pipeIdx] = outlet;
+    const delaySteps = Math.min(pipeLen - 1, Math.round(tau / DT));
+    const readIdx = (pipeIdx - delaySteps + pipeLen) % pipeLen;
+    const arriving = pipe[readIdx];
+    pipeIdx = (pipeIdx + 1) % pipeLen;
+
+    // water at the showerhead mixes toward what's arriving
+    temp += (arriving - temp) * (DT / MIX_TAU);
+
+    // the person: turns the tap toward comfort, but a hand can only twist so fast.
+    // k = max twist speed; tanh saturates the response to big errors.
+    valve += k * Math.tanh((T_TARGET - temp) / E0) * DT;
+    valve = Math.max(0, Math.min(1, valve));
+
+    simTime += DT;
+    history.push({ t: simTime, temp, valve });
+    const cutoff = simTime - WINDOW;
+    while (history.length && history[0].t < cutoff) history.shift();
+  }
+
+  // ---- regime detection ---------------------------------------------------
+  function regime() {
+    const recent = history.filter(s => s.t > simTime - 10);
+    if (simTime < 6 || recent.length < 50) return null;
+    let lo = Infinity, hi = -Infinity, railed = 0;
+    for (const s of recent) {
+      if (s.temp < lo) lo = s.temp;
+      if (s.temp > hi) hi = s.temp;
+      if (s.valve <= 0.001 || s.valve >= 0.999) railed++;
+    }
+    const range = hi - lo;
+    if (range > 25 || railed / recent.length > 0.35)
+      return { name: 'BOOM–BUST', color: 'var(--bad)',
+               note: 'scald, freeze, scald — the tap slams rail to rail' };
+    if (range > 4)
+      return { name: 'HUNTING', color: 'var(--warn)',
+               note: 'endlessly overshooting a target it keeps passing' };
+    return { name: 'SMOOTH', color: 'var(--good)',
+             note: 'small corrections, patiently timed' };
+  }
+
+  // ---- drawing -------------------------------------------------------------
+  const canvas = document.getElementById('chart');
+  const ctx = canvas.getContext('2d');
+  const css = getComputedStyle(document.documentElement);
+  const C = n => css.getPropertyValue(n).trim();
+
+  function yOf(t, h, pad) {
+    const lo = 5, hi = 60;
+    return pad + (1 - (t - lo) / (hi - lo)) * (h - 2 * pad);
+  }
+
+  function draw() {
+    const w = canvas.width, h = canvas.height, pad = 30;
+    ctx.clearRect(0, 0, w, h);
+
+    // zones: scald, comfort band, cold
+    const zone = (t1, t2, color, alpha) => {
+      ctx.globalAlpha = alpha;
+      ctx.fillStyle = color;
+      const y1 = yOf(t2, h, pad), y2 = yOf(t1, h, pad);
+      ctx.fillRect(0, y1, w, y2 - y1);
+      ctx.globalAlpha = 1;
+    };
+    zone(45, 60, C('--bad'), 0.07);
+    zone(36, 40, C('--good'), 0.08);
+    zone(5, 25, C('--valve'), 0.05);
+
+    // target line
+    ctx.strokeStyle = C('--ink-faint');
+    ctx.setLineDash([2, 6]);
+    ctx.beginPath();
+    ctx.moveTo(0, yOf(T_TARGET, h, pad));
+    ctx.lineTo(w, yOf(T_TARGET, h, pad));
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    // axis labels
+    ctx.fillStyle = C('--ink-faint');
+    ctx.font = '20px ui-monospace, monospace';
+    ctx.fillText('scald', 12, yOf(50, h, pad));
+    ctx.fillText('38° — just right', 12, yOf(T_TARGET, h, pad) - 8);
+    ctx.fillText('cold', 12, yOf(15, h, pad));
+
+    if (history.length < 2) return;
+    const t0 = Math.max(0, simTime - WINDOW);
+    const xOf = t => ((t - t0) / WINDOW) * w;
+
+    // valve trace (what your hand is doing) — faint, along the bottom
+    ctx.strokeStyle = C('--valve');
+    ctx.globalAlpha = 0.55;
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    history.forEach((s, i) => {
+      const y = h - pad - s.valve * 60;
+      i ? ctx.lineTo(xOf(s.t), y) : ctx.moveTo(xOf(s.t), y);
+    });
+    ctx.stroke();
+    ctx.globalAlpha = 1;
+    ctx.fillStyle = C('--valve');
+    ctx.fillText('tap position', 12, h - pad - 66);
+
+    // temperature trace (what your skin feels)
+    ctx.strokeStyle = C('--accent');
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    history.forEach((s, i) => {
+      const y = yOf(s.temp, h, pad);
+      i ? ctx.lineTo(xOf(s.t), y) : ctx.moveTo(xOf(s.t), y);
+    });
+    ctx.stroke();
+  }
+
+  // ---- UI wiring -------------------------------------------------------------
+  const delayEl = document.getElementById('delay');
+  const gainEl = document.getElementById('gain');
+  const delayOut = document.getElementById('delayOut');
+  const gainOut = document.getElementById('gainOut');
+  const regimeEl = document.getElementById('regime');
+  const regimeNote = document.getElementById('regimeNote');
+
+  function gainWord(g) {
+    if (g < 0.07) return 'patient';
+    if (g < 0.13) return 'attentive';
+    if (g < 0.21) return 'jumpy';
+    return 'frantic';
+  }
+  function syncLabels() {
+    delayOut.textContent = tau.toFixed(1) + ' s';
+    gainOut.textContent = gainWord(k);
+  }
+
+  delayEl.addEventListener('input', () => { tau = parseFloat(delayEl.value); syncLabels(); });
+  gainEl.addEventListener('input', () => { k = parseFloat(gainEl.value); syncLabels(); });
+  document.getElementById('flush').addEventListener('click', () => { flushLeft = 3; });
+  document.getElementById('reset').addEventListener('click', () => { reset(); syncLabels(); });
+
+  // ---- main loop -----------------------------------------------------------
+  let last = performance.now();
+  let acc = 0;
+  function frame(now) {
+    acc += Math.min(0.1, (now - last) / 1000) * TIME_SCALE;
+    last = now;
+    while (acc >= DT) { step(); acc -= DT; }
+    draw();
+    const r = regime();
+    if (r) {
+      regimeEl.textContent = r.name;
+      regimeEl.style.color = r.color;
+      regimeNote.textContent = r.note;
+    } else {
+      regimeEl.textContent = 'settling…';
+      regimeEl.style.color = C('--ink-faint');
+      regimeNote.textContent = '';
+    }
+    requestAnimationFrame(frame);
+  }
+
+  reset();
+  syncLabels();
+  requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>

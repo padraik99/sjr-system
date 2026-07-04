@@ -497,6 +497,65 @@ main { padding:1.25rem; max-width:700px; margin:0 auto; }
   color:#c87e7e;transition:opacity .2s,transform .15s;
 }
 .flare-fab:active{opacity:1;transform:scale(.92);}
+
+/* ── v7 (Jul 2026): CONSOLE + GROUPED LOG + DOCTOR SUMMARY ── */
+.con-eyebrow{display:flex;align-items:center;gap:.5rem;}
+.con-date{font-family:'IBM Plex Mono',monospace;font-size:.6rem;color:var(--dim);flex-shrink:0;}
+#wave-verdict{font-family:'Playfair Display',serif;font-size:1.18rem;line-height:1.32;font-weight:400;}
+.con-actions{display:flex;flex-direction:column;gap:.4rem;margin-top:.7rem;}
+.con-action{display:flex;align-items:center;gap:.6rem;background:var(--surface2);border:1px solid var(--border);border-radius:6px;color:var(--text);font-size:.78rem;padding:.6rem .75rem;cursor:pointer;text-align:left;font-family:'IBM Plex Sans',sans-serif;width:100%;box-sizing:border-box;}
+.con-action:active{border-color:var(--accent2);}
+.ca-ic{flex-shrink:0;width:1.1rem;text-align:center;}
+.ca-hint{margin-left:auto;font-family:'IBM Plex Mono',monospace;font-size:.56rem;color:var(--dim);flex-shrink:0;}
+.con-chips{display:flex;gap:.4rem;margin-top:.6rem;flex-wrap:wrap;}
+.con-chip{display:flex;align-items:center;gap:.4rem;background:var(--surface2);border:1px solid var(--border);border-radius:99px;padding:.3rem .6rem;cursor:pointer;font-family:'IBM Plex Mono',monospace;font-size:.6rem;color:var(--muted);}
+.chip-label{letter-spacing:.08em;text-transform:uppercase;color:var(--dim);}
+.chip-val{color:var(--text);}
+.vbt-panel,.flareup-panel{border:none;background:none;margin:0 1.25rem;border-radius:0;}
+.vbt-body{border:1px solid var(--border);border-radius:6px;background:var(--surface);padding:.1rem .8rem .8rem;margin-top:.45rem;}
+#flareup-body{border:1px solid var(--border);border-radius:6px;background:var(--surface);margin-top:.45rem;}
+.log-group{border:1px solid var(--border);border-radius:6px;margin-bottom:.5rem;overflow:hidden;}
+.log-group-head{display:flex;align-items:center;gap:.5rem;width:100%;background:var(--surface2);border:none;padding:.55rem .7rem;cursor:pointer;font-family:'IBM Plex Mono',monospace;font-size:.62rem;letter-spacing:.12em;text-transform:lowercase;color:var(--muted);text-align:left;box-sizing:border-box;}
+.lg-count{margin-left:auto;color:var(--accent2);font-size:.56rem;letter-spacing:.04em;}
+.lg-chev{color:var(--dim);font-size:.55rem;flex-shrink:0;}
+.log-group-body{padding:.55rem .7rem .65rem;display:none;}
+.log-group.open .log-group-body{display:block;}
+.slider-row{display:flex;align-items:center;gap:.55rem;padding:.4rem 0;}
+.sr-label{font-family:'IBM Plex Mono',monospace;font-size:.66rem;color:var(--muted);width:4.4rem;flex-shrink:0;}
+.slider-row input[type=range]{flex:1;-webkit-appearance:none;appearance:none;height:4px;border-radius:2px;background:var(--border);outline:none;margin:0;}
+.slider-row input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:24px;height:24px;border-radius:50%;background:var(--surface2);border:2px solid var(--muted);cursor:pointer;}
+.slider-row.staged input[type=range]::-webkit-slider-thumb{border-color:var(--accent2);}
+.slider-row input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;background:var(--surface2);border:2px solid var(--muted);cursor:pointer;}
+.sr-val{font-family:'Playfair Display',serif;font-size:1.05rem;color:var(--dim);width:2.4rem;text-align:right;flex-shrink:0;}
+.slider-row.staged .sr-val{color:var(--text);}
+.sr-clear{background:none;border:none;color:var(--dim);font-size:.8rem;cursor:pointer;width:1.3rem;flex-shrink:0;padding:0;visibility:hidden;}
+.slider-row.staged .sr-clear{visibility:visible;}
+.seg-row{margin:.45rem 0 .6rem;}
+.seg-label{font-family:'IBM Plex Mono',monospace;font-size:.58rem;letter-spacing:.08em;text-transform:uppercase;color:var(--dim);margin-bottom:.3rem;}
+.seg-btns{display:grid;gap:.35rem;}
+.seg-btns.n2{grid-template-columns:1fr 1fr;}
+.seg-btns.n3{grid-template-columns:1fr 1fr 1fr;}
+.stepper-row{display:flex;align-items:center;gap:.7rem;margin:.35rem 0 .5rem;}
+.stepper-btn{background:var(--surface2);border:1px solid var(--border);border-radius:5px;color:var(--text);width:2.3rem;height:2.3rem;font-size:1.05rem;cursor:pointer;flex-shrink:0;}
+.stepper-val{font-family:'Playfair Display',serif;font-size:1.3rem;color:var(--text);min-width:2rem;text-align:center;}
+.treat-mods{display:flex;gap:.35rem;flex-wrap:wrap;margin:.2rem 0 .5rem;}
+.treat-mods .timing-btn{flex:0 0 auto;padding:.45rem .7rem;}
+.treat-delta{font-family:'IBM Plex Mono',monospace;font-size:.64rem;color:var(--accent2);margin:.2rem 0 .1rem;min-height:.9rem;}
+.medrol-chip{display:none;font-family:'IBM Plex Mono',monospace;font-size:.6rem;color:var(--yellow);border:1px solid rgba(200,180,110,.35);border-radius:99px;padding:.2rem .55rem;margin:.1rem 0 .4rem;}
+.note-input{width:100%;box-sizing:border-box;background:var(--surface2);border:1px solid var(--border);border-radius:4px;padding:.5rem .75rem;font-family:'IBM Plex Sans',sans-serif;font-size:.78rem;color:var(--text);outline:none;min-height:3.4rem;resize:vertical;}
+.sum-section{margin:.7rem 0 .2rem;}
+.sum-h{font-family:'IBM Plex Mono',monospace;font-size:.58rem;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);border-bottom:1px solid var(--border);padding-bottom:.25rem;margin-bottom:.35rem;}
+.sum-row{display:flex;justify-content:space-between;gap:.6rem;font-size:.76rem;color:var(--muted);padding:.16rem 0;}
+.sum-row span:last-child{font-family:'IBM Plex Mono',monospace;color:var(--text);text-align:right;}
+.sum-note{font-size:.62rem;color:var(--dim);line-height:1.45;margin-top:.3rem;}
+.range-btns{display:grid;grid-template-columns:repeat(3,1fr);gap:.35rem;margin:.4rem 0 .2rem;}
+@media print{
+  body.print-summary > *{display:none !important;}
+  body.print-summary #summary-modal{display:block !important;position:static !important;background:#fff !important;backdrop-filter:none !important;padding:0 !important;}
+  body.print-summary #summary-modal .modal{max-height:none !important;overflow:visible !important;width:100% !important;max-width:100% !important;transform:none !important;}
+  body.print-summary #summary-modal, body.print-summary #summary-modal *{color:#111 !important;background:#fff !important;border-color:#999 !important;box-shadow:none !important;text-shadow:none !important;}
+  body.print-summary .sum-actions, body.print-summary .range-btns{display:none !important;}
+}
 </style>
 </head>
 <body>
@@ -506,7 +565,7 @@ main { padding:1.25rem; max-width:700px; margin:0 auto; }
   <div class="hdr-top">
     <div>
       <div class="hdr-name">Patrick</div>
-      <div class="hdr-sub">L4–L5 · Return to Athletic Life · v6.0</div>
+      <div class="hdr-sub">L4–L5 · Return to Athletic Life · v7.0</div>
     </div>
     <div class="week-inline-nav">
       <button class="nav-arrow-inline" id="prev-week" onclick="changeWeek(-1)" disabled>‹</button>
@@ -535,12 +594,13 @@ main { padding:1.25rem; max-width:700px; margin:0 auto; }
   </div>
 </header>
 
-<!-- WAVE HEADLINE (v6) -->
+<!-- v7 CONSOLE (Jul 2026) — one surface replaces wave headline + gate banner + VBT head + flareup head.
+     Every JS-updated ID preserved: wave-headline/light/pos/verdict/discipline/override/why*, vbt-light/verdict/chev, flareup-badge/chev. -->
 <div class="wave-headline" id="wave-headline" data-tone="neutral">
-  <div class="wave-top">
+  <div class="con-eyebrow">
     <span class="wave-light" id="wave-light"></span>
     <div class="wave-pos" id="wave-pos">—</div>
-    <button class="wave-log" onclick="openModal()">＋ Log</button>
+    <span class="con-date" id="con-date"></span>
   </div>
   <div class="wave-verdict" id="wave-verdict">Loading today's wave position…</div>
   <div class="wave-discipline" id="wave-discipline" style="display:none"></div>
@@ -552,36 +612,34 @@ main { padding:1.25rem; max-width:700px; margin:0 auto; }
   <div class="wave-why-body" id="wave-why-body" style="display:none">
     <div class="wave-why-row"><span>Back · AM</span><span id="why-morning">—</span></div>
     <div class="wave-why-row"><span>Nerve</span><span id="why-nerve">—</span></div>
-    <div class="wave-why-row"><span>Ankle</span><span id="why-ankle">—</span></div>
+    <div class="wave-why-row"><span>Glute</span><span id="why-glute">—</span></div>
     <div class="wave-why-row"><span>Readiness</span><span id="why-ready">—</span></div>
     <div class="wave-why-foot" id="why-foot"></div>
   </div>
+  <div class="con-actions">
+    <button class="con-action" onclick="openModal()"><span class="ca-ic">＋</span>Log day<span class="ca-hint">pain · sleep · treatment</span></button>
+    <button class="con-action" onclick="openInjuryModal()"><span class="ca-ic">⚠</span>Log an issue</button>
+    <button class="con-action" onclick="openMetricsModal()"><span class="ca-ic">📊</span>Performance data</button>
+    <button class="con-action" onclick="openSummary()"><span class="ca-ic">📄</span>Doctor summary<span class="ca-hint">Bansal 7/8 · Kataria 7/28</span></button>
+  </div>
+  <div class="con-chips">
+    <button class="con-chip" onclick="toggleReadiness()">
+      <span class="vbt-light" id="vbt-light" style="width:.5rem;height:.5rem;"></span>
+      <span class="chip-label">lift readiness</span>
+      <span class="chip-val" id="vbt-verdict">check in</span>
+      <span class="lg-chev" id="vbt-chev">▼</span>
+    </button>
+    <button class="con-chip" onclick="toggleFlareupPanel()">
+      <span class="chip-label">flare</span>
+      <span class="flareup-badge flat" id="flareup-badge">—</span>
+      <span class="lg-chev" id="flareup-chev">▼</span>
+    </button>
+    <span class="con-chip" style="cursor:default"><span class="chip-label">gate</span><span class="chip-val">pain ≤3.5/10</span></span>
+  </div>
 </div>
 
-<!-- GATE BANNER -->
-<div class="gate-banner" id="gate-banner">
-  <div style="font-size:1rem;flex-shrink:0">🔴</div>
-  <div class="gate-banner-text">
-    <strong>Autoregulation Gates</strong>
-    AM ≤2/10 · Nerve ≤2.5/10 · Ankle spot — log and track
-  </div>
-  <!-- v6.0.3: dropped duplicate "Log" (pain log now lives solely on the wave headline ＋Log,
-       line ~528); collapsed cluster to one row: Issue · Ready · Data -->
-  <div style="display:flex;gap:.5rem;">
-    <button class="gate-log-btn" style="flex:1;background:var(--surface2);border-color:rgba(200,80,60,0.3);color:#c8503c;" onclick="openInjuryModal()">⚠ Issue</button>
-    <button class="gate-log-btn" style="flex:1;background:var(--surface2);" onclick="toggleReadiness()">🎯 Ready</button>
-    <button class="gate-log-btn" style="flex:1;background:var(--surface2);" onclick="openMetricsModal()">📊 Data</button>
-  </div>
-</div>
-
-<!-- VBT READINESS PANEL (v5.10) -->
+<!-- LIFT READINESS EXPAND (chip-driven · was VBT panel v5.10) -->
 <div class="vbt-panel" id="vbt-panel">
-  <div class="vbt-head" onclick="toggleReadiness()">
-    <span class="vbt-light" id="vbt-light"></span>
-    <span class="vbt-title">Session Readiness</span>
-    <span class="vbt-verdict" id="vbt-verdict">tap to check in</span>
-    <span class="ex-chevron" id="vbt-chev" style="font-size:.6rem;color:var(--dim)">▼</span>
-  </div>
   <div class="vbt-body" id="vbt-body" style="display:none">
     <div class="vbt-grid">
       <div class="vbt-field">
@@ -619,14 +677,8 @@ main { padding:1.25rem; max-width:700px; margin:0 auto; }
   </div>
 </div>
 
-<!-- FLAREUP RECOVERY TRACKER (v5.11) -->
+<!-- FLAREUP RECOVERY EXPAND (chip-driven · was panel v5.11) -->
 <div class="flareup-panel" id="flareup-panel">
-  <div class="flareup-head" onclick="toggleFlareupPanel()">
-    <span class="vbt-title">Flareup Recovery</span>
-    <span style="flex:1"></span>
-    <span id="flareup-badge" class="flareup-badge flat">—</span>
-    <span class="ex-chevron" id="flareup-chev" style="font-size:.6rem;color:var(--dim);margin-left:.4rem;">▼</span>
-  </div>
   <div id="flareup-body" style="display:none">
     <div class="flareup-body-inner">
       <div id="flareup-list"></div>
@@ -652,7 +704,7 @@ main { padding:1.25rem; max-width:700px; margin:0 auto; }
 <!-- GATE LOG MODAL -->
 <div class="modal-bg" id="gate-modal">
   <div class="modal">
-    <div class="modal-title">Pain Log</div>
+    <div class="modal-title">Daily Log</div>
     <div class="modal-sub" id="modal-date-label">Logging for today</div>
 
     <!-- PENDING SCORES SUMMARY -->
@@ -667,115 +719,129 @@ main { padding:1.25rem; max-width:700px; margin:0 auto; }
         font-size:0.72rem;color:var(--accent2);line-height:1.8;"></div>
     </div>
 
-    <div class="metric-toggle">
-      <button class="metric-btn active" id="mbtn-morning" onclick="selectMetric('morning')">🔴 Back</button>
-      <button class="metric-btn" id="mbtn-nerve" onclick="selectMetric('nerve')">⚡ Nerve</button>
-      <button class="metric-btn" id="mbtn-glute" onclick="selectMetric('glute')">🟠 Glute</button>
-      <button class="metric-btn" id="mbtn-ankle" onclick="selectMetric('ankle')">📍 Ankle</button>
-      <button class="metric-btn" id="mbtn-overnight" onclick="selectMetric('overnight')">🌙 Night</button>
-      <button class="metric-btn" id="mbtn-tingle" onclick="selectMetric('tingle')">👣 Tingle</button>
-      <button class="metric-btn" id="mbtn-dizzy" onclick="selectMetric('dizzy')">💫 Dizzy</button>
-    </div>
+    <!-- v7: grouped log · 0–10 half-point sliders · progressive disclosure.
+         Ankle retired (merged into Nerve — calf/ankle/nerve synonymous, Jul 2026);
+         historical 'ankle' rows stay in the DB, no new input. -->
 
-    <div id="score-section-morning">
-      <div class="score-label">Back Pain — Gate ≤ 2/10</div>
-      <div class="score-grid">
-        <button class="score-btn" data-v="0" onclick="selectScore(0)">0</button>
-        <button class="score-btn" data-v="1" onclick="selectScore(1)">1</button>
-        <button class="score-btn" data-v="2" onclick="selectScore(2)">2</button>
-        <button class="score-btn" data-v="3" onclick="selectScore(3)">3</button>
-        <button class="score-btn" data-v="4" onclick="selectScore(4)">4</button>
-        <button class="score-btn" data-v="5" onclick="selectScore(5)">5</button>
+    <div class="log-group open" id="lg-pain">
+      <button class="log-group-head" type="button" onclick="toggleLogGroup('pain')">pain · 0–10<span class="lg-count" id="lgc-pain"></span><span class="lg-chev">▾</span></button>
+      <div class="log-group-body">
+        <div class="slider-row" id="srow-morning">
+          <span class="sr-label">Back</span>
+          <input type="range" min="0" max="10" step="0.5" value="0" id="sl-morning" oninput="stageSlider('morning', this.value)"/>
+          <span class="sr-val" id="sv-morning">—</span>
+          <button class="sr-clear" type="button" onclick="clearStage('morning')" title="Clear">✕</button>
+        </div>
+        <div class="slider-row" id="srow-nerve">
+          <span class="sr-label">Nerve</span>
+          <input type="range" min="0" max="10" step="0.5" value="0" id="sl-nerve" oninput="stageSlider('nerve', this.value)"/>
+          <span class="sr-val" id="sv-nerve">—</span>
+          <button class="sr-clear" type="button" onclick="clearStage('nerve')" title="Clear">✕</button>
+        </div>
+        <div class="slider-row" id="srow-glute">
+          <span class="sr-label">Glute</span>
+          <input type="range" min="0" max="10" step="0.5" value="0" id="sl-glute" oninput="stageSlider('glute', this.value)"/>
+          <span class="sr-val" id="sv-glute">—</span>
+          <button class="sr-clear" type="button" onclick="clearStage('glute')" title="Clear">✕</button>
+        </div>
+        <div class="sum-note" style="margin:.05rem 0 .5rem;">Nerve = radicular umbrella — calf · ankle · lateral · tingling sensation. Gate ≤3.5/10.</div>
+        <div class="timing-toggle" id="timing-toggle-wrap">
+          <button class="timing-btn active" id="tbtn-am" onclick="selectTiming('am')">AM</button>
+          <button class="timing-btn" id="tbtn-pre" onclick="selectTiming('pre')">Pre-Session</button>
+          <button class="timing-btn" id="tbtn-post" onclick="selectTiming('post')">Post-Session</button>
+        </div>
+        <div class="gate-status" id="gate-status"></div>
       </div>
-      <div class="score-legend"><span>0 = None</span><span>2 = Gate</span><span>3 = Day C</span><span>5 = Rest</span></div>
     </div>
 
-    <div id="score-section-nerve" style="display:none">
-      <div class="score-label">Nerve — Radiculopathy · Calf Bands · Tingling · Lateral Ankle — Gate ≤ 2/10</div>
-      <div class="score-grid">
-        <button class="score-btn" data-v="0" onclick="selectScore(0)">0</button>
-        <button class="score-btn" data-v="1" onclick="selectScore(1)">1</button>
-        <button class="score-btn" data-v="2" onclick="selectScore(2)">2</button>
-        <button class="score-btn" data-v="3" onclick="selectScore(3)">3</button>
-        <button class="score-btn" data-v="4" onclick="selectScore(4)">4</button>
-        <button class="score-btn" data-v="5" onclick="selectScore(5)">5</button>
+    <div class="log-group" id="lg-symptoms">
+      <button class="log-group-head" type="button" onclick="toggleLogGroup('symptoms')">symptoms<span class="lg-count" id="lgc-symptoms"></span><span class="lg-chev">▾</span></button>
+      <div class="log-group-body">
+        <div class="seg-row">
+          <div class="seg-label">Pain direction today (leg vs back)</div>
+          <div class="seg-btns n3">
+            <button class="timing-btn" id="seg-leg_dominant-0" onclick="stageSeg('leg_dominant',0)">Back-dom.</button>
+            <button class="timing-btn" id="seg-leg_dominant-1" onclick="stageSeg('leg_dominant',1)">Equal</button>
+            <button class="timing-btn" id="seg-leg_dominant-2" onclick="stageSeg('leg_dominant',2)">Leg-dom.</button>
+          </div>
+        </div>
+        <div class="seg-row">
+          <div class="seg-label">Toe tingling today? (big toe / L5)</div>
+          <div class="seg-btns n2">
+            <button class="timing-btn" id="seg-tingle-0" onclick="stageSeg('tingle',0)">No</button>
+            <button class="timing-btn" id="seg-tingle-1" onclick="stageSeg('tingle',1)">Yes</button>
+          </div>
+        </div>
+        <div class="seg-row">
+          <div class="seg-label">Dizzy / near-faint on standing (AM)?</div>
+          <div class="seg-btns n3">
+            <button class="timing-btn" id="seg-dizzy-0" onclick="stageSeg('dizzy',0)">No</button>
+            <button class="timing-btn" id="seg-dizzy-1" onclick="stageSeg('dizzy',1)">Some</button>
+            <button class="timing-btn" id="seg-dizzy-2" onclick="stageSeg('dizzy',2)">Yes</button>
+          </div>
+        </div>
       </div>
-      <div class="score-legend"><span>0 = Silent</span><span>2 = Acceptable</span><span>3+ = Reduce</span></div>
     </div>
 
-    <div id="score-section-glute" style="display:none">
-      <div class="score-label">Glute Activation / Inhibition — Track Trend</div>
-      <div class="score-grid">
-        <button class="score-btn" data-v="0" onclick="selectScore(0)">0</button>
-        <button class="score-btn" data-v="1" onclick="selectScore(1)">1</button>
-        <button class="score-btn" data-v="2" onclick="selectScore(2)">2</button>
-        <button class="score-btn" data-v="3" onclick="selectScore(3)">3</button>
-        <button class="score-btn" data-v="4" onclick="selectScore(4)">4</button>
-        <button class="score-btn" data-v="5" onclick="selectScore(5)">5</button>
+    <div class="log-group" id="lg-sleep">
+      <button class="log-group-head" type="button" onclick="toggleLogGroup('sleep')">sleep<span class="lg-count" id="lgc-sleep"></span><span class="lg-chev">▾</span></button>
+      <div class="log-group-body">
+        <div class="slider-row" id="srow-overnight">
+          <span class="sr-label">Overnight</span>
+          <input type="range" min="0" max="10" step="0.5" value="0" id="sl-overnight" oninput="stageSlider('overnight', this.value)"/>
+          <span class="sr-val" id="sv-overnight">—</span>
+          <button class="sr-clear" type="button" onclick="clearStage('overnight')" title="Clear">✕</button>
+        </div>
+        <div class="seg-label" style="margin-top:.3rem;">Night wakings</div>
+        <div class="stepper-row">
+          <button class="stepper-btn" type="button" onclick="stepWakings(-1)">−</button>
+          <span class="stepper-val" id="wk-val">—</span>
+          <button class="stepper-btn" type="button" onclick="stepWakings(1)">＋</button>
+          <button class="sr-clear" type="button" style="visibility:visible;" onclick="clearWakings()" title="Clear">✕</button>
+        </div>
+        <div class="seg-label">Wake time(s) — optional, once/day</div>
+        <input id="wake-time-input" type="text" maxlength="120" placeholder="e.g. 2:15am, 4:40am"
+          style="width:100%;box-sizing:border-box;background:var(--surface2);border:1px solid var(--border);
+          border-radius:4px;padding:.5rem .75rem;font-family:'IBM Plex Mono',monospace;
+          font-size:.72rem;color:var(--text);outline:none;"/>
       </div>
-      <div class="score-legend"><span>0 = Firing well</span><span>2–3 = Inhibited</span><span>4–5 = Absent</span></div>
     </div>
 
-    <div id="score-section-ankle" style="display:none">
-      <div class="score-label">Lateral Ankle Spot — Track Trend</div>
-      <div class="score-grid">
-        <button class="score-btn" data-v="0" onclick="selectScore(0)">0</button>
-        <button class="score-btn" data-v="1" onclick="selectScore(1)">1</button>
-        <button class="score-btn" data-v="2" onclick="selectScore(2)">2</button>
-        <button class="score-btn" data-v="3" onclick="selectScore(3)">3</button>
-        <button class="score-btn" data-v="4" onclick="selectScore(4)">4</button>
-        <button class="score-btn" data-v="5" onclick="selectScore(5)">5</button>
+    <div class="log-group" id="lg-treatment">
+      <button class="log-group-head" type="button" onclick="toggleLogGroup('treatment')">treatment<span class="lg-count" id="lgc-treatment"></span><span class="lg-chev">▾</span></button>
+      <div class="log-group-body">
+        <span class="medrol-chip" id="medrol-chip"></span>
+        <div class="seg-label">Modality</div>
+        <div class="treat-mods" id="treat-mods"></div>
+        <div class="slider-row" id="srow-treat-before">
+          <span class="sr-label">Before</span>
+          <input type="range" min="0" max="10" step="0.5" value="0" id="sl-treat-before" oninput="stageTreat('before', this.value)"/>
+          <span class="sr-val" id="sv-treat-before">—</span>
+          <button class="sr-clear" type="button" onclick="clearTreat('before')" title="Clear">✕</button>
+        </div>
+        <div class="slider-row" id="srow-treat-after">
+          <span class="sr-label">After</span>
+          <input type="range" min="0" max="10" step="0.5" value="0" id="sl-treat-after" oninput="stageTreat('after', this.value)"/>
+          <span class="sr-val" id="sv-treat-after">—</span>
+          <button class="sr-clear" type="button" onclick="clearTreat('after')" title="Clear">✕</button>
+        </div>
+        <div class="treat-delta" id="treat-delta"></div>
       </div>
-      <div class="score-legend"><span>0 = Gone</span><span>1–2 = Residual</span><span>3+ = Active</span></div>
     </div>
 
-    <div id="score-section-overnight" style="display:none">
-      <div class="score-label">Overnight Pain — reported at night wakings</div>
-      <div class="score-grid">
-        <button class="score-btn" data-v="0" onclick="selectScore(0)">0</button>
-        <button class="score-btn" data-v="1" onclick="selectScore(1)">1</button>
-        <button class="score-btn" data-v="2" onclick="selectScore(2)">2</button>
-        <button class="score-btn" data-v="3" onclick="selectScore(3)">3</button>
-        <button class="score-btn" data-v="4" onclick="selectScore(4)">4</button>
-        <button class="score-btn" data-v="5" onclick="selectScore(5)">5</button>
+    <div class="log-group" id="lg-notes">
+      <button class="log-group-head" type="button" onclick="toggleLogGroup('notes')">notes<span class="lg-count" id="lgc-notes"></span><span class="lg-chev">▾</span></button>
+      <div class="log-group-body">
+        <div class="seg-row">
+          <div class="seg-label">Rehab exercises done today?</div>
+          <div class="seg-btns n2">
+            <button class="timing-btn" id="seg-exdone-0" onclick="stageExDone(0)">No</button>
+            <button class="timing-btn" id="seg-exdone-1" onclick="stageExDone(1)">Yes</button>
+          </div>
+        </div>
+        <div class="seg-label">Notes — symptoms, leg detail, anything for the visit</div>
+        <textarea id="note-input" class="note-input" maxlength="500" placeholder="e.g. calf band mid-afternoon after 20 min sitting"></textarea>
       </div>
-      <div class="score-legend"><span>0 = None</span><span>2–3 = Moderate</span><span>4–5 = Severe</span></div>
-    </div>
-
-    <div id="score-section-tingle" style="display:none">
-      <div class="score-label">Toe Tingling Today? (big toe / L5)</div>
-      <div class="score-grid narrow-2">
-        <button class="score-btn text-label" data-v="0" onclick="selectScore(0)">No</button>
-        <button class="score-btn text-label" data-v="1" onclick="selectScore(1)">Yes</button>
-      </div>
-      <div class="score-legend"><span>No tingling</span><span>Present — stand + 10 standing ext.</span></div>
-    </div>
-
-    <div id="score-section-dizzy" style="display:none">
-      <div class="score-label">Dizzy / Near-Faint on Standing (AM)?</div>
-      <div class="score-grid narrow-3">
-        <button class="score-btn text-label" data-v="0" onclick="selectScore(0)">No</button>
-        <button class="score-btn text-label" data-v="1" onclick="selectScore(1)">Some</button>
-        <button class="score-btn text-label" data-v="2" onclick="selectScore(2)">Yes</button>
-      </div>
-      <div class="score-legend"><span>None</span><span>Mild</span><span>Clear — flag for Bansal</span></div>
-    </div>
-
-    <!-- 3 timing options: AM / Pre-Session / Post-Session — hidden for non-session metrics (overnight/tingle/dizzy) -->
-    <div class="timing-toggle" id="timing-toggle-wrap">
-      <button class="timing-btn active" id="tbtn-am" onclick="selectTiming('am')">AM</button>
-      <button class="timing-btn" id="tbtn-pre" onclick="selectTiming('pre')">Pre-Session</button>
-      <button class="timing-btn" id="tbtn-post" onclick="selectTiming('post')">Post-Session</button>
-    </div>
-
-    <div class="gate-status" id="gate-status"></div>
-
-    <div style="margin-bottom:.85rem;">
-      <div class="score-label" style="margin-bottom:.35rem;">Wake Time(s) — optional, once/day</div>
-      <input id="wake-time-input" type="text" maxlength="120" placeholder="e.g. 2:15am, 4:40am"
-        style="width:100%;box-sizing:border-box;background:var(--surface2);border:1px solid var(--border);
-        border-radius:4px;padding:.5rem .75rem;font-family:'IBM Plex Mono',monospace;
-        font-size:.72rem;color:var(--text);outline:none;"/>
     </div>
 
     <div style="margin-bottom:0.45rem;">
@@ -873,6 +939,25 @@ main { padding:1.25rem; max-width:700px; margin:0 auto; }
     <div style="display:flex;gap:.5rem;">
       <button class="modal-cancel" style="flex:1;" onclick="exportMetricsCSV()">⬇ CSV</button>
       <button class="modal-cancel" style="flex:1;" onclick="closeMetricsModal()">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- DOCTOR SUMMARY (v7) — in-app replacement for the loose rehab xlsx Summary tab.
+     Printable view for Bansal (Jul 8) + Kataria (Jul 28); data stays on private Supabase sync. -->
+<div class="modal-bg" id="summary-modal">
+  <div class="modal">
+    <div class="modal-title">Doctor Summary</div>
+    <div class="modal-sub" id="summary-range-label">—</div>
+    <div class="range-btns">
+      <button class="timing-btn" id="rng-7" onclick="setSummaryRange(7)">7 days</button>
+      <button class="timing-btn active" id="rng-14" onclick="setSummaryRange(14)">14 days</button>
+      <button class="timing-btn" id="rng-30" onclick="setSummaryRange(30)">30 days</button>
+    </div>
+    <div id="summary-body"></div>
+    <div class="sum-actions" style="display:flex;gap:.5rem;margin-top:.7rem;">
+      <button class="modal-save" style="flex:1;" onclick="printSummary()">🖨 Print / PDF</button>
+      <button class="modal-cancel" style="flex:1;" onclick="closeSummary()">Close</button>
     </div>
   </div>
 </div>
@@ -2582,8 +2667,6 @@ async function sbFetch(path, opts = {}){
 // ─────────────────────────────────────────
 let currentWeek = parseInt(localStorage.getItem('pt_week') || '0');
 let selectedDay = 0;
-let activeMetric = 'morning';
-let selectedScore = null;
 let selectedTiming = 'am';
 
 // In-memory log cache — populated from Supabase on load, updated on save
@@ -2782,18 +2865,21 @@ function getLatestScore(metric){
   return recent.sort((a,b) => b.ts - a.ts)[0].score;
 }
 
+// v7 (Jul 2026): thresholds rescaled to the true 0–10 log scale.
+// Old 0–5 grid gates map via new = old×2 − 0.5 (the go-live conversion SQL):
+// old ≥3 (Day C) → ≥5.5 · old ≥2 (reduce) → ≥3.5 · old ≤2 gate → ≤3.5.
 function getDayType(baseType){
   const am = getLatestScore('morning');
   if(am === null) return baseType;
-  if(am >= 3) return 'C';
+  if(am >= 5.5) return 'C';
   return baseType;
 }
 
 function getLoadModifier(){
   const am = getLatestScore('morning');
   if(am === null) return 1;
-  if(am >= 3) return 0;
-  if(am >= 2) return 0.7;
+  if(am >= 5.5) return 0;
+  if(am >= 3.5) return 0.7;
   return 1;
 }
 
@@ -2801,21 +2887,21 @@ function getBreaches(){
   const am = getLatestScore('morning');
   const nerve = getLatestScore('nerve');
   return {
-    morning: am !== null && am >= 3,
-    morningReduce: am !== null && am >= 2 && am < 3,
-    nerve: nerve !== null && nerve > 2,
+    morning: am !== null && am >= 5.5,
+    morningReduce: am !== null && am >= 3.5 && am < 5.5,
+    nerve: nerve !== null && nerve > 3.5,
   };
 }
 
 function updateMetricDisplay(){
-  const metrics = ['morning','nerve','ankle'];
-  const limits = {morning:2, nerve:2, ankle:99};
+  const metrics = ['morning','nerve','glute'];
+  const limits = {morning:3.5, nerve:3.5, glute:99};
   metrics.forEach(m => {
     const val = getLatestScore(m);
     const el = document.getElementById('val-'+m);
     if(!el) return;
     if(val === null){ el.textContent = '—'; el.className = 'metric-val none'; return; }
-    el.textContent = val + '/10';
+    el.textContent = fmtScore(val) + '/10';
     el.className = 'metric-val ' + (val === 0 ? 'ok' : val <= limits[m] ? 'warn' : 'bad');
   });
 }
@@ -2928,12 +3014,12 @@ function renderDay(idx){
 
   // Override banners
   if(breaches.morning && !day.rest){
-    html += `<div class="hold-banner"><div style="font-size:1rem;flex-shrink:0">🛑</div><div class="hold-text"><strong>Day C Override — Morning Pain ≥3/10</strong>Lower body loading cancelled today. Walk + bike + upper body only.</div></div>`;
+    html += `<div class="hold-banner"><div style="font-size:1rem;flex-shrink:0">🛑</div><div class="hold-text"><strong>Day C Override — Morning Pain ≥5.5/10</strong>Lower body loading cancelled today. Walk + bike + upper body only.</div></div>`;
   } else if(breaches.morningReduce && !day.rest && (day.type === 'A' || day.type === 'D')){
-    html += `<div class="autoreg-banner"><div class="autoreg-icon">⚠️</div><div class="autoreg-text"><strong>Load Reduction — Morning Pain 2–3/10</strong>Reduce lower body loads by 30% today. Do not skip — reduce.</div></div>`;
+    html += `<div class="autoreg-banner"><div class="autoreg-icon">⚠️</div><div class="autoreg-text"><strong>Load Reduction — Morning Pain 3.5–5/10</strong>Reduce lower body loads by 30% today. Do not skip — reduce.</div></div>`;
   }
   if(breaches.nerve && !day.rest){
-    html += `<div class="autoreg-banner"><div class="autoreg-icon">⚡</div><div class="autoreg-text"><strong>Nerve Elevated >2/10</strong>Session proceeds but avoid loading to fatigue. Monitor calf bands mid-session. Bike post-session is mandatory.</div></div>`;
+    html += `<div class="autoreg-banner"><div class="autoreg-icon">⚡</div><div class="autoreg-text"><strong>Nerve Elevated >3.5/10</strong>Session proceeds but avoid loading to fatigue. Monitor calf bands mid-session. Bike post-session is mandatory.</div></div>`;
   }
 
   if(day.rest || (breaches.morning && !day.rest)){
@@ -2984,21 +3070,41 @@ function renderDay(idx){
     }
   }
 
-  // History
+  // History (v7: categorical + treatment metrics render with labels; gates on /10 scale)
   const dayLogs = logs.filter(l => l.date === dateStr);
   if(dayLogs.length){
-    html += `<div class="history-section"><div class="history-label">Pain Log</div>`;
+    html += `<div class="history-section"><div class="history-label">Daily Log</div>`;
     dayLogs.forEach(l => {
-      const limits = {morning:2, nerve:2, glute:99, ankle:99};
-      const limit = limits[l.metric] || 2;
-      const sc = l.score === 0 ? 'ok' : l.score <= limit ? 'warn' : 'bad';
-      const mLabel = {morning:'Back', nerve:'Nerve', glute:'Glute', ankle:'Ankle'}[l.metric] || l.metric;
+      const gateLimits = {morning:3.5, nerve:3.5};
+      const catMap = {tingle:{0:'No',1:'Yes'}, dizzy:{0:'No',1:'Some',2:'Yes'},
+                      leg_dominant:{0:'Back-dom',1:'Equal',2:'Leg-dom'}};
+      const mMap = {morning:'Back', nerve:'Nerve', glute:'Glute', ankle:'Ankle', overnight:'Overnight',
+                    tingle:'Tingle', dizzy:'Dizzy', leg_dominant:'Direction', wakings:'Wakings'};
+      const mLabel = mMap[l.metric] ||
+        (l.metric.charAt(0).toUpperCase() + l.metric.slice(1)).replace(/_/g,' ');
       const tLabel = {am:'AM', pre:'Pre-Session', post:'Post-Session',
                       before:'Pre-Session', after:'Post/AM'}[l.timing] || l.timing;
+      let valTxt, sc, gateTxt = '';
+      if(catMap[l.metric]){
+        valTxt = catMap[l.metric][l.score] !== undefined ? catMap[l.metric][l.score] : l.score;
+        sc = l.score === 0 ? 'ok' : 'warn';
+      } else if(l.metric === 'wakings'){
+        valTxt = l.score + '×';
+        sc = l.score <= 1 ? 'ok' : 'warn';
+      } else {
+        valTxt = fmtScore(l.score) + '/10';
+        const limit = gateLimits[l.metric];
+        if(limit !== undefined){
+          sc = l.score === 0 ? 'ok' : l.score <= limit ? 'warn' : 'bad';
+          gateTxt = l.score <= limit ? '✓ gate held' : '⚠ gate breached';
+        } else {
+          sc = l.score === 0 ? 'ok' : l.score <= 3.5 ? 'warn' : 'bad';
+        }
+      }
       html += `<div class="log-row">
         <span class="log-date">${mLabel} · ${tLabel}</span>
-        <span class="log-score ${sc}">${l.score}/10</span>
-        <span class="log-timing">${l.score <= limit ? '✓' : '⚠'} ${l.score <= limit ? 'gate held' : 'gate breached'}</span>
+        <span class="log-score ${sc}">${valTxt}</span>
+        <span class="log-timing">${gateTxt}</span>
       </div>`;
     });
     html += `</div>`;
@@ -3047,7 +3153,20 @@ function buildBlocksHtml(blocks, dayIdx, opts){
           ${demoLinkHtml(nameIdx, info)}
         </div>`;
       } else {
-        html += `<div class="ex-row${rowCls}" style="cursor:default"><div class="ex-name">${safeName}</div><div style="display:flex;align-items:center;gap:0.3rem;flex-shrink:0"><div class="${doseCls}">${safeDose}</div>${ovBtn}</div></div>`;
+        // v7: rehab/flare-protocol rows (no EX_INFO entry) still get a detail drawer
+        // carrying the ＋demo affordance — same pt_demos flow as the strength lifts.
+        html += `
+        <div class="ex-row${rowCls}" onclick="toggleDetail('${uid}')" id="row-${uid}">
+          <div class="ex-name">${safeName}${ex.note ? `<small>${ex.note}</small>` : ''}</div>
+          <div style="display:flex;align-items:center;gap:0.3rem;flex-shrink:0">
+            <div class="${doseCls}">${safeDose}</div>
+            ${ovBtn}
+            <span class="ex-chevron">▼</span>
+          </div>
+        </div>
+        <div class="ex-detail" id="${uid}">
+          ${demoLinkHtml(nameIdx, null)}
+        </div>`;
       }
     });
     html += `</div>`;
@@ -3064,40 +3183,69 @@ function toggleDetail(uid){
 }
 
 // ─────────────────────────────────────────
-// MODAL — multi-metric staging
+// MODAL — v7 grouped daily log (Jul 2026 redesign)
 // ─────────────────────────────────────────
-// Metrics: morning, nerve, glute, ankle
-// Timings: am, pre, post
-// Timing persists across metric switches — only resets on openModal()
+// Pain: morning/nerve/glute — 0–10 half-point sliders (Ankle RETIRED, merged into
+//   Nerve; historical 'ankle' rows stay in the DB, no new input).
+// Symptoms: leg_dominant 0/1/2 · tingle 0/1 · dizzy 0/1/2 (toggles).
+// Sleep: overnight 0–10 · wakings # · wake times (localStorage pt_wake_times).
+// Treatment: modality-agnostic <mod>_before / <mod>_after (nexwave, shockwave, +custom).
+// Notes: exercise-done + free text → localStorage pt_daily_notes (35-day prune).
+// pain_logs schema untouched — new inputs are just new `metric` strings.
 
-const METRICS = ['morning','nerve','glute','ankle','overnight','tingle','dizzy'];
-const METRIC_LABELS = { morning:'Morning', nerve:'Nerve', glute:'Glute', ankle:'Ankle', overnight:'Overnight', tingle:'Toe Tingle', dizzy:'AM Dizzy' };
+const METRIC_LABELS = { morning:'Back', nerve:'Nerve', glute:'Glute', ankle:'Ankle',
+  overnight:'Overnight', tingle:'Toe Tingle', dizzy:'AM Dizzy',
+  leg_dominant:'Direction', wakings:'Night Wakings' };
 const TIMING_LABELS = { am:'AM', pre:'Pre-Session', post:'Post-Session' };
-// Metrics that aren't session-relative — no Pre/Post meaning, always logged as AM
-const METRICS_NO_TIMING = new Set(['overnight','tingle','dizzy']);
-// Categorical metrics — display a label instead of a raw score
-const CATEGORICAL_LABELS = { tingle:{0:'No',1:'Yes'}, dizzy:{0:'No',1:'Some',2:'Yes'} };
+// Only session-relative metrics carry a Pre/Post timing — everything else logs as 'am'
+const TIMED_METRICS = new Set(['morning','nerve','glute']);
+const CATEGORICAL_LABELS = { tingle:{0:'No',1:'Yes'}, dizzy:{0:'No',1:'Some',2:'Yes'},
+  leg_dominant:{0:'Back-dominant',1:'Equal',2:'Leg-dominant'} };
+const SLIDER_METRICS = ['morning','nerve','glute','overnight'];
+const GROUP_METRICS = { pain:['morning','nerve','glute'], symptoms:['leg_dominant','tingle','dizzy'],
+  sleep:['overnight','wakings'] };
 
-// pendingScores: { morning: {score, timing}, nerve: {...}, glute: {...}, ankle: {...} }
-let pendingScores = {};
+// Treatment modalities — extensible ('＋' adds one, persisted in pt_treat_mods)
+let treatMods = ['nexwave','shockwave'];
+try { JSON.parse(localStorage.getItem('pt_treat_mods') || '[]').forEach(m => { if(!treatMods.includes(m)) treatMods.push(m); }); } catch(e){}
+const MOD_LABELS = { nexwave:'NexWave', shockwave:'Shockwave' };
+function modLabel(m){ return MOD_LABELS[m] || (m.charAt(0).toUpperCase() + m.slice(1)).replace(/_/g,' '); }
+let activeModality = 'nexwave';
+
+let pendingScores = {};   // {metric: {score, timing}}
+let wakingsVal = null;
+let exDoneVal = null;
+
+function fmtScore(v){ return (v % 1 === 0) ? String(v) : v.toFixed(1); }
+
+function toggleLogGroup(g){ document.getElementById('lg-'+g).classList.toggle('open'); }
 
 function openModal(){
   pendingScores = {};
-  selectedScore = null;
-  activeMetric = 'morning';
-  selectedTiming = 'am'; // default to AM on fresh open
-  document.querySelectorAll('.score-btn').forEach(b => b.classList.remove('selected'));
-  METRICS.forEach(k => {
-    document.getElementById('mbtn-'+k).classList.toggle('active', k==='morning');
-    document.getElementById('score-section-'+k).style.display = k==='morning' ? 'block' : 'none';
-  });
+  selectedTiming = 'am';
+  wakingsVal = null;
   syncTimingButtons();
-  document.getElementById('timing-toggle-wrap').style.display = METRICS_NO_TIMING.has('morning') ? 'none' : 'grid';
+  SLIDER_METRICS.forEach(resetSliderRow);
+  resetTreatSliders();
+  ['leg_dominant','tingle','dizzy'].forEach(m => setSegActive(m, null));
+  renderWakings();
+  renderModalityBtns();
+  renderMedrolChip();
+  ['pain','symptoms','sleep','treatment','notes'].forEach(g => {
+    document.getElementById('lg-'+g).classList.toggle('open', g === 'pain');
+  });
+  updateGroupCounts();
   document.getElementById('gate-status').style.display = 'none';
   document.getElementById('pending-summary').style.display = 'none';
   document.getElementById('pending-list').textContent = '';
+  // Prefill day-keyed local stores
   const wakeStore = JSON.parse(localStorage.getItem('pt_wake_times') || '{}');
   document.getElementById('wake-time-input').value = wakeStore[todayDateStr()] || '';
+  const noteStore = JSON.parse(localStorage.getItem('pt_daily_notes') || '{}');
+  const todayNote = noteStore[todayDateStr()] || {};
+  document.getElementById('note-input').value = todayNote.note || '';
+  exDoneVal = (todayNote.ex === 0 || todayNote.ex === 1) ? todayNote.ex : null;
+  setSegActive('exdone', exDoneVal);
   const today = new Date().toLocaleDateString('en-US',{weekday:'long',month:'short',day:'numeric'});
   document.getElementById('modal-date-label').textContent = 'Logging for ' + today;
   document.getElementById('gate-modal').classList.add('open');
@@ -3106,103 +3254,240 @@ function openModal(){
 function closeModal(){
   document.getElementById('gate-modal').classList.remove('open');
   pendingScores = {};
+  wakingsVal = null;
+  exDoneVal = null;
 }
 
 function syncTimingButtons(){
-  // Reflect selectedTiming in the 3 buttons — no side effects
   ['am','pre','post'].forEach(t => {
     document.getElementById('tbtn-'+t).classList.toggle('active', t === selectedTiming);
   });
 }
 
-function selectMetric(m){
-  // Auto-stage current metric if a score is selected before switching
-  if(selectedScore !== null && activeMetric !== m){
-    pendingScores[activeMetric] = { score: selectedScore, timing: selectedTiming };
-    updatePendingSummary();
-  }
-
-  activeMetric = m;
-  selectedScore = null;
-  document.querySelectorAll('.score-btn').forEach(b => b.classList.remove('selected'));
-
-  // If this metric was already staged, pre-fill its score
-  if(pendingScores[m] !== undefined){
-    const staged = pendingScores[m].score;
-    document.querySelectorAll('#score-section-' + m + ' .score-btn').forEach(b => {
-      b.classList.toggle('selected', parseInt(b.dataset.v) === staged);
-    });
-    selectedScore = staged;
-  }
-
-  METRICS.forEach(k => {
-    document.getElementById('mbtn-'+k).classList.toggle('active', k===m);
-    document.getElementById('score-section-'+k).style.display = k===m ? 'block' : 'none';
-  });
-  if(METRICS_NO_TIMING.has(m)){
-    document.getElementById('timing-toggle-wrap').style.display = 'none';
-    selectedTiming = 'am';
-    if(pendingScores[m] !== undefined) pendingScores[m].timing = 'am';
-  } else {
-    document.getElementById('timing-toggle-wrap').style.display = 'grid';
-  }
-  document.getElementById('gate-status').style.display = 'none';
-  if(selectedScore !== null) updateGateStatus();
-}
-
-function selectScore(n){
-  selectedScore = n;
-  document.querySelectorAll('#score-section-' + activeMetric + ' .score-btn').forEach(b => {
-    b.classList.toggle('selected', parseInt(b.dataset.v) === n);
-  });
-  updateGateStatus();
-}
-
 function selectTiming(t){
   selectedTiming = t;
   syncTimingButtons();
-  // If current metric is already staged, update its timing in place
-  if(pendingScores[activeMetric] !== undefined){
-    pendingScores[activeMetric].timing = t;
-    updatePendingSummary();
-  }
+  // One timing per logging moment — re-time every staged pain metric
+  Object.keys(pendingScores).forEach(m => { if(TIMED_METRICS.has(m)) pendingScores[m].timing = t; });
+  updatePendingSummary();
 }
 
-function updateGateStatus(){
+// ── staging: sliders ──
+function stageSlider(m, v){
+  const val = parseFloat(v);
+  pendingScores[m] = { score: val, timing: TIMED_METRICS.has(m) ? selectedTiming : 'am' };
+  const row = document.getElementById('srow-'+m);
+  if(row) row.classList.add('staged');
+  document.getElementById('sv-'+m).textContent = fmtScore(val);
+  updateGateStatus(m, val);
+  updatePendingSummary();
+  updateGroupCounts();
+}
+
+function clearStage(m){
+  delete pendingScores[m];
+  resetSliderRow(m);
+  document.getElementById('gate-status').style.display = 'none';
+  updatePendingSummary();
+  updateGroupCounts();
+}
+
+function resetSliderRow(m){
+  const el = document.getElementById('sl-'+m);
+  if(el) el.value = 0;
+  const row = document.getElementById('srow-'+m);
+  if(row) row.classList.remove('staged');
+  const sv = document.getElementById('sv-'+m);
+  if(sv) sv.textContent = '—';
+}
+
+// ── staging: segmented toggles (tap active again to unstage) ──
+function stageSeg(m, v){
+  if(pendingScores[m] && pendingScores[m].score === v){
+    delete pendingScores[m];
+    setSegActive(m, null);
+    document.getElementById('gate-status').style.display = 'none';
+  } else {
+    pendingScores[m] = { score: v, timing: 'am' };
+    setSegActive(m, v);
+    updateGateStatus(m, v);
+  }
+  updatePendingSummary();
+  updateGroupCounts();
+}
+
+function setSegActive(name, val){
+  document.querySelectorAll('[id^="seg-' + name + '-"]').forEach(b => {
+    b.classList.toggle('active', val !== null && b.id === 'seg-' + name + '-' + val);
+  });
+}
+
+function stageExDone(v){
+  exDoneVal = (exDoneVal === v) ? null : v;
+  setSegActive('exdone', exDoneVal);
+}
+
+// ── staging: night wakings stepper ──
+function stepWakings(d){
+  wakingsVal = wakingsVal === null ? Math.max(0, d) : Math.min(9, Math.max(0, wakingsVal + d));
+  pendingScores['wakings'] = { score: wakingsVal, timing: 'am' };
+  renderWakings();
+  updatePendingSummary();
+  updateGroupCounts();
+}
+
+function clearWakings(){
+  wakingsVal = null;
+  delete pendingScores['wakings'];
+  renderWakings();
+  updatePendingSummary();
+  updateGroupCounts();
+}
+
+function renderWakings(){
+  document.getElementById('wk-val').textContent = wakingsVal === null ? '—' : wakingsVal;
+}
+
+// ── staging: treatment (modality-agnostic before/after) ──
+function renderModalityBtns(){
+  const wrap = document.getElementById('treat-mods');
+  wrap.textContent = '';
+  treatMods.forEach(m => {
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'timing-btn' + (m === activeModality ? ' active' : '');
+    b.textContent = modLabel(m);   // user-entered names render via textContent (security rule)
+    b.onclick = function(){ activeModality = m; renderModalityBtns(); syncTreatSliders(); };
+    wrap.appendChild(b);
+  });
+  const add = document.createElement('button');
+  add.type = 'button';
+  add.className = 'timing-btn';
+  add.textContent = '＋';
+  add.onclick = addModality;
+  wrap.appendChild(add);
+}
+
+function addModality(){
+  const name = prompt('New treatment modality (e.g. Massage gun):');
+  if(!name) return;
+  const slug = name.toLowerCase().replace(/[^a-z0-9]+/g,'_').replace(/^_+|_+$/g,'').slice(0,24);
+  if(!slug) return;
+  if(!treatMods.includes(slug)) treatMods.push(slug);
+  localStorage.setItem('pt_treat_mods', JSON.stringify(treatMods.filter(m => m !== 'nexwave' && m !== 'shockwave')));
+  activeModality = slug;
+  renderModalityBtns();
+  syncTreatSliders();
+}
+
+function stageTreat(phase, v){
+  const val = parseFloat(v);
+  pendingScores[activeModality + '_' + phase] = { score: val, timing: 'am' };
+  document.getElementById('srow-treat-'+phase).classList.add('staged');
+  document.getElementById('sv-treat-'+phase).textContent = fmtScore(val);
+  updateTreatDelta();
+  updatePendingSummary();
+  updateGroupCounts();
+}
+
+function clearTreat(phase){
+  delete pendingScores[activeModality + '_' + phase];
+  resetTreatRow(phase);
+  updateTreatDelta();
+  updatePendingSummary();
+  updateGroupCounts();
+}
+
+function resetTreatRow(phase){
+  document.getElementById('sl-treat-'+phase).value = 0;
+  document.getElementById('srow-treat-'+phase).classList.remove('staged');
+  document.getElementById('sv-treat-'+phase).textContent = '—';
+}
+
+function resetTreatSliders(){
+  ['before','after'].forEach(resetTreatRow);
+  updateTreatDelta();
+}
+
+function syncTreatSliders(){
+  // Modality switched — show that modality's staged values (values are keyed per modality)
+  ['before','after'].forEach(p => {
+    const st = pendingScores[activeModality + '_' + p];
+    if(st){
+      document.getElementById('sl-treat-'+p).value = st.score;
+      document.getElementById('srow-treat-'+p).classList.add('staged');
+      document.getElementById('sv-treat-'+p).textContent = fmtScore(st.score);
+    } else resetTreatRow(p);
+  });
+  updateTreatDelta();
+}
+
+function updateTreatDelta(){
+  const el = document.getElementById('treat-delta');
+  const b = pendingScores[activeModality + '_before'];
+  const a = pendingScores[activeModality + '_after'];
+  if(b && a){
+    const d = a.score - b.score;
+    el.textContent = modLabel(activeModality) + ': ' + fmtScore(b.score) + ' → ' + fmtScore(a.score) +
+      ' (' + (d > 0 ? '+' : '') + fmtScore(d) + (d < 0 ? ' — relief' : d > 0 ? ' — worse' : ' — no change') + ')';
+  } else el.textContent = '';
+}
+
+// ── Medrol taper chip — auto-derived, self-expires after Jul 8 2026 ──
+function renderMedrolChip(){
+  const chip = document.getElementById('medrol-chip');
+  const start = new Date(2026, 6, 3); // Jul 3 (month 0-indexed — CLAUDE.md date rule)
+  const t = new Date();
+  const dayN = Math.round((new Date(t.getFullYear(), t.getMonth(), t.getDate()) - start) / 86400000) + 1;
+  if(dayN >= 1 && dayN <= 6){
+    chip.style.display = 'inline-block';
+    chip.textContent = '💊 Medrol taper — day ' + dayN + ' of 6 (auto-tracked)';
+  } else chip.style.display = 'none';
+}
+
+// ── gate hint (thresholds on the 0–10 scale; old 0–5 gates × 2 − 0.5) ──
+function updateGateStatus(m, s){
   const el = document.getElementById('gate-status');
-  if(selectedScore === null){ el.style.display = 'none'; return; }
   el.style.display = 'block';
-  const s = selectedScore;
-  if(activeMetric === 'morning'){
-    if(s <= 1){ el.className = 'gate-status pass'; el.textContent = '✓ Back gate clear — proceed normally'; }
-    else if(s === 2){ el.className = 'gate-status reduce'; el.textContent = '⚠ Day A with 30% load reduction'; }
-    else if(s >= 3){ el.className = 'gate-status hold'; el.textContent = '🛑 Day C override — lower body cancelled'; }
-  } else if(activeMetric === 'nerve'){
-    if(s <= 2){ el.className = 'gate-status pass'; el.textContent = '✓ Nerve gate held — proceed'; }
+  if(m === 'morning'){
+    if(s <= 3){ el.className = 'gate-status pass'; el.textContent = '✓ Back gate clear — proceed normally'; }
+    else if(s < 5.5){ el.className = 'gate-status reduce'; el.textContent = '⚠ Back 3.5–5 — Day A with 30% load reduction'; }
+    else{ el.className = 'gate-status hold'; el.textContent = '🛑 Back ≥5.5 — Day C override, lower body cancelled'; }
+  } else if(m === 'nerve'){
+    if(s <= 3.5){ el.className = 'gate-status pass'; el.textContent = '✓ Nerve gate held — proceed'; }
     else{ el.className = 'gate-status reduce'; el.textContent = '⚠ Nerve elevated — reduce load, bike mandatory post-session.'; }
-  } else if(activeMetric === 'glute'){
+  } else if(m === 'glute'){
     if(s === 0){ el.className = 'gate-status pass'; el.textContent = '✓ Glute firing well — positive sign'; }
-    else if(s <= 2){ el.className = 'gate-status reduce'; el.textContent = s + '/10 — some inhibition. Note L vs R difference.'; }
-    else{ el.className = 'gate-status hold'; el.textContent = s + '/10 — significant inhibition. Log and track.'; }
-  } else if(activeMetric === 'ankle'){
-    if(s === 0){ el.className = 'gate-status pass'; el.textContent = '✓ Ankle spot silent — positive sign'; }
-    else if(s <= 2){ el.className = 'gate-status reduce'; el.textContent = s + '/10 — residual. Log and track trend.'; }
-    else{ el.className = 'gate-status hold'; el.textContent = s + '/10 — active. Note position changes.'; }
-  } else if(activeMetric === 'overnight'){
-    if(s <= 1){ el.className = 'gate-status pass'; el.textContent = '✓ Overnight pain low — logged.'; }
-    else if(s <= 3){ el.className = 'gate-status reduce'; el.textContent = s + '/5 — moderate overnight pain, logged for Jul 8.'; }
-    else{ el.className = 'gate-status hold'; el.textContent = s + '/5 — high overnight pain, logged for Bansal.'; }
-  } else if(activeMetric === 'tingle'){
+    else if(s <= 3.5){ el.className = 'gate-status reduce'; el.textContent = fmtScore(s) + '/10 — some inhibition. Note L vs R difference.'; }
+    else{ el.className = 'gate-status hold'; el.textContent = fmtScore(s) + '/10 — significant inhibition. Log and track.'; }
+  } else if(m === 'overnight'){
+    if(s <= 2){ el.className = 'gate-status pass'; el.textContent = '✓ Overnight pain low — logged.'; }
+    else if(s <= 5.5){ el.className = 'gate-status reduce'; el.textContent = fmtScore(s) + '/10 — moderate overnight pain, logged for Jul 8.'; }
+    else{ el.className = 'gate-status hold'; el.textContent = fmtScore(s) + '/10 — high overnight pain, logged for Bansal.'; }
+  } else if(m === 'tingle'){
     if(s === 0){ el.className = 'gate-status pass'; el.textContent = '✓ No toe tingling today.'; }
     else{ el.className = 'gate-status reduce'; el.textContent = '⚠ Tingling logged — stand + 10 standing extensions.'; }
-  } else if(activeMetric === 'dizzy'){
+  } else if(m === 'dizzy'){
     if(s === 0){ el.className = 'gate-status pass'; el.textContent = '✓ No AM dizziness — logged.'; }
     else if(s === 1){ el.className = 'gate-status reduce'; el.textContent = '⚠ Some AM dizziness logged — mention at Jul 8.'; }
     else{ el.className = 'gate-status hold'; el.textContent = '🛑 AM dizziness logged — rise slowly, flag clearly for Bansal.'; }
-  }
+  } else if(m === 'leg_dominant'){
+    if(s === 2){ el.className = 'gate-status hold'; el.textContent = 'Leg-dominant day — peripheralizing signal, worth a note for Kataria.'; }
+    else if(s === 0){ el.className = 'gate-status pass'; el.textContent = 'Back-dominant — centralizing direction. Good sign.'; }
+    else{ el.className = 'gate-status reduce'; el.textContent = 'Equal leg/back today — logged.'; }
+  } else el.style.display = 'none';
 }
 
-
+function updateGroupCounts(){
+  Object.keys(GROUP_METRICS).forEach(g => {
+    const n = GROUP_METRICS[g].filter(m => pendingScores[m] !== undefined).length;
+    const el = document.getElementById('lgc-'+g);
+    if(el) el.textContent = n ? '· ' + n + ' staged' : '';
+  });
+  const t = Object.keys(pendingScores).filter(m => /_before$|_after$/.test(m)).length;
+  const tEl = document.getElementById('lgc-treatment');
+  if(tEl) tEl.textContent = t ? '· ' + t + ' staged' : '';
+}
 
 function updatePendingSummary(){
   const keys = Object.keys(pendingScores);
@@ -3211,11 +3496,15 @@ function updatePendingSummary(){
     return;
   }
   document.getElementById('pending-summary').style.display = 'block';
+  // Internal constant strings only — no user input in this innerHTML
   document.getElementById('pending-list').innerHTML = keys.map(k => {
     const p = pendingScores[k];
     if(CATEGORICAL_LABELS[k]) return '✓ ' + METRIC_LABELS[k] + ': ' + CATEGORICAL_LABELS[k][p.score];
-    if(k === 'overnight') return '✓ ' + METRIC_LABELS[k] + ': ' + p.score + '/5';
-    return '✓ ' + METRIC_LABELS[k] + ': ' + p.score + '/10 (' + TIMING_LABELS[p.timing] + ')';
+    if(k === 'wakings') return '✓ Night wakings: ' + p.score;
+    const tm = /_before$/.test(k) ? 'before' : /_after$/.test(k) ? 'after' : null;
+    if(tm) return '✓ ' + modLabel(k.replace(/_(before|after)$/,'')).replace(/[<>&]/g,'') + ' ' + tm + ': ' + fmtScore(p.score) + '/10';
+    if(k === 'overnight') return '✓ Overnight: ' + fmtScore(p.score) + '/10';
+    return '✓ ' + METRIC_LABELS[k] + ': ' + fmtScore(p.score) + '/10 (' + TIMING_LABELS[p.timing] + ')';
   }).join('<br>');
 }
 
@@ -3232,13 +3521,26 @@ function saveWakeTime(){
   return true;
 }
 
+function saveDailyNotes(){
+  // Free text + exercise-done — localStorage pt_daily_notes {date:{ex:0|1, note}}, 35-day prune
+  const note = document.getElementById('note-input').value.trim().slice(0,500);
+  if(!note && exDoneVal === null) return false;
+  const store = JSON.parse(localStorage.getItem('pt_daily_notes') || '{}');
+  const cur = store[todayDateStr()] || {};
+  if(note) cur.note = note; else delete cur.note;
+  if(exDoneVal !== null) cur.ex = exDoneVal;
+  store[todayDateStr()] = cur;
+  const cutoff = new Date(); cutoff.setDate(cutoff.getDate() - 35);
+  Object.keys(store).forEach(k => { if(parseDateLocal(k) < cutoff) delete store[k]; });
+  localStorage.setItem('pt_daily_notes', JSON.stringify(store));
+  return true;
+}
+
 function saveLog(){
-  if(selectedScore !== null){
-    pendingScores[activeMetric] = { score: selectedScore, timing: selectedTiming };
-  }
   const wakeSaved = saveWakeTime();
+  const notesSaved = saveDailyNotes();
   const toSave = Object.keys(pendingScores);
-  if(!toSave.length && !wakeSaved) return;
+  if(!toSave.length && !wakeSaved && !notesSaved) return;
   if(toSave.length){
     const today = todayDateStr();
     const ts = Date.now();
@@ -3253,6 +3555,7 @@ function saveLog(){
   closeModal();
   updateMetricDisplay();
   renderWaveHeadline(); // pain just changed — re-govern
+  renderFlareupPanel(); // flare episodes may have opened/closed on this log
   initDaySelector();
 }
 
@@ -3424,6 +3727,8 @@ function renderWaveHeadline(){
   const roleTxt = {heavy:'Heavy', moderate:'Moderate', power:'Light-power', canal:'Canal / VO2', recovery:'Recovery'}[wk.role];
   document.getElementById('wave-pos').textContent =
     `Wave ${wk.isDeload ? 'Deload' : wk.cycleLabel} · ${roleTxt}${wk.plannedFactor ? ' · ~'+Math.round(wk.plannedFactor*100)+'%' : ''}`;
+  const cd = document.getElementById('con-date');
+  if(cd) cd.textContent = new Date().toLocaleDateString('en-US',{month:'short',day:'numeric'});
   document.getElementById('wave-verdict').textContent = v.headline;
   const disc = document.getElementById('wave-discipline');
   if(v.discipline){ disc.style.display = 'block'; disc.textContent = '🪧 ' + v.discipline; }
@@ -3440,10 +3745,10 @@ function renderWaveHeadline(){
   paintWhy(v);
 }
 function paintWhy(v){
-  const fmt = (m) => { const s = getLatestScore(m); return s === null ? '—' : s + '/10'; };
+  const fmt = (m) => { const s = getLatestScore(m); return s === null ? '—' : fmtScore(s) + '/10'; };
   document.getElementById('why-morning').textContent = fmt('morning');
   document.getElementById('why-nerve').textContent   = fmt('nerve');
-  document.getElementById('why-ankle').textContent   = fmt('ankle');
+  document.getElementById('why-glute').textContent   = fmt('glute');
   const rl = readingForDate(todayDateStr());
   document.getElementById('why-ready').textContent = rl ? rl : 'not checked in';
   const foot = document.getElementById('why-foot');
@@ -3655,6 +3960,7 @@ function demoLinkHtml(nameIdx, info){
     html += `<button class="ex-video-link demo-set-btn" onclick="event.stopPropagation();setDemo(${nameIdx})" title="Change saved demo">✎</button>`;
   } else {
     if(info && info.url) html += `<a class="ex-video-link" href="${info.url}" target="_blank" onclick="event.stopPropagation()">▶ Search Demo</a>`;
+    else html += `<a class="ex-video-link" href="https://www.youtube.com/results?search_query=${encodeURIComponent(name + ' exercise')}" target="_blank" onclick="event.stopPropagation()">🔍 Search</a>`;
     html += `<button class="ex-video-link demo-set-btn" onclick="event.stopPropagation();setDemo(${nameIdx})">＋ Save my demo</button>`;
   }
   return html + '</div>';
@@ -3998,6 +4304,142 @@ function exportMetricsCSV(){
 document.getElementById('metrics-modal').addEventListener('click', function(e){ if(e.target === this) closeMetricsModal(); });
 
 // ─────────────────────────────────────────
+// v7 — DOCTOR SUMMARY (in-app replacement for the rehab xlsx Summary tab)
+// Recreates the doc-facing view for Bansal (Jul 8) + Kataria (Jul 28):
+// averages per region, symptom direction, treatment deltas, tingle/dizzy counts,
+// wakings, wake times, rehab compliance, notes. DOM-constructed — user text
+// (wake times, notes, modality names) renders via textContent only.
+// ─────────────────────────────────────────
+let summaryRange = 14;
+
+function openSummary(){
+  document.getElementById('summary-modal').classList.add('open');
+  renderSummary();
+}
+function closeSummary(){ document.getElementById('summary-modal').classList.remove('open'); }
+function setSummaryRange(d){
+  summaryRange = d;
+  [7,14,30].forEach(r => document.getElementById('rng-'+r).classList.toggle('active', r === d));
+  renderSummary();
+}
+function printSummary(){
+  document.body.classList.add('print-summary');
+  window.onafterprint = function(){ document.body.classList.remove('print-summary'); window.onafterprint = null; };
+  window.print();
+  setTimeout(function(){ document.body.classList.remove('print-summary'); }, 2000);
+}
+
+function sumEl(tag, cls, text){
+  const el = document.createElement(tag);
+  if(cls) el.className = cls;
+  if(text !== undefined) el.textContent = text;
+  return el;
+}
+function sumRow(parent, label, val){
+  const r = sumEl('div','sum-row');
+  r.appendChild(sumEl('span', null, label));
+  r.appendChild(sumEl('span', null, val));
+  parent.appendChild(r);
+}
+function sumSection(parent, title){
+  const s = sumEl('div','sum-section');
+  s.appendChild(sumEl('div','sum-h', title));
+  parent.appendChild(s);
+  return s;
+}
+
+function renderSummary(){
+  const body = document.getElementById('summary-body');
+  body.textContent = '';
+  const cut = new Date(); cut.setDate(cut.getDate() - (summaryRange - 1));
+  const cs = sbDateStr(cut);
+  const todayS = todayDateStr();
+  document.getElementById('summary-range-label').textContent =
+    'Patrick · L4–L5 / L5–S1 radicular · ' + cs + ' → ' + todayS + ' · 0–10 scale';
+
+  const inRange = logs.filter(l => l.date >= cs);
+  const scores = m => inRange.filter(l => (Array.isArray(m) ? m.includes(l.metric) : l.metric === m));
+  const avg = arr => arr.length ? (arr.reduce((a,l) => a + l.score, 0) / arr.length) : null;
+  const f = v => v === null ? '—' : (Math.round(v*10)/10).toFixed(1);
+
+  // Pain averages
+  const pain = sumSection(body, 'pain — averages, last ' + summaryRange + ' days');
+  const backAm = scores('morning').filter(l => l.timing === 'am');
+  const nerveAll = scores(['nerve','ankle']); // 'ankle' = legacy rows, folded into Nerve (Jul 2026)
+  const gl = scores('glute');
+  const on = scores('overnight');
+  sumRow(pain, 'Back (AM) · ' + backAm.length + ' logs', f(avg(backAm)) + '/10');
+  sumRow(pain, 'Nerve / leg (radicular) · ' + nerveAll.length + ' logs', f(avg(nerveAll)) + '/10');
+  sumRow(pain, 'Glute inhibition · ' + gl.length + ' logs', f(avg(gl)) + '/10');
+  sumRow(pain, 'Overnight · ' + on.length + ' logs', f(avg(on)) + '/10');
+
+  // Symptom direction + discrete markers
+  const sym = sumSection(body, 'symptoms');
+  const dir = scores('leg_dominant').slice().sort((a,b) => a.date < b.date ? -1 : 1);
+  if(dir.length){
+    const c = [0,0,0];
+    dir.forEach(l => { if(c[l.score] !== undefined) c[l.score]++; });
+    const last = dir[dir.length - 1];
+    sumRow(sym, 'Direction (leg vs back)', 'back ' + c[0] + ' · equal ' + c[1] + ' · leg ' + c[2]);
+    sumRow(sym, 'Most recent direction', ['Back-dominant','Equal','Leg-dominant'][last.score] + ' (' + last.date + ')');
+  } else sumRow(sym, 'Direction (leg vs back)', 'not logged');
+  const tD = {}; scores('tingle').forEach(l => { tD[l.date] = Math.max(tD[l.date] || 0, l.score); });
+  const tDays = Object.keys(tD);
+  sumRow(sym, 'Toe tingling (L5 marker)', tDays.filter(d => tD[d] >= 1).length + ' of ' + tDays.length + ' logged days');
+  const dz = {}; scores('dizzy').forEach(l => { dz[l.date] = Math.max(dz[l.date] || 0, l.score); });
+  const dzD = Object.keys(dz);
+  sumRow(sym, 'AM dizzy / near-faint', 'yes ' + dzD.filter(d => dz[d] === 2).length + ' · some ' + dzD.filter(d => dz[d] === 1).length + ' · of ' + dzD.length + ' days');
+
+  // Sleep
+  const slp = sumSection(body, 'sleep');
+  const wk = scores('wakings');
+  sumRow(slp, 'Night wakings · ' + wk.length + ' logs',
+    wk.length ? f(avg(wk)) + ' avg · ' + Math.max.apply(null, wk.map(l => l.score)) + ' max' : '—');
+  let wakeStore = {};
+  try { wakeStore = JSON.parse(localStorage.getItem('pt_wake_times') || '{}'); } catch(e){}
+  Object.keys(wakeStore).filter(d => d >= cs).sort().reverse().slice(0,7)
+    .forEach(d => sumRow(slp, d, wakeStore[d]));
+
+  // Treatment — per-modality paired deltas
+  const tr = sumSection(body, 'treatment — pain before → after');
+  const mods = {};
+  inRange.forEach(l => {
+    const m = /^(.+)_(before|after)$/.exec(l.metric);
+    if(!m) return;
+    mods[m[1]] = mods[m[1]] || {};
+    mods[m[1]][l.date] = mods[m[1]][l.date] || {};
+    mods[m[1]][l.date][m[2]] = l.score;
+  });
+  const modNames = Object.keys(mods);
+  if(modNames.length){
+    modNames.forEach(mod => {
+      const days = Object.keys(mods[mod]).filter(d => mods[mod][d].before !== undefined && mods[mod][d].after !== undefined);
+      if(!days.length){ sumRow(tr, modLabel(mod), 'incomplete before/after pairs'); return; }
+      const bAvg = days.reduce((a,d) => a + mods[mod][d].before, 0) / days.length;
+      const aAvg = days.reduce((a,d) => a + mods[mod][d].after, 0) / days.length;
+      sumRow(tr, modLabel(mod) + ' · ' + days.length + ' session' + (days.length === 1 ? '' : 's'),
+        f(bAvg) + ' → ' + f(aAvg) + ' (Δ ' + f(aAvg - bAvg) + ')');
+    });
+  } else sumRow(tr, 'No treatment sessions logged', '—');
+  if(cs <= '2026-07-08' && todayS >= '2026-07-03')
+    tr.appendChild(sumEl('div','sum-note','Medrol 6-day taper (6/5/4/3/2/1 tabs) ran Jul 3–8 within this window.'));
+
+  // Rehab compliance + notes
+  let noteStore = {};
+  try { noteStore = JSON.parse(localStorage.getItem('pt_daily_notes') || '{}'); } catch(e){}
+  const nDates = Object.keys(noteStore).filter(d => d >= cs).sort().reverse();
+  const reh = sumSection(body, 'rehab + notes');
+  const exDays = nDates.filter(d => noteStore[d].ex !== undefined);
+  sumRow(reh, 'Rehab exercises done', exDays.filter(d => noteStore[d].ex === 1).length + ' of ' + exDays.length + ' logged days');
+  nDates.filter(d => noteStore[d].note).slice(0,7).forEach(d => sumRow(reh, d, noteStore[d].note));
+
+  body.appendChild(sumEl('div','sum-note',
+    'Nerve average includes legacy "ankle" logs (metric retired Jul 2026 — calf/ankle territory now logs under Nerve). Historical scores converted to 0–10 at go-live.'));
+}
+
+document.getElementById('summary-modal').addEventListener('click', function(e){ if(e.target === this) closeSummary(); });
+
+// ─────────────────────────────────────────
 // v5.11 — FLAREUP RECOVERY TRACKER
 // v6.0.1 (Jun 16 2026): widened trigger from Back-only to ALL pain-log metrics.
 //   Start: any pain-log metric (Back/Nerve/Glute/Ankle) ≥3 on a day, OR an Issue
@@ -4031,13 +4473,16 @@ function computeFlareupEpisodes(){
       symptomByDate[l.date] = l.score;
   });
 
-  // Per-date max Issue severity among pain-relevant regions (severity ≥3 only)
+  // Per-date max Issue severity among pain-relevant regions (severity ≥3 only).
+  // v7: Issue severity is still logged 0–5 — normalize to the /10 pain scale
+  // (×2 − 0.5, same mapping as the go-live SQL) so dayMax compares like with like.
   var injurySevByDate = {};
   injuryLogs
     .filter(function(l){ return FLARE_REGIONS.includes(l.region) && l.severity >= 3; })
     .forEach(function(l){
-      if(injurySevByDate[l.date] === undefined || l.severity > injurySevByDate[l.date])
-        injurySevByDate[l.date] = l.severity;
+      var sev10 = l.severity * 2 - 0.5;
+      if(injurySevByDate[l.date] === undefined || sev10 > injurySevByDate[l.date])
+        injurySevByDate[l.date] = sev10;
     });
 
   // Helper: worst symptom magnitude on a date across both stores (0 if nothing logged)
@@ -4061,7 +4506,7 @@ function computeFlareupEpisodes(){
   for(var i = 0; i < allDates.length; i++){
     var d = allDates[i];
     var dm = dayMax(d);                 // defined for every date in allDates
-    var isFlare = dm >= 3;
+    var isFlare = dm >= 5.5;            // v7: /10 scale (was ≥3 on the 0–5 grid)
 
     if(!flareStart){
       if(isFlare){
@@ -4075,7 +4520,7 @@ function computeFlareupEpisodes(){
       var nextD = allDates[i + 1];
       var nextMax = dayMax(nextD);
 
-      if(dm <= 2 && nextMax !== undefined && nextMax <= 2){
+      if(dm <= 3.5 && nextMax !== undefined && nextMax <= 3.5){  // v7: /10 (was ≤2 on 0–5)
         episodes.push({
           start: flareStart,
           end: nextD,

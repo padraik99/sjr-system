@@ -29,5 +29,25 @@ Likely a self-contained HTML canvas piece, dark and spare — the aesthetic we f
 - Whether the punchline should stay neutral-systemsy or get a little philosophical ("restraint is respect for what you can't yet see").
 - Redline anything here. Half-formed is an invitation, per your own rules.
 
+## The training timeline (Patrick's words, landed Jul 3 — the skin's script)
+- **Fri May 29** — Indoor plyos w/ Yari, game-style (broad jump/cone shuttle, 15m full intensity). No warm-up ("not sweating, not primed"). 3/4 through: shooting pain lower-right back (the hip-flexion→knee-extension pattern). Cold sweats. Shut down own work, kept coaching. Then: 2–3 days ibuprofen+Tylenol → "hardly felt it again," running by day 3–4. **"Elated!"** Back still sore "the way it's always been sore." MBB shortly after: no result.
+- **Wed Jun 10** — Indoor 1v1s, pressuring/chasing, lots of directional changes. Another shot through the back — **less sharp than May 29**, still a full stop. 4–5 days to light running (vs 3–4). Baseline soreness noticeably higher after. "Resolved to take it easy."
+- **Thu Jun 18** — 4×4: struggled, 2 intervals to reach pace, never comfortable. Ignored — "running hadn't been an issue."
+- **Fri Jun 19** — Outdoor, first-touch + shooting. Mostly just passing the ball, various speeds, occasional pressure. Back tightened during wind-down. **4am: full flare.**
+
+### The three lag mechanisms in it (richer than the shower)
+1. **Feel leads healing** *(corrected Jul 4 — Patrick did NOT train on painkillers; short course, stopped before returning)* — symptoms resolved in days on a genuinely honest sensor; tissue was on a much longer clock. The DOMS pattern-match ("felt better in a few days, like after a brutal workout") is the trap: muscle has short symptom tail + short tissue tail; a nerve root has short symptom tail + long tissue tail, and feel can't distinguish them. Quiet signal ≠ recovered system — the sensor reports symptoms, not state.
+2. **Rising noise floor + falling threshold** — each hit felt *less* sharp but recovered *slower*; baseline soreness ratcheted up until the true warning was indistinguishable from everyday sore. Felt intensity falling while true damage rises — curves crossing in opposite directions.
+3. **Integration lag** — the Jun 19 flare answered the 3-week integral, not the day's dose (the day's dose was passing drills). The body sums; the feel reports today's line item.
+
+### Training-skin design decisions (from the timeline, Jul 3)
+- **Not a re-skin of the shower.** Two mechanics the shower lacks: **hysteresis** (each flare lowers the capacity ceiling — boom-bust is a downward ratchet, not an oscillation) and **two recovery clocks** (felt trace recovers in days; tissue trace recovers on a longer clock — the gap between them IS the trap).
+- **Ibuprofen button CUT/demoted (Jul 4):** Patrick didn't train medicated — the drug isn't needed for the trap, so centering it would be melodrama and misrepresent the facts. The sensor's native optimism digs the hole unaided. Less "cautionary tale about pills," more "your instruments report symptoms, not state."
+- **Reveal beat (kept, now stronger):** run the sim showing only the felt trace; flare lands "out of nowhere"; then reveal the hidden tissue-state trace — it was never out of nowhere, and no bad decision was required. (= Jun 19, 4am.)
+
+## Decisions log
+- **Jul 3:** World #4 = **phantom traffic waves** (simulatable — our math wearing a highway). **Fed rate hikes = prose coda**, no sliders (simulating it would fake precision the Fed itself doesn't have — betrays the thesis). Five simulated worlds = too much; four skins + a coda = right size.
+- **Jul 3:** Shower demo v1 built → `lag-and-restraint/index.html`. Controller finding: naive proportional control snaps straight from smooth to boom-bust — no hunting regime. Honest fix = human hand has a **max twist speed** (`dv/dt = R·tanh(error/4°)`); the saturation creates the bounded limit cycle. Regime grid verified in node: smooth/hunting/boom-bust as a clean diagonal band in (delay × reaction) space. More human = more honest math.
+
 ## Not the point
 Not a productivity tool, not self-help, not SJR. A well-made small thing about a true idea. If it stops being fun, we shelve it — that's allowed.
