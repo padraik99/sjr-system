@@ -230,7 +230,7 @@ Baar · Grey · Ward · Natera · Barr · Schexnayder · McGill · Alfredson · 
 ## Commit Message Convention
 `[scope]: what changed + why`
 
-**Claude ALWAYS writes the commit message** (Patrick's call, Jul 4 2026) — every change ships with a ready-to-paste "Suggested commit" line. Rationale: consistent technical vocabulary (function names, feature terms, version numbers) makes the git log precisely greppable later; Patrick's own phrasing wouldn't hone searches as well. Claude writes it, Patrick pastes it in GitHub Desktop — Claude never runs `git commit` in the sandbox (index corruption, Jun 15).
+**Claude ALWAYS writes the commit message** (Patrick's call, Jul 4 2026) — every change ships with a ready-to-paste "Suggested commit" line, **always in a fenced code block** (visual contrast + one-tap copy). Rationale: consistent technical vocabulary (function names, feature terms, version numbers) makes the git log precisely greppable later; Patrick's own phrasing wouldn't hone searches as well. Claude writes it, Patrick pastes it in GitHub Desktop — Claude never runs `git commit` in the sandbox (index corruption, Jun 15).
 
 Examples:
 - `Patrick v5.3: auto-stage on metric switch, remove Add Another Metric button`
