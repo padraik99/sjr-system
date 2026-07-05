@@ -307,7 +307,7 @@ main { padding:1.25rem; max-width:700px; margin:0 auto; }
   color:var(--dim); margin-bottom:1.25rem;
 }
 
-.timing-toggle { display:grid; grid-template-columns:1fr 1fr 1fr; gap:0.4rem; margin-bottom:1.25rem; }
+.timing-toggle { display:grid; grid-template-columns:repeat(4,1fr); gap:0.4rem; margin-bottom:1.25rem; }
 .timing-btn {
   background:var(--surface2); border:1px solid var(--border);
   border-radius:6px; padding:0.6rem;
@@ -747,8 +747,9 @@ main { padding:1.25rem; max-width:700px; margin:0 auto; }
         <div class="sum-note" style="margin:.05rem 0 .5rem;">Nerve = radicular umbrella — calf · ankle · lateral · tingling sensation. Gate ≤3.5/10.</div>
         <div class="timing-toggle" id="timing-toggle-wrap">
           <button class="timing-btn active" id="tbtn-am" onclick="selectTiming('am')">AM</button>
-          <button class="timing-btn" id="tbtn-pre" onclick="selectTiming('pre')">Pre-Session</button>
-          <button class="timing-btn" id="tbtn-post" onclick="selectTiming('post')">Post-Session</button>
+          <button class="timing-btn" id="tbtn-pre" onclick="selectTiming('pre')">Pre</button>
+          <button class="timing-btn" id="tbtn-post" onclick="selectTiming('post')">Post</button>
+          <button class="timing-btn" id="tbtn-pm" onclick="selectTiming('pm')">PM</button>
         </div>
         <div class="gate-status" id="gate-status"></div>
       </div>
@@ -3082,7 +3083,7 @@ function renderDay(idx){
                     tingle:'Tingle', dizzy:'Dizzy', leg_dominant:'Direction', wakings:'Wakings'};
       const mLabel = mMap[l.metric] ||
         (l.metric.charAt(0).toUpperCase() + l.metric.slice(1)).replace(/_/g,' ');
-      const tLabel = {am:'AM', pre:'Pre-Session', post:'Post-Session',
+      const tLabel = {am:'AM', pre:'Pre-Session', post:'Post-Session', pm:'PM',
                       before:'Pre-Session', after:'Post/AM'}[l.timing] || l.timing;
       let valTxt, sc, gateTxt = '';
       if(catMap[l.metric]){
@@ -3196,7 +3197,9 @@ function toggleDetail(uid){
 const METRIC_LABELS = { morning:'Back', nerve:'Nerve', glute:'Glute', ankle:'Ankle',
   overnight:'Overnight', tingle:'Toe Tingle', dizzy:'AM Dizzy',
   leg_dominant:'Direction', wakings:'Night Wakings' };
-const TIMING_LABELS = { am:'AM', pre:'Pre-Session', post:'Post-Session' };
+const TIMING_LABELS = { am:'AM', pre:'Pre-Session', post:'Post-Session', pm:'PM' };
+// 'pm' added Jul 4 2026 — general end-of-day reading, not session-relative. Closes the
+// daily arc (AM → session → PM → overnight) and catches delayed treatment responses.
 // Only session-relative metrics carry a Pre/Post timing — everything else logs as 'am'
 const TIMED_METRICS = new Set(['morning','nerve','glute']);
 const CATEGORICAL_LABELS = { tingle:{0:'No',1:'Yes'}, dizzy:{0:'No',1:'Some',2:'Yes'},
@@ -3259,7 +3262,7 @@ function closeModal(){
 }
 
 function syncTimingButtons(){
-  ['am','pre','post'].forEach(t => {
+  ['am','pre','post','pm'].forEach(t => {
     document.getElementById('tbtn-'+t).classList.toggle('active', t === selectedTiming);
   });
 }
@@ -4369,7 +4372,11 @@ function renderSummary(){
   const gl = scores('glute');
   const on = scores('overnight');
   sumRow(pain, 'Back (AM) · ' + backAm.length + ' logs', f(avg(backAm)) + '/10');
+  const backPm = scores('morning').filter(l => l.timing === 'pm');
+  if(backPm.length) sumRow(pain, 'Back (PM) · ' + backPm.length + ' logs', f(avg(backPm)) + '/10');
+  const nervePm = scores(['nerve','ankle']).filter(l => l.timing === 'pm');
   sumRow(pain, 'Nerve / leg (radicular) · ' + nerveAll.length + ' logs', f(avg(nerveAll)) + '/10');
+  if(nervePm.length) sumRow(pain, 'Nerve / leg (PM) · ' + nervePm.length + ' logs', f(avg(nervePm)) + '/10');
   sumRow(pain, 'Glute inhibition · ' + gl.length + ' logs', f(avg(gl)) + '/10');
   sumRow(pain, 'Overnight · ' + on.length + ' logs', f(avg(on)) + '/10');
 
