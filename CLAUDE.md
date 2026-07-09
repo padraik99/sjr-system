@@ -251,6 +251,20 @@ Examples:
 5. **Shaylan** — NEW written PT clearance (~Jul, "lots of variety green-lit") to feed in + integrate into `shaylan_boot_phase_v1` (expand cleared work beyond current tier). Awaiting Patrick's details.
 6. **Yari** — still here until Fri; extend the guide a further week (light-load power + short Thursday ball-plyo). Confirm whether this is W11 (W10 already built in v2.8) or a re-run.
 
+### Next-session queue (updated Jul 9 2026)
+**Bansal visit HAPPENED Jul 8 — supersedes the Jul-4 pre-visit agenda notes:**
+- Rx: **cyclobenzaprine (Flexeril) 10mg up to TID — REPLACES baclofen** (not stacked); ibuprofen **resumed** (Medrol done); gabapentin **increased** (headroom 800–900mg) but **held at 600mg** for now (one change at a time during Medrol washout). Bansal **declined the gabapentin-efficacy discussion** → carried to Kataria Jul 28. Bansal also noted he's written only 1–2 TCA scripts in ~15 yrs (dry mouth) — flagged the irony that cyclobenzaprine is a TCA relative w/ the same anticholinergic/dry-mouth load (matters for LPR).
+- **Medrol pack completed Jul 8: partial/muted response** — toe tingling lessened (not resolved), pain stayed leg/glute-dominant, centralization **equivocal**. Still read as supporting a nerve-root-edema component → argues for **targeted transforaminal ESI** at Kataria. **Watch days 7–10 post-taper for rebound** (return of leg/tingling as steroid washes out = further confirmation).
+- Med schedule: gabapentin ~9pm **before** cyclobenzaprine ~10pm (pharmacist pref). Daytime relaxation only if bedtime carryover (~18h t½) insufficient → prefer low-dose **baclofen 5mg** (less sedating, not anticholinergic, doubles as baclofen taper) over daytime ½-tab cyclobenzaprine.
+- Reference packet drafted in Gmail (6 gold-standard sources: Finnerup 2015 Lancet Neurol, NICE NG59, Mathieson/PRECISE 2017 NEJM, Enke/CMAJ 2018, Chou 2015 ESI Ann Intern Med, Qaseem 2017 ACP). Tracking-log xlsx built in scratchpad (NOT in repo).
+
+**Shipped to repo this session (uncommitted — push via GitHub Desktop):**
+- `patrick-active-flare-protocol-v1-20260702.html` → **v1.3** (post-Bansal): status pills updated, Bansal-outcome box, **current med-schedule table**, covering-physician box → "resolved", Medrol section → completed/partial-response + rebound-watch + garden/drip-line analogy, ibuprofen row → resumed, toe tingling → "lessened not resolved", Kataria agenda gains **gabapentin-efficacy reopen + ESI/evidence-packet**, footer → v1.3, WG xref → v7, nav link to new cheat card. Commit: `Patrick flare-protocol v1.3: post-Bansal update — cyclobenzaprine replaces baclofen, ibuprofen resumed, gabapentin held 600, Medrol complete (partial response), toe tingling lessened, med-schedule table, Kataria gabapentin-efficacy + ESI packet`
+- `patrick-flare-cheatcard-20260709.html` → **NEW** 1-page daily quick-reference (matches flare-protocol CSS; morning/day/PM/evening sequence + canal walk + traffic light + Phase-2 exclusions + meds note + hard-stop rule; print @media; links to full protocol + weekly guide). Commit: `Patrick: add flare cheat card (1-page daily quick-reference) + nav link from flare protocol`
+
+**TODO next (Patrick's ask):**
+1. **Weekly Guide log restructure** — move rehab/exercise logging OUT of the Notes group INTO the Treatment group alongside nexwave/shockwave, in `SJR_WeeklyGuide_Patrick_v5_20260402.html` (v7.0 code). Respect: one-script rule, textContent-only (no innerHTML), `node --check`, preserve JS element IDs + `pt_treat_mods` / `<mod>_before`/`<mod>_after` keys, no Supabase schema change. Read `guide-redesign-build-spec-20260703.md` + the grouped-log-modal code first.
+
 ### Session Orientation — run this first
 At the start of any session, run `git log --oneline -20` to see recent commits before accepting Patrick's verbal description of what's changed. Patrick's descriptions are directionally accurate but may omit details — the commit log is ground truth. Cross-reference against the File Inventory above to catch version drift.
 
