@@ -812,7 +812,14 @@ main { padding:1.25rem; max-width:700px; margin:0 auto; }
       <button class="log-group-head" type="button" onclick="toggleLogGroup('treatment')">treatment<span class="lg-count" id="lgc-treatment"></span><span class="lg-chev">▾</span></button>
       <div class="log-group-body">
         <span class="medrol-chip" id="medrol-chip"></span>
-        <div class="seg-label">Modality</div>
+        <div class="seg-row">
+          <div class="seg-label">Rehab exercises done today?</div>
+          <div class="seg-btns n2">
+            <button class="timing-btn" id="seg-exdone-0" onclick="stageExDone(0)">No</button>
+            <button class="timing-btn" id="seg-exdone-1" onclick="stageExDone(1)">Yes</button>
+          </div>
+        </div>
+        <div class="seg-label" style="margin-top:.6rem;">Modality</div>
         <div class="treat-mods" id="treat-mods"></div>
         <div class="slider-row" id="srow-treat-before">
           <span class="sr-label">Before</span>
@@ -833,13 +840,6 @@ main { padding:1.25rem; max-width:700px; margin:0 auto; }
     <div class="log-group" id="lg-notes">
       <button class="log-group-head" type="button" onclick="toggleLogGroup('notes')">notes<span class="lg-count" id="lgc-notes"></span><span class="lg-chev">▾</span></button>
       <div class="log-group-body">
-        <div class="seg-row">
-          <div class="seg-label">Rehab exercises done today?</div>
-          <div class="seg-btns n2">
-            <button class="timing-btn" id="seg-exdone-0" onclick="stageExDone(0)">No</button>
-            <button class="timing-btn" id="seg-exdone-1" onclick="stageExDone(1)">Yes</button>
-          </div>
-        </div>
         <div class="seg-label">Notes — symptoms, leg detail, anything for the visit</div>
         <textarea id="note-input" class="note-input" maxlength="500" placeholder="e.g. calf band mid-afternoon after 20 min sitting"></textarea>
       </div>
@@ -3249,6 +3249,7 @@ function openModal(){
   document.getElementById('note-input').value = todayNote.note || '';
   exDoneVal = (todayNote.ex === 0 || todayNote.ex === 1) ? todayNote.ex : null;
   setSegActive('exdone', exDoneVal);
+  updateGroupCounts();
   const today = new Date().toLocaleDateString('en-US',{weekday:'long',month:'short',day:'numeric'});
   document.getElementById('modal-date-label').textContent = 'Logging for ' + today;
   document.getElementById('gate-modal').classList.add('open');
@@ -3328,6 +3329,7 @@ function setSegActive(name, val){
 function stageExDone(v){
   exDoneVal = (exDoneVal === v) ? null : v;
   setSegActive('exdone', exDoneVal);
+  updateGroupCounts();
 }
 
 // ── staging: night wakings stepper ──
@@ -3487,7 +3489,7 @@ function updateGroupCounts(){
     const el = document.getElementById('lgc-'+g);
     if(el) el.textContent = n ? '· ' + n + ' staged' : '';
   });
-  const t = Object.keys(pendingScores).filter(m => /_before$|_after$/.test(m)).length;
+  const t = Object.keys(pendingScores).filter(m => /_before$|_after$/.test(m)).length + (exDoneVal !== null ? 1 : 0);
   const tEl = document.getElementById('lgc-treatment');
   if(tEl) tEl.textContent = t ? '· ' + t + ' staged' : '';
 }
