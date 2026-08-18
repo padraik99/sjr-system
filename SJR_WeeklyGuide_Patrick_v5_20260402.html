@@ -3023,6 +3023,21 @@ function renderDay(idx){
     html += `<div class="autoreg-banner"><div class="autoreg-icon">⚡</div><div class="autoreg-text"><strong>Nerve Elevated >3.5/10</strong>Session proceeds but avoid loading to fatigue. Monitor calf bands mid-session. Bike post-session is mandatory.</div></div>`;
   }
 
+  // v7.1: MEDIUM DAY (morning 3.5–5.5) — surface a light-load / band / sciatica swap instead of
+  // loading heavy lifts (Patrick's ask). Static card, no RENDER_NAMES/demo-index interaction.
+  // Authored plan still renders below for reference.
+  if((breaches.morningReduce || breaches.nerve) && !day.rest && !breaches.morning){
+    html += `<div class="ex-block">
+      <div class="block-label green">Medium Day — Spine-Friendly Swap</div>
+      <div class="day-sub" style="margin:-.1rem 0 .55rem">Medium symptoms today (back 4–5/10, or nerve up) — skip the heavy lifts (hip thrusts, loaded hinge). Run this light band + neural set instead, and earn the heavy work back on a green day. Authored plan is below for reference.</div>
+      <div class="ex-row"><div class="ex-name">Banded glute-med series<small>clamshell → lateral shuffle → monster walk · light band</small></div><div class="ex-dose green">2×15–20</div></div>
+      <div class="ex-row"><div class="ex-name">Sciatic nerve slider<small>glide, not stretch · stop if it travels down the leg</small></div><div class="ex-dose green">2×10</div></div>
+      <div class="ex-row"><div class="ex-name">Backward jog / treadmill<small>non-impact · pole-to-pole, easy effort</small></div><div class="ex-dose green">easy</div></div>
+      <div class="ex-row"><div class="ex-name">Movement &amp; Restoration<small>deep squat sit · ankle CARs · spinal waves</small></div><div class="ex-dose green">pick 2–3</div></div>
+      <a class="ex-video-link" href="https://padraik99.github.io/sjr-system/SJR_Library_Master_v4_20260402.html#restoration" style="display:inline-block;margin:.35rem 0 .5rem">Open Movement &amp; Restoration in Library →</a>
+    </div>`;
+  }
+
   if(day.rest || (breaches.morning && !day.rest)){
     if(day.rest){
       html += `<div class="rest-card"><div class="rest-icon">🌙</div><div class="rest-title">Rest Day</div><div class="rest-text">Walk, sleep, eat well. Nerve floss only if calf bands are settled. Recovery is the work.</div></div>`;

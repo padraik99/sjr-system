@@ -1786,6 +1786,83 @@ const WEEKS = [
     ]
   },
 
+  // ── GPP · RETURN (added Aug 2026) ────────────────────────────────
+  // Post-injury base block, DECOUPLED from the old meet calendar. The guide
+  // auto-lands here once today is past the authored competition weeks (see
+  // initApp + getWeekStart special-case). Bridge until Berkeley's program takes over.
+  {
+    label:'GPP · Return', dates:'Rolling — current week', phase:'GPP — Return to Training', gpp:true,
+    focus:'Post-injury base rebuild, decoupled from the meet calendar. General strength + tissue tolerance + a gradual return to running. Foot and shins guide the load — nothing explosive on your own until Berkeley staff and your PT progress you. This is a bridge until your Berkeley program takes over. Foot revival / CARs / movement snacks live in the Library "Movement & Restoration" section.',
+    days:[
+      { name:'Monday — Lower Strength (GPP)', intent:'Base strength', sub:'Bilateral, submaximal, controlled. Build tissue, not peaks.',
+        blocks:[
+          { label:'Non-Negotiables', items: TRACK_A_FULL },
+          { label:'Strength — General', items:[
+            {name:'Goblet or box squat', dose:'3×8 · controlled'},
+            {name:'Trap-bar / RDL (light)', dose:'3×8 · hinge, neutral spine'},
+            {name:'Split squat (assist if needed)', dose:'2×8 / leg'},
+            {name:'Calf raise — bilateral', dose:'3×12 · pain-free range'},
+          ]},
+          SHIN_COMP,
+        ]
+      },
+      { name:'Tuesday — Aerobic + Tissue', intent:'Easy aerobic', sub:'Rebuild the engine gently. Shins and foot first.',
+        blocks:[
+          { label:'Non-Negotiables', items: TRACK_A_FULL },
+          { label:'Aerobic — Build', items:[
+            {name:'Walk-jog intervals', dose:'20–25 min · jog:walk as tolerated'},
+            {name:'Backward run (non-impact)', dose:'4×30m easy'},
+          ]},
+          SHIN_COMP,
+        ]
+      },
+      { name:'Wednesday — Upper + Core', intent:'Upper / trunk', sub:'Load the top half; keep the foot easy.',
+        blocks:[
+          { label:'Non-Negotiables', items: TRACK_A_SHORT },
+          { label:'Upper + Core', items:[
+            {name:'Push — DB press or push-up', dose:'3×10'},
+            {name:'Pull — row or pulldown', dose:'4×10'},
+            {name:'Anti-rotation — Pallof', dose:'3×10 / side'},
+            {name:'Dead bug / hollow hold', dose:'3×10'},
+          ]},
+        ]
+      },
+      { name:'Thursday — Movement & Restoration', intent:'Mobility / refresh', sub:'Foot revival, CARs, ground movement — from the Library.',
+        blocks:[
+          { label:'Non-Negotiables', items: TRACK_A_SHORT },
+          { label:'Movement & Restoration', items:[
+            {name:'Foot revival — toe yoga · short-foot · splay', dose:'5–8 min'},
+            {name:'Ankle + toe CARs', dose:'3–5 each'},
+            {name:'Deep squat sit + spinal waves', dose:'easy'},
+            {name:'Easy bike or walk', dose:'15–20 min · optional'},
+          ]},
+        ]
+      },
+      { name:'Friday — Single-Leg Reintro', intent:'Single-leg base', sub:'Reintroduce unilateral load — light, controlled, foot-aware.',
+        blocks:[
+          { label:'Non-Negotiables', items: TRACK_A_FULL },
+          { label:'Single-Leg — Light', items:[
+            {name:'Step-up (low box)', dose:'3×8 / leg'},
+            {name:'SL RDL (light / assisted)', dose:'2×8 / leg'},
+            {name:'SL calf raise (build to tolerance)', dose:'2×10 / leg'},
+            {name:'Lateral band walk — glute med', dose:'2×15'},
+          ]},
+          SHIN_COMP,
+        ]
+      },
+      { name:'Saturday — Easy or Rest', intent:'Easy movement', sub:'Walk, mobility, or full rest. Optional.',
+        blocks:[
+          { label:'Non-Negotiables', items: TRACK_A_SHORT },
+          { label:'Optional Easy', items:[
+            {name:'Walk or easy bike', dose:'20–30 min'},
+            {name:'Movement snacks', dose:'as you like'},
+          ]},
+        ]
+      },
+      REST_DAY,
+    ]
+  },
+
 ];
 
 function detectCurrentWeek(){
@@ -1981,6 +2058,13 @@ function toggleExDetail(uid){
 // WEEK / DAY RENDERING
 // ─────────────────────────────────────────
 function getWeekStart(weekIdx){
+  // GPP · Return block is decoupled from the meet calendar — anchor it to THIS week's Monday
+  if(WEEKS[weekIdx] && WEEKS[weekIdx].gpp){
+    const t = new Date();
+    const dow = t.getDay();                  // 0=Sun .. 6=Sat
+    const diff = (dow === 0 ? -6 : 1 - dow);  // step back to Monday
+    return new Date(t.getFullYear(), t.getMonth(), t.getDate() + diff);
+  }
   const base = new Date(2026, 2, 9); // Mon Mar 9 2026 — Shaylan base
   return new Date(base.getFullYear(), base.getMonth(), base.getDate() + weekIdx * 7);
 }
@@ -2100,7 +2184,10 @@ async function initApp(){
     currentWeek = det.week;
     localStorage.setItem('sh_week', currentWeek);
   } else {
-    currentWeek = await loadWeekState('shaylan', currentWeek);
+    // past the authored meet calendar → land on the GPP · Return block, not a stale peak week
+    const gppIdx = WEEKS.findIndex(w => w.gpp);
+    currentWeek = gppIdx >= 0 ? gppIdx : await loadWeekState('shaylan', currentWeek);
+    localStorage.setItem('sh_week', currentWeek);
   }
   await loadGateLogs('shaylan', gateLogs);
   updateWeekUI();
