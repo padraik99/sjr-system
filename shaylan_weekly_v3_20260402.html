@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- VERSION: 3.4 | Updated: 2026-08-18 | Prior: 3.3 | GPP · Return block + auto-land past the meet calendar (post-injury base, decoupled from comp dates). Full changelog in CLAUDE.md File Inventory. -->
+<!-- VERSION: 3.4 | Updated: 2026-08-18 | Prior: 3.3 | GPP · Return block + auto-land past the meet calendar (post-injury base, decoupled from comp dates) + persistent 🧘 Movement quick-link to Library #restoration. Full changelog in CLAUDE.md File Inventory. -->
 <!-- CHANGELOG: v3.4 GPP · Return reset · v3.3 W11 off-week + W12 return + W13 Sacramento (conditional) -->
 
 <html lang="en">
@@ -2359,5 +2359,8 @@ document.getElementById('injury-modal').addEventListener('click', function(e){ i
 
 <button id="refresh-fab" title="Load latest version"
   onclick="window.location.replace(window.location.pathname+'?t='+Date.now())">↺</button>
+<!-- Movement & Restoration quick-link (v3.4) — persistent option to the Library's restoration section, phase-agnostic so it's NOT filtered by updateInjuryGate (.move-fab ≠ .browse-btn) -->
+<a class="move-fab" href="https://padraik99.github.io/sjr-system/SJR_Library_Master_v4_20260402.html#restoration"
+   style="position:fixed;bottom:1rem;right:1rem;z-index:60;display:flex;align-items:center;gap:.4rem;background:var(--surface2);border:1px solid var(--accent);color:var(--accent);border-radius:22px;padding:.55rem .95rem;font-size:.72rem;font-family:'IBM Plex Mono',monospace;letter-spacing:.05em;text-decoration:none;box-shadow:0 3px 12px rgba(0,0,0,.45)">🧘 Movement</a>
 </body>
 </html>
