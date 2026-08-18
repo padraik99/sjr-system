@@ -275,6 +275,17 @@ At the start of any session, run `git log --oneline -20` to see recent commits b
 git -C "C:/Users/padra/Documents/GitHub/sjr-system" log --oneline -20
 ```
 
+### Project Continuity & Anti-Staleness Protocol (Patrick's tactics, adopted Aug 18 2026)
+**Problem:** work scatters across many chats → can't tell which chat/file is current, and stale copies masquerade as latest. This bit us Aug 17: a stale *mount read* reported the guide as v6 when the live repo file was v7. Fixes:
+
+1. **The repo is the ONLY source of truth — never a chat's memory.** All current work lives in `C:\Users\padra\GitHub\sjr-system`; read the files, don't reconstruct state from prior conversations. (This is the Cowork/git analog of the claude.ai "re-upload to Project Knowledge" rule — the repo already persists, so the rule becomes: always work from repo files, and at session end make sure every edited file is saved + pushed via GitHub Desktop and the File Inventory matches reality.)
+2. **Version + changelog live INSIDE each file, not in the filename.** Filenames stay stable (never-rename convention). Every guide carries a top-of-file header comment so ONE read confirms current-vs-stale without cross-referencing: `<!-- VERSION: 7.1 | Updated: 2026-08-18 | Prior: 7.0 -->`. The CLAUDE.md File Inventory stays the master registry; the in-file header is the quick per-file check. (Stamped Aug 18 on Patrick guide v7.1, Shaylan weekly v3.4, Library v4.3; stamp the rest as they're next touched.)
+3. **Session start = FORCE a fresh read + version check.** THE Aug 17–18 lesson: the mounted folder can serve a stale snapshot. So at session start: (a) **re-request the directory** (`request_cowork_directory`) to force a fresh view, (b) `git log --oneline -20`, (c) grep the target file's VERSION header and state version + date before trusting any verbal description. Sharpened opener: *"Continuing SJR. Re-connect the folder, then read the VERSION header of [file] and state its version + date. Flag if it looks stale vs. what I tell you next."*
+4. **Session end = reconcile + push.** Before closing: File Inventory rows + in-file VERSION headers updated; suggested commit messages written; remind Patrick to push via GitHub Desktop.
+
+### Parked feature — medium-day PHASE FLAG (Aug 18 2026)
+The v7.1 medium-day swap card fires on ANY medium day (Back 3.5–5.5 OR nerve >3.5) regardless of phase — right for the current injury phase, but it will NOT auto-revert when Patrick returns to healthy regular lifting (it'd keep telling a healthy athlete to skip hip thrusts on a stiff 4/10). The classic reduced-load logic (`getLoadModifier` 0.7, "reduce 30%" banner, Day C at ≥5.5) is intact *underneath* — the swap is layered on top, so reverting = just gating the swap off, not rebuilding. Fix WHEN he returns to lifting: a single explicit **phase flag (rehab vs training)** gating the swap — rehab → swap card; training → classic reduce banner only. **Deliberate flip, NEVER auto-detected** — auto-reverting on a quiet-signal streak is the exact lag trap the whole system resists (quiet signal ≠ recovered; cf. the June flare + the Lag & Restraint project). ~20-min build when genuinely cleared (clinician-informed). Not imminent — Patrick framed it "if ever."
+
 ### Recent Commit Log (May–June 2026)
 Branch in sync with origin/main through `8bab5f7` (June 15 2026). The v5.12 / Library-v4.2 work below is **uncommitted** — push from GitHub Desktop. (Git index had corrupted mid-session via the sandbox; rebuilt with `git reset` June 15.)
 
