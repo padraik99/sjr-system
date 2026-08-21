@@ -1,4 +1,7 @@
 <!DOCTYPE html>
+<!-- VERSION: 2.9 | Updated: 2026-08-18 | Prior: 2.8 | Rolling Maintenance · Trial-Ready block (A=2 runs / B=3 runs, alternating) + auto-land past the Mexico meet calendar. Full changelog in CLAUDE.md File Inventory. -->
+<!-- CHANGELOG: v2.9 rolling maintenance A/B (hold match fitness until a trial) · v2.8 W10 Power Expression · v2.7 W8–W9 extended stay/club prep -->
+
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -785,7 +788,7 @@ footer .accent{color:var(--accent)}
 </section>
 
 <footer>
-  <p>YARI &mdash; ACL Return to Sport Guide &middot; v2.8 &middot; Sprint Jump Resilience &middot; W10 Power Expression (Jun 2026)</p>
+  <p>YARI &mdash; ACL Return to Sport Guide &middot; v2.9 &middot; Sprint Jump Resilience &middot; Rolling Maintenance · Trial-Ready (Aug 2026)</p>
   <p style="margin-top:.4rem">Built on research from <span class="accent">Baar &middot; Grey &middot; Ward &middot; Bosch &middot; Dietz &middot; Natera &middot; Uthoff &middot; Rio &middot; Petersen &middot; Grindem &middot; Ardern &middot; Filbay &middot; Hughes &middot; Mountjoy &middot; Hewett &middot; Verkhoshansky &middot; Elliott &middot; Zatsiorsky</span></p>
 </footer>
 
@@ -890,7 +893,23 @@ function sbDateStr(d){
 // ── WEEK DATA ────────────────────────────────────────────────────
 const BASE = new Date(2026, 3, 13); // Mon Apr 13 2026 — Phase 2 Week 5
 
+function mondayOfThisWeek(){
+  const t = new Date();
+  const dow = t.getDay();                 // 0=Sun .. 6=Sat
+  const diff = (dow === 0 ? -6 : 1 - dow); // step back to Monday
+  return new Date(t.getFullYear(), t.getMonth(), t.getDate() + diff);
+}
+// Rolling maintenance: which of the alternating roll-weeks (A/B) is "current" this week.
+function rollingWeekIndex(){
+  const first = WEEKS.findIndex(w => w.roll);
+  if(first < 0) return -1;
+  const weeks = Math.round((mondayOfThisWeek() - BASE) / (7 * 86400000)); // BASE is a Monday
+  const parity = ((weeks % 2) + 2) % 2;   // 0 → A, 1 → B
+  return first + parity;
+}
 function getWeekStart(w){
+  // rolling maintenance weeks are decoupled from the meet calendar — anchor to THIS week's Monday
+  if(WEEKS[w] && WEEKS[w].roll) return mondayOfThisWeek();
   return new Date(BASE.getFullYear(), BASE.getMonth(), BASE.getDate() + w * 7);
 }
 
@@ -906,17 +925,27 @@ const WEEKS = [
   { label:'Phase 3 · Extended Stay', range:'Jun 8–14', note:'Independent training · joint prep daily · light strength maintenance · own the protocol' },
   { label:'Phase 3 · Club Prep', range:'Jun 15–21', note:'Prep for team training · movement quality · full joint articulation daily · hand-off week' },
   { label:'Phase 3 · Power Expression', range:'Jun 22–28', note:'Bonus week before Friday departure · light-load power/velocity in the gym (Mon+Wed) · short ball-plyo Thursday · joint prep daily · low volume, maximal intent, full recovery — express what you built, do not grind it' },
+  // ── ROLLING MAINTENANCE (added Aug 2026) — alternates A (2 runs) / B (3 runs) by week parity ──
+  { label:'Maintenance · Trial-Ready (A · 2 runs)', range:'Rolling — this week', note:'Hold match fitness until a trial materializes. 2 runs (extensive tempo + RSA/agility) · strength 2× · daily joint prep/CARs · recovery. ACL-smart deceleration throughout.', roll:true },
+  { label:'Maintenance · Trial-Ready (B · 3 runs)', range:'Rolling — this week', note:'Higher-run week: aerobic interval + RSA/COD + game-simulation · strength 1–2× · recovery. Alternates automatically with Week A.', roll:true },
 ];
 
 // detectCurrentWeek declared AFTER getWeekStart AND AFTER WEEKS (CLAUDE.md spec)
 function detectCurrentWeek(){
   const today = sbDateStr(new Date());
   for(let w = 0; w < WEEKS.length; w++){
+    if(WEEKS[w].roll) continue;   // rolling weeks resolved below, not by fixed date
     const ws = getWeekStart(w);
     for(let d = 0; d < 7; d++){
       const sd = new Date(ws.getFullYear(), ws.getMonth(), ws.getDate() + d);
       if(sbDateStr(sd) === today) return { week: w, day: d };
     }
+  }
+  // past the authored meet calendar → roll into Maintenance (A/B alternating by week parity)
+  const rw = rollingWeekIndex();
+  if(rw >= 0){
+    const dow = new Date().getDay();
+    return { week: rw, day: (dow === 0 ? 6 : dow - 1) };
   }
   return null;
 }
@@ -2995,6 +3024,214 @@ const DAYS_BY_WEEK = [
         { gold:true, label:'Recovery Only', items:[
           {name:'Easy Walk',   dose:'20–30 min'},
           {name:'Soft Tissue', dose:'full lower body'},
+        ]},
+      ]
+    },
+  ],
+
+  // ── ROLLING MAINTENANCE A (2 runs) ────────────────────────────────
+  [
+    { name:'Monday', collagen:true, rest:false, intent:'Strength — Lower + Posterior Chain',
+      sub:'Maintenance strength. Hold what you built — quality over grind. This block keeps you trial-ready, not peaking.',
+      blocks:[
+        { label:'Joint Prep — Daily', items:[
+          {name:'Hip CARs', note:'Spina · daily ritual', dose:'5 circles ea direction · each hip'},
+          {name:'Ankle CARs', dose:'5 ea direction · each ankle'},
+          {name:'90/90 Hip Switch', dose:'8 switches · own the end-range'},
+        ]},
+        { label:'Strength', items:[
+          {name:'Trap-Bar Deadlift', dose:'4×5 · RPE 7'},
+          {name:'Rear-Foot Elevated Split Squat', dose:'3×8 ea · controlled'},
+          {name:'Single-Leg Hip Thrust', dose:'3×8 ea · right leg extra set if strong'},
+          {name:'Nordic Curl — Eccentric', dose:'3×5 · 4s descent'},
+          {name:'Copenhagen Plank', dose:'3×20s ea · groin durability (Harøy)'},
+        ]},
+      ]
+    },
+    { name:'Tuesday', collagen:false, rest:false, intent:'RUN 1 — Extensive Tempo (aerobic base)',
+      sub:'Soccer aerobic engine. Smooth, submaximal, repeatable — the base that lets everything else recover.',
+      blocks:[
+        { label:'Joint Prep + Warmup', items:[
+          {name:'Hip + Ankle CARs', dose:'5 ea'},
+          {name:'Dynamic warmup', dose:'leg swings · lunges · skips · build-ups'},
+        ]},
+        { gold:true, label:'Extensive Tempo', items:[
+          {name:'Tempo runs', dose:'8–10 × 100m @ ~70% · walk 100m back'},
+          {name:'Cue', note:'relaxed, tall, quiet feet — never max; HR settles between reps', dose:'controlled'},
+        ]},
+        { label:'COD — Controlled', items:[
+          {name:'Deceleration drill', dose:'4×15m in → stick the stop · no valgus'},
+          {name:'Lateral shuffle + plant', dose:'3×10m ea · control the plant leg'},
+        ]},
+        { gold:true, label:'Core', items:[
+          {name:'Dead bugs · Bird dogs · Side plank', dose:'3 rounds'},
+        ]},
+      ]
+    },
+    { name:'Wednesday', collagen:true, rest:false, intent:'Upper + Core + Mobility',
+      sub:'Off the legs. Load the top half, mobilize, let the runs absorb.',
+      blocks:[
+        { label:'Joint Prep — Daily', items:[
+          {name:'Hip + Ankle CARs', dose:'5 ea'},
+        ]},
+        { label:'Upper + Core', items:[
+          {name:'Push — DB press / push-up', dose:'3×10'},
+          {name:'Pull — row / pulldown', dose:'4×10'},
+          {name:'Pallof press — anti-rotation', dose:'3×10 ea'},
+          {name:'Hanging or reverse crunch', dose:'3×12'},
+        ]},
+        { label:'Mobility', items:[
+          {name:'T-spine + hip flow', dose:'8–10 min · 90/90, lateral lunge, deep squat sit'},
+        ]},
+      ]
+    },
+    { name:'Thursday', collagen:false, rest:false, intent:'RUN 2 — RSA + Agility',
+      sub:'Repeated-sprint ability + change of direction — the soccer-specific stuff. Ball optional. ACL-smart decel throughout.',
+      blocks:[
+        { label:'Joint Prep + Warmup', items:[
+          {name:'Hip + Ankle CARs', dose:'5 ea'},
+          {name:'Sprint warmup', dose:'build-ups · A-skips · accels'},
+        ]},
+        { gold:true, label:'RSA', items:[
+          {name:'Repeated sprints', dose:'8×30m · 1:4 work:rest · full recovery, hold speed'},
+        ]},
+        { label:'Agility + COD', items:[
+          {name:'5-10-5 pro-agility', dose:'4–6 reps · plant control, no knee dive'},
+          {name:'Reactive cut (ball if flowing)', dose:'6 ea side · decelerate then go'},
+        ]},
+        { label:'Glute-Med', items:[
+          {name:'Banded lateral walk + fire hydrant', dose:'2×15 (Harris)'},
+        ]},
+      ]
+    },
+    { name:'Friday', collagen:false, rest:false, intent:'Recovery + Movement',
+      sub:'Active recovery. Refresh the tissue, keep the joints articulate. Nothing hard.',
+      blocks:[
+        { label:'Recovery', items:[
+          {name:'Easy bike or walk', dose:'20–30 min conversational'},
+          {name:'Full CARs series', dose:'hip · ankle · knee · spine'},
+          {name:'Soft tissue + movement snacks', dose:'deep squat sit · ground transitions'},
+        ]},
+      ]
+    },
+    { name:'Saturday', collagen:false, rest:false, intent:'Ball + Light Power (optional)',
+      sub:'Touch the ball, express a little pop. Low volume, max intent, full recovery. Swap for rest if you need it.',
+      blocks:[
+        { label:'Ball + Power', items:[
+          {name:'Ball work — rondo / passing / first touch', dose:'15–20 min · game rhythm'},
+          {name:'Light plyo — pogo · broad jump · bound', dose:'low volume · stick every landing'},
+        ]},
+      ]
+    },
+    { name:'Sunday', rest:true, intent:'Rest',
+      sub:'Full rest. Sleep, fuel, recover — this is where the fitness consolidates.',
+      blocks:[
+        { label:'Optional', items:[
+          {name:'Gentle walk or stretch', dose:'only if it helps'},
+        ]},
+      ]
+    },
+  ],
+
+  // ── ROLLING MAINTENANCE B (3 runs) ────────────────────────────────
+  [
+    { name:'Monday', collagen:true, rest:false, intent:'Strength — Lower',
+      sub:'Same maintenance anchor. Hold the base while the running load steps up this week.',
+      blocks:[
+        { label:'Joint Prep — Daily', items:[
+          {name:'Hip CARs', note:'Spina', dose:'5 circles ea direction · each hip'},
+          {name:'Ankle CARs', dose:'5 ea'},
+          {name:'90/90 Hip Switch', dose:'8 switches'},
+        ]},
+        { label:'Strength', items:[
+          {name:'Back / Box Squat', dose:'4×5 · RPE 7'},
+          {name:'Single-Leg RDL', dose:'3×8 ea · 3s eccentric'},
+          {name:'Loaded Step-Up', dose:'3×8 ea'},
+          {name:'Nordic Curl', dose:'3×5 · eccentric'},
+        ]},
+      ]
+    },
+    { name:'Tuesday', collagen:false, rest:false, intent:'RUN 1 — Aerobic Interval',
+      sub:'VO2 / aerobic power. Lift the ceiling — the engine that survives 90 minutes.',
+      blocks:[
+        { label:'Joint Prep + Warmup', items:[
+          {name:'Hip + Ankle CARs', dose:'5 ea'},
+          {name:'Dynamic warmup + build-ups', dose:'full'},
+        ]},
+        { gold:true, label:'Intervals', items:[
+          {name:'4×4 VO2 (or 6×3 min)', dose:'4 min hard / 3 min easy · >90% HRmax on work'},
+          {name:'Cue', note:'controlled hard, mechanics stay clean — not a grind to failure', dose:'quality'},
+        ]},
+        { gold:true, label:'Core', items:[
+          {name:'Dead bugs · side plank · Pallof', dose:'3 rounds'},
+        ]},
+      ]
+    },
+    { name:'Wednesday', collagen:false, rest:false, intent:'RUN 2 — RSA + COD',
+      sub:'Repeated sprint + change of direction — the soccer bread and butter. Decel mechanics honest.',
+      blocks:[
+        { label:'Joint Prep + Warmup', items:[
+          {name:'Hip + Ankle CARs', dose:'5 ea'},
+          {name:'Sprint warmup', dose:'A-skips · accels · build-ups'},
+        ]},
+        { gold:true, label:'RSA', items:[
+          {name:'Repeated sprints', dose:'10×30m · 1:4 rest · hold top speed'},
+        ]},
+        { label:'Agility + COD', items:[
+          {name:'Cone agility (T-drill / 5-10-5)', dose:'5–6 reps · plant control'},
+          {name:'Reactive cut with ball', dose:'6 ea side · brake then accelerate'},
+        ]},
+        { label:'Glute-Med', items:[
+          {name:'Banded lateral walk + monster walk', dose:'2×15'},
+        ]},
+      ]
+    },
+    { name:'Thursday', collagen:true, rest:false, intent:'Upper + Recovery Mobility',
+      sub:'Off the legs between run days. Upper, core, and a real mobility flow so Friday’s run is fresh.',
+      blocks:[
+        { label:'Joint Prep — Daily', items:[
+          {name:'Hip + Ankle CARs', dose:'5 ea'},
+        ]},
+        { label:'Upper + Core', items:[
+          {name:'Push + Pull superset', dose:'3×10 ea'},
+          {name:'Anti-rotation + anti-extension core', dose:'3 rounds'},
+        ]},
+        { label:'Mobility', items:[
+          {name:'Hip + T-spine + ankle flow', dose:'10 min · deep squat sit, 90/90, lateral lunge'},
+        ]},
+      ]
+    },
+    { name:'Friday', collagen:false, rest:false, intent:'RUN 3 — Game-Simulation',
+      sub:'Mixed demands — accelerate, decelerate, change pace, with the ball. Closest thing to a match without a match. Moderate volume, high quality.',
+      blocks:[
+        { label:'Joint Prep + Warmup', items:[
+          {name:'Hip + Ankle CARs', dose:'5 ea'},
+          {name:'Ball-integrated warmup', dose:'dribble · pass · turn'},
+        ]},
+        { gold:true, label:'Game-Sim Running', items:[
+          {name:'Interval mix — accel / decel / change of pace', dose:'6×(15m accel + 10m decel + jog) · vary'},
+          {name:'Small-sided-style with ball', dose:'12–15 min · first touch, turns, short bursts'},
+        ]},
+        { label:'Decel / Landing', items:[
+          {name:'Depth-drop to stick + reactive cut', dose:'6 · ACL-protective deceleration'},
+        ]},
+      ]
+    },
+    { name:'Saturday', collagen:false, rest:false, intent:'Recovery + Movement',
+      sub:'Bigger run week — earn it back. Active recovery, full CARs, tissue.',
+      blocks:[
+        { label:'Recovery', items:[
+          {name:'Easy bike or walk', dose:'25–30 min'},
+          {name:'Full CARs + movement snacks', dose:'joints + ground movement'},
+          {name:'Soft tissue', dose:'lower body'},
+        ]},
+      ]
+    },
+    { name:'Sunday', rest:true, intent:'Rest',
+      sub:'Full rest. The week was heavier — sleep and fuel do the adaptation.',
+      blocks:[
+        { label:'Optional', items:[
+          {name:'Gentle walk or stretch', dose:'only if it helps'},
         ]},
       ]
     },
