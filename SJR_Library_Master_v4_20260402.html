@@ -1,6 +1,6 @@
 <!DOCTYPE html>
-<!-- VERSION: 4.3 | Updated: 2026-08-18 | Prior: 4.2 | +Section 12 "Movement & Restoration" (10 cards: foot revival, CARs, movement snacks). Full changelog in CLAUDE.md File Inventory. -->
-<!-- CHANGELOG: v4.3 +Movement & Restoration · v4.2 Sciatic Nerve Slider · v4.1 filter FAQ panel -->
+<!-- VERSION: 4.4 | Updated: 2026-08-22 | Prior: 4.3 | Deep-link scroll fix: #restoration (and any #section link from the guides) now lands ON the section — preserve hash in replaceState + re-scroll after fonts/layout settle. Full changelog in CLAUDE.md File Inventory. -->
+<!-- CHANGELOG: v4.4 deep-link #hash scroll fix · v4.3 +Movement & Restoration · v4.2 Sciatic Nerve Slider · v4.1 filter FAQ panel -->
 
 <html lang="en">
 <head>
@@ -2463,8 +2463,8 @@
     if (hasIntensity) params.set('intensity', [...activeFilters.intensity].join(','));
     if (hasQuality)   params.set('quality',   [...activeFilters.quality].join(','));
     const newUrl = params.toString()
-      ? `${location.pathname}?${params.toString()}`
-      : location.pathname;
+      ? `${location.pathname}?${params.toString()}${location.hash}`
+      : `${location.pathname}${location.hash}`;
     try {
       history.replaceState(null, '', newUrl);
     } catch(e) { /* sandboxed preview — URL sync unavailable, filters still work */ }
@@ -2517,6 +2517,21 @@
   }
 
   loadFromURL();
+
+  // ── Deep-link scroll (v4.4) ────────────────────────────────────────────────
+  // Long page + async web fonts: the browser's native jump to a #hash fires
+  // before layout settles, so a bottom section like #restoration lands near the
+  // top of the page. Re-scroll once fonts/layout are ready so deep-links from the
+  // guides (…#restoration) land ON the section, not at the top.
+  function scrollToHash(){
+    if(!location.hash) return;
+    const el = document.getElementById(decodeURIComponent(location.hash.slice(1)));
+    if(el) el.scrollIntoView({ block:'start' });
+  }
+  if(location.hash){
+    window.addEventListener('load', () => setTimeout(scrollToHash, 80));
+    if(document.fonts && document.fonts.ready){ document.fonts.ready.then(() => setTimeout(scrollToHash, 80)); }
+  }
 </script>
 
 

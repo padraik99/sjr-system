@@ -1,6 +1,6 @@
 <!DOCTYPE html>
-<!-- VERSION: 7.1 | Updated: 2026-08-18 | Prior: 7.0 | Medium-day spine-friendly swap card (Back 4–5/10 or nerve up → light band/neural set). Full changelog in CLAUDE.md File Inventory. -->
-<!-- CHANGELOG: v7.1 medium-day swap · v7.0 hybrid console + grouped 0–10 log + doctor summary + Nerve-umbrella + /10 gates · v6.x wave engine + governor -->
+<!-- VERSION: 7.2 | Updated: 2026-08-22 | Prior: 7.1 | Rehab-done toggle moved Notes→Treatment group; med-day swap card gets Search-Demo links (banded glute-med, sciatic slider); hdr label corrected (was stuck at v7.0). Full changelog in CLAUDE.md File Inventory. -->
+<!-- CHANGELOG: v7.2 rehab toggle → Treatment + med-day demo links + label fix · v7.1 medium-day swap · v7.0 hybrid console + grouped 0–10 log + doctor summary + Nerve-umbrella + /10 gates · v6.x wave engine + governor -->
 
 <html lang="en">
 <head>
@@ -568,7 +568,7 @@ main { padding:1.25rem; max-width:700px; margin:0 auto; }
   <div class="hdr-top">
     <div>
       <div class="hdr-name">Patrick</div>
-      <div class="hdr-sub">L4–L5 · Return to Athletic Life · v7.0</div>
+      <div class="hdr-sub">L4–L5 · Return to Athletic Life · v7.2</div>
     </div>
     <div class="week-inline-nav">
       <button class="nav-arrow-inline" id="prev-week" onclick="changeWeek(-1)" disabled>‹</button>
@@ -3033,8 +3033,8 @@ function renderDay(idx){
     html += `<div class="ex-block">
       <div class="block-label green">Medium Day — Spine-Friendly Swap</div>
       <div class="day-sub" style="margin:-.1rem 0 .55rem">Medium symptoms today (back 4–5/10, or nerve up) — skip the heavy lifts (hip thrusts, loaded hinge). Run this light band + neural set instead, and earn the heavy work back on a green day. Authored plan is below for reference.</div>
-      <div class="ex-row"><div class="ex-name">Banded glute-med series<small>clamshell → lateral shuffle → monster walk · light band</small></div><div class="ex-dose green">2×15–20</div></div>
-      <div class="ex-row"><div class="ex-name">Sciatic nerve slider<small>glide, not stretch · stop if it travels down the leg</small></div><div class="ex-dose green">2×10</div></div>
+      <div class="ex-row"><div class="ex-name">Banded glute-med series<small>clamshell → lateral shuffle → monster walk · light band</small><a class="ex-video-link" style="margin-top:.35rem" href="https://www.youtube.com/results?search_query=banded+glute+medius+clamshell+lateral+shuffle+monster+walk" target="_blank" rel="noopener">🔍 Search Demo</a></div><div class="ex-dose green">2×15–20</div></div>
+      <div class="ex-row"><div class="ex-name">Sciatic nerve slider<small>glide, not stretch · stop if it travels down the leg</small><a class="ex-video-link" style="margin-top:.35rem" href="https://www.youtube.com/results?search_query=sciatic+nerve+slider+neural+glide+flossing+technique" target="_blank" rel="noopener">🔍 Search Demo</a></div><div class="ex-dose green">2×10</div></div>
       <div class="ex-row"><div class="ex-name">Backward jog / treadmill<small>non-impact · pole-to-pole, easy effort</small></div><div class="ex-dose green">easy</div></div>
       <div class="ex-row"><div class="ex-name">Movement &amp; Restoration<small>deep squat sit · ankle CARs · spinal waves</small></div><div class="ex-dose green">pick 2–3</div></div>
       <a class="ex-video-link" href="https://padraik99.github.io/sjr-system/SJR_Library_Master_v4_20260402.html#restoration" style="display:inline-block;margin:.35rem 0 .5rem">Open Movement &amp; Restoration in Library →</a>
