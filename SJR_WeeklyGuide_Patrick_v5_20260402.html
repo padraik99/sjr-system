@@ -1499,6 +1499,22 @@ function BIKE_STEP(step, dose, effort){
     {name:'Effort', note:effort, dose:'RPE'},
   ]};
 }
+
+// Thursday anchor session (Sep 4 2026). Patrick's actual pattern with Yari: backward and
+// forward intervals as WARMUP, then a hard sled session, with BFR folded into the sled work.
+// Counted as a FULL forward-running exposure — by total distance and time it is one, and
+// filing it as a warmup is exactly the accounting error the June ledger was blind to.
+function CANAL_SLED_ANCHOR(id){
+  return { label:'Canal — Anchor Session (with Yari)', cls:'accent', items:[
+    {name:'Dynamic warmup', dose:'5 min'},
+    {name:'Backward jog intervals — warmup', note:'maintained base · pole intervals as usual', dose:'2–3 poles work / 1 pole rest'},
+    {name:'Forward intervals — warmup role, rung ' + id, note:'warmup by intent, full exposure by distance and time — it counts as one of the week\'s two rung sessions, so do not also add volume elsewhere', dose:RUNGS[id].work},
+    {name:'Sled pull — backward', note:'concentric-only · horizontal load · flexion-biased, opens the lateral recess', dose:'2–3 poles work / 1 pole rest'},
+    {name:'Sled pull — forward, slight lean', dose:'2 poles × 3'},
+    {name:'BFR — cuffed on the sled work', note:'20–30% equivalent effort · cuff snug not painful (~7/10) · deflate on any distal numbness beyond the ordinary BFR ache', dose:'across the sled sets'},
+  ]};
+}
+
 const SLED_REENTRY = {
   label:'Sled — Canal', cls:'accent', items:[
     {name:'Sled pull — backward', note:'concentric-only, no eccentric braking · horizontal load · flexion-biased, opens the lateral recess', dose:'2–3 poles work / 1 pole rest'},
@@ -1572,14 +1588,14 @@ function reentryWeek(c){
         collagen:false, blocks:[WALK_BASE, GYM_REENTRY, GLUTE_MED_DOSE, UPPER_REENTRY, MOVEMENT_RESTORATION(c.flex,'rot')] },
       { name:'Tuesday', type:'B', intent:'Movement — Forward Rung ' + c.rungA, sub:c.tueSub || 'Rung inside a walk. Judge it at 24 and 48 hours, not during.',
         collagen:false, blocks:[WALK_BASE, CANAL_RUNG(c.rungA)] },
-      { name:'Wednesday', type:'C', intent:c.wedIntent || 'Movement — Bike', sub:c.wedSub || 'Aerobic work lives here. No running, no load.',
+      { name:'Wednesday', type:'C', intent:c.wedIntent || 'Movement — Bike', sub:c.wedSub || 'Ladder A step day. No running, no load.',
         collagen:false, blocks:c.wedBlocks || [WALK_BASE, BIKE_STEP(c.bike, c.bikeDose, c.bikeEffort), MOVEMENT_RESTORATION(c.flex,'tspine')] },
-      { name:'Thursday', type:'A', intent:'Resistance — Sled with Yari', sub:'Sled on the canal. Pole intervals as usual.',
-        collagen:false, blocks:[WALK_BASE, SLED_REENTRY] },
-      { name:'Friday', type:'B', intent:'Movement — Forward Rung ' + c.rungB, sub:'Second rung session, 3 days off Tuesday.',
-        collagen:false, blocks:[WALK_BASE, CANAL_RUNG(c.rungB), MOVEMENT_RESTORATION(c.flex,'lat')] },
-      { name:'Saturday', type:'A', intent:'Resistance — BFR + Upper', sub:'BFR is where leg stress goes while the trap bar is still light.',
-        collagen:false, blocks:[WALK_BASE, BFR_LEGS, UPPER_REENTRY, MOVEMENT_RESTORATION(c.flex,'squat')] },
+      { name:'Thursday', type:'A', intent:'Anchor — Intervals + Sled with Yari', sub:'The big day. Intervals warm you up, the sled is the session, BFR rides along with it. Counts as a full rung exposure.',
+        collagen:false, blocks:[WALK_BASE, CANAL_SLED_ANCHOR(c.rungB), MOVEMENT_RESTORATION(c.flex,'lat')] },
+      { name:'Friday', type:'C', intent:'Movement — Bike, Active Recovery', sub:'No intervals, no running. This is the 24-hour readout on Thursday — keep it clean.',
+        collagen:false, blocks:[WALK_BASE, BIKE_STEP(c.bike, c.bikeDose, c.bikeEffort), MOVEMENT_RESTORATION(c.flex,'rot')] },
+      { name:'Saturday', type:'A', intent:'Resistance — Garage', sub:'No running. This is Thursday\'s 48-hour readout, so keep the legs off the road.',
+        collagen:false, blocks:[WALK_BASE, GYM_REENTRY, UPPER_REENTRY, MOVEMENT_RESTORATION(c.flex,'squat')] },
       { name:'Sunday', type:'C', rest:true, intent:'Rest', sub:'Walk and sleep. Nothing measured, nothing progressed.',
         collagen:false, blocks:[] },
     ]
