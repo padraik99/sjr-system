@@ -1443,6 +1443,35 @@ const ISO_TENDON = {
 // WEEK DATA
 // ─────────────────────────────────────────
 
+
+// ── FLEXION LADDER (Sep 4 2026) ────────────────────────────────────
+// The library had zero forward-bend entries before today. Patrick identified never
+// regaining full forward bend as a gap behind the re-flare, and the Curtin programme
+// (Wernli/Kent/Caneiro/O'Sullivan, JOSPT 2023-25) found improvements in forward bending
+// track improvements in pain and disability — so this is an outcome measure, not a stretch.
+// Advances only in weeks where the RUN rung does not: one variable per week.
+const FLEX = {
+  F1:{ name:'Flexion rung 1 — supported hip hinge, hands on thighs', dose:'5 breaths × 3' },
+  F2:{ name:'Flexion rung 2 — seated forward reach, graded', dose:'5 breaths × 3 · one landmark at a time' },
+  F3:{ name:'Flexion rung 3 — standing forward bend, depth ladder', dose:'5 breaths × 3 · log the landmark reached' },
+  F4:{ name:'Flexion rung 4 — unloaded Jefferson curl', dose:'3 slow reps' },
+};
+const PLANES = {
+  rot:    {name:'Supine rotation — knees fall', note:'transverse plane, unloaded · small arc first · stop short of any distal symptom, not short of discomfort', dose:'8 ea side'},
+  tspine: {name:'Half-kneeling thoracic rotation', note:'pelvis locked so rotation comes from the thoracic spine instead of being borrowed from the lumbar segments', dose:'2×8 ea'},
+  lat:    {name:'Wall-supported lateral flexion', note:'frontal plane · compare left against right and note which is stiffer — that asymmetry is worth a number', dose:'5 breaths ea side'},
+  squat:  {name:'Deep squat sit — supported', note:'hold a doorframe or strap · accumulates flexion exposure passively', dose:'30–90s'},
+};
+function MOVEMENT_RESTORATION(f, plane){
+  return { label:'Movement Restoration — Afternoon Only', cls:'green', items:[
+    {name:FLEX[f].name,
+     note:'NEVER within two hours of waking — discs are maximally hydrated overnight and bending stress on them is highest in the early morning (Adams & Hutton). Advance one landmark only after three sessions clean at 24 and 48h. Log the landmark alongside the run rung.',
+     dose:FLEX[f].dose},
+    PLANES[plane],
+    {name:'Library — Flexion Tolerance & Graded Exposure', note:'full ladder with rationales and sources: Library section 13', dose:'reference'},
+  ]};
+}
+
 // ── RE-ENTRY BLOCKS (Sep 2026) ─────────────────────────────────────
 // Forward-running is a TOLERANCE ladder, not a fitness stimulus. Rungs are held
 // 3 sessions each and gated on the 24/48h return rule. Backward jogging and sled
@@ -1539,17 +1568,17 @@ function reentryWeek(c){
     label:c.label, dates:c.dates, phase:'Re-Entry Phase', focus:c.focus,
     days:[
       { name:'Monday', type:'A', intent:'Resistance — Garage', sub:c.monSub || 'Load in the 11am–4pm window. Trap bar, wedged squat, glute med at the real dose.',
-        collagen:false, blocks:[WALK_BASE, GYM_REENTRY, GLUTE_MED_DOSE, UPPER_REENTRY] },
+        collagen:false, blocks:[WALK_BASE, GYM_REENTRY, GLUTE_MED_DOSE, UPPER_REENTRY, MOVEMENT_RESTORATION(c.flex,'rot')] },
       { name:'Tuesday', type:'B', intent:'Movement — Forward Rung ' + c.rungA, sub:c.tueSub || 'Rung inside a walk. Judge it at 24 and 48 hours, not during.',
         collagen:false, blocks:[WALK_BASE, CANAL_RUNG(c.rungA)] },
       { name:'Wednesday', type:'C', intent:c.wedIntent || 'Movement — Bike', sub:c.wedSub || 'Aerobic work lives here. No running, no load.',
-        collagen:false, blocks:c.wedBlocks || [WALK_BASE, BIKE_STEP(c.bike, c.bikeDose, c.bikeEffort)] },
+        collagen:false, blocks:c.wedBlocks || [WALK_BASE, BIKE_STEP(c.bike, c.bikeDose, c.bikeEffort), MOVEMENT_RESTORATION(c.flex,'tspine')] },
       { name:'Thursday', type:'A', intent:'Resistance — Sled with Yari', sub:'Sled on the canal. Pole intervals as usual.',
         collagen:false, blocks:[WALK_BASE, SLED_REENTRY] },
       { name:'Friday', type:'B', intent:'Movement — Forward Rung ' + c.rungB, sub:'Second rung session, 3 days off Tuesday.',
-        collagen:false, blocks:[WALK_BASE, CANAL_RUNG(c.rungB)] },
+        collagen:false, blocks:[WALK_BASE, CANAL_RUNG(c.rungB), MOVEMENT_RESTORATION(c.flex,'lat')] },
       { name:'Saturday', type:'A', intent:'Resistance — BFR + Upper', sub:'BFR is where leg stress goes while the trap bar is still light.',
-        collagen:false, blocks:[WALK_BASE, BFR_LEGS, UPPER_REENTRY] },
+        collagen:false, blocks:[WALK_BASE, BFR_LEGS, UPPER_REENTRY, MOVEMENT_RESTORATION(c.flex,'squat')] },
       { name:'Sunday', type:'C', rest:true, intent:'Rest', sub:'Walk and sleep. Nothing measured, nothing progressed.',
         collagen:false, blocks:[] },
     ]
@@ -2759,6 +2788,7 @@ const WEEKS = [
   reentryWeek({
     label:'Re-Entry · W1 — Pre-ESI', dates:'Sep 7–13',
     focus:'Hold R4. Establish a clean pre-injection baseline — do NOT advance into the procedure.',
+    flex:'F1',
     rungA:'R4', rungB:'R4', bike:'B2', bikeDose:'30 min steady', bikeEffort:'Conversational — RPE 3–4',
     monSub:'Kataria consult Tue Sep 8. Bring the 30-day Doctor Summary. Tell her about the Lyrica taper.',
     tueSub:'Consult day. Rung after the appointment if the day allows, otherwise move it to Wednesday.',
@@ -2779,7 +2809,7 @@ const WEEKS = [
       { name:'Tuesday', type:'C', rest:true, intent:'Procedure inflammation', sub:'Walking only. Early soreness is the needle. It says nothing about whether the injection worked.', collagen:false, blocks:[WALK_BASE] },
       { name:'Wednesday', type:'C', rest:true, intent:'Procedure inflammation', sub:'Walking only. Steroid onset is typically 2–7 days — this stretch tells you little.', collagen:false, blocks:[WALK_BASE] },
       { name:'Thursday', type:'C', intent:'Early return — bike only', sub:'No sled this week. No BFR. No rung.', collagen:false, blocks:[WALK_BASE, BIKE_STEP('B1','20 min easy','Conversational — RPE 3')] },
-      { name:'Friday', type:'C', intent:'Early return — upper body', sub:'Upper body and walking. Legs stay out of it.', collagen:false, blocks:[WALK_BASE, UPPER_REENTRY] },
+      { name:'Friday', type:'C', intent:'Early return — upper body', sub:'Upper body and walking. Legs stay out of it. Flexion ladder holds at rung 1 — no advance through the procedure.', collagen:false, blocks:[WALK_BASE, UPPER_REENTRY, MOVEMENT_RESTORATION('F1','rot')] },
       { name:'Saturday', type:'C', intent:'Early return — bike + upper', sub:'Still no rung. Resist the temptation if it feels good — that feeling is the steroid, not new capacity.', collagen:false, blocks:[WALK_BASE, BIKE_STEP('B1','20 min easy','Conversational — RPE 3'), UPPER_REENTRY] },
       { name:'Sunday', type:'C', rest:true, intent:'Rest', sub:'Walk and sleep.', collagen:false, blocks:[] },
     ]
@@ -2788,6 +2818,7 @@ const WEEKS = [
   reentryWeek({
     label:'Re-Entry · W3 — Window Opens', dates:'Sep 21–27',
     focus:'Resume at R4 — the SAME rung you held Sep 13, not one above it. Read the 48h column; the 24h signal is chemically suppressed.',
+    flex:'F2',
     rungA:'R4', rungB:'R4', bike:'B2', bikeDose:'30 min steady', bikeEffort:'Conversational — RPE 3–4',
     monSub:'Full template resumes. Advance at the same rate inside the window as outside it — the window is permission to climb without the pain tax, not to skip rungs.',
     tueSub:'R4 session 3. Two sessions in a row needing 48h to settle is a stop, even if the days between feel like the best in a year.'
@@ -2796,18 +2827,21 @@ const WEEKS = [
   reentryWeek({
     label:'Re-Entry · W4', dates:'Sep 28 – Oct 4',
     focus:'R4 completes its hold, then step to R5. One variable this week — rung only, hold the bike at B2.',
+    flex:'F2',
     rungA:'R4', rungB:'R5', bike:'B2', bikeDose:'30 min steady', bikeEffort:'Conversational — RPE 3–4'
   }),
 
   reentryWeek({
     label:'Re-Entry · W5', dates:'Oct 5–11',
     focus:'R5 across both sessions. Bike steps to B3 only if the rung held clean last week — never both in one week.',
+    flex:'F3',
     rungA:'R5', rungB:'R5', bike:'B3', bikeDose:'30 min · 3 × 5 min lifts, 3 min easy between', bikeEffort:'Lifts at RPE 6'
   }),
 
   reentryWeek({
     label:'Re-Entry · W6 — The Quarter Mile', dates:'Oct 12–18',
     focus:'R6. A quarter mile you can repeat five times in a session — earned, not tested. Birthday week.',
+    flex:'F3',
     rungA:'R5', rungB:'R6', bike:'B3', bikeDose:'30 min · 3 × 5 min lifts, 3 min easy between', bikeEffort:'Lifts at RPE 6',
     monSub:'A year on from the surfing session that started this. R6 is the rung you described wanting at the top of this rebuild.'
   }),

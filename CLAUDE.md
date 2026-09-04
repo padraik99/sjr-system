@@ -198,8 +198,10 @@ https://padraik99.github.io/sjr-system/SJR_Library_Master_v4_20260402.html?phase
 | Isometric | 5×45s (Rio analgesia) or 20–30s (Baar collagen) | Different durations, different mechanisms |
 | GPP | Volume over intensity | Tissue tolerance is the goal |
 
-## Expert Reference Pool (26)
+## Expert Reference Pool (32)
 Baar · Grey · Ward · Natera · Barr · Schexnayder · McGill · Alfredson · Rio · Uthoff · Bosch · Dietz · Winkelman · Zourdos · Spina · Boyle · Cressey · Shepherd · Mack · Elliott · Harris · Verkhoshansky · Zatsiorsky · Gabbett · Sims · Pfaff
+**Spinal / neuropathic pain (added Sep 4 2026, for Patrick’s L4–L5 case):**
+Schmid · Wernli/Curtin group · Caneiro · O’Sullivan · Lehman · Konstantinou · Adams & Hutton
 
 | Expert | Scope |
 |--------|-------|
@@ -229,6 +231,25 @@ Baar · Grey · Ward · Natera · Barr · Schexnayder · McGill · Alfredson · 
 | Gabbett | ACWR — load spike vs. absolute load as injury predictor; sweet spot 0.8–1.3, >1.5 danger zone; session RPE×duration (AU) method |
 | Sims | Female athlete physiology, menstrual cycle periodization, hormonal effects on tissue vulnerability — 3 of 4 athletes are female |
 | Pfaff | Sprint/jump ground contact mechanics, approach run, elite load management — more current and technically detailed than Schexnayder |
+| Schmid (Oxford) | Nerve mechanosensitivity, entrapment neuropathies — distinguishing mechanical nerve compromise from neuroinflammatory and central mechanisms in the same patient. *Entrapment neuropathies*, PAIN Reports 2020 (open access). The most directly relevant researcher to Patrick's presentation. |
+| O'Sullivan / Caneiro | Cognitive Functional Therapy; movement-related fear and bending beliefs. RESTORE trial (Lancet 2023, n≈492) with 3-year follow-up (Lancet Rheum 2025) — held at 3 years, which is rare. |
+| Wernli / Kent (Curtin) | Forward-bending research programme: JOSPT 2023 (how movement is assessed), 2024 (improvements in bending track improvements in pain and disability), 2025 (bending × catastrophizing × self-efficacy). Basis for Library §13 — bending is an **outcome measure**, not a stretch. |
+| Lehman | *Reconciling Biomechanics with Pain Science.* The explicit bridge between McGill's flexion-intolerance model (already in this pool) and graded-exposure. Read when the two appear to conflict — which for Patrick, they do. |
+| Konstantinou (Keele) | Sciatica prognosis and stratified care: ATLAS cohort (Spine J 2017), SCOPiC RCT (Lancet Rheum 2020). Calibrates expected trajectory and escalation decisions. |
+| Adams & Hutton | Diurnal variation in disc mechanics — bending stress on the disc is highest in the first ~2 hours after waking. Source of the hard rule that flexion-ladder work is afternoon-only. |
+
+
+### Flexion tolerance — added Sep 4 2026
+Library §13 (`#flexion`) is an **ordered ladder**, unlike every other library section:
+Rung 1 supported hip hinge → Rung 2 seated forward reach → Rung 3 standing forward bend
+→ Rung 4 unloaded Jefferson curl. Hold each three sessions, gate on the 24/48h return rule.
+Before this the library had **zero** forward-bend entries — Patrick identified never regaining
+full forward bend as a real gap behind the June re-flare, and he was right that it was
+untrainable because nothing existed to train from.
+
+Two standing rules: **afternoon only, never within two hours of waking** (Adams & Hutton),
+and the flexion rung advances only in weeks where the **run** rung does not — one variable
+per week. See `sciatica-evidence-sources-v1-20260904.md` for the full source review.
 
 ## Commit Message Convention
 `[scope]: what changed + why`
