@@ -1442,6 +1442,120 @@ const ISO_TENDON = {
 // ─────────────────────────────────────────
 // WEEK DATA
 // ─────────────────────────────────────────
+
+// ── RE-ENTRY BLOCKS (Sep 2026) ─────────────────────────────────────
+// Forward-running is a TOLERANCE ladder, not a fitness stimulus. Rungs are held
+// 3 sessions each and gated on the 24/48h return rule. Backward jogging and sled
+// are separate maintained bases — never progress a rung and the base in one week.
+const RUNGS = {
+  R4:{ work:'60s run / 90s walk × 8', vol:'8 min running total' },
+  R5:{ work:'2:00 run / 2:00 walk × 6', vol:'12 min running total' },
+  R6:{ work:'3:00 run / 2:00 walk × 5', vol:'15 min · the quarter mile' },
+  R7:{ work:'5:00 run / 2:00 walk × 4', vol:'20 min · half mile per rep' },
+};
+const RUNG_ORDER = ['R4','R5','R6','R7'];
+
+function CANAL_RUNG(id){
+  return { label:'Canal — Forward Rung ' + id, cls:'accent', items:[
+    {name:'Dynamic warmup', dose:'5 min'},
+    {name:'Backward jog intervals', note:'maintained base — do not progress this in a week you change rungs', dose:'2–3 poles work / 1 pole rest'},
+    {name:'Forward rung ' + id, note:'conversational — slightly winded by the end of a rep is fine, unable to speak mid-rep is not · short steps, ~170–180 cadence, land under the hip, never reach out front · ' + RUNGS[id].vol, dose:RUNGS[id].work},
+    {name:'Walk out', dose:'5 min'},
+  ]};
+}
+function BIKE_STEP(step, dose, effort){
+  return { label:'Bike — Ladder A ' + step, cls:'green', items:[
+    {name:'Stationary bike — ' + step, note:'upright or slightly forward, never reclined · seat set so the knee nears extension without the pelvis rocking', dose:dose},
+    {name:'Effort', note:effort, dose:'RPE'},
+  ]};
+}
+const SLED_REENTRY = {
+  label:'Sled — Canal', cls:'accent', items:[
+    {name:'Sled pull — backward', note:'concentric-only, no eccentric braking · horizontal load · flexion-biased, opens the lateral recess', dose:'2–3 poles work / 1 pole rest'},
+    {name:'Sled pull — forward, slight lean', dose:'2 poles × 3'},
+    {name:'Counts as RESISTANCE', note:'reads like a walk, loads like a lift — do not file it as a movement day', dose:'—'},
+  ]
+};
+const BFR_LEGS = {
+  label:'BFR — Occlusion Cuffs', cls:'accent', items:[
+    {name:'Step-up — cuffed', note:'20–30% 1RM · cuff snug not painful (~7/10 tightness) · stays inflated across all four sets · deflate on any distal numbness beyond the ordinary BFR ache', dose:'30/15/15/15 · 30–45s rest'},
+    {name:'Split squat — cuffed', dose:'30/15/15/15'},
+    {name:'Calf raise — cuffed', dose:'30/15/15/15'},
+  ]
+};
+const GLUTE_MED_DOSE = {
+  label:'Glute Med — Duration Dose', cls:'green', items:[
+    {name:'Isometric glute med at wall', note:'25s, not 5s — duration is the prescription. Baar 20–30s builds tissue; Rio 45s for analgesia. A 5s hold primes a pattern, it does not build capacity.', dose:'4×25s ea'},
+    {name:'Side plank', note:'log left and right separately — if left trails right that number is worth showing Kataria', dose:'2×25s ea'},
+  ]
+};
+const GYM_REENTRY = {
+  label:'Lower Body — Garage', cls:'accent', items:[
+    {name:'Trap bar — elevated start', note:'high handles, bar mid-shin or above · exhale through the lift, no Valsalva · hold 65 for three sessions then step to 75–85', dose:'65 lbs · 3×8'},
+    {name:'Goblet squat — 16° wedges', note:'heels elevated cuts dorsiflexion demand, keeps torso upright, less lumbar flexion at depth · stop above any provoking depth', dose:'3×10'},
+    {name:'Single-leg RDL', note:'watch for left trunk rotation at the bottom', dose:'2×10 ea'},
+    {name:'Step-up', dose:'2×8 ea'},
+  ]
+};
+const UPPER_REENTRY = {
+  label:'Upper Body', items:[
+    {name:'DB bench press', note:'a load you can breathe through is the only rule', dose:'40 lbs · 2×20'},
+    {name:'Banded row', dose:'2×20'},
+    {name:'Dead hang', note:'step down off the bar, do not drop off it', dose:'2 × 50–60s'},
+    {name:'Pallof press', note:'anti-rotation without compression', dose:'5 pulses + 5s hold × 5 ea'},
+  ]
+};
+const WALK_BASE = {
+  label:'Canal Walk + Position Breaks', cls:'green', items:[
+    {name:'Canal walk', dose:'2 mi'},
+    {name:'Break up sustained positions', note:'90s of walking every 45–60 min · standing extensions retired Sep 2026, they stopped earning their place', dose:'through the day'},
+  ]
+};
+
+// Jun 8 – Sep 6 2026 — the flare. Deliberately unauthored: training was symptom-led,
+// not programmed. These placeholders keep the WEEKS index aligned to getWeekStart(),
+// which maps index → calendar date from Mon Mar 23 2026.
+function flareGapWeeks(){
+  const out = [];
+  const names = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
+  for(let i = 0; i < 12; i++){
+    out.push({
+      label:'Flare · W' + (i+1), dates:'Jun 8 – Sep 6', phase:'Flare — Unauthored',
+      focus:'Symptom-led. Walking, Phase 1 rehab, medication titration, second MRI. No programmed block.',
+      days: names.map(n => ({
+        name:n, type:'C', rest:true, intent:'Flare period — no authored plan',
+        sub:'Not programmed. Retained so week numbering stays aligned to the calendar.',
+        collagen:false, blocks:[]
+      }))
+    });
+  }
+  return out;
+}
+
+// Standard Re-Entry week. Alternates movement and resistance, never two of the same
+// back to back. Sled sits Thursday (with Yari) and counts as resistance.
+function reentryWeek(c){
+  return {
+    label:c.label, dates:c.dates, phase:'Re-Entry Phase', focus:c.focus,
+    days:[
+      { name:'Monday', type:'A', intent:'Resistance — Garage', sub:c.monSub || 'Load in the 11am–4pm window. Trap bar, wedged squat, glute med at the real dose.',
+        collagen:false, blocks:[WALK_BASE, GYM_REENTRY, GLUTE_MED_DOSE, UPPER_REENTRY] },
+      { name:'Tuesday', type:'B', intent:'Movement — Forward Rung ' + c.rungA, sub:c.tueSub || 'Rung inside a walk. Judge it at 24 and 48 hours, not during.',
+        collagen:false, blocks:[WALK_BASE, CANAL_RUNG(c.rungA)] },
+      { name:'Wednesday', type:'C', intent:c.wedIntent || 'Movement — Bike', sub:c.wedSub || 'Aerobic work lives here. No running, no load.',
+        collagen:false, blocks:c.wedBlocks || [WALK_BASE, BIKE_STEP(c.bike, c.bikeDose, c.bikeEffort)] },
+      { name:'Thursday', type:'A', intent:'Resistance — Sled with Yari', sub:'Sled on the canal. Pole intervals as usual.',
+        collagen:false, blocks:[WALK_BASE, SLED_REENTRY] },
+      { name:'Friday', type:'B', intent:'Movement — Forward Rung ' + c.rungB, sub:'Second rung session, 3 days off Tuesday.',
+        collagen:false, blocks:[WALK_BASE, CANAL_RUNG(c.rungB)] },
+      { name:'Saturday', type:'A', intent:'Resistance — BFR + Upper', sub:'BFR is where leg stress goes while the trap bar is still light.',
+        collagen:false, blocks:[WALK_BASE, BFR_LEGS, UPPER_REENTRY] },
+      { name:'Sunday', type:'C', rest:true, intent:'Rest', sub:'Walk and sleep. Nothing measured, nothing progressed.',
+        collagen:false, blocks:[] },
+    ]
+  };
+}
+
 const WEEKS = [
 
   // ── BRIDGE W1 — Mon Mar 23 ──────────────────────────────────────
@@ -2635,6 +2749,69 @@ const WEEKS = [
       { name:'Sunday', type:'rest', intent:'Rest', sub:'Full rest.', collagen:false, rest:true, blocks:[] },
     ]
   },
+
+  // ══ RE-ENTRY PHASE — Sep 7 → Oct 18 2026 ═══════════════════════════
+  // Authored Sep 4 2026. Replaces the Bridge-block carry-forward, which had been
+  // re-serving CANAL_RUN_BLOCK (4×4 VO2max) every week since the plan ran out in June.
+  // Entry rung R4 — R1–R3 cleared on demonstrated tolerance.
+  ...flareGapWeeks(),
+
+  reentryWeek({
+    label:'Re-Entry · W1 — Pre-ESI', dates:'Sep 7–13',
+    focus:'Hold R4. Establish a clean pre-injection baseline — do NOT advance into the procedure.',
+    rungA:'R4', rungB:'R4', bike:'B2', bikeDose:'30 min steady', bikeEffort:'Conversational — RPE 3–4',
+    monSub:'Kataria consult Tue Sep 8. Bring the 30-day Doctor Summary. Tell her about the Lyrica taper.',
+    tueSub:'Consult day. Rung after the appointment if the day allows, otherwise move it to Wednesday.',
+    wedIntent:'Movement — Quarter-Mile Probe',
+    wedSub:'One quarter mile, inside a walk, then stop and walk home. Do NOT add a second rep. This is the last uncontaminated window to test interval length — after the 14th the steroid suppresses the signal you would be reading.',
+    wedBlocks:[WALK_BASE, { label:'Probe — Single Quarter Mile', cls:'accent', items:[
+      {name:'Walk in', dose:'10 min'},
+      {name:'Forward quarter mile — ONE rep', note:'conversational · then stop · clean at 24 and 48h means the interval-length ceiling is at least R6 and W4–W5 can compress · a flare means you found the ceiling for the price of one rep', dose:'1 × ~0.25 mi'},
+      {name:'Walk home', dose:'15 min'},
+    ]}]
+  }),
+
+  {
+    label:'Re-Entry · W2 — Procedure', dates:'Sep 14–20', phase:'Re-Entry Phase',
+    focus:'Transforaminal ESI at L4–L5 Mon Sep 14. No rungs this week. A flare in the first 48–72h is the needle, not the outcome.',
+    days:[
+      { name:'Monday', type:'C', rest:true, intent:'TFESI L4–L5', sub:'Procedure day. Nothing else. Do not log this as a rung response.', collagen:false, blocks:[] },
+      { name:'Tuesday', type:'C', rest:true, intent:'Procedure inflammation', sub:'Walking only. Early soreness is the needle. It says nothing about whether the injection worked.', collagen:false, blocks:[WALK_BASE] },
+      { name:'Wednesday', type:'C', rest:true, intent:'Procedure inflammation', sub:'Walking only. Steroid onset is typically 2–7 days — this stretch tells you little.', collagen:false, blocks:[WALK_BASE] },
+      { name:'Thursday', type:'C', intent:'Early return — bike only', sub:'No sled this week. No BFR. No rung.', collagen:false, blocks:[WALK_BASE, BIKE_STEP('B1','20 min easy','Conversational — RPE 3')] },
+      { name:'Friday', type:'C', intent:'Early return — upper body', sub:'Upper body and walking. Legs stay out of it.', collagen:false, blocks:[WALK_BASE, UPPER_REENTRY] },
+      { name:'Saturday', type:'C', intent:'Early return — bike + upper', sub:'Still no rung. Resist the temptation if it feels good — that feeling is the steroid, not new capacity.', collagen:false, blocks:[WALK_BASE, BIKE_STEP('B1','20 min easy','Conversational — RPE 3'), UPPER_REENTRY] },
+      { name:'Sunday', type:'C', rest:true, intent:'Rest', sub:'Walk and sleep.', collagen:false, blocks:[] },
+    ]
+  },
+
+  reentryWeek({
+    label:'Re-Entry · W3 — Window Opens', dates:'Sep 21–27',
+    focus:'Resume at R4 — the SAME rung you held Sep 13, not one above it. Read the 48h column; the 24h signal is chemically suppressed.',
+    rungA:'R4', rungB:'R4', bike:'B2', bikeDose:'30 min steady', bikeEffort:'Conversational — RPE 3–4',
+    monSub:'Full template resumes. Advance at the same rate inside the window as outside it — the window is permission to climb without the pain tax, not to skip rungs.',
+    tueSub:'R4 session 3. Two sessions in a row needing 48h to settle is a stop, even if the days between feel like the best in a year.'
+  }),
+
+  reentryWeek({
+    label:'Re-Entry · W4', dates:'Sep 28 – Oct 4',
+    focus:'R4 completes its hold, then step to R5. One variable this week — rung only, hold the bike at B2.',
+    rungA:'R4', rungB:'R5', bike:'B2', bikeDose:'30 min steady', bikeEffort:'Conversational — RPE 3–4'
+  }),
+
+  reentryWeek({
+    label:'Re-Entry · W5', dates:'Oct 5–11',
+    focus:'R5 across both sessions. Bike steps to B3 only if the rung held clean last week — never both in one week.',
+    rungA:'R5', rungB:'R5', bike:'B3', bikeDose:'30 min · 3 × 5 min lifts, 3 min easy between', bikeEffort:'Lifts at RPE 6'
+  }),
+
+  reentryWeek({
+    label:'Re-Entry · W6 — The Quarter Mile', dates:'Oct 12–18',
+    focus:'R6. A quarter mile you can repeat five times in a session — earned, not tested. Birthday week.',
+    rungA:'R5', rungB:'R6', bike:'B3', bikeDose:'30 min · 3 × 5 min lifts, 3 min easy between', bikeEffort:'Lifts at RPE 6',
+    monSub:'A year on from the surfing session that started this. R6 is the rung you described wanting at the top of this rebuild.'
+  }),
+
 ];
 
 // ─────────────────────────────────────────
@@ -2873,28 +3050,73 @@ function getLatestScore(metric){
 // Old 0–5 grid gates map via new = old×2 − 0.5 (the go-live conversion SQL):
 // old ≥3 (Day C) → ≥5.5 · old ≥2 (reduce) → ≥3.5 · old ≤2 gate → ≤3.5.
 function getDayType(baseType){
-  const am = getLatestScore('morning');
-  if(am === null) return baseType;
-  if(am >= 5.5) return 'C';
-  return baseType;
+  const b = getBreaches();
+  return b.morning ? 'C' : baseType;
 }
 
 function getLoadModifier(){
-  const am = getLatestScore('morning');
-  if(am === null) return 1;
-  if(am >= 5.5) return 0;
-  if(am >= 3.5) return 0.7;
+  const b = getBreaches();
+  if(b.morning) return 0;
+  if(b.morningReduce) return 0.7;
   return 1;
 }
 
+// v8 (Sep 4 2026) - ROLLING BASELINE. The absolute gates below were calibrated when
+// Patrick's morning pain averaged ~2/10. At a 5.9/10 floor they fired every logged day:
+// lower body cancelled, permanently. Gates now read TODAY against his own recent median,
+// so they re-calibrate as he improves or flares. Direction of travel, not absolute number.
+const BASELINE_WINDOW_DAYS = 14;
+
+function getBaseline(metric){
+  const cutoff = Date.now() - BASELINE_WINDOW_DAYS*24*3600000;
+  const vals = logs.filter(l => l.metric === metric && l.ts > cutoff)
+                   .map(l => l.score).sort((a,b) => a - b);
+  if(vals.length < 4) return null;
+  const mid = Math.floor(vals.length/2);
+  return vals.length % 2 ? vals[mid] : (vals[mid-1] + vals[mid]) / 2;
+}
+
+function getDelta(metric){
+  const now = getLatestScore(metric);
+  if(now === null) return null;
+  const base = getBaseline(metric);
+  return { score:now, base:base, delta: base === null ? null : now - base };
+}
+
 function getBreaches(){
-  const am = getLatestScore('morning');
-  const nerve = getLatestScore('nerve');
+  const am = getDelta('morning');
+  const nv = getDelta('nerve');
+  if(am === null) return { morning:false, morningReduce:false, nerve:false, thin:true };
+  // Fewer than 4 logs in the window - no trustworthy baseline yet, fall back to absolutes.
+  if(am.base === null){
+    const n = nv ? nv.score : null;
+    return { morning: am.score >= 5.5, morningReduce: am.score >= 3.5 && am.score < 5.5,
+             nerve: n !== null && n > 3.5, thin:true };
+  }
   return {
-    morning: am !== null && am >= 5.5,
-    morningReduce: am !== null && am >= 3.5 && am < 5.5,
-    nerve: nerve !== null && nerve > 3.5,
+    morning:       am.delta >= 1.5,
+    morningReduce: am.delta >= 0.5 && am.delta < 1.5,
+    nerve:         !!(nv && nv.base !== null && nv.delta >= 1.5),
+    thin:          false,
+    delta:         am.delta,
+    base:          am.base,
   };
+}
+
+// Rung selection. Patrick's mapping (Sep 2026) with one correction: today's score can
+// send you DOWN from your current rung, never UP past it. Rung position is earned across
+// sessions (3 clean, 24/48h return); the daily score only decides how much you run today.
+// Feeling good on Tuesday says nothing about whether you can absorb the next rung's volume.
+function rungForToday(plannedRung){
+  const b = getBreaches();
+  if(b.morning)       return { rung:null, mode:'walk',
+    why:'Morning 1.5+ above your ' + BASELINE_WINDOW_DAYS + '-day median \u2014 walk only today.' };
+  if(b.morningReduce) return { rung:plannedRung, mode:'reduced',
+    why:'Morning 0.5\u20131.5 above median \u2014 run ' + plannedRung + ' at about 60% of the reps.' };
+  if(b.nerve)         return { rung:plannedRung, mode:'reduced',
+    why:'Nerve elevated against your own median \u2014 same rung, fewer reps, stop if it climbs mid-set.' };
+  return { rung:plannedRung, mode:'full',
+    why:'At or below your median \u2014 run ' + plannedRung + ' as written.' };
 }
 
 function updateMetricDisplay(){
@@ -3018,12 +3240,12 @@ function renderDay(idx){
 
   // Override banners
   if(breaches.morning && !day.rest){
-    html += `<div class="hold-banner"><div style="font-size:1rem;flex-shrink:0">🛑</div><div class="hold-text"><strong>Day C Override — Morning Pain ≥5.5/10</strong>Lower body loading cancelled today. Walk + bike + upper body only.</div></div>`;
+    html += `<div class="hold-banner"><div style="font-size:1rem;flex-shrink:0">🛑</div><div class="hold-text"><strong>Day C Override — Morning 1.5+ Above Your Median</strong>Lower body loading cancelled today. Walk + bike + upper body only. Measured against your own 14-day baseline, not a fixed score.</div></div>`;
   } else if(breaches.morningReduce && !day.rest && (day.type === 'A' || day.type === 'D')){
-    html += `<div class="autoreg-banner"><div class="autoreg-icon">⚠️</div><div class="autoreg-text"><strong>Load Reduction — Morning Pain 3.5–5/10</strong>Reduce lower body loads by 30% today. Do not skip — reduce.</div></div>`;
+    html += `<div class="autoreg-banner"><div class="autoreg-icon">⚠️</div><div class="autoreg-text"><strong>Load Reduction — Morning 0.5–1.5 Above Your Median</strong>Reduce lower body loads by 30% and run today's rung at ~60% of the reps. Do not skip — reduce.</div></div>`;
   }
   if(breaches.nerve && !day.rest){
-    html += `<div class="autoreg-banner"><div class="autoreg-icon">⚡</div><div class="autoreg-text"><strong>Nerve Elevated >3.5/10</strong>Session proceeds but avoid loading to fatigue. Monitor calf bands mid-session. Bike post-session is mandatory.</div></div>`;
+    html += `<div class="autoreg-banner"><div class="autoreg-icon">⚡</div><div class="autoreg-text"><strong>Nerve Elevated vs Your Median</strong>Session proceeds but avoid loading to fatigue. Monitor calf bands mid-session. Bike post-session is mandatory.</div></div>`;
   }
 
   // v7.1: MEDIUM DAY (morning 3.5–5.5) — surface a light-load / band / sciatica swap instead of
@@ -3650,6 +3872,29 @@ function weekIndexFromDate(d){
 const DUP_ROLE  = {1:'heavy', 3:'moderate', 6:'power', 2:'canal', 4:'canal', 5:'recovery', 0:'recovery'};
 const ROLE_BASE = {heavy:1.00, moderate:0.85, power:0.75, canal:null, recovery:null};
 
+// v8 (Sep 4 2026) - resolve the authored rung (or sled session) for a given date, so the
+// wave-engine headline reflects the current block instead of a hardcoded string.
+function plannedRungFor(d){
+  const target = sbDateStr(new Date(d.getFullYear(), d.getMonth(), d.getDate()));
+  for(let w = 0; w < WEEKS.length; w++){
+    const ws = getWeekStart(w);
+    for(let i = 0; i < 7; i++){
+      if(slotDateStr(ws, i) === target){
+        const day = WEEKS[w].days[i] || {};
+        let rung = null, sled = false;
+        (day.blocks || []).forEach(b => {
+          if(!b || !b.label) return;
+          const m = /Forward Rung (R\d)/.exec(b.label);
+          if(m) rung = m[1];
+          if(/Sled/.test(b.label)) sled = true;
+        });
+        return { rung:rung, sled:sled };
+      }
+    }
+  }
+  return { rung:null, sled:false };
+}
+
 function waveInfo(d){
   const wi  = weekIndexFromDate(d);
   const cyc = ((wi % 4) + 4) % 4;            // 0,1,2 build · 3 deload
@@ -3703,7 +3948,19 @@ function governorVerdict(d){
 
   if(wk.role === 'canal'){
     action = 'aerobic'; tone = 'canal';
-    headline = 'Canal day — VO2 4×4. Governed on the separate aerobic track, not the lifting wave.';
+    // v8 (Sep 4 2026): was hardcoded to 'VO2 4×4'. That line outlived the plan running
+    // out in June and kept announcing 4×4s on every canal day regardless of content.
+    // Now reads the authored rung for the date, and knows Thursday is the sled session.
+    const p = plannedRungFor(d);
+    if(p.sled){
+      headline = 'Sled day — concentric-only, flexion-biased. Counts as resistance, not movement.';
+    } else if(p.rung){
+      const sel = isToday ? rungForToday(p.rung) : null;
+      headline = 'Canal day — forward rung ' + p.rung +
+        (sel ? '. ' + sel.why : '. Conversational pace — judge it at 24 and 48 hours, not during.');
+    } else {
+      headline = 'Canal day — walk + backward intervals. No forward rung authored for today.';
+    }
   } else if(wk.role === 'recovery'){
     action = 'recovery'; tone = 'recovery';
     headline = (d.getDay() === 5) ? 'Recovery — walk + easy movement only. Friday is not a bonus lifting day.'
