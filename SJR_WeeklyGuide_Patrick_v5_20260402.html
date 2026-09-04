@@ -637,7 +637,7 @@ main { padding:1.25rem; max-width:700px; margin:0 auto; }
       <span class="flareup-badge flat" id="flareup-badge">—</span>
       <span class="lg-chev" id="flareup-chev">▼</span>
     </button>
-    <span class="con-chip" style="cursor:default"><span class="chip-label">gate</span><span class="chip-val">pain ≤3.5/10</span></span>
+    <span class="con-chip" style="cursor:default"><span class="chip-label">gate</span><span class="chip-val">vs 14-day median</span></span>
   </div>
 </div>
 
@@ -747,7 +747,7 @@ main { padding:1.25rem; max-width:700px; margin:0 auto; }
           <span class="sr-val" id="sv-glute">—</span>
           <button class="sr-clear" type="button" onclick="clearStage('glute')" title="Clear">✕</button>
         </div>
-        <div class="sum-note" style="margin:.05rem 0 .5rem;">Nerve = radicular umbrella — calf · ankle · lateral · tingling sensation. Gate ≤3.5/10.</div>
+        <div class="sum-note" style="margin:.05rem 0 .5rem;">Nerve = radicular umbrella — calf · ankle · lateral · tingling sensation. Gated on deviation from your own 14-day median, not an absolute score.</div>
         <div class="timing-toggle" id="timing-toggle-wrap">
           <button class="timing-btn active" id="tbtn-am" onclick="selectTiming('am')">AM</button>
           <button class="timing-btn" id="tbtn-pre" onclick="selectTiming('pre')">Pre</button>
@@ -1548,9 +1548,9 @@ const WALK_BASE = {
 function flareGapWeeks(){
   const out = [];
   const names = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
-  for(let i = 0; i < 12; i++){
+  for(let i = 0; i < 11; i++){
     out.push({
-      label:'Flare · W' + (i+1), dates:'Jun 8 – Sep 6', phase:'Flare — Unauthored',
+      label:'Flare · W' + (i+1), dates:'Jun 8 – Aug 30', phase:'Flare — Unauthored',
       focus:'Symptom-led. Walking, Phase 1 rehab, medication titration, second MRI. No programmed block.',
       days: names.map(n => ({
         name:n, type:'C', rest:true, intent:'Flare period — no authored plan',
@@ -2785,6 +2785,18 @@ const WEEKS = [
   // re-serving CANAL_RUN_BLOCK (4×4 VO2max) every week since the plan ran out in June.
   // Entry rung R4 — R1–R3 cleared on demonstrated tolerance.
   ...flareGapWeeks(),
+
+  // W0 — the current part-week. Authored Sep 4 2026 because the gap weeks left the
+  // live week empty: today fell inside 'Flare · W12' and the guide had nothing to show.
+  reentryWeek({
+    label:'Re-Entry · W0 — Ramp In', dates:'Aug 31 – Sep 6',
+    focus:'Enter the ladder at R4. Establish the flexion rung and the logging cadence before the pre-ESI week proper.',
+    flex:'F1',
+    rungA:'R4', rungB:'R4', bike:'B1', bikeDose:'20 min steady', bikeEffort:'Conversational — RPE 3–4',
+    monSub:'Short week — the block starts mid-stream. Do what the day offers, log all five fields.',
+    tueSub:'First authored R4 session. Judge it at 24 and 48 hours, not during.'
+  }),
+
 
   reentryWeek({
     label:'Re-Entry · W1 — Pre-ESI', dates:'Sep 7–13',
