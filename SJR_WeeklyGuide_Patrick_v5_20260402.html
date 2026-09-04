@@ -1468,8 +1468,9 @@ function MOVEMENT_RESTORATION(f, plane){
      note:'NEVER within two hours of waking — discs are maximally hydrated overnight and bending stress on them is highest in the early morning (Adams & Hutton). Advance one landmark only after three sessions clean at 24 and 48h. Log the landmark alongside the run rung.',
      dose:FLEX[f].dose},
     PLANES[plane],
-    {name:'Library — Flexion Tolerance & Graded Exposure', note:'full ladder with rationales and sources: Library section 13', dose:'reference'},
-  ]};
+  ],
+  link:{ href:'SJR_Library_Master_v4_20260402.html#flexion',
+         text:'Open the Flexion Tolerance ladder in the Library →' }};
 }
 
 // ── RE-ENTRY BLOCKS (Sep 2026) ─────────────────────────────────────
@@ -3444,6 +3445,11 @@ function buildBlocksHtml(blocks, dayIdx, opts){
         </div>`;
       }
     });
+    // v8 (Sep 4 2026): optional block-level link. Item names/doses go through escHtml,
+    // so a clickable reference can never live in an item — it has to sit on the block.
+    if(block.link){
+      html += `<a class="ex-video-link" href="${escHtml(block.link.href)}" target="_blank" rel="noopener" style="display:inline-block;margin:.4rem 0 .15rem">${escHtml(block.link.text)}</a>`;
+    }
     html += `</div>`;
   });
   return html;
