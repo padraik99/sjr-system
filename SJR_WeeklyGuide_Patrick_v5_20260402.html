@@ -1,6 +1,6 @@
 <!DOCTYPE html>
-<!-- VERSION: 7.2 | Updated: 2026-08-22 | Prior: 7.1 | Rehab-done toggle moved Notes→Treatment group; med-day swap card gets Search-Demo links (banded glute-med, sciatic slider); hdr label corrected (was stuck at v7.0). Full changelog in CLAUDE.md File Inventory. -->
-<!-- CHANGELOG: v7.2 rehab toggle → Treatment + med-day demo links + label fix · v7.1 medium-day swap · v7.0 hybrid console + grouped 0–10 log + doctor summary + Nerve-umbrella + /10 gates · v6.x wave engine + governor -->
+<!-- VERSION: 7.4 | Updated: 2026-10-01 | Prior: 7.3 (Sep 4 2026, shipped unstamped) | Two-key gate: ONE source of truth (gateVerdictFor) shared by the log modal and the plan builder, plus absolute walk/reduce limits no rolling median can override (a median CAP was built and then rejected — it compounds with the delta rule and re-creates the every-day-cancelled failure; see gate_test.js), gate chip now shows median · score · delta so a verdict is auditable. Re-Entry W2–W6 annotated with the actual post-TFESI course. Full changelog in CLAUDE.md File Inventory. -->
+<!-- CHANGELOG: v7.4 two-key gate (absolute backstop + capped median) · log modal and plan now share one verdict function · visible gate numbers · post-TFESI course recorded · v7.3 (Sep 4, committed unstamped under an old “v5.5–v5.8” numbering) rolling-baseline gates + Re-Entry W0–W6 + Thursday anchor / Friday recovery + BFR onto the sled + prone extension restored · v7.2 rehab toggle → Treatment + med-day demo links + label fix · v7.1 medium-day swap · v7.0 hybrid console + grouped 0–10 log + doctor summary + Nerve-umbrella + /10 gates · v6.x wave engine + governor -->
 
 <html lang="en">
 <head>
@@ -568,7 +568,7 @@ main { padding:1.25rem; max-width:700px; margin:0 auto; }
   <div class="hdr-top">
     <div>
       <div class="hdr-name">Patrick</div>
-      <div class="hdr-sub">L4–L5 · Return to Athletic Life · v7.2</div>
+      <div class="hdr-sub">L4–L5 · Return to Athletic Life · v7.4</div>
     </div>
     <div class="week-inline-nav">
       <button class="nav-arrow-inline" id="prev-week" onclick="changeWeek(-1)" disabled>‹</button>
@@ -623,7 +623,7 @@ main { padding:1.25rem; max-width:700px; margin:0 auto; }
     <button class="con-action" onclick="openModal()"><span class="ca-ic">＋</span>Log day<span class="ca-hint">pain · sleep · treatment</span></button>
     <button class="con-action" onclick="openInjuryModal()"><span class="ca-ic">⚠</span>Log an issue</button>
     <button class="con-action" onclick="openMetricsModal()"><span class="ca-ic">📊</span>Performance data</button>
-    <button class="con-action" onclick="openSummary()"><span class="ca-ic">📄</span>Doctor summary<span class="ca-hint">Bansal 7/8 · Kataria 7/28</span></button>
+    <button class="con-action" onclick="openSummary()"><span class="ca-ic">📄</span>Doctor summary<span class="ca-hint">last 30 days</span></button>
   </div>
   <div class="con-chips">
     <button class="con-chip" onclick="toggleReadiness()">
@@ -637,7 +637,7 @@ main { padding:1.25rem; max-width:700px; margin:0 auto; }
       <span class="flareup-badge flat" id="flareup-badge">—</span>
       <span class="lg-chev" id="flareup-chev">▼</span>
     </button>
-    <span class="con-chip" style="cursor:default"><span class="chip-label">gate</span><span class="chip-val">vs 14-day median</span></span>
+    <span class="con-chip" style="cursor:default"><span class="chip-label">gate</span><span class="chip-val" id="gate-chip-val">vs 14-day median</span></span>
   </div>
 </div>
 
@@ -2832,7 +2832,7 @@ const WEEKS = [
 
   {
     label:'Re-Entry · W2 — Procedure', dates:'Sep 14–20', phase:'Re-Entry Phase',
-    focus:'Transforaminal ESI at L4–L5 Mon Sep 14. No rungs this week. A flare in the first 48–72h is the needle, not the outcome.',
+    focus:'Transforaminal ESI at L4–L5 Mon Sep 14. No rungs this week. A flare in the first 48–72h is the needle, not the outcome. —— ACTUAL COURSE (recorded Oct 1): procedure smooth, went in feeling the best in a long time. Discharge advice was to take it easy a few days then carry on as before, which conflicted with this rung-free week and won. Ran 0.5 mi Wed Sep 16, lifted Thu Sep 17, lifted Sat Sep 19. No immediate problem; then a slow creep into the glute and the radiculopathy returned. Note the Saturday line below, written Sep 4, which named this mechanism in advance.',
     days:[
       { name:'Monday', type:'C', rest:true, intent:'TFESI L4–L5', sub:'Procedure day. Nothing else. Do not log this as a rung response.', collagen:false, blocks:[] },
       { name:'Tuesday', type:'C', rest:true, intent:'Procedure inflammation', sub:'Walking only. Early soreness is the needle. It says nothing about whether the injection worked.', collagen:false, blocks:[WALK_BASE] },
@@ -2846,7 +2846,7 @@ const WEEKS = [
 
   reentryWeek({
     label:'Re-Entry · W3 — Window Opens', dates:'Sep 21–27',
-    focus:'Resume at R4 — the SAME rung you held Sep 13, not one above it. Read the 48h column; the 24h signal is chemically suppressed.',
+    focus:'Resume at R4 — the SAME rung you held Sep 13, not one above it. Read the 48h column; the 24h signal is chemically suppressed. —— ACTUAL COURSE (recorded Oct 1): no clean resume. The Sep 19 flare carried into this week and was being managed throughout. No rung progression took place, so there is no uncontaminated read on what the injection bought.',
     flex:'F2',
     rungA:'R4', rungB:'R4', bike:'B2', bikeDose:'30 min steady', bikeEffort:'Conversational — RPE 3–4',
     monSub:'Full template resumes. Advance at the same rate inside the window as outside it — the window is permission to climb without the pain tax, not to skip rungs.',
@@ -2854,22 +2854,22 @@ const WEEKS = [
   }),
 
   reentryWeek({
-    label:'Re-Entry · W4', dates:'Sep 28 – Oct 4',
-    focus:'R4 completes its hold, then step to R5. One variable this week — rung only, hold the bike at B2.',
+    label:'Re-Entry · W4 — Hold', dates:'Sep 28 – Oct 4',
+    focus:'HOLD R4 both sessions. REVISED Oct 1: the step to R5 is cancelled. Radicular symptoms returned after Sep 19 and are still being managed, and your own rule governs — a rung is never advanced through a live flare, and two sessions needing 48h to settle is a stop. Working dose at the moment is about 0.5 mi inside a walk, roughly 4 min, repeated; it drives heart rate into the old 4×4 range at a jog, which is a conditioning finding worth keeping, not a licence to climb. Full hip flexion is putting the glute on notice, so keep the bike upright and low and hold flexion at F2 without advancing. Reinstate progression only after the symptoms settle.',
     flex:'F2',
-    rungA:'R4', rungB:'R5', bike:'B2', bikeDose:'30 min steady', bikeEffort:'Conversational — RPE 3–4'
+    rungA:'R4', rungB:'R4', bike:'B2', bikeDose:'30 min steady', bikeEffort:'Conversational — RPE 3–4'
   }),
 
   reentryWeek({
     label:'Re-Entry · W5', dates:'Oct 5–11',
-    focus:'R5 across both sessions. Bike steps to B3 only if the rung held clean last week — never both in one week.',
+    focus:'CONTINGENT (revised Oct 1, not scheduled): only if R4 has run clean for two sessions and the radiculopathy has settled. Otherwise this week repeats the W4 hold. R5 across both sessions. Bike steps to B3 only if the rung held clean last week — never both in one week.',
     flex:'F3',
     rungA:'R5', rungB:'R5', bike:'B3', bikeDose:'30 min · 3 × 5 min lifts, 3 min easy between', bikeEffort:'Lifts at RPE 6'
   }),
 
   reentryWeek({
     label:'Re-Entry · W6 — The Quarter Mile', dates:'Oct 12–18',
-    focus:'R6. A quarter mile you can repeat five times in a session — earned, not tested. Birthday week.',
+    focus:'CONTINGENT (revised Oct 1, not scheduled). R6. A quarter mile you can repeat five times in a session — earned, not tested. Birthday week. NOTE: the ladder tops out at a quarter mile while the dose actually being run since mid-September is a half mile. The rung definitions are behind practice and need re-cutting — do not read R6 as a step up from where you already are.',
     flex:'F3',
     rungA:'R5', rungB:'R6', bike:'B3', bikeDose:'30 min · 3 × 5 min lifts, 3 min easy between', bikeEffort:'Lifts at RPE 6',
     monSub:'A year on from the surfing session that started this. R6 is the rung you described wanting at the top of this rebuild.'
@@ -3124,11 +3124,41 @@ function getLoadModifier(){
   return 1;
 }
 
-// v8 (Sep 4 2026) - ROLLING BASELINE. The absolute gates below were calibrated when
-// Patrick's morning pain averaged ~2/10. At a 5.9/10 floor they fired every logged day:
-// lower body cancelled, permanently. Gates now read TODAY against his own recent median,
-// so they re-calibrate as he improves or flares. Direction of travel, not absolute number.
+// v8 (Sep 4 2026) → v7.4 (Oct 1 2026) — TWO-KEY GATE.
+//
+// History, because this has now failed in both directions:
+//   The original gates were absolute, calibrated when morning pain averaged ~2/10. At a
+//   5.9/10 floor they fired every single logged day and lower body was cancelled
+//   permanently, so Sep 4 replaced them with a pure rolling median — direction of travel
+//   only. That removed the floor entirely: a 6/10 morning sitting on a 5/10 median read
+//   as "run it as written". Worse, updateGateStatus was NOT updated and kept showing the
+//   old absolute verdict, so the log modal said "Day C override, lower body cancelled"
+//   and the plan rendered underneath it at full send. The flags were firing on screen and
+//   being ignored by the builder.
+//
+// The fix is two keys and one lock:
+//   KEY 1 (sensitivity)  the rolling median, which still catches a bad day inside a good
+//                        stretch and re-calibrates as he genuinely improves.
+//   KEY 2 (safety)       absolute limits that no median can argue away, so a high plateau
+//                        cannot normalise itself into a green light.
+//   ONE LOCK             gateVerdictFor() — the modal and the plan builder both call it,
+//                        so they cannot disagree again.
 const BASELINE_WINDOW_DAYS = 14;
+
+// walk   = hard stop. Day C, lower body cancelled, whatever the delta says.
+// reduce = same rung, roughly 60% of the reps.
+//
+// NOTE (Oct 1, found by the gate test): an earlier draft also capped the median at 4.5 so a
+// high plateau could not earn slack. That was redundant and actively harmful — a capped
+// median compounds with the delta rule, so a 6.0 became a hard stop and the 7.0 limit turned
+// into dead code. It would have re-created the "lower body cancelled every day" failure the
+// Sep 4 rewrite existed to fix. The two keys must stay INDEPENDENT: the median (uncapped)
+// watches change, the absolute limits watch severity. A plateau at 8/10 is caught by the
+// absolute limit, which is exactly what a backstop is for.
+const ABS_LIMITS = {
+  morning: { walk: 7.0, reduce: 5.5 },
+  nerve:   { walk: 6.5, reduce: 4.5 },
+};
 
 function getBaseline(metric){
   const cutoff = Date.now() - BASELINE_WINDOW_DAYS*24*3600000;
@@ -3139,6 +3169,21 @@ function getBaseline(metric){
   return vals.length % 2 ? vals[mid] : (vals[mid-1] + vals[mid]) / 2;
 }
 
+// The single gate. Takes ANY score for a metric, so the modal previewing a staged score
+// and the builder reading the saved score run identical logic.
+// level: 'pass' | 'reduce' | 'hold'   driver: which key actually fired.
+function gateVerdictFor(metric, score){
+  const lim = ABS_LIMITS[metric];
+  const base = getBaseline(metric);
+  const delta = base === null ? null : score - base;
+  if(!lim) return { level:'pass', base:base, delta:delta, driver:'none' };
+  if(score >= lim.walk)              return { level:'hold',   base:base, delta:delta, driver:'absolute' };
+  if(delta !== null && delta >= 1.5) return { level:'hold',   base:base, delta:delta, driver:'delta' };
+  if(score >= lim.reduce)            return { level:'reduce', base:base, delta:delta, driver:'absolute' };
+  if(delta !== null && delta >= 0.5) return { level:'reduce', base:base, delta:delta, driver:'delta' };
+  return { level:'pass', base:base, delta:delta, driver: delta === null ? 'absolute' : 'delta' };
+}
+
 function getDelta(metric){
   const now = getLatestScore(metric);
   if(now === null) return null;
@@ -3147,23 +3192,36 @@ function getDelta(metric){
 }
 
 function getBreaches(){
-  const am = getDelta('morning');
-  const nv = getDelta('nerve');
-  if(am === null) return { morning:false, morningReduce:false, nerve:false, thin:true };
-  // Fewer than 4 logs in the window - no trustworthy baseline yet, fall back to absolutes.
-  if(am.base === null){
-    const n = nv ? nv.score : null;
-    return { morning: am.score >= 5.5, morningReduce: am.score >= 3.5 && am.score < 5.5,
-             nerve: n !== null && n > 3.5, thin:true };
-  }
+  const amScore = getLatestScore('morning');
+  const nvScore = getLatestScore('nerve');
+  if(amScore === null) return { morning:false, morningReduce:false, nerve:false, thin:true };
+  const am = gateVerdictFor('morning', amScore);
+  const nv = nvScore === null ? null : gateVerdictFor('nerve', nvScore);
   return {
-    morning:       am.delta >= 1.5,
-    morningReduce: am.delta >= 0.5 && am.delta < 1.5,
-    nerve:         !!(nv && nv.base !== null && nv.delta >= 1.5),
-    thin:          false,
-    delta:         am.delta,
+    morning:       am.level === 'hold',
+    morningReduce: am.level === 'reduce',
+    nerve:         !!(nv && nv.level !== 'pass'),
+    thin:          am.base === null,
+    score:         amScore,
     base:          am.base,
+    delta:         am.delta,
+    driver:        am.driver,
   };
+}
+
+// v7.4: the gate chip read a static "vs 14-day median" with no number, which made a green
+// verdict unauditable — you could not see that a 6 had been judged against a median of 5.4.
+function updateGateChip(){
+  const el = document.getElementById('gate-chip-val');
+  if(!el) return;
+  const s = getLatestScore('morning');
+  if(s === null){ el.textContent = 'no morning log yet today'; return; }
+  const v = gateVerdictFor('morning', s);
+  const word = v.level === 'hold' ? 'HOLD' : v.level === 'reduce' ? 'REDUCE' : 'CLEAR';
+  if(v.base === null){ el.textContent = word + ' · ' + fmtScore(s) + '/10 · absolute (no median yet)'; return; }
+  el.textContent = word + ' · ' + fmtScore(s) + '/10 vs med ' + fmtScore(v.base)
+    + ' (' + (v.delta >= 0 ? '+' : '') + fmtScore(v.delta) + ') · '
+    + (v.driver === 'absolute' ? 'abs limit' : 'median');
 }
 
 // Rung selection. Patrick's mapping (Sep 2026) with one correction: today's score can
@@ -3193,6 +3251,7 @@ function updateMetricDisplay(){
     el.textContent = fmtScore(val) + '/10';
     el.className = 'metric-val ' + (val === 0 ? 'ok' : val <= limits[m] ? 'warn' : 'bad');
   });
+  updateGateChip();
 }
 
 // ─────────────────────────────────────────
@@ -3762,27 +3821,39 @@ function renderMedrolChip(){
 function updateGateStatus(m, s){
   const el = document.getElementById('gate-status');
   el.style.display = 'block';
-  if(m === 'morning'){
-    if(s <= 3){ el.className = 'gate-status pass'; el.textContent = '✓ Back gate clear — proceed normally'; }
-    else if(s < 5.5){ el.className = 'gate-status reduce'; el.textContent = '⚠ Back 3.5–5 — Day A with 30% load reduction'; }
-    else{ el.className = 'gate-status hold'; el.textContent = '🛑 Back ≥5.5 — Day C override, lower body cancelled'; }
-  } else if(m === 'nerve'){
-    if(s <= 3.5){ el.className = 'gate-status pass'; el.textContent = '✓ Nerve gate held — proceed'; }
-    else{ el.className = 'gate-status reduce'; el.textContent = '⚠ Nerve elevated — reduce load, bike mandatory post-session.'; }
+  if(m === 'morning' || m === 'nerve'){
+    // v7.4: same function the plan builder uses, so this box can no longer contradict the
+    // workout rendered underneath it. Shows the number it judged against.
+    const v = gateVerdictFor(m, s);
+    const label = m === 'morning' ? 'Back' : 'Nerve';
+    const why = v.base === null
+      ? 'no 14-day median yet, needs 4+ logs — judged on absolute score'
+      : 'median ' + fmtScore(v.base) + ' · ' + (v.delta >= 0 ? '+' : '') + fmtScore(v.delta)
+        + ' · ' + (v.driver === 'absolute' ? 'absolute limit, median overridden' : 'vs your median');
+    if(v.level === 'hold'){
+      el.className = 'gate-status hold';
+      el.textContent = '🛑 ' + label + ' ' + fmtScore(s) + '/10 — Day C override, lower body cancelled. (' + why + ')';
+    } else if(v.level === 'reduce'){
+      el.className = 'gate-status reduce';
+      el.textContent = '⚠ ' + label + ' ' + fmtScore(s) + '/10 — same rung, about 60% of the reps. (' + why + ')';
+    } else {
+      el.className = 'gate-status pass';
+      el.textContent = '✓ ' + label + ' ' + fmtScore(s) + '/10 — gate clear, proceed as written. (' + why + ')';
+    }
   } else if(m === 'glute'){
     if(s === 0){ el.className = 'gate-status pass'; el.textContent = '✓ Glute firing well — positive sign'; }
     else if(s <= 3.5){ el.className = 'gate-status reduce'; el.textContent = fmtScore(s) + '/10 — some inhibition. Note L vs R difference.'; }
     else{ el.className = 'gate-status hold'; el.textContent = fmtScore(s) + '/10 — significant inhibition. Log and track.'; }
   } else if(m === 'overnight'){
     if(s <= 2){ el.className = 'gate-status pass'; el.textContent = '✓ Overnight pain low — logged.'; }
-    else if(s <= 5.5){ el.className = 'gate-status reduce'; el.textContent = fmtScore(s) + '/10 — moderate overnight pain, logged for Jul 8.'; }
+    else if(s <= 5.5){ el.className = 'gate-status reduce'; el.textContent = fmtScore(s) + '/10 — moderate overnight pain, logged for your next visit.'; }
     else{ el.className = 'gate-status hold'; el.textContent = fmtScore(s) + '/10 — high overnight pain, logged for Bansal.'; }
   } else if(m === 'tingle'){
     if(s === 0){ el.className = 'gate-status pass'; el.textContent = '✓ No toe tingling today.'; }
     else{ el.className = 'gate-status reduce'; el.textContent = '⚠ Tingling logged — stand + 10 standing extensions.'; }
   } else if(m === 'dizzy'){
     if(s === 0){ el.className = 'gate-status pass'; el.textContent = '✓ No AM dizziness — logged.'; }
-    else if(s === 1){ el.className = 'gate-status reduce'; el.textContent = '⚠ Some AM dizziness logged — mention at Jul 8.'; }
+    else if(s === 1){ el.className = 'gate-status reduce'; el.textContent = '⚠ Some AM dizziness logged — mention at your next visit.'; }
     else{ el.className = 'gate-status hold'; el.textContent = '🛑 AM dizziness logged — rise slowly, flag clearly for Bansal.'; }
   } else if(m === 'leg_dominant'){
     if(s === 2){ el.className = 'gate-status hold'; el.textContent = 'Leg-dominant day — peripheralizing signal, worth a note for Kataria.'; }
