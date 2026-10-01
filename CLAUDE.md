@@ -298,7 +298,9 @@ Examples:
 
 2. **Decide whether a procedure window gets a time-based governor.** Sep 14–19 is the case for it: the plan correctly said no rungs that week, the discharge advice said carry on as before, the more permissive instruction won, and a flare followed the Saturday session. During a steroid window BOTH gates are unreliable, because the pain signal is chemically suppressed — so a symptom-driven gate cannot protect that window by design. A date-bounded hard cap is the only thing that can. Proposed, not built.
 
-3. **Fold the Patrick flare-protocol series into `MASTER_PROJECT_SUMMARY.md` properly** — still open from Sep 5.
+3. **Add a cumulative-load term to the gate.** Both v7.4 keys read today only. `lag-and-restraint` mechanism 3 (integration lag) says flares answer a multi-week integral, so the gate is blind to the variable that actually produced Sep 19. Candidate: a rolling 7–10 day sum of running volume + session count against a trailing reference, as a third key that can only downregulate. Needs design before code.
+
+4. **Fold the Patrick flare-protocol series into `MASTER_PROJECT_SUMMARY.md` properly** — still open from Sep 5.
 
 1. ~~**Weekly Guide log restructure** — move rehab/exercise logging OUT of the Notes group INTO the Treatment group alongside nexwave/shockwave.~~ ✅ **DONE Aug 22 (Patrick v7.2, committed).** The "Rehab exercises done today?" No/Yes toggle now sits in the Treatment group under the Medrol chip, above the modality tracker; kept the same element IDs (`seg-exdone-0/1`, `stageExDone`, `exDoneVal`) and the same `pt_daily_notes` `ex` storage → render/save/Doctor-Summary paths unchanged. Treatment count badge now counts a staged exercise-done; Notes group is now free-text only. `node --check` clean, one-script rule + textContent rules honored, no Supabase schema change.
 
@@ -638,4 +640,16 @@ Source: Patrick, Oct 1 2026. Fills the Sep 4 → Oct 1 gap; nothing had been com
 - Is the glute creep facet-mediated or radicular? Relevant to the medial branch block → RFA pathway already on the books.
 - Pregabalin back at 3/day: hold, or re-attempt the taper once symptoms settle?
 
-**Coaching read:** the pattern that produced the June relapse repeated in miniature. The June attribution was *using previous recovery times as the current standard instead of monitoring signals*; here it was using how good a steroid-assisted day felt as the licence to load. The mitigating detail is real — the physician said carry on, and the physician did not know the plan had a deliberately rung-free week. Two authorities disagreed and the permissive one won. Worth resolving in advance of the next procedure rather than in the days after it.
+**Coaching read — CORRECTED Oct 1 after Patrick's account.** The first draft of this entry blamed steroid analgesia: a chemically good day becoming the licence to load. Patrick's correction retires that reading. He **felt no different pre- and post-injection** — he went in feeling good and stayed feeling good, so there was no drug-produced step change to be fooled by, and the Sep 4 warning line (“that feeling is the steroid, not new capacity”) was unactionable: you cannot resist a feeling you do not have. He also did not add load. He **reduced volume and kept the same exercises.**
+
+The better explanation was already written down three months earlier, in `lag-and-restraint-project-seed-20260703.md`, in his own words:
+
+- **Mechanism 1 — feel leads healing.** The sensor reports symptoms, not state. Quiet signal ≠ recovered system. A nerve root has a short symptom tail and a long tissue tail, and feel cannot distinguish them.
+- **Mechanism 3 — integration lag.** The flare answers the multi-week integral, not the day's dose. Sep 19 was a reduced-volume session; the day's line item was not the cause.
+- The project's own reveal beat, verbatim: the flare lands “out of nowhere,” then the hidden tissue trace shows it never did, and **no bad decision was required.** Sep 19 is that beat, including the slow creep rather than an immediate stop.
+
+Note that the July project **deliberately cut the ibuprofen button** because centring the drug “would be melodrama and misrepresent the facts — the sensor's native optimism digs the hole unaided.” The Oct 1 draft of this log made exactly the error that project had already rejected. Keep the drug out of it.
+
+**The time-based governor (TODO 2) survives the correction, by a cleaner route.** Five days post-needle the limiting factor is the injectate and the needle track, not pain perception. Tissue tolerance is below what symptoms report whether or not anything is masking them. That is an argument from the calendar — which is why only the calendar can enforce it, and why no symptom-driven gate ever could.
+
+**Open gap in the v7.4 gate, surfaced by this.** Both keys are instantaneous: today's absolute score, and today's delta against a 14-day median. **Neither integrates.** Mechanism 3 says the thing that actually flares him is a multi-day sum, so the gate still cannot see the variable that got him on Sep 19. Also worth noting that the rolling median is mechanism 2 (“rising noise floor, falling threshold”) implemented in code — a threshold that tracks the noise floor until the true warning is indistinguishable from everyday sore. That is the strongest argument yet for keeping the absolute backstop: it is a fixed reference the ratchet cannot move.
