@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- VERSION: 7.4.1 | Updated: 2026-10-04 | Prior: 7.4 (2026-10-01) | HOTFIX (Oct 4): an unescaped apostrophe (in "day's") inside a WEEKS focus: single-quoted string — added by the Oct 1 clinical-read edit — closed the string early → SyntaxError → the ENTIRE script block failed to parse → guide froze at the wave-position loader. Escaped it; node --check clean + gate_test.js 28/28. Root cause: the Oct 1 edit shipped without node --check, which catches exactly this. | v7.4 Two-key gate: ONE source of truth (gateVerdictFor) shared by the log modal and the plan builder, plus absolute walk/reduce limits no rolling median can override (a median CAP was built and then rejected — it compounds with the delta rule and re-creates the every-day-cancelled failure; see gate_test.js), gate chip now shows median · score · delta so a verdict is auditable. Re-Entry W2–W6 annotated with the actual post-TFESI course. Full changelog in CLAUDE.md File Inventory. -->
+<!-- VERSION: 7.4.2 | Updated: 2026-10-04 | Prior: 7.4.1 (2026-10-04) | v7.4.2 (Oct 4): dropped "with Yari"/"+ Yari" from every canal/Thursday label — Patrick trains solo now (others welcome, not assumed); the tingling gate handler no longer prescribes retired standing extensions (now "get up and walk, change position"). · HOTFIX (Oct 4): an unescaped apostrophe (in "day's") inside a WEEKS focus: single-quoted string — added by the Oct 1 clinical-read edit — closed the string early → SyntaxError → the ENTIRE script block failed to parse → guide froze at the wave-position loader. Escaped it; node --check clean + gate_test.js 28/28. Root cause: the Oct 1 edit shipped without node --check, which catches exactly this. | v7.4 Two-key gate: ONE source of truth (gateVerdictFor) shared by the log modal and the plan builder, plus absolute walk/reduce limits no rolling median can override (a median CAP was built and then rejected — it compounds with the delta rule and re-creates the every-day-cancelled failure; see gate_test.js), gate chip now shows median · score · delta so a verdict is auditable. Re-Entry W2–W6 annotated with the actual post-TFESI course. Full changelog in CLAUDE.md File Inventory. -->
 <!-- CHANGELOG: v7.4 two-key gate (absolute backstop + capped median) · log modal and plan now share one verdict function · visible gate numbers · post-TFESI course recorded · v7.3 (Sep 4, committed unstamped under an old “v5.5–v5.8” numbering) rolling-baseline gates + Re-Entry W0–W6 + Thursday anchor / Friday recovery + BFR onto the sled + prone extension restored · v7.2 rehab toggle → Treatment + med-day demo links + label fix · v7.1 medium-day swap · v7.0 hybrid console + grouped 0–10 log + doctor summary + Nerve-umbrella + /10 gates · v6.x wave engine + governor -->
 
 <html lang="en">
@@ -1505,7 +1505,7 @@ function BIKE_STEP(step, dose, effort){
 // Counted as a FULL forward-running exposure — by total distance and time it is one, and
 // filing it as a warmup is exactly the accounting error the June ledger was blind to.
 function CANAL_SLED_ANCHOR(id){
-  return { label:'Canal — Anchor Session (with Yari)', cls:'accent', items:[
+  return { label:'Canal — Anchor Session', cls:'accent', items:[
     {name:'Dynamic warmup', dose:'5 min'},
     {name:'Backward jog intervals — warmup', note:'maintained base · pole intervals as usual', dose:'2–3 poles work / 1 pole rest'},
     {name:'Forward intervals — warmup role, rung ' + id, note:'warmup by intent, full exposure by distance and time — it counts as one of the week\'s two rung sessions, so do not also add volume elsewhere', dose:RUNGS[id].work},
@@ -1590,7 +1590,7 @@ function reentryWeek(c){
         collagen:false, blocks:[WALK_BASE, CANAL_RUNG(c.rungA)] },
       { name:'Wednesday', type:'C', intent:c.wedIntent || 'Movement — Bike', sub:c.wedSub || 'Ladder A step day. No running, no load.',
         collagen:false, blocks:c.wedBlocks || [WALK_BASE, BIKE_STEP(c.bike, c.bikeDose, c.bikeEffort), MOVEMENT_RESTORATION(c.flex,'tspine')] },
-      { name:'Thursday', type:'A', intent:'Anchor — Intervals + Sled with Yari', sub:'The big day. Intervals warm you up, the sled is the session, BFR rides along with it. Counts as a full rung exposure.',
+      { name:'Thursday', type:'A', intent:'Anchor — Intervals + Sled', sub:'The big day. Intervals warm you up, the sled is the session, BFR rides along with it. Counts as a full rung exposure.',
         collagen:false, blocks:[WALK_BASE, CANAL_SLED_ANCHOR(c.rungB), MOVEMENT_RESTORATION(c.flex,'lat')] },
       { name:'Friday', type:'C', intent:'Movement — Bike, Active Recovery', sub:'No intervals, no running. This is the 24-hour readout on Thursday — keep it clean.',
         collagen:false, blocks:[WALK_BASE, BIKE_STEP(c.bike, c.bikeDose, c.bikeEffort), MOVEMENT_RESTORATION(c.flex,'rot')] },
@@ -1607,7 +1607,7 @@ const WEEKS = [
   // ── BRIDGE W1 — Mon Mar 23 ──────────────────────────────────────
   {
     label:'Bridge · W1', dates:'Mar 23–29', phase:'Bridge Phase',
-    focus:'Establish patterns · Trap bar entry · Canal debut with Yari',
+    focus:'Establish patterns · Trap bar entry · Canal debut',
     days:[
       { name:'Monday', type:'A', intent:'Day A — Gym',
         sub:'Walk first, then garage. Trap bar debut. Box squat replaces full-depth. Bike post-session.',
@@ -1635,7 +1635,7 @@ const WEEKS = [
           ]},
         ]
       },
-      { name:'Tuesday', type:'C', intent:'Canal + Yari — VO2 Max Only',
+      { name:'Tuesday', type:'C', intent:'Canal — VO2 Max Only',
         sub:'VO2 max 4×4 drains significantly in heat. This is the full stimulus. Nothing after.',
         collagen:true,
         blocks:[
@@ -1739,7 +1739,7 @@ const WEEKS = [
           ]},
         ]
       },
-      { name:'Tuesday', type:'C', intent:'Canal + Yari — VO2 Max Only',
+      { name:'Tuesday', type:'C', intent:'Canal — VO2 Max Only',
         sub:'VO2 max 4×4 drains significantly in heat. This is the full stimulus. Nothing after.',
         collagen:true,
         blocks:[
@@ -1844,7 +1844,7 @@ const WEEKS = [
           ]},
         ]
       },
-      { name:'Tuesday', type:'C', intent:'Canal + Yari — VO2 Max Only',
+      { name:'Tuesday', type:'C', intent:'Canal — VO2 Max Only',
         sub:'VO2 max 4×4 drains significantly in heat. This is the full stimulus. Nothing after.',
         collagen:true,
         blocks:[
@@ -1945,7 +1945,7 @@ const WEEKS = [
           ]},
         ]
       },
-      { name:'Tuesday', type:'C', intent:'Canal + Yari — VO2 Max Only',
+      { name:'Tuesday', type:'C', intent:'Canal — VO2 Max Only',
         sub:'VO2 max 4×4 drains significantly in heat. This is the full stimulus. Nothing after.',
         collagen:true,
         blocks:[
@@ -2031,7 +2031,7 @@ const WEEKS = [
           ANKLE_HOPS,
         ]
       },
-      { name:'Tuesday', type:'C', intent:'Canal + Yari — VO2 Max Only', sub:'VO2 max 4×4 drains significantly in heat. This is the full stimulus. Nothing after.',
+      { name:'Tuesday', type:'C', intent:'Canal — VO2 Max Only', sub:'VO2 max 4×4 drains significantly in heat. This is the full stimulus. Nothing after.',
         collagen:true,
         blocks:[
           { label:'Foot Yoga', cls:'green', items: FOOT_YOGA_SHORT },
@@ -2129,7 +2129,7 @@ const WEEKS = [
           ANKLE_HOPS,
         ]
       },
-      { name:'Tuesday', type:'C', intent:'Canal + Yari — VO2 Max Only', sub:'VO2 max 4×4 drains significantly in heat. This is the full stimulus. Nothing after.',
+      { name:'Tuesday', type:'C', intent:'Canal — VO2 Max Only', sub:'VO2 max 4×4 drains significantly in heat. This is the full stimulus. Nothing after.',
         collagen:true,
         blocks:[
           { label:'Foot Yoga', cls:'green', items: FOOT_YOGA_SHORT },
@@ -2230,7 +2230,7 @@ const WEEKS = [
           ANKLE_HOPS,
         ]
       },
-      { name:'Tuesday', type:'C', intent:'Canal + Yari — VO2 Max Only', sub:'VO2 max 4×4 drains significantly in heat. This is the full stimulus. Nothing after.',
+      { name:'Tuesday', type:'C', intent:'Canal — VO2 Max Only', sub:'VO2 max 4×4 drains significantly in heat. This is the full stimulus. Nothing after.',
         collagen:true,
         blocks:[
           { label:'Foot Yoga', cls:'green', items: FOOT_YOGA_SHORT },
@@ -2331,7 +2331,7 @@ const WEEKS = [
           ANKLE_HOPS,
         ]
       },
-      { name:'Tuesday', type:'C', intent:'Canal + Yari — VO2 Max Only', sub:'VO2 max 4×4 drains significantly in heat. This is the full stimulus. Nothing after.',
+      { name:'Tuesday', type:'C', intent:'Canal — VO2 Max Only', sub:'VO2 max 4×4 drains significantly in heat. This is the full stimulus. Nothing after.',
         collagen:true,
         blocks:[
           { label:'Foot Yoga', cls:'green', items: FOOT_YOGA_SHORT },
@@ -2438,7 +2438,7 @@ const WEEKS = [
           ANKLE_HOPS,
         ]
       },
-      { name:'Tuesday', type:'C', intent:'Canal + Yari — VO2 Max Only', sub:'VO2 max 4×4 drains significantly in heat. This is the full stimulus. Nothing after.',
+      { name:'Tuesday', type:'C', intent:'Canal — VO2 Max Only', sub:'VO2 max 4×4 drains significantly in heat. This is the full stimulus. Nothing after.',
         collagen:true,
         blocks:[
           { label:'Foot Yoga', cls:'green', items: FOOT_YOGA_SHORT },
@@ -2551,7 +2551,7 @@ const WEEKS = [
           ANKLE_HOPS,
         ]
       },
-      { name:'Tuesday', type:'C', intent:'Canal + Yari — VO2 Max Only', sub:'VO2 max 4×4 — same stimulus, full recovery afterward.',
+      { name:'Tuesday', type:'C', intent:'Canal — VO2 Max Only', sub:'VO2 max 4×4 — same stimulus, full recovery afterward.',
         collagen:true,
         blocks:[
           { label:'Foot Yoga', cls:'green', items: FOOT_YOGA_SHORT },
@@ -2634,7 +2634,7 @@ const WEEKS = [
           ]},
         ]
       },
-      { name:'Tuesday', type:'C', intent:'Canal — Easy Walk Only', sub:'Canal walk with Yari. No intervals. Easy movement.',
+      { name:'Tuesday', type:'C', intent:'Canal — Easy Walk Only', sub:'Canal walk. No intervals. Easy movement.',
         collagen:false,
         blocks:[
           { label:'Foot Yoga', cls:'green', items: FOOT_YOGA_SHORT },
@@ -2710,7 +2710,7 @@ const WEEKS = [
           ]},
         ]
       },
-      { name:'Tuesday', type:'B', intent:'Canal + Yari — Upgraded',
+      { name:'Tuesday', type:'B', intent:'Canal — Upgraded',
         sub:'Forward run primary. A-March enters. Band circuit upgraded.',
         collagen:true,
         blocks:[
@@ -3850,7 +3850,7 @@ function updateGateStatus(m, s){
     else{ el.className = 'gate-status hold'; el.textContent = fmtScore(s) + '/10 — high overnight pain, logged for Bansal.'; }
   } else if(m === 'tingle'){
     if(s === 0){ el.className = 'gate-status pass'; el.textContent = '✓ No toe tingling today.'; }
-    else{ el.className = 'gate-status reduce'; el.textContent = '⚠ Tingling logged — stand + 10 standing extensions.'; }
+    else{ el.className = 'gate-status reduce'; el.textContent = '⚠ Tingling logged — get up and walk, change position. Don\'t hold a shape.'; }
   } else if(m === 'dizzy'){
     if(s === 0){ el.className = 'gate-status pass'; el.textContent = '✓ No AM dizziness — logged.'; }
     else if(s === 1){ el.className = 'gate-status reduce'; el.textContent = '⚠ Some AM dizziness logged — mention at your next visit.'; }
