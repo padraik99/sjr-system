@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- VERSION: 7.4.2 | Updated: 2026-10-04 | Prior: 7.4.1 (2026-10-04) | v7.4.2 (Oct 4): dropped "with Yari"/"+ Yari" from every canal/Thursday label — Patrick trains solo now (others welcome, not assumed); the tingling gate handler no longer prescribes retired standing extensions (now "get up and walk, change position"). · HOTFIX (Oct 4): an unescaped apostrophe (in "day's") inside a WEEKS focus: single-quoted string — added by the Oct 1 clinical-read edit — closed the string early → SyntaxError → the ENTIRE script block failed to parse → guide froze at the wave-position loader. Escaped it; node --check clean + gate_test.js 28/28. Root cause: the Oct 1 edit shipped without node --check, which catches exactly this. | v7.4 Two-key gate: ONE source of truth (gateVerdictFor) shared by the log modal and the plan builder, plus absolute walk/reduce limits no rolling median can override (a median CAP was built and then rejected — it compounds with the delta rule and re-creates the every-day-cancelled failure; see gate_test.js), gate chip now shows median · score · delta so a verdict is auditable. Re-Entry W2–W6 annotated with the actual post-TFESI course. Full changelog in CLAUDE.md File Inventory. -->
+<!-- VERSION: 7.5 | Updated: 2026-10-15 | Prior: 7.4.2 (2026-10-04) | v7.5 (Oct 15): weekly load REDISTRIBUTED in the reentryWeek() factory per Patrick — Thursday stripped to the sled+intervals anchor ONLY (BFR removed from the anchor + movement-restoration pulled off; that stack was the exhausting part); UPPER_REENTRY pulled off Monday AND Saturday → Wednesday (leg-neutral, keeps Thursday's sled/4×4 fresh — Patrick's swap); BFR_LEGS → Sunday (low-load occlusion, 2 days clear of Thursday, not the day before it); Sunday now an active "Movement + Prehab" day, no longer full rest; heavy days (Mon/Sat) now lower + movement only. Nothing removed — only spread. One-script rule + node --check clean, gate_test.js 28/28 (gate untouched). | v7.4.2 (Oct 4): dropped "with Yari"/"+ Yari" from every canal/Thursday label — Patrick trains solo now (others welcome, not assumed); the tingling gate handler no longer prescribes retired standing extensions (now "get up and walk, change position"). · HOTFIX (Oct 4): an unescaped apostrophe (in "day's") inside a WEEKS focus: single-quoted string — added by the Oct 1 clinical-read edit — closed the string early → SyntaxError → the ENTIRE script block failed to parse → guide froze at the wave-position loader. Escaped it; node --check clean + gate_test.js 28/28. Root cause: the Oct 1 edit shipped without node --check, which catches exactly this. | v7.4 Two-key gate: ONE source of truth (gateVerdictFor) shared by the log modal and the plan builder, plus absolute walk/reduce limits no rolling median can override (a median CAP was built and then rejected — it compounds with the delta rule and re-creates the every-day-cancelled failure; see gate_test.js), gate chip now shows median · score · delta so a verdict is auditable. Re-Entry W2–W6 annotated with the actual post-TFESI course. Full changelog in CLAUDE.md File Inventory. -->
 <!-- CHANGELOG: v7.4 two-key gate (absolute backstop + capped median) · log modal and plan now share one verdict function · visible gate numbers · post-TFESI course recorded · v7.3 (Sep 4, committed unstamped under an old “v5.5–v5.8” numbering) rolling-baseline gates + Re-Entry W0–W6 + Thursday anchor / Friday recovery + BFR onto the sled + prone extension restored · v7.2 rehab toggle → Treatment + med-day demo links + label fix · v7.1 medium-day swap · v7.0 hybrid console + grouped 0–10 log + doctor summary + Nerve-umbrella + /10 gates · v6.x wave engine + governor -->
 
 <html lang="en">
@@ -1511,9 +1511,12 @@ function CANAL_SLED_ANCHOR(id){
     {name:'Forward intervals — warmup role, rung ' + id, note:'warmup by intent, full exposure by distance and time — it counts as one of the week\'s two rung sessions, so do not also add volume elsewhere', dose:RUNGS[id].work},
     {name:'Sled pull — backward', note:'concentric-only · horizontal load · flexion-biased, opens the lateral recess', dose:'2–3 poles work / 1 pole rest'},
     {name:'Sled pull — forward, slight lean', dose:'2 poles × 3'},
-    {name:'BFR — cuffed on the sled work', note:'20–30% equivalent effort · cuff snug not painful (~7/10) · deflate on any distal numbness beyond the ordinary BFR ache', dose:'across the sled sets'},
   ]};
 }
+// BFR lifted off the Thursday anchor (Oct 2026) — Patrick: sled + 4×4 is the right Thursday
+// dose, piling BFR on top is exhausting at this stage. BFR_LEGS now rides SUNDAY (low-load
+// occlusion, disuse-atrophy stimulus) — two days clear of Thursday so it doesn't leave the legs
+// tired going into the week's one hard sled/4×4 session. (Upper took the Wednesday slot: leg-neutral.)
 
 const SLED_REENTRY = {
   label:'Sled — Canal', cls:'accent', items:[
@@ -1584,20 +1587,20 @@ function reentryWeek(c){
   return {
     label:c.label, dates:c.dates, phase:'Re-Entry Phase', focus:c.focus,
     days:[
-      { name:'Monday', type:'A', intent:'Resistance — Garage', sub:c.monSub || 'Load in the 11am–4pm window. Trap bar, wedged squat, glute med at the real dose.',
-        collagen:false, blocks:[WALK_BASE, GYM_REENTRY, GLUTE_MED_DOSE, UPPER_REENTRY, MOVEMENT_RESTORATION(c.flex,'rot')] },
+      { name:'Monday', type:'A', intent:'Resistance — Garage', sub:c.monSub || 'Load in the 11am–4pm window. Trap bar, wedged squat, glute med at the real dose. Lower-focused — upper moved to the light days so this stays a clean, not-too-heavy strength day.',
+        collagen:false, blocks:[WALK_BASE, GYM_REENTRY, GLUTE_MED_DOSE, MOVEMENT_RESTORATION(c.flex,'rot')] },
       { name:'Tuesday', type:'B', intent:'Movement — Forward Rung ' + c.rungA, sub:c.tueSub || 'Rung inside a walk. Judge it at 24 and 48 hours, not during.',
         collagen:false, blocks:[WALK_BASE, CANAL_RUNG(c.rungA)] },
-      { name:'Wednesday', type:'C', intent:c.wedIntent || 'Movement — Bike', sub:c.wedSub || 'Ladder A step day. No running, no load.',
-        collagen:false, blocks:c.wedBlocks || [WALK_BASE, BIKE_STEP(c.bike, c.bikeDose, c.bikeEffort), MOVEMENT_RESTORATION(c.flex,'tspine')] },
-      { name:'Thursday', type:'A', intent:'Anchor — Intervals + Sled', sub:'The big day. Intervals warm you up, the sled is the session, BFR rides along with it. Counts as a full rung exposure.',
-        collagen:false, blocks:[WALK_BASE, CANAL_SLED_ANCHOR(c.rungB), MOVEMENT_RESTORATION(c.flex,'lat')] },
+      { name:'Wednesday', type:'C', intent:c.wedIntent || 'Movement — Bike + Upper', sub:c.wedSub || 'Ladder A step day. No running, no leg load — bike plus the upper-body vitamin dose, kept leg-neutral so Thursday\'s sled + 4×4 stays fresh.',
+        collagen:false, blocks:c.wedBlocks || [WALK_BASE, BIKE_STEP(c.bike, c.bikeDose, c.bikeEffort), UPPER_REENTRY, MOVEMENT_RESTORATION(c.flex,'tspine')] },
+      { name:'Thursday', type:'A', intent:'Anchor — Intervals + Sled', sub:'The big day, and ONLY the big day. Warmup intervals + the sled is the whole session — no BFR, no extra prehab stacked on top. It counts as a full rung exposure; let it be enough.',
+        collagen:false, blocks:[WALK_BASE, CANAL_SLED_ANCHOR(c.rungB)] },
       { name:'Friday', type:'C', intent:'Movement — Bike, Active Recovery', sub:'No intervals, no running. This is the 24-hour readout on Thursday — keep it clean.',
         collagen:false, blocks:[WALK_BASE, BIKE_STEP(c.bike, c.bikeDose, c.bikeEffort), MOVEMENT_RESTORATION(c.flex,'rot')] },
-      { name:'Saturday', type:'A', intent:'Resistance — Garage', sub:'No running. This is Thursday\'s 48-hour readout, so keep the legs off the road.',
-        collagen:false, blocks:[WALK_BASE, GYM_REENTRY, UPPER_REENTRY, MOVEMENT_RESTORATION(c.flex,'squat')] },
-      { name:'Sunday', type:'C', rest:true, intent:'Rest', sub:'Walk and sleep. Nothing measured, nothing progressed.',
-        collagen:false, blocks:[] },
+      { name:'Saturday', type:'A', intent:'Resistance — Garage', sub:'No running. This is Thursday\'s 48-hour readout, so keep the legs off the road. Lower + movement only — upper lives on the light days now, so the strength days stay manageable.',
+        collagen:false, blocks:[WALK_BASE, GYM_REENTRY, MOVEMENT_RESTORATION(c.flex,'squat')] },
+      { name:'Sunday', type:'C', intent:'Movement + Prehab', sub:'Not a full day off — you move anyway, so make it gentle and useful: low-load BFR legs (disuse-atrophy stimulus, 20–30%), movement restoration, a walk. Two days clear of Thursday, so the legs are fine to work lightly. Nothing measured, nothing progressed.',
+        collagen:false, blocks:[WALK_BASE, BFR_LEGS, MOVEMENT_RESTORATION(c.flex,'lat')] },
     ]
   };
 }
