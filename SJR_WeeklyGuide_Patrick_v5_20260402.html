@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- VERSION: 7.5 | Updated: 2026-10-15 | Prior: 7.4.2 (2026-10-04) | v7.5 (Oct 15): weekly load REDISTRIBUTED in the reentryWeek() factory per Patrick — Thursday stripped to the sled+intervals anchor ONLY (BFR removed from the anchor + movement-restoration pulled off; that stack was the exhausting part); UPPER_REENTRY pulled off Monday AND Saturday → Wednesday (leg-neutral, keeps Thursday's sled/4×4 fresh — Patrick's swap); BFR_LEGS → Sunday (low-load occlusion, 2 days clear of Thursday, not the day before it); Sunday now an active "Movement + Prehab" day, no longer full rest; heavy days (Mon/Sat) now lower + movement only. Nothing removed — only spread. One-script rule + node --check clean, gate_test.js 28/28 (gate untouched). | v7.4.2 (Oct 4): dropped "with Yari"/"+ Yari" from every canal/Thursday label — Patrick trains solo now (others welcome, not assumed); the tingling gate handler no longer prescribes retired standing extensions (now "get up and walk, change position"). · HOTFIX (Oct 4): an unescaped apostrophe (in "day's") inside a WEEKS focus: single-quoted string — added by the Oct 1 clinical-read edit — closed the string early → SyntaxError → the ENTIRE script block failed to parse → guide froze at the wave-position loader. Escaped it; node --check clean + gate_test.js 28/28. Root cause: the Oct 1 edit shipped without node --check, which catches exactly this. | v7.4 Two-key gate: ONE source of truth (gateVerdictFor) shared by the log modal and the plan builder, plus absolute walk/reduce limits no rolling median can override (a median CAP was built and then rejected — it compounds with the delta rule and re-creates the every-day-cancelled failure; see gate_test.js), gate chip now shows median · score · delta so a verdict is auditable. Re-Entry W2–W6 annotated with the actual post-TFESI course. Full changelog in CLAUDE.md File Inventory. -->
+<!-- VERSION: 7.6 | Updated: 2026-10-18 | Prior: 7.5 (2026-10-15) | v7.6 (Oct 18): per-device AD-FREE demo frontend — every demo/search link now routes through demoUrl(), keyed to a per-device localStorage pref (pt_demo_src): Invidious (default, yewtu.be — phone-verified ad-free; the YT app can't hijack a non-youtube.com domain) · FreeTube (freetube:// — desktop/Edge-verified, handles BOTH search and exact video) · plain YouTube (escape hatch). Footer "Demos ·" button cycles the source and repaints the day. Piped dropped (both public instances dead on Patrick's test). node --check + gate_test.js 28/28, one-script rule intact. | v7.5 (Oct 15): weekly load REDISTRIBUTED in the reentryWeek() factory per Patrick — Thursday stripped to the sled+intervals anchor ONLY (BFR removed from the anchor + movement-restoration pulled off; that stack was the exhausting part); UPPER_REENTRY pulled off Monday AND Saturday → Wednesday (leg-neutral, keeps Thursday's sled/4×4 fresh — Patrick's swap); BFR_LEGS → Sunday (low-load occlusion, 2 days clear of Thursday, not the day before it); Sunday now an active "Movement + Prehab" day, no longer full rest; heavy days (Mon/Sat) now lower + movement only. Nothing removed — only spread. One-script rule + node --check clean, gate_test.js 28/28 (gate untouched). | v7.4.2 (Oct 4): dropped "with Yari"/"+ Yari" from every canal/Thursday label — Patrick trains solo now (others welcome, not assumed); the tingling gate handler no longer prescribes retired standing extensions (now "get up and walk, change position"). · HOTFIX (Oct 4): an unescaped apostrophe (in "day's") inside a WEEKS focus: single-quoted string — added by the Oct 1 clinical-read edit — closed the string early → SyntaxError → the ENTIRE script block failed to parse → guide froze at the wave-position loader. Escaped it; node --check clean + gate_test.js 28/28. Root cause: the Oct 1 edit shipped without node --check, which catches exactly this. | v7.4 Two-key gate: ONE source of truth (gateVerdictFor) shared by the log modal and the plan builder, plus absolute walk/reduce limits no rolling median can override (a median CAP was built and then rejected — it compounds with the delta rule and re-creates the every-day-cancelled failure; see gate_test.js), gate chip now shows median · score · delta so a verdict is auditable. Re-Entry W2–W6 annotated with the actual post-TFESI course. Full changelog in CLAUDE.md File Inventory. -->
 <!-- CHANGELOG: v7.4 two-key gate (absolute backstop + capped median) · log modal and plan now share one verdict function · visible gate numbers · post-TFESI course recorded · v7.3 (Sep 4, committed unstamped under an old “v5.5–v5.8” numbering) rolling-baseline gates + Re-Entry W0–W6 + Thursday anchor / Friday recovery + BFR onto the sled + prone extension restored · v7.2 rehab toggle → Treatment + med-day demo links + label fix · v7.1 medium-day swap · v7.0 hybrid console + grouped 0–10 log + doctor summary + Nerve-umbrella + /10 gates · v6.x wave engine + governor -->
 
 <html lang="en">
@@ -3380,8 +3380,8 @@ function renderDay(idx){
     html += `<div class="ex-block">
       <div class="block-label green">Medium Day — Spine-Friendly Swap</div>
       <div class="day-sub" style="margin:-.1rem 0 .55rem">Medium symptoms today (back 4–5/10, or nerve up) — skip the heavy lifts (hip thrusts, loaded hinge). Run this light band + neural set instead, and earn the heavy work back on a green day. Authored plan is below for reference.</div>
-      <div class="ex-row"><div class="ex-name">Banded glute-med series<small>clamshell → lateral shuffle → monster walk · light band</small><a class="ex-video-link" style="margin-top:.35rem" href="https://www.youtube.com/results?search_query=banded+glute+medius+clamshell+lateral+shuffle+monster+walk" target="_blank" rel="noopener">🔍 Search Demo</a></div><div class="ex-dose green">2×15–20</div></div>
-      <div class="ex-row"><div class="ex-name">Sciatic nerve slider<small>glide, not stretch · stop if it travels down the leg</small><a class="ex-video-link" style="margin-top:.35rem" href="https://www.youtube.com/results?search_query=sciatic+nerve+slider+neural+glide+flossing+technique" target="_blank" rel="noopener">🔍 Search Demo</a></div><div class="ex-dose green">2×10</div></div>
+      <div class="ex-row"><div class="ex-name">Banded glute-med series<small>clamshell → lateral shuffle → monster walk · light band</small><a class="ex-video-link" style="margin-top:.35rem" href="${demoUrl('https://www.youtube.com/results?search_query=banded+glute+medius+clamshell+lateral+shuffle+monster+walk')}" target="_blank" rel="noopener">🔍 Search Demo</a></div><div class="ex-dose green">2×15–20</div></div>
+      <div class="ex-row"><div class="ex-name">Sciatic nerve slider<small>glide, not stretch · stop if it travels down the leg</small><a class="ex-video-link" style="margin-top:.35rem" href="${demoUrl('https://www.youtube.com/results?search_query=sciatic+nerve+slider+neural+glide+flossing+technique')}" target="_blank" rel="noopener">🔍 Search Demo</a></div><div class="ex-dose green">2×10</div></div>
       <div class="ex-row"><div class="ex-name">Backward jog / treadmill<small>non-impact · pole-to-pole, easy effort</small></div><div class="ex-dose green">easy</div></div>
       <div class="ex-row"><div class="ex-name">Movement &amp; Restoration<small>deep squat sit · ankle CARs · spinal waves</small></div><div class="ex-dose green">pick 2–3</div></div>
       <a class="ex-video-link" href="https://padraik99.github.io/sjr-system/SJR_Library_Master_v4_20260402.html#restoration" style="display:inline-block;margin:.35rem 0 .5rem">Open Movement &amp; Restoration in Library →</a>
@@ -4373,16 +4373,52 @@ let RENDER_NAMES = [];
 let demoOverrides = {};
 try { demoOverrides = JSON.parse(localStorage.getItem('pt_demos') || '{}'); } catch(e){ demoOverrides = {}; }
 
+// Ad-free demo frontend — PER-DEVICE preference (Oct 18 2026, Patrick's phone + Edge test).
+// localStorage is per-device, so the desktop can sit on FreeTube while the phone uses Invidious,
+// with no fragile device-detection. Test results that set this up:
+//   · Desktop (Edge, FreeTube installed): freetube:// caught BOTH search AND video — native, fully ad-free.
+//   · Phone: freetube:// did NOT fire (scheme not registered on mobile); Invidious worked; Piped instances were dead.
+// Default = invidious (works everywhere, ad-free, not a youtube.com domain so the YT app can't hijack it).
+// Toggle via the footer "Demos ·" button. INVIDIOUS fallback instance: 'https://inv.nadeko.net'.
+const INVIDIOUS = 'https://yewtu.be';
+const DEMO_SOURCES = ['invidious','freetube','youtube'];
+const DEMO_SRC_LABEL = { invidious:'Invidious', freetube:'FreeTube', youtube:'YouTube' };
+function demoSrc(){
+  const v = localStorage.getItem('pt_demo_src');
+  return DEMO_SOURCES.includes(v) ? v : 'invidious';
+}
+function demoUrl(u){
+  if(typeof u !== 'string') return u;
+  const src = demoSrc();
+  const isYT = /^https:\/\/((www\.)?youtube\.com|youtu\.be)\//.test(u);
+  if(src === 'youtube' || !isYT) return u;          // plain YT, or a non-YT (already-Invidious / other) saved link — untouched
+  if(src === 'freetube') return 'freetube://' + u;  // native desktop app — handles search + watch (verified in Edge)
+  return u                                          // invidious (default)
+    .replace(/^https:\/\/(www\.)?youtube\.com\/results\?search_query=/, INVIDIOUS + '/search?q=')
+    .replace(/^https:\/\/(www\.)?youtube\.com\/watch/,                  INVIDIOUS + '/watch')
+    .replace(/^https:\/\/youtu\.be\/([\w-]+)/,                          INVIDIOUS + '/watch?v=$1');
+}
+function cycleDemoSrc(){
+  const next = DEMO_SOURCES[(DEMO_SOURCES.indexOf(demoSrc()) + 1) % DEMO_SOURCES.length];
+  localStorage.setItem('pt_demo_src', next);
+  updateDemoSrcBtn();
+  if(typeof selectedDay !== 'undefined') renderDay(selectedDay);  // repaint so links pick up the new source
+}
+function updateDemoSrcBtn(){
+  const b = document.getElementById('demo-src-btn');
+  if(b) b.textContent = 'Demos · ' + DEMO_SRC_LABEL[demoSrc()];
+}
+window.addEventListener('DOMContentLoaded', updateDemoSrcBtn);
 function demoLinkHtml(nameIdx, info){
   const name = RENDER_NAMES[nameIdx];
   const saved = demoOverrides[name];
   let html = '<div style="display:flex;align-items:center;gap:.4rem;flex-wrap:wrap;">';
   if(saved && /^https?:\/\//.test(saved)){
-    html += `<a class="ex-video-link" href="${escHtml(saved)}" target="_blank" onclick="event.stopPropagation()">▶ My Demo</a>`;
+    html += `<a class="ex-video-link" href="${escHtml(demoUrl(saved))}" target="_blank" onclick="event.stopPropagation()">▶ My Demo</a>`;
     html += `<button class="ex-video-link demo-set-btn" onclick="event.stopPropagation();setDemo(${nameIdx})" title="Change saved demo">✎</button>`;
   } else {
-    if(info && info.url) html += `<a class="ex-video-link" href="${info.url}" target="_blank" onclick="event.stopPropagation()">▶ Search Demo</a>`;
-    else html += `<a class="ex-video-link" href="https://www.youtube.com/results?search_query=${encodeURIComponent(name + ' exercise')}" target="_blank" onclick="event.stopPropagation()">🔍 Search</a>`;
+    if(info && info.url) html += `<a class="ex-video-link" href="${demoUrl(info.url)}" target="_blank" onclick="event.stopPropagation()">▶ Search Demo</a>`;
+    else html += `<a class="ex-video-link" href="${demoUrl('https://www.youtube.com/results?search_query=' + encodeURIComponent(name + ' exercise'))}" target="_blank" onclick="event.stopPropagation()">🔍 Search</a>`;
     html += `<button class="ex-video-link demo-set-btn" onclick="event.stopPropagation();setDemo(${nameIdx})">＋ Save my demo</button>`;
   }
   return html + '</div>';
@@ -5092,6 +5128,12 @@ init();
     font-family:'IBM Plex Mono',monospace;font-size:0.6rem;letter-spacing:0.1em;
     text-transform:uppercase;padding:0.4rem 0.9rem;border-radius:3px;cursor:pointer;">
     Migrate local data → Supabase
+  </button>
+  <button id="demo-src-btn" onclick="cycleDemoSrc()" title="Which player demo links open in — set per device (tap to cycle)"
+    style="display:block;margin:0.6rem auto 0;background:none;border:1px solid var(--border);color:var(--muted);
+    font-family:'IBM Plex Mono',monospace;font-size:0.6rem;letter-spacing:0.1em;
+    text-transform:uppercase;padding:0.4rem 0.9rem;border-radius:3px;cursor:pointer;">
+    Demos · Invidious
   </button>
 </footer>
 <button id="refresh-fab" title="Load latest version"
