@@ -1,6 +1,6 @@
 <!DOCTYPE html>
-<!-- VERSION: 2.9 | Updated: 2026-08-18 | Prior: 2.8 | Rolling Maintenance · Trial-Ready block (A=2 runs / B=3 runs, alternating) + auto-land past the Mexico meet calendar. Full changelog in CLAUDE.md File Inventory. -->
-<!-- CHANGELOG: v2.9 rolling maintenance A/B (hold match fitness until a trial) · v2.8 W10 Power Expression · v2.7 W8–W9 extended stay/club prep -->
+<!-- VERSION: 2.10 | Updated: 2026-10-18 | Prior: 2.9 | Rotation layer (close-tier variants rotate every 4 wks, 3 sets) + per-day ⇄ swap tap with solo versions of partner drills + unilateral floor weekly + Week B runs Tue/Thu/Sat (Thursday = supervised hard day both weeks). Full changelog in CLAUDE.md File Inventory. -->
+<!-- CHANGELOG: v2.10 rotation layer + ⇄ swap + unilateral floor + B-week Thursday fix · v2.9 rolling maintenance A/B (hold match fitness until a trial) · v2.8 W10 Power Expression · v2.7 W8–W9 extended stay/club prep -->
 
 <html lang="en">
 <head>
@@ -199,6 +199,10 @@ p{color:#b8d4c0;margin-bottom:1rem;font-size:.95rem}
 .dc-ex-dose.gold{color:var(--gold)}
 .dc-rest{text-align:center;padding:2rem 1rem;color:var(--muted);font-size:.9rem;font-style:italic}
 .dc-collagen{background:rgba(255,209,102,.06);border:1px solid rgba(255,209,102,.3);border-radius:4px;padding:.6rem .85rem;margin-bottom:1rem;font-family:"IBM Plex Mono",monospace;font-size:.7rem;color:var(--gold);display:flex;align-items:center;gap:.5rem}
+.swap-btn{background:none;border:1px solid var(--border);color:var(--accent);border-radius:3px;margin-left:.5rem;padding:.05rem .45rem;font-size:.85rem;line-height:1.3;cursor:pointer;flex-shrink:0;align-self:center}
+.swap-btn:hover{border-color:var(--accent)}
+.dc-solo{font-family:"IBM Plex Mono",monospace;font-size:.55rem;letter-spacing:.08em;text-transform:uppercase;color:var(--gold);border:1px solid rgba(255,209,102,.4);padding:.05rem .3rem;border-radius:2px;margin-left:.4rem;vertical-align:middle}
+.dc-rot{font-family:"IBM Plex Mono",monospace;font-size:.62rem;letter-spacing:.06em;color:var(--muted);border:1px dashed var(--border);border-radius:4px;padding:.45rem .7rem;margin-bottom:1rem}
 /* FOOTER */
 footer{background:var(--surface);border-top:1px solid var(--border);padding:2rem;text-align:center;font-family:"IBM Plex Mono",monospace;font-size:.72rem;color:var(--muted);letter-spacing:.06em}
 footer .accent{color:var(--accent)}
@@ -788,7 +792,7 @@ footer .accent{color:var(--accent)}
 </section>
 
 <footer>
-  <p>YARI &mdash; ACL Return to Sport Guide &middot; v2.9 &middot; Sprint Jump Resilience &middot; Rolling Maintenance · Trial-Ready (Aug 2026)</p>
+  <p>YARI &mdash; ACL Return to Sport Guide &middot; v2.10 &middot; Sprint Jump Resilience &middot; Rolling Maintenance · Trial-Ready · Rotating (Oct 2026)</p>
   <p style="margin-top:.4rem">Built on research from <span class="accent">Baar &middot; Grey &middot; Ward &middot; Bosch &middot; Dietz &middot; Natera &middot; Uthoff &middot; Rio &middot; Petersen &middot; Grindem &middot; Ardern &middot; Filbay &middot; Hughes &middot; Mountjoy &middot; Hewett &middot; Verkhoshansky &middot; Elliott &middot; Zatsiorsky</span></p>
 </footer>
 
@@ -907,6 +911,67 @@ function rollingWeekIndex(){
   const parity = ((weeks % 2) + 2) % 2;   // 0 → A, 1 → B
   return first + parity;
 }
+// ── ROTATION LAYER (v2.10) ───────────────────────────────────────
+// Close-tier items (rot:[...]) inside the rolling block rotate every ROT_LEN weeks through ROT_SETS variants.
+// Anchor = Mon Sep 28 2026, a Week-A Monday → every swap lands on the lighter A week (new movements debut light).
+// Anchors (trap bar, Nordic, squat, run structures) carry no rot[] and never change.
+const ROT_ANCHOR = new Date(2026, 8, 28);
+const ROT_LEN = 4;   // weeks per rotation (two A/B pairs)
+const ROT_SETS = 3;  // 12-week cycle before anything repeats
+function rotWeeksSinceAnchor(){
+  return Math.round((mondayOfThisWeek() - ROT_ANCHOR) / (7 * 86400000)); // round absorbs DST hour
+}
+function rotationIndex(){
+  const blk = Math.floor(rotWeeksSinceAnchor() / ROT_LEN);
+  return ((blk % ROT_SETS) + ROT_SETS) % ROT_SETS;
+}
+function nextRotation(){
+  const w = rotWeeksSinceAnchor();
+  const into = ((w % ROT_LEN) + ROT_LEN) % ROT_LEN;
+  const mon = mondayOfThisWeek();
+  const next = new Date(mon.getFullYear(), mon.getMonth(), mon.getDate() + (ROT_LEN - into) * 7);
+  const t = new Date();
+  const today = new Date(t.getFullYear(), t.getMonth(), t.getDate());
+  return { date: next, days: Math.round((next - today) / 86400000) };
+}
+function rotationLabel(){
+  const n = nextRotation();
+  const when = n.date.toLocaleDateString('en-US', { weekday:'short', month:'short', day:'numeric' });
+  return 'Rotation ' + (rotationIndex() + 1) + '/' + ROT_SETS + ' · new swaps ' + when + ' (' + n.days + (n.days === 1 ? ' day)' : ' days)');
+}
+// ⇄ swap tap: options = this rotation's pick, then the solo version (one tap on a solo Thursday), then the other variants.
+// Choice is stored per calendar day (yari_swap_YYYY-MM-DD_<id>), so it resets tomorrow.
+function itemOptions(ex){
+  if(!ex.rot) return [ex];
+  const r = rotationIndex() % ex.rot.length;
+  const opts = [ex.rot[r]];
+  if(ex.solo) opts.push(Object.assign({ solo:true }, ex.solo));
+  ex.rot.forEach((v, i) => { if(i !== r) opts.push(v); });
+  return opts;
+}
+function swapKey(dayStr, id){ return 'yari_swap_' + dayStr + '_' + id; }
+function resolveItem(ex, dayStr){
+  const opts = itemOptions(ex);
+  let k = 0;
+  try { k = parseInt(localStorage.getItem(swapKey(dayStr, ex.id)) || '0', 10) || 0; } catch(e){}
+  k = ((k % opts.length) + opts.length) % opts.length;
+  return { opt: opts[k], k: k, n: opts.length };
+}
+function swapItem(id, dayStr, idx){
+  try {
+    const key = swapKey(dayStr, id);
+    const k = (parseInt(localStorage.getItem(key) || '0', 10) || 0) + 1;
+    localStorage.setItem(key, String(k));
+  } catch(e){}
+  selectDay(idx);
+}
+function rotItemHtml(ex, dc, dayStr, idx){
+  const R = resolveItem(ex, dayStr);
+  const tag = R.opt.solo ? '<span class="dc-solo">solo</span>' : '';
+  return `<div class="dc-ex"><span class="dc-ex-name">${R.opt.name}${tag}</span><span class="${dc}">${R.opt.dose}</span>` +
+    `<button class="swap-btn" onclick="swapItem('${ex.id}','${dayStr}',${idx})" title="Swap for today (${R.k + 1} of ${R.n})" aria-label="Swap exercise for today">⇄</button></div>`;
+}
+
 function getWeekStart(w){
   // rolling maintenance weeks are decoupled from the meet calendar — anchor to THIS week's Monday
   if(WEEKS[w] && WEEKS[w].roll) return mondayOfThisWeek();
@@ -926,8 +991,8 @@ const WEEKS = [
   { label:'Phase 3 · Club Prep', range:'Jun 15–21', note:'Prep for team training · movement quality · full joint articulation daily · hand-off week' },
   { label:'Phase 3 · Power Expression', range:'Jun 22–28', note:'Bonus week before Friday departure · light-load power/velocity in the gym (Mon+Wed) · short ball-plyo Thursday · joint prep daily · low volume, maximal intent, full recovery — express what you built, do not grind it' },
   // ── ROLLING MAINTENANCE (added Aug 2026) — alternates A (2 runs) / B (3 runs) by week parity ──
-  { label:'Maintenance · Trial-Ready (A · 2 runs)', range:'Rolling — this week', note:'Hold match fitness until a trial materializes. 2 runs (extensive tempo + RSA/agility) · strength 2× · daily joint prep/CARs · recovery. ACL-smart deceleration throughout.', roll:true },
-  { label:'Maintenance · Trial-Ready (B · 3 runs)', range:'Rolling — this week', note:'Higher-run week: aerobic interval + RSA/COD + game-simulation · strength 1–2× · recovery. Alternates automatically with Week A.', roll:true },
+  { label:'Maintenance · Trial-Ready (A · 2 runs)', range:'Rolling — this week', note:'Hold match fitness until a trial materializes. 2 runs (tempo Tue · RSA/agility Thu, supervised) · strength Mon · upper Wed · unilateral landing + reactive work weekly · ACL-smart deceleration throughout.', roll:true },
+  { label:'Maintenance · Trial-Ready (B · 3 runs)', range:'Rolling — this week', note:'Higher-run week: aerobic interval Tue · RSA/COD Thu (supervised) · game-simulation Sat · strength Mon · upper Wed. Alternates automatically with Week A.', roll:true },
 ];
 
 // detectCurrentWeek declared AFTER getWeekStart AND AFTER WEEKS (CLAUDE.md spec)
@@ -3030,21 +3095,41 @@ const DAYS_BY_WEEK = [
   ],
 
   // ── ROLLING MAINTENANCE A (2 runs) ────────────────────────────────
+  // v2.10: items with rot:[...] rotate every 4 weeks (rotationIndex) and carry a ⇄ swap tap; solo:{} = no-partner version.
   [
     { name:'Monday', collagen:true, rest:false, intent:'Strength — Lower + Posterior Chain',
-      sub:'Maintenance strength. Hold what you built — quality over grind. This block keeps you trial-ready, not peaking.',
+      sub:'Maintenance strength. Trap bar and Nordic are the anchors and stay put so progress stays readable. Items marked ⇄ rotate every 4 weeks, or swap them for today.',
       blocks:[
         { label:'Joint Prep — Daily', items:[
           {name:'Hip CARs', note:'Spina · daily ritual', dose:'5 circles ea direction · each hip'},
           {name:'Ankle CARs', dose:'5 ea direction · each ankle'},
           {name:'90/90 Hip Switch', dose:'8 switches · own the end-range'},
         ]},
+        { gold:true, label:'Landing — Unilateral Floor (before lifting)', items:[
+          {id:'A-mon-land', rot:[
+            {name:'Single-Leg Hop and Stick — Fwd + Lat', dose:'3×4 ea dir ea leg · 2s stick'},
+            {name:'Lateral Bound to Stick (Skater)', dose:'3×5 ea side · stick 2s · knee over 2nd toe'},
+            {name:'Drop Landing to Single-Leg Stick', dose:'3×4 ea leg · 20–30cm box · no knee dive'},
+          ]},
+        ]},
         { label:'Strength', items:[
-          {name:'Trap-Bar Deadlift', dose:'4×5 · RPE 7'},
-          {name:'Rear-Foot Elevated Split Squat', dose:'3×8 ea · controlled'},
-          {name:'Single-Leg Hip Thrust', dose:'3×8 ea · right leg extra set if strong'},
-          {name:'Nordic Curl — Eccentric', dose:'3×5 · 4s descent'},
-          {name:'Copenhagen Plank', dose:'3×20s ea · groin durability (Harøy)'},
+          {name:'Trap-Bar Deadlift', dose:'4×5 · RPE 7 · anchor'},
+          {id:'A-mon-knee', rot:[
+            {name:'Rear-Foot Elevated Split Squat', dose:'3×8 ea · controlled'},
+            {name:'Front-Foot Elevated Split Squat', dose:'3×8 ea · deep knee bend · knee over 2nd toe'},
+            {name:'Lateral Lunge (Cossack)', dose:'3×6 ea · frontal plane · own the bottom'},
+          ]},
+          {id:'A-mon-glute', rot:[
+            {name:'Single-Leg Hip Thrust', dose:'3×8 ea · right leg extra set if strong'},
+            {name:'B-Stance Hip Thrust', dose:'3×8 ea · heavier than single-leg'},
+            {name:'Single-Leg Glute Bridge March (bench)', dose:'3×10 ea · hips level'},
+          ]},
+          {name:'Nordic Curl — Eccentric', dose:'3×5 · 4s descent · anchor'},
+          {id:'A-mon-cph', rot:[
+            {name:'Copenhagen Plank', dose:'3×20s ea · groin durability (Harøy)'},
+            {name:'Copenhagen Adduction — Reps', dose:'2×8–10 ea · slow down, controlled up'},
+            {name:'Copenhagen Plank — Long Hold', dose:'3×25–30s ea · only if 20s is easy'},
+          ]},
         ]},
       ]
     },
@@ -3056,15 +3141,27 @@ const DAYS_BY_WEEK = [
           {name:'Dynamic warmup', dose:'leg swings · lunges · skips · build-ups'},
         ]},
         { gold:true, label:'Extensive Tempo', items:[
-          {name:'Tempo runs', dose:'8–10 × 100m @ ~70% · walk 100m back'},
+          {id:'A-tue-tempo', rot:[
+            {name:'Tempo runs — 100s', dose:'8–10 × 100m @ ~70% · walk 100m back'},
+            {name:'Tempo runs — 150s', dose:'6–7 × 150m @ ~70% · walk 100m'},
+            {name:'Tempo runs — goal line to goal line', dose:'8 reps @ ~70% · walk the width'},
+          ]},
           {name:'Cue', note:'relaxed, tall, quiet feet — never max; HR settles between reps', dose:'controlled'},
         ]},
         { label:'COD — Controlled', items:[
-          {name:'Deceleration drill', dose:'4×15m in → stick the stop · no valgus'},
+          {id:'A-tue-decel', rot:[
+            {name:'Deceleration drill', dose:'4×15m in → stick the stop · no valgus'},
+            {name:'Accel–Decel 3-Step Stop', dose:'4×20m · brake in 3 steps · hips back'},
+            {name:'Backpedal → Turn → Stick', dose:'4 ea side · open the hips, stick 2s'},
+          ]},
           {name:'Lateral shuffle + plant', dose:'3×10m ea · control the plant leg'},
         ]},
         { gold:true, label:'Core', items:[
-          {name:'Dead bugs · Bird dogs · Side plank', dose:'3 rounds'},
+          {id:'A-tue-core', rot:[
+            {name:'Dead bugs · Bird dogs · Side plank', dose:'3 rounds'},
+            {name:'Side plank + top-leg lift · Pallof · Hollow hold', dose:'3 rounds'},
+            {name:'Bear crawl hold · Suitcase carry · Reverse crunch', dose:'3 rounds'},
+          ]},
         ]},
       ]
     },
@@ -3075,8 +3172,16 @@ const DAYS_BY_WEEK = [
           {name:'Hip + Ankle CARs', dose:'5 ea'},
         ]},
         { label:'Upper + Core', items:[
-          {name:'Push — DB press / push-up', dose:'3×10'},
-          {name:'Pull — row / pulldown', dose:'4×10'},
+          {id:'A-wed-push', rot:[
+            {name:'Push — DB press / push-up', dose:'3×10'},
+            {name:'Push — half-kneeling 1-arm DB press', dose:'3×8 ea'},
+            {name:'Push — tempo push-up (3s down)', dose:'3×8–12'},
+          ]},
+          {id:'A-wed-pull', rot:[
+            {name:'Pull — row / pulldown', dose:'4×10'},
+            {name:'Pull — 1-arm DB row', dose:'4×10 ea'},
+            {name:'Pull — chin-up (band-assisted if needed)', dose:'4×5–8'},
+          ]},
           {name:'Pallof press — anti-rotation', dose:'3×10 ea'},
           {name:'Hanging or reverse crunch', dose:'3×12'},
         ]},
@@ -3085,19 +3190,38 @@ const DAYS_BY_WEEK = [
         ]},
       ]
     },
-    { name:'Thursday', collagen:false, rest:false, intent:'RUN 2 — RSA + Agility',
-      sub:'Repeated-sprint ability + change of direction — the soccer-specific stuff. Ball optional. ACL-smart decel throughout.',
+    { name:'Thursday', collagen:false, rest:false, intent:'RUN 2 — RSA + Agility (with Patrick)',
+      sub:'The hard day, supervised. Repeated sprints + change of direction, ACL-smart decel throughout. Training solo? Tap ⇄ once on the partner drills for the solo version.',
       blocks:[
         { label:'Joint Prep + Warmup', items:[
           {name:'Hip + Ankle CARs', dose:'5 ea'},
           {name:'Sprint warmup', dose:'build-ups · A-skips · accels'},
         ]},
         { gold:true, label:'RSA', items:[
-          {name:'Repeated sprints', dose:'8×30m · 1:4 work:rest · full recovery, hold speed'},
+          {id:'A-thu-rsa', rot:[
+            {name:'Repeated sprints — straight', dose:'8×30m · 1:4 work:rest · hold speed'},
+            {name:'Repeated sprints — curved', dose:'8×30m on a wide arc · 1:4 · alternate direction'},
+            {name:'Repeated sprints — shuttle', dose:'8×(15m + 15m) · 1:4 · 3-step brake at the turn'},
+          ]},
         ]},
         { label:'Agility + COD', items:[
-          {name:'5-10-5 pro-agility', dose:'4–6 reps · plant control, no knee dive'},
-          {name:'Reactive cut (ball if flowing)', dose:'6 ea side · decelerate then go'},
+          {id:'A-thu-agil', rot:[
+            {name:'5-10-5 pro-agility', dose:'4–6 reps · plant control, no knee dive'},
+            {name:'T-drill', dose:'4–6 reps · clean shuffle, no crossover'},
+            {name:'45° → 90° cut progression', dose:'4 ea side each angle · decelerate then go'},
+          ]},
+          {id:'A-thu-rcut', rot:[
+            {name:'Reactive cut (ball if flowing)', dose:'6 ea side · decelerate then go'},
+            {name:'Partner-called cut with ball', dose:'6 ea side · call comes late'},
+            {name:'Visual-cue cut (partner points late)', dose:'6 ea side · eyes up, then cut'},
+          ], solo:{name:'Reactive cut with ball — solo', dose:'6 ea side · choose the cut late, after the touch'}},
+        ]},
+        { gold:true, label:'Single-Leg Reactive — Unilateral Floor', items:[
+          {id:'A-thu-react', rot:[
+            {name:'Band Perturbation — Single Leg', dose:'3×8 ea · random direction + timing'},
+            {name:'Partner-Called Single-Leg Stick', dose:'3×5 ea · hop on the call, stick 2s'},
+            {name:'Partner-Toss Catch on One Leg', dose:'3×8 ea · 6 lb ball · vary height + side'},
+          ], solo:{name:'Med-Ball Wall Catch on One Leg', dose:'3×8 ea · 6 lb · vary height + side'}},
         ]},
         { label:'Glute-Med', items:[
           {name:'Banded lateral walk + fire hydrant', dose:'2×15 (Harris)'},
@@ -3119,7 +3243,11 @@ const DAYS_BY_WEEK = [
       blocks:[
         { label:'Ball + Power', items:[
           {name:'Ball work — rondo / passing / first touch', dose:'15–20 min · game rhythm'},
-          {name:'Light plyo — pogo · broad jump · bound', dose:'low volume · stick every landing'},
+          {id:'A-sat-plyo', rot:[
+            {name:'Light plyo — pogo · broad jump · bound', dose:'low volume · stick every landing'},
+            {name:'Light plyo — single-leg pogo · skater bound', dose:'2×10 pogo ea · 2×5 bound ea · stick'},
+            {name:'Light plyo — hurdle hops fwd + lateral', dose:'3×5 ea · quiet, stick the last one'},
+          ]},
         ]},
       ]
     },
@@ -3132,8 +3260,8 @@ const DAYS_BY_WEEK = [
       ]
     },
   ],
-
   // ── ROLLING MAINTENANCE B (3 runs) ────────────────────────────────
+  // v2.10: runs moved to Tue / Thu / Sat so Thursday stays the supervised hard day in both weeks (upper → Wed, recovery → Fri).
   [
     { name:'Monday', collagen:true, rest:false, intent:'Strength — Lower',
       sub:'Same maintenance anchor. Hold the base while the running load steps up this week.',
@@ -3143,11 +3271,31 @@ const DAYS_BY_WEEK = [
           {name:'Ankle CARs', dose:'5 ea'},
           {name:'90/90 Hip Switch', dose:'8 switches'},
         ]},
+        { gold:true, label:'Landing — Unilateral Floor (before lifting)', items:[
+          {id:'B-mon-land', rot:[
+            {name:'Lateral Bound to Stick (Skater)', dose:'3×5 ea side · stick 2s'},
+            {name:'Drop Landing to Single-Leg Stick', dose:'3×4 ea leg · 20–30cm box'},
+            {name:'Single-Leg Hop and Stick — Fwd + Lat', dose:'3×4 ea dir ea leg · 2s stick'},
+          ]},
+        ]},
         { label:'Strength', items:[
-          {name:'Back / Box Squat', dose:'4×5 · RPE 7'},
-          {name:'Single-Leg RDL', dose:'3×8 ea · 3s eccentric'},
-          {name:'Loaded Step-Up', dose:'3×8 ea'},
-          {name:'Nordic Curl', dose:'3×5 · eccentric'},
+          {name:'Back / Box Squat', dose:'4×5 · RPE 7 · anchor'},
+          {id:'B-mon-hinge', rot:[
+            {name:'Single-Leg RDL', dose:'3×8 ea · 3s eccentric'},
+            {name:'B-Stance RDL', dose:'3×8 ea · heavier, still one-leg biased'},
+            {name:'45° Hip Extension / Reverse Hyper', dose:'3×10–12 · long-head hamstring bias (Bourne)'},
+          ]},
+          {id:'B-mon-step', rot:[
+            {name:'Loaded Step-Up', dose:'3×8 ea'},
+            {name:'Lateral Step-Up', dose:'3×8 ea · slow lower'},
+            {name:'Skater Squat', dose:'3×6 ea · back knee touches down softly'},
+          ]},
+          {name:'Nordic Curl', dose:'3×5 · eccentric · anchor'},
+          {id:'B-mon-cph', rot:[
+            {name:'Copenhagen Plank', dose:'3×20s ea · weekly now (Harøy)'},
+            {name:'Copenhagen Adduction — Reps', dose:'2×8–10 ea · slow down, controlled up'},
+            {name:'Copenhagen Plank — Long Hold', dose:'3×25–30s ea · only if 20s is easy'},
+          ]},
         ]},
       ]
     },
@@ -3159,41 +3307,34 @@ const DAYS_BY_WEEK = [
           {name:'Dynamic warmup + build-ups', dose:'full'},
         ]},
         { gold:true, label:'Intervals', items:[
-          {name:'4×4 VO2 (or 6×3 min)', dose:'4 min hard / 3 min easy · >90% HRmax on work'},
+          {id:'B-tue-int', rot:[
+            {name:'4×4 VO2', dose:'4 min hard / 3 min easy · >90% HRmax on work'},
+            {name:'6×3 min', dose:'3 min hard / 2 min easy · >90% HRmax on work'},
+            {name:'30-30s', dose:'2 × 10 min of 30s hard / 30s jog · 3 min between'},
+          ]},
           {name:'Cue', note:'controlled hard, mechanics stay clean — not a grind to failure', dose:'quality'},
         ]},
         { gold:true, label:'Core', items:[
-          {name:'Dead bugs · side plank · Pallof', dose:'3 rounds'},
+          {id:'B-tue-core', rot:[
+            {name:'Dead bugs · side plank · Pallof', dose:'3 rounds'},
+            {name:'Hollow hold · side plank + leg lift · Pallof', dose:'3 rounds'},
+            {name:'Bear crawl hold · suitcase carry · dead bugs', dose:'3 rounds'},
+          ]},
         ]},
       ]
     },
-    { name:'Wednesday', collagen:false, rest:false, intent:'RUN 2 — RSA + COD',
-      sub:'Repeated sprint + change of direction — the soccer bread and butter. Decel mechanics honest.',
-      blocks:[
-        { label:'Joint Prep + Warmup', items:[
-          {name:'Hip + Ankle CARs', dose:'5 ea'},
-          {name:'Sprint warmup', dose:'A-skips · accels · build-ups'},
-        ]},
-        { gold:true, label:'RSA', items:[
-          {name:'Repeated sprints', dose:'10×30m · 1:4 rest · hold top speed'},
-        ]},
-        { label:'Agility + COD', items:[
-          {name:'Cone agility (T-drill / 5-10-5)', dose:'5–6 reps · plant control'},
-          {name:'Reactive cut with ball', dose:'6 ea side · brake then accelerate'},
-        ]},
-        { label:'Glute-Med', items:[
-          {name:'Banded lateral walk + monster walk', dose:'2×15'},
-        ]},
-      ]
-    },
-    { name:'Thursday', collagen:true, rest:false, intent:'Upper + Recovery Mobility',
-      sub:'Off the legs between run days. Upper, core, and a real mobility flow so Friday’s run is fresh.',
+    { name:'Wednesday', collagen:true, rest:false, intent:'Upper + Recovery Mobility',
+      sub:'Off the legs between run days. Upper, core, and a real mobility flow so Thursday is fresh.',
       blocks:[
         { label:'Joint Prep — Daily', items:[
           {name:'Hip + Ankle CARs', dose:'5 ea'},
         ]},
         { label:'Upper + Core', items:[
-          {name:'Push + Pull superset', dose:'3×10 ea'},
+          {id:'B-wed-pp', rot:[
+            {name:'Push + Pull superset', dose:'3×10 ea'},
+            {name:'1-arm DB press + 1-arm DB row', dose:'3×8 ea side'},
+            {name:'Push-up + chin-up (assisted if needed)', dose:'3×8–12 / 3×5–8'},
+          ]},
           {name:'Anti-rotation + anti-extension core', dose:'3 rounds'},
         ]},
         { label:'Mobility', items:[
@@ -3201,7 +3342,55 @@ const DAYS_BY_WEEK = [
         ]},
       ]
     },
-    { name:'Friday', collagen:false, rest:false, intent:'RUN 3 — Game-Simulation',
+    { name:'Thursday', collagen:false, rest:false, intent:'RUN 2 — RSA + COD (with Patrick)',
+      sub:'The hard day, supervised. Repeated sprint + change of direction — the soccer bread and butter. Training solo? Tap ⇄ once on the partner drills for the solo version.',
+      blocks:[
+        { label:'Joint Prep + Warmup', items:[
+          {name:'Hip + Ankle CARs', dose:'5 ea'},
+          {name:'Sprint warmup', dose:'A-skips · accels · build-ups'},
+        ]},
+        { gold:true, label:'RSA', items:[
+          {id:'B-thu-rsa', rot:[
+            {name:'Repeated sprints — straight', dose:'10×30m · 1:4 rest · hold top speed'},
+            {name:'Repeated sprints — 40s', dose:'8×40m · 1:4 · hold top speed'},
+            {name:'Repeated sprints — shuttle', dose:'10×(15m + 15m) · 1:4 · 3-step brake'},
+          ]},
+        ]},
+        { label:'Agility + COD', items:[
+          {id:'B-thu-agil', rot:[
+            {name:'Cone agility (T-drill / 5-10-5)', dose:'5–6 reps · plant control'},
+            {name:'3-cone L-drill', dose:'5–6 reps · tight turns, low hips'},
+            {name:'45° → 90° cut progression', dose:'4 ea side each angle'},
+          ]},
+          {id:'B-thu-rcut', rot:[
+            {name:'Reactive cut with ball', dose:'6 ea side · brake then accelerate'},
+            {name:'Partner-called cut with ball', dose:'6 ea side · call comes late'},
+            {name:'Visual-cue cut (partner points late)', dose:'6 ea side · eyes up, then cut'},
+          ], solo:{name:'Reactive cut with ball — solo', dose:'6 ea side · choose the cut late, after the touch'}},
+        ]},
+        { gold:true, label:'Single-Leg Reactive — Unilateral Floor', items:[
+          {id:'B-thu-react', rot:[
+            {name:'Partner-Called Single-Leg Stick', dose:'3×5 ea · hop on the call, stick 2s'},
+            {name:'Partner-Toss Catch on One Leg', dose:'3×8 ea · 6 lb ball · vary height + side'},
+            {name:'Band Perturbation — Single Leg', dose:'3×8 ea · random direction + timing'},
+          ], solo:{name:'Med-Ball Wall Catch on One Leg', dose:'3×8 ea · 6 lb · vary height + side'}},
+        ]},
+        { label:'Glute-Med', items:[
+          {name:'Banded lateral walk + monster walk', dose:'2×15'},
+        ]},
+      ]
+    },
+    { name:'Friday', collagen:false, rest:false, intent:'Recovery + Movement',
+      sub:'Between two run days — earn it back. Easy movement, full CARs, tissue.',
+      blocks:[
+        { label:'Recovery', items:[
+          {name:'Easy bike or walk', dose:'25–30 min'},
+          {name:'Full CARs + movement snacks', dose:'joints + ground movement'},
+          {name:'Soft tissue', dose:'lower body'},
+        ]},
+      ]
+    },
+    { name:'Saturday', collagen:false, rest:false, intent:'RUN 3 — Game-Simulation',
       sub:'Mixed demands — accelerate, decelerate, change pace, with the ball. Closest thing to a match without a match. Moderate volume, high quality.',
       blocks:[
         { label:'Joint Prep + Warmup', items:[
@@ -3209,21 +3398,19 @@ const DAYS_BY_WEEK = [
           {name:'Ball-integrated warmup', dose:'dribble · pass · turn'},
         ]},
         { gold:true, label:'Game-Sim Running', items:[
-          {name:'Interval mix — accel / decel / change of pace', dose:'6×(15m accel + 10m decel + jog) · vary'},
+          {id:'B-sat-sim', rot:[
+            {name:'Interval mix — accel / decel / change of pace', dose:'6×(15m accel + 10m decel + jog) · vary'},
+            {name:'Box-to-box mix', dose:'6 × (sprint 20m · jog 40m · stride 30m · walk back)'},
+            {name:'Pattern runs — pitch shapes', dose:'6 × 45s of cut, curve, check-back · walk 75s'},
+          ]},
           {name:'Small-sided-style with ball', dose:'12–15 min · first touch, turns, short bursts'},
         ]},
         { label:'Decel / Landing', items:[
-          {name:'Depth-drop to stick + reactive cut', dose:'6 · ACL-protective deceleration'},
-        ]},
-      ]
-    },
-    { name:'Saturday', collagen:false, rest:false, intent:'Recovery + Movement',
-      sub:'Bigger run week — earn it back. Active recovery, full CARs, tissue.',
-      blocks:[
-        { label:'Recovery', items:[
-          {name:'Easy bike or walk', dose:'25–30 min'},
-          {name:'Full CARs + movement snacks', dose:'joints + ground movement'},
-          {name:'Soft tissue', dose:'lower body'},
+          {id:'B-sat-land', rot:[
+            {name:'Depth-drop to stick + reactive cut', dose:'6 · ACL-protective deceleration'},
+            {name:'Lateral bound → stick → cut', dose:'6 ea side'},
+            {name:'Single-leg drop to stick → first step', dose:'5 ea leg'},
+          ]},
         ]},
       ]
     },
@@ -3262,7 +3449,7 @@ function renderWeekHeader(){
   const ws = getWeekStart(currentWeek);
   document.getElementById('wk-label').textContent = w.label;
   document.getElementById('wk-range').textContent = w.range;
-  document.getElementById('wk-note').textContent  = w.note;
+  document.getElementById('wk-note').textContent  = w.roll ? (w.note + ' · ' + rotationLabel()) : w.note;
   document.getElementById('wk-prev').disabled = currentWeek === 0;
   document.getElementById('wk-next').disabled = currentWeek === WEEKS.length - 1;
 }
@@ -3316,6 +3503,7 @@ function selectDay(idx){
   const ws = getWeekStart(currentWeek);
   const dayDate = new Date(ws.getFullYear(), ws.getMonth(), ws.getDate() + idx);
   const dateStr = dayDate.toLocaleDateString('en-US', { month:'short', day:'numeric' });
+  const dayStr = sbDateStr(dayDate);
   const today = sbDateStr(new Date());
   const cachedPain = localStorage.getItem('yari_pain_' + today);
 
@@ -3327,6 +3515,10 @@ function selectDay(idx){
     html += `<div class="dc-collagen">⚡ Collagen window — 15g hydrolyzed collagen + Vit C · 30–60 min before this session</div>`;
   }
 
+  if(WEEKS[currentWeek].roll && d.blocks.some(b => b.items.some(x => x.rot))){
+    html += `<div class="dc-rot">${rotationLabel()} · tap ⇄ to swap an exercise for today</div>`;
+  }
+
   if(d.rest && d.blocks.length === 0){
     html += `<div class="dc-rest">Rest day. Layer 1, canal walk, soft tissue.<br>No resistance, no impact. This is when tissue rebuilds.</div>`;
   } else {
@@ -3335,7 +3527,8 @@ function selectDay(idx){
       html += `<div class="dc-block"><div class="${lc}">${b.label}</div>`;
       b.items.forEach(ex => {
         const dc = b.gold ? 'dc-ex-dose gold' : 'dc-ex-dose';
-        html += `<div class="dc-ex"><span class="dc-ex-name">${ex.name}</span><span class="${dc}">${ex.dose}</span></div>`;
+        if(ex.rot){ html += rotItemHtml(ex, dc, dayStr, idx); }
+        else { html += `<div class="dc-ex"><span class="dc-ex-name">${ex.name}</span><span class="${dc}">${ex.dose}</span></div>`; }
       });
       html += `</div>`;
     });
