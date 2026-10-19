@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- VERSION: 4.6.2 | Updated: 2026-10-19 | Prior: 4.6.1 (same session) | v4.6.2: label contrast bumped ~35% more per Patrick — section labels (Phase/Intensity/Quality, legend group titles) #4a463f→#26231d (near-ink); --ink-dim (Search Demo, counts) #645f56→#4a463f. CSS-only. | v4.6.1: Pixel follow-up — (a) filter-row distortion fixed: group label sat inline in a wrapping flex row (min-width:80px) so buttons wrapped ragged around it; label now flex-basis:100% = clean label-over-buttons blocks. (b) faint titles darkened: --ink-dim #9a9690→#645f56 + Phase/Intensity/Quality & legend group titles to #4a463f so the mono labels + "Search Demo" + counts read. CSS-only, one real <script> (note: the changelog below literally contains the text "<script>", which trips naive grep -c — strip comments before counting). | v4.6: land-on-filters reorder + legibility pass (Patrick, Pixel). DOM reordered so you open onto the filters: header → Back/Dashboard → sticky category tabs → FILTER BAR → how-to → legend; the legend is now a collapsed <details> drawer (was a full block on top) and the header is slimmed with the expert blurb tucked into an "about ▾" drawer (dropped the stale "61 exercises" vanity stat — there are 100 cards; #ex-total now fills live from the DOM). Legibility: darkened the pale tag tokens (intensity-sub, phase-maint/trans/perf, spinal-low/mod, rehab) + darkened inline quality colors (velocity gold #c8a040→#8a6410, gpp/iso/hypertrophy/power) + tag font-weight 600; legend-drawer summary and the how-to toggle lifted off the faint grays. Category nav gets a scrollspy active-highlight (IntersectionObserver). node --check clean, ONE <script>, CSP untouched. DEFERRED to v4.7 (test core on Pixel first): self-serve demo links (localStorage lib_demos, incl. a higher-contrast save button) + Add-to-Home-screen manifest/meta for chromeless fullscreen. Suggested commit: `Library v4.6: land-on-filters reorder (filters above legend, legend→drawer, slim header) + legibility pass (darker tag tokens/quality colors, readable drawer summaries) + nav scrollspy` -->
+<!-- VERSION: 4.7 | Updated: 2026-10-19 | Prior: 4.6.2 (same session) | v4.7: GLOBAL darken + size bump + folded-in demo links + fullscreen meta. Root cause of "everything is so light": body was Crimson Pro WEIGHT 300 (light serif reads faint at any color) — now 400 + base 1.1rem (~+1.5pt). Secondary tokens near-ink (--ink-muted #5a5650→#262320, --ink-dim →#332f29); .ex-rationale was faint italic #5a5650 0.9rem → upright #2a2620 1rem 400; .ex-name 1.22rem; ex-source/cat-count/nav/tags darkened + up a size; dark-header cream text lifted toward solid (eyebrow .45→.82, desc .6→.92, about .9, meta .8). FOLDED IN (were v4.7 deferrals): (1) self-serve demo links — localStorage `lib_demos`, per-card ＋Save/▶My demo/✎ injected beside Search Demo, high-contrast accent button, prompt-based, http(s)-validated, name via textContent (XSS-safe); (2) Add-to-Home-screen meta (mobile-web-app-capable + apple + theme-color) for chromeless standalone — meta-only (manifest.json would hit CSP default-src none). node --check clean (comment-stripped: ONE real <script>, 9041 chars), CSP untouched. Patrick: "we'll get there with aesthetic" — font-family still serif; sans-body is the next dial if still light. Suggested commit: `Library v4.7: global darken (body 300→400, size +1.5pt, near-ink secondary tokens, lift header text) + self-serve demo links (lib_demos) + add-to-home-screen meta` | v4.6.2: label contrast bumped ~35% more per Patrick — section labels (Phase/Intensity/Quality, legend group titles) #4a463f→#26231d (near-ink); --ink-dim (Search Demo, counts) #645f56→#4a463f. CSS-only. | v4.6.1: Pixel follow-up — (a) filter-row distortion fixed: group label sat inline in a wrapping flex row (min-width:80px) so buttons wrapped ragged around it; label now flex-basis:100% = clean label-over-buttons blocks. (b) faint titles darkened: --ink-dim #9a9690→#645f56 + Phase/Intensity/Quality & legend group titles to #4a463f so the mono labels + "Search Demo" + counts read. CSS-only, one real <script> (note: the changelog below literally contains the text "<script>", which trips naive grep -c — strip comments before counting). | v4.6: land-on-filters reorder + legibility pass (Patrick, Pixel). DOM reordered so you open onto the filters: header → Back/Dashboard → sticky category tabs → FILTER BAR → how-to → legend; the legend is now a collapsed <details> drawer (was a full block on top) and the header is slimmed with the expert blurb tucked into an "about ▾" drawer (dropped the stale "61 exercises" vanity stat — there are 100 cards; #ex-total now fills live from the DOM). Legibility: darkened the pale tag tokens (intensity-sub, phase-maint/trans/perf, spinal-low/mod, rehab) + darkened inline quality colors (velocity gold #c8a040→#8a6410, gpp/iso/hypertrophy/power) + tag font-weight 600; legend-drawer summary and the how-to toggle lifted off the faint grays. Category nav gets a scrollspy active-highlight (IntersectionObserver). node --check clean, ONE <script>, CSP untouched. DEFERRED to v4.7 (test core on Pixel first): self-serve demo links (localStorage lib_demos, incl. a higher-contrast save button) + Add-to-Home-screen manifest/meta for chromeless fullscreen. Suggested commit: `Library v4.6: land-on-filters reorder (filters above legend, legend→drawer, slim header) + legibility pass (darker tag tokens/quality colors, readable drawer summaries) + nav scrollspy` -->
 <!-- CHANGELOG: v4.6 land-on-filters reorder + legibility + nav scrollspy · v4.5 flexion tolerance ladder + sources + nav/count fixes (Sep 3, stamped Oct 1) · v4.4 deep-link #hash scroll fix · v4.3 +Movement & Restoration · v4.2 Sciatic Nerve Slider · v4.1 filter FAQ panel -->
 
 <html lang="en">
@@ -7,6 +7,11 @@
 <meta charset="UTF-8">
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; connect-src 'none'; img-src 'self' data:;">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- v4.7: Add-to-Home-screen → chromeless standalone launch (Android/iOS). Meta-only (no manifest.json — would hit CSP default-src none). -->
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#1a1814">
 <title>Master Exercise Library — Sprint · Jump · Resilience · v4</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
@@ -560,6 +565,30 @@
      read at once. */
   :root { --ink-dim: #4a463f; }  /* v4.6.2: another step darker (Search Demo, counts) */
   .filter-label, .legend-group-title, .legend-title { color: #26231d; }  /* v4.6.2: section labels → near-ink, +~35% contrast */
+
+  /* ───────── v4.7 (Oct 19 2026) — global darken + size bump (Patrick: "everything is so light") ───────── */
+  /* Root cause: body was Crimson Pro WEIGHT 300 (a light serif reads faint at any color). Heavier + bigger + darker tokens across the board. */
+  body { font-weight: 400 !important; font-size: 1.1rem; }         /* 300→400, ~+1.5pt base */
+  :root { --ink-muted: #262320; --ink-dim: #332f29; }             /* secondary text near-ink */
+  .ex-rationale { color: #2a2620 !important; font-style: normal; font-size: 1rem; font-weight: 400; }  /* was faint italic #5a5650 0.9rem */
+  .ex-name { font-size: 1.22rem; font-weight: 600; color: var(--ink); }
+  .ex-source { color: #3a362f !important; font-size: 0.66rem; }
+  .cat-count { color: #3a362f !important; font-size: 0.68rem; }
+  .filter-label, .legend-group-title, .legend-title { font-size: 0.68rem; }
+  .filter-btn { font-size: 0.82rem; }
+  nav a { font-size: 0.68rem; color: #2e2b25; }
+  .tag, .ltag { font-size: 0.64rem; }
+  /* Top dark-header text was low-opacity cream — lift toward solid */
+  .header-eyebrow { color: rgba(245,242,236,0.82) !important; }
+  .header-desc { color: rgba(245,242,236,0.92) !important; }
+  .header-about summary { color: rgba(245,242,236,0.9) !important; font-size: 0.68rem; }
+  .meta-item { color: rgba(245,242,236,0.8) !important; }
+
+  /* v4.7: self-serve saved demo link (localStorage lib_demos) — high-contrast accent button */
+  .demo-save-wrap { display: inline-flex; gap: 0.4rem; align-items: center; margin-top: 0.5rem; }
+  .demo-save { display: inline-flex; align-items: center; gap: 0.3rem; font-family: 'DM Mono', monospace; font-size: 0.62rem; letter-spacing: 0.06em; text-transform: uppercase; font-weight: 500; color: var(--accent); background: rgba(200,52,26,0.08); border: 1px solid var(--accent); border-radius: 3px; padding: 0.26rem 0.6rem; text-decoration: none; cursor: pointer; }
+  .demo-save.on { color: #fff; background: var(--accent); }
+  .demo-save-edit { font-family: 'DM Mono', monospace; font-size: 0.72rem; color: var(--accent); background: none; border: 1px solid var(--accent); border-radius: 3px; padding: 0.08rem 0.38rem; cursor: pointer; }
 </style>
 </head>
 <body>
@@ -2729,6 +2758,60 @@
       }, { rootMargin: '-45% 0px -50% 0px' });
       document.querySelectorAll('section.cat-section').forEach(function(s){ obs.observe(s); });
     }
+  })();
+
+  // ── v4.7: self-serve saved demo link per card (localStorage lib_demos, per-device) ──────────
+  // Mirrors the guides' pt_demos/sh_demos pattern. Keyed by exercise name (textContent, XSS-safe);
+  // URL only assigned to .href when it validates as http(s). Sits beside the existing Search Demo.
+  (function(){
+    var KEY = 'lib_demos';
+    function load(){ try { return JSON.parse(localStorage.getItem(KEY) || '{}'); } catch(e){ return {}; } }
+    function save(o){ try { localStorage.setItem(KEY, JSON.stringify(o)); } catch(e){} }
+    function valid(u){ return /^https?:\/\//i.test(u); }
+    document.querySelectorAll('.ex-card').forEach(function(card){
+      var nameEl = card.querySelector('.ex-name');
+      if(!nameEl) return;
+      var name = nameEl.textContent.trim();
+      var wrap = document.createElement('span');
+      wrap.className = 'demo-save-wrap';
+      function render(){
+        wrap.textContent = '';
+        var url = load()[name];
+        if(url){
+          var a = document.createElement('a');
+          a.className = 'demo-save on'; a.href = url; a.target = '_blank'; a.rel = 'noopener';
+          a.textContent = '▶ My demo';
+          var ed = document.createElement('button');
+          ed.className = 'demo-save-edit'; ed.type = 'button'; ed.textContent = '✎';
+          ed.title = 'Change or remove this demo link';
+          ed.addEventListener('click', function(){
+            var v = prompt('Your demo URL for:\n' + name + '\n\n(empty = remove)', url || '');
+            if(v === null) return;
+            v = v.trim(); var s = load();
+            if(!v){ delete s[name]; }
+            else if(valid(v)){ s[name] = v; }
+            else { alert('Link must start with http:// or https://'); return; }
+            save(s); render();
+          });
+          wrap.appendChild(a); wrap.appendChild(ed);
+        } else {
+          var b = document.createElement('button');
+          b.className = 'demo-save'; b.type = 'button'; b.textContent = '＋ Save my demo';
+          b.addEventListener('click', function(){
+            var v = prompt('Paste your demo URL for:\n' + name, '');
+            if(v === null) return;
+            v = v.trim();
+            if(!valid(v)){ alert('Link must start with http:// or https://'); return; }
+            var s = load(); s[name] = v; save(s); render();
+          });
+          wrap.appendChild(b);
+        }
+      }
+      render();
+      var sd = card.querySelector('.ex-video-link');
+      if(sd && sd.parentNode){ sd.parentNode.insertBefore(wrap, sd.nextSibling); }
+      else { card.appendChild(wrap); }
+    });
   })();
 </script>
 
