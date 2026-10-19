@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- VERSION: 7.6 | Updated: 2026-10-18 | Prior: 7.5 (2026-10-15) | v7.6 (Oct 18): per-device AD-FREE demo frontend — every demo/search link now routes through demoUrl(), keyed to a per-device localStorage pref (pt_demo_src): Invidious (default, yewtu.be — phone-verified ad-free; the YT app can't hijack a non-youtube.com domain) · FreeTube (freetube:// — desktop/Edge-verified, handles BOTH search and exact video) · plain YouTube (escape hatch). Footer "Demos ·" button cycles the source and repaints the day. Piped dropped (both public instances dead on Patrick's test). node --check + gate_test.js 28/28, one-script rule intact. | v7.5 (Oct 15): weekly load REDISTRIBUTED in the reentryWeek() factory per Patrick — Thursday stripped to the sled+intervals anchor ONLY (BFR removed from the anchor + movement-restoration pulled off; that stack was the exhausting part); UPPER_REENTRY pulled off Monday AND Saturday → Wednesday (leg-neutral, keeps Thursday's sled/4×4 fresh — Patrick's swap); BFR_LEGS → Sunday (low-load occlusion, 2 days clear of Thursday, not the day before it); Sunday now an active "Movement + Prehab" day, no longer full rest; heavy days (Mon/Sat) now lower + movement only. Nothing removed — only spread. One-script rule + node --check clean, gate_test.js 28/28 (gate untouched). | v7.4.2 (Oct 4): dropped "with Yari"/"+ Yari" from every canal/Thursday label — Patrick trains solo now (others welcome, not assumed); the tingling gate handler no longer prescribes retired standing extensions (now "get up and walk, change position"). · HOTFIX (Oct 4): an unescaped apostrophe (in "day's") inside a WEEKS focus: single-quoted string — added by the Oct 1 clinical-read edit — closed the string early → SyntaxError → the ENTIRE script block failed to parse → guide froze at the wave-position loader. Escaped it; node --check clean + gate_test.js 28/28. Root cause: the Oct 1 edit shipped without node --check, which catches exactly this. | v7.4 Two-key gate: ONE source of truth (gateVerdictFor) shared by the log modal and the plan builder, plus absolute walk/reduce limits no rolling median can override (a median CAP was built and then rejected — it compounds with the delta rule and re-creates the every-day-cancelled failure; see gate_test.js), gate chip now shows median · score · delta so a verdict is auditable. Re-Entry W2–W6 annotated with the actual post-TFESI course. Full changelog in CLAUDE.md File Inventory. -->
+<!-- VERSION: 7.7 | Updated: 2026-10-18 | Prior: 7.6 (2026-10-18) | v7.7 (Oct 18): LEG/BFR CONSOLIDATION + gentle hamstrings + AM-dizzy retired. (1) BFR_LEGS collapsed from three cuffed moves to ONE squat (split squat) + ONE calf — the cuffed step-up was also loaded Mon/Sat in GYM_REENTRY (triplicated), dropped; OCCLUSION_FINISHER (leg-press + calf, a leftover in one old hardcoded week) deleted — Patrick: "one version of squats + calf is fine, not two," BFR is "a bit much" at slow progression. (2) Gentle hamstring added: bent-knee isometric bridge (knee bent keeps the sciatic nerve slack, so the hamstring loads without SLR nerve tension; supine = zero axial load; isometric-first per Sanford/Aspetar). Replaced the Single-Leg RDL in GYM_REENTRY (RDL = straight-leg hip-hinge = the nerve-tension pattern) — hamstrings now hit Mon/Sat/Sun at the gentlest dose. (3) bfrThrottle(): on a flared day (today's logged pain AVERAGE >4/10, nerve+glute counted as ONE combined radicular term per Patrick) renderDay swaps BFR_LEGS→BFR_LEGS_LIGHT (squat dropped, one calf + hamstring hold). Separate, additive, downregulate-only — does NOT touch the tested two-key gate. (4) AM-dizzy metric retired (one-off syncope long resolved; benign positional lightheadedness is lifelong) — input removed from the log modal + Doctor Summary; historical rows kept & still render (ankle precedent). node --check + gate_test.js 28/28, bfrThrottle unit-tested, one-script rule intact. | v7.6 (Oct 18): per-device AD-FREE demo frontend — every demo/search link now routes through demoUrl(), keyed to a per-device localStorage pref (pt_demo_src): Invidious (default, yewtu.be — phone-verified ad-free; the YT app can't hijack a non-youtube.com domain) · FreeTube (freetube:// — desktop/Edge-verified, handles BOTH search and exact video) · plain YouTube (escape hatch). Footer "Demos ·" button cycles the source and repaints the day. Piped dropped (both public instances dead on Patrick's test). node --check + gate_test.js 28/28, one-script rule intact. | v7.5 (Oct 15): weekly load REDISTRIBUTED in the reentryWeek() factory per Patrick — Thursday stripped to the sled+intervals anchor ONLY (BFR removed from the anchor + movement-restoration pulled off; that stack was the exhausting part); UPPER_REENTRY pulled off Monday AND Saturday → Wednesday (leg-neutral, keeps Thursday's sled/4×4 fresh — Patrick's swap); BFR_LEGS → Sunday (low-load occlusion, 2 days clear of Thursday, not the day before it); Sunday now an active "Movement + Prehab" day, no longer full rest; heavy days (Mon/Sat) now lower + movement only. Nothing removed — only spread. One-script rule + node --check clean, gate_test.js 28/28 (gate untouched). | v7.4.2 (Oct 4): dropped "with Yari"/"+ Yari" from every canal/Thursday label — Patrick trains solo now (others welcome, not assumed); the tingling gate handler no longer prescribes retired standing extensions (now "get up and walk, change position"). · HOTFIX (Oct 4): an unescaped apostrophe (in "day's") inside a WEEKS focus: single-quoted string — added by the Oct 1 clinical-read edit — closed the string early → SyntaxError → the ENTIRE script block failed to parse → guide froze at the wave-position loader. Escaped it; node --check clean + gate_test.js 28/28. Root cause: the Oct 1 edit shipped without node --check, which catches exactly this. | v7.4 Two-key gate: ONE source of truth (gateVerdictFor) shared by the log modal and the plan builder, plus absolute walk/reduce limits no rolling median can override (a median CAP was built and then rejected — it compounds with the delta rule and re-creates the every-day-cancelled failure; see gate_test.js), gate chip now shows median · score · delta so a verdict is auditable. Re-Entry W2–W6 annotated with the actual post-TFESI course. Full changelog in CLAUDE.md File Inventory. -->
 <!-- CHANGELOG: v7.4 two-key gate (absolute backstop + capped median) · log modal and plan now share one verdict function · visible gate numbers · post-TFESI course recorded · v7.3 (Sep 4, committed unstamped under an old “v5.5–v5.8” numbering) rolling-baseline gates + Re-Entry W0–W6 + Thursday anchor / Friday recovery + BFR onto the sled + prone extension restored · v7.2 rehab toggle → Treatment + med-day demo links + label fix · v7.1 medium-day swap · v7.0 hybrid console + grouped 0–10 log + doctor summary + Nerve-umbrella + /10 gates · v6.x wave engine + governor -->
 
 <html lang="en">
@@ -776,14 +776,6 @@ main { padding:1.25rem; max-width:700px; margin:0 auto; }
             <button class="timing-btn" id="seg-tingle-1" onclick="stageSeg('tingle',1)">Yes</button>
           </div>
         </div>
-        <div class="seg-row">
-          <div class="seg-label">Dizzy / near-faint on standing (AM)?</div>
-          <div class="seg-btns n3">
-            <button class="timing-btn" id="seg-dizzy-0" onclick="stageSeg('dizzy',0)">No</button>
-            <button class="timing-btn" id="seg-dizzy-1" onclick="stageSeg('dizzy',1)">Some</button>
-            <button class="timing-btn" id="seg-dizzy-2" onclick="stageSeg('dizzy',2)">Yes</button>
-          </div>
-        </div>
       </div>
     </div>
 
@@ -1039,6 +1031,11 @@ const EX_INFO = {
     setup: 'Cuffs on upper calves. Bodyweight. 4×25. 30s rest. Cuffs off after last set.',
     cue: 'Full range — heel drop to tip-toe. Slow controlled lowering. BFR calf work targets the soleus and Achilles unit without axial load.',
     url: 'https://www.youtube.com/results?search_query=blood+flow+restriction+calf+raise+BFR+soleus'
+  },
+  'Hamstring bridge — bent-knee isometric': {
+    setup: 'Supine, knees bent ~90°, heels pulled in close under the knees, arms flat on the floor. Dig the heels down and lift the hips to a straight line from shoulder to knee. Hold. Double-leg first; single-leg only once double-leg is easy and nerve-quiet.',
+    cue: 'The knee stays bent on purpose — that keeps the sciatic nerve slack, so the hamstring loads while the nerve does not (a straight-leg raise strains the nerve at every hip angle; a bent knee hands it slack). Spine neutral on the floor, zero axial load — same logic as the supine-only bench rule. No RDL, Nordic, or good-morning for now: all three are straight-leg nerve-tension patterns on a root you are keeping quiet.',
+    url: 'https://www.youtube.com/results?search_query=bent+knee+hamstring+bridge+isometric+hold'
   },
   // ── THURSDAY — SLED ──
   'Sled pull — backward': {
@@ -1393,12 +1390,6 @@ const BAND_CIRCUIT_TUE = {
     {name:'Isometric Wall Sit — Mid Angle', note:'nerve check post-canal · 3×45s', dose:'3×45s'},
   ]
 };
-const OCCLUSION_FINISHER = {
-  label:'Occlusion Finisher', cls:'accent', items:[
-    {name:'Occlusion cuff — leg press or leg extension', dose:'30/15/15/15'},
-    {name:'Occlusion cuff — standing calf raise', dose:'4×25'},
-  ]
-};
 const SLED_MAIN = {
   label:'Sled', items:[
     {name:'Sled Pull — Backward', note:'foraminal decompression', dose:'4×20m'},
@@ -1525,11 +1516,25 @@ const SLED_REENTRY = {
     {name:'Counts as RESISTANCE', note:'reads like a walk, loads like a lift — do not file it as a movement day', dose:'—'},
   ]
 };
+// BFR consolidated (Oct 2026, Patrick): one squat + one calf, not the old three-move stack
+// (step-up was also loaded Mon/Sat in GYM_REENTRY — triplicated). Split squat is the single
+// cuffed squat; the cuffed step-up is gone. The gentle hamstring (bent-knee iso bridge) rides
+// here too — it's the lowest-cost, most nerve-safe way to hit the hamstrings. `bfr:true` lets
+// renderDay swap this for BFR_LEGS_LIGHT on a flared day (see bfrThrottle).
 const BFR_LEGS = {
-  label:'BFR — Occlusion Cuffs', cls:'accent', items:[
-    {name:'Step-up — cuffed', note:'20–30% 1RM · cuff snug not painful (~7/10 tightness) · stays inflated across all four sets · deflate on any distal numbness beyond the ordinary BFR ache', dose:'30/15/15/15 · 30–45s rest'},
-    {name:'Split squat — cuffed', dose:'30/15/15/15'},
+  label:'BFR — Occlusion Cuffs', cls:'accent', bfr:true, items:[
+    {name:'Split squat — cuffed', note:'the one cuffed squat · 20–30% 1RM · cuff snug not painful (~7/10 tightness) · stays inflated across all four sets · deflate on any distal numbness beyond the ordinary BFR ache', dose:'30/15/15/15 · 30–45s rest'},
     {name:'Calf raise — cuffed', dose:'30/15/15/15'},
+    {name:'Hamstring bridge — bent-knee isometric', note:'the gentle hamstring piece — knee stays bent so the nerve stays slack · double-leg, progress to single-leg only when quiet', dose:'3×20–30s'},
+  ]
+};
+// Reduced variant — renders instead of BFR_LEGS when the day's logged pain averages over 4/10
+// (bfrThrottle). Squat dropped; one calf set + the hamstring hold, then movement. Patrick's
+// "any logs that average over 3.5–4 should reflect this" + "reduce, keep it light".
+const BFR_LEGS_LIGHT = {
+  label:'BFR — Reduced (flared day)', cls:'green', bfr:true, items:[
+    {name:'Calf raise — cuffed', note:'squat dropped — today averaged over 4/10. One calf set, the hamstring hold, then movement.', dose:'2×20'},
+    {name:'Hamstring bridge — bent-knee isometric', note:'knee bent · nerve slack · nothing to fatigue', dose:'3×20s'},
   ]
 };
 const GLUTE_MED_DOSE = {
@@ -1542,7 +1547,7 @@ const GYM_REENTRY = {
   label:'Lower Body — Garage', cls:'accent', items:[
     {name:'Trap bar — elevated start', note:'high handles, bar mid-shin or above · exhale through the lift, no Valsalva · hold 65 for three sessions then step to 75–85', dose:'65 lbs · 3×8'},
     {name:'Goblet squat — 16° wedges', note:'heels elevated cuts dorsiflexion demand, keeps torso upright, less lumbar flexion at depth · stop above any provoking depth', dose:'3×10'},
-    {name:'Single-leg RDL', note:'watch for left trunk rotation at the bottom', dose:'2×10 ea'},
+    {name:'Hamstring bridge — bent-knee isometric', note:'the gentle hamstring slot — replaced the single-leg RDL, which is a straight-leg nerve-tension pattern (hip hinge + near-straight knee loads the lumbar and tensions the root). Knee bent here = nerve slack. RDL earns its way back once the nerve is reliably quiet.', dose:'3×20–30s'},
     {name:'Step-up', dose:'2×8 ea'},
   ]
 };
@@ -2726,7 +2731,6 @@ const WEEKS = [
             {name:'Clamshells — banded', dose:'3×15/side'},
             {name:'Isometric Wall Sit — Mid Angle', note:'nerve check · 3×45s', dose:'3×45s'},
           ]},
-          OCCLUSION_FINISHER,
           { label:'A-March — Intro', cls:'accent', items:[
             {name:'A-March', dose:'3×20m'},
           ]},
@@ -3112,6 +3116,24 @@ function getLatestScore(metric){
   return recent.sort((a,b) => b.ts - a.ts)[0].score;
 }
 
+// BFR throttle (Oct 2026, Patrick). The Sunday cuffed work backs off on a flared day: when the
+// day's logged pain AVERAGES over 4/10, renderDay swaps BFR_LEGS → BFR_LEGS_LIGHT (squat dropped,
+// one calf + the hamstring hold). Nerve and glute co-move for Patrick ("rare to get one without
+// the other"), so they count as ONE combined radicular term — averaged with back, not as two.
+// Reads today only. It deliberately does NOT touch the tested two-key gate (getBreaches /
+// gateVerdictFor) — it's a separate, additive, downregulate-only throttle on one block.
+function bfrThrottle(){
+  const back = getLatestScore('morning');
+  const nv = getLatestScore('nerve');
+  const gl = getLatestScore('glute');
+  const legVals = [nv, gl].filter(v => v !== null);
+  const leg = legVals.length ? legVals.reduce((a,b) => a + b, 0) / legVals.length : null;
+  const parts = [back, leg].filter(v => v !== null);
+  if(!parts.length) return false;            // nothing logged today → full work
+  const avg = parts.reduce((a,b) => a + b, 0) / parts.length;
+  return avg > 4;
+}
+
 // v7 (Jul 2026): thresholds rescaled to the true 0–10 log scale.
 // Old 0–5 grid gates map via new = old×2 − 0.5 (the go-live conversion SQL):
 // old ≥3 (Day C) → ≥5.5 · old ≥2 (reduce) → ≥3.5 · old ≤2 gate → ≤3.5.
@@ -3411,6 +3433,11 @@ function renderDay(idx){
     const isToday = dateStr === todayDateStr();
     const ov = isToday ? dayOverrides[dateStr] : null;
     let blocks = day.blocks;
+    // BFR throttle: on a flared day (logged pain avg >4/10), swap the cuffed block for its
+    // reduced variant before overrides/rendering. Only affects blocks flagged bfr:true.
+    if(bfrThrottle()){
+      blocks = blocks.map(b => (b && b.bfr) ? BFR_LEGS_LIGHT : b);
+    }
     const removedNames = ov ? ov.removed : [];
     if(ov){
       if(!editDayMode){
@@ -3558,24 +3585,27 @@ function toggleDetail(uid){
 // ─────────────────────────────────────────
 // Pain: morning/nerve/glute — 0–10 half-point sliders (Ankle RETIRED, merged into
 //   Nerve; historical 'ankle' rows stay in the DB, no new input).
-// Symptoms: leg_dominant 0/1/2 · tingle 0/1 · dizzy 0/1/2 (toggles).
+// Symptoms: leg_dominant 0/1/2 · tingle 0/1 (toggles). AM-dizzy RETIRED Oct 2026 (Patrick:
+//   the syncope was a one-off long ago; benign positional lightheadedness from skipping lunch
+//   is lifelong and not worth tracking). Historical 'dizzy' rows stay in the DB and still
+//   render in per-day history — no new input, same as the retired 'ankle' metric.
 // Sleep: overnight 0–10 · wakings # · wake times (localStorage pt_wake_times).
 // Treatment: modality-agnostic <mod>_before / <mod>_after (nexwave, shockwave, +custom).
 // Notes: exercise-done + free text → localStorage pt_daily_notes (35-day prune).
 // pain_logs schema untouched — new inputs are just new `metric` strings.
 
 const METRIC_LABELS = { morning:'Back', nerve:'Nerve', glute:'Glute', ankle:'Ankle',
-  overnight:'Overnight', tingle:'Toe Tingle', dizzy:'AM Dizzy',
+  overnight:'Overnight', tingle:'Toe Tingle', dizzy:'AM Dizzy',  // dizzy label kept for old rows
   leg_dominant:'Direction', wakings:'Night Wakings' };
 const TIMING_LABELS = { am:'AM', pre:'Pre-Session', post:'Post-Session', pm:'PM' };
 // 'pm' added Jul 4 2026 — general end-of-day reading, not session-relative. Closes the
 // daily arc (AM → session → PM → overnight) and catches delayed treatment responses.
 // Only session-relative metrics carry a Pre/Post timing — everything else logs as 'am'
 const TIMED_METRICS = new Set(['morning','nerve','glute']);
-const CATEGORICAL_LABELS = { tingle:{0:'No',1:'Yes'}, dizzy:{0:'No',1:'Some',2:'Yes'},
+const CATEGORICAL_LABELS = { tingle:{0:'No',1:'Yes'},
   leg_dominant:{0:'Back-dominant',1:'Equal',2:'Leg-dominant'} };
 const SLIDER_METRICS = ['morning','nerve','glute','overnight'];
-const GROUP_METRICS = { pain:['morning','nerve','glute'], symptoms:['leg_dominant','tingle','dizzy'],
+const GROUP_METRICS = { pain:['morning','nerve','glute'], symptoms:['leg_dominant','tingle'],
   sleep:['overnight','wakings'] };
 
 // Treatment modalities — extensible ('＋' adds one, persisted in pt_treat_mods)
@@ -3600,7 +3630,7 @@ function openModal(){
   syncTimingButtons();
   SLIDER_METRICS.forEach(resetSliderRow);
   resetTreatSliders();
-  ['leg_dominant','tingle','dizzy'].forEach(m => setSegActive(m, null));
+  ['leg_dominant','tingle'].forEach(m => setSegActive(m, null));
   renderWakings();
   renderModalityBtns();
   renderMedrolChip();
@@ -3854,10 +3884,6 @@ function updateGateStatus(m, s){
   } else if(m === 'tingle'){
     if(s === 0){ el.className = 'gate-status pass'; el.textContent = '✓ No toe tingling today.'; }
     else{ el.className = 'gate-status reduce'; el.textContent = '⚠ Tingling logged — get up and walk, change position. Don\'t hold a shape.'; }
-  } else if(m === 'dizzy'){
-    if(s === 0){ el.className = 'gate-status pass'; el.textContent = '✓ No AM dizziness — logged.'; }
-    else if(s === 1){ el.className = 'gate-status reduce'; el.textContent = '⚠ Some AM dizziness logged — mention at your next visit.'; }
-    else{ el.className = 'gate-status hold'; el.textContent = '🛑 AM dizziness logged — rise slowly, flag clearly for Bansal.'; }
   } else if(m === 'leg_dominant'){
     if(s === 2){ el.className = 'gate-status hold'; el.textContent = 'Leg-dominant day — peripheralizing signal, worth a note for Kataria.'; }
     else if(s === 0){ el.className = 'gate-status pass'; el.textContent = 'Back-dominant — centralizing direction. Good sign.'; }
@@ -4848,9 +4874,7 @@ function renderSummary(){
   const tD = {}; scores('tingle').forEach(l => { tD[l.date] = Math.max(tD[l.date] || 0, l.score); });
   const tDays = Object.keys(tD);
   sumRow(sym, 'Toe tingling (L5 marker)', tDays.filter(d => tD[d] >= 1).length + ' of ' + tDays.length + ' logged days');
-  const dz = {}; scores('dizzy').forEach(l => { dz[l.date] = Math.max(dz[l.date] || 0, l.score); });
-  const dzD = Object.keys(dz);
-  sumRow(sym, 'AM dizzy / near-faint', 'yes ' + dzD.filter(d => dz[d] === 2).length + ' · some ' + dzD.filter(d => dz[d] === 1).length + ' · of ' + dzD.length + ' days');
+  // AM-dizzy retired Oct 2026 — no longer summarised (one-off syncope long resolved).
 
   // Sleep
   const slp = sumSection(body, 'sleep');
