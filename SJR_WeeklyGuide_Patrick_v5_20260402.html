@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- VERSION: 7.8 | Updated: 2026-10-18 | Prior: 7.7 (2026-10-18, same session uncommitted) | v7.8 (Oct 18): two follow-ups on the v7.7 work. (1) SL-RDL NOT removed after all — restored to GYM_REENTRY as a GREEN-DAY UNLOCK (`greenOnly:true` item + a renderDay filter dropping greenOnly items unless no breach fires: !morning && !morningReduce && !nerve). The bent-knee iso bridge stays the always-on hamstring slot; the straight-leg RDL (nerve-tension pattern) surfaces only on a quiet-nerve day — earned, not default (Patrick's call). (2) Demo-source DEFAULT flipped Invidious → YouTube: yewtu.be searches fine but its video PLAYBACK is dead (instances proxy streams Google blocks → the Play icon just bounces back to YouTube, pure overhead), and Patrick's phone is Android where the real ad-free fix is device-level (NewPipe/LibreTube/Brave set to own youtube.com links). Plain YouTube is now the phone-friendly default; FreeTube stays the desktop toggle, Invidious still selectable for ad-free search. `demoSrc()` fallback + footer button initial label → YouTube. node --check + gate_test.js 28/28, green-day filter unit-checked, one-script rule intact. | v7.7 (Oct 18): LEG/BFR CONSOLIDATION + gentle hamstrings + AM-dizzy retired. (1) BFR_LEGS collapsed from three cuffed moves to ONE squat (split squat) + ONE calf — the cuffed step-up was also loaded Mon/Sat in GYM_REENTRY (triplicated), dropped; OCCLUSION_FINISHER (leg-press + calf, a leftover in one old hardcoded week) deleted — Patrick: "one version of squats + calf is fine, not two," BFR is "a bit much" at slow progression. (2) Gentle hamstring added: bent-knee isometric bridge (knee bent keeps the sciatic nerve slack, so the hamstring loads without SLR nerve tension; supine = zero axial load; isometric-first per Sanford/Aspetar). Replaced the Single-Leg RDL in GYM_REENTRY (RDL = straight-leg hip-hinge = the nerve-tension pattern) — hamstrings now hit Mon/Sat/Sun at the gentlest dose. (3) bfrThrottle(): on a flared day (today's logged pain AVERAGE >4/10, nerve+glute counted as ONE combined radicular term per Patrick) renderDay swaps BFR_LEGS→BFR_LEGS_LIGHT (squat dropped, one calf + hamstring hold). Separate, additive, downregulate-only — does NOT touch the tested two-key gate. (4) AM-dizzy metric retired (one-off syncope long resolved; benign positional lightheadedness is lifelong) — input removed from the log modal + Doctor Summary; historical rows kept & still render (ankle precedent). node --check + gate_test.js 28/28, bfrThrottle unit-tested, one-script rule intact. | v7.6 (Oct 18): per-device AD-FREE demo frontend — every demo/search link now routes through demoUrl(), keyed to a per-device localStorage pref (pt_demo_src): Invidious (default, yewtu.be — phone-verified ad-free; the YT app can't hijack a non-youtube.com domain) · FreeTube (freetube:// — desktop/Edge-verified, handles BOTH search and exact video) · plain YouTube (escape hatch). Footer "Demos ·" button cycles the source and repaints the day. Piped dropped (both public instances dead on Patrick's test). node --check + gate_test.js 28/28, one-script rule intact. | v7.5 (Oct 15): weekly load REDISTRIBUTED in the reentryWeek() factory per Patrick — Thursday stripped to the sled+intervals anchor ONLY (BFR removed from the anchor + movement-restoration pulled off; that stack was the exhausting part); UPPER_REENTRY pulled off Monday AND Saturday → Wednesday (leg-neutral, keeps Thursday's sled/4×4 fresh — Patrick's swap); BFR_LEGS → Sunday (low-load occlusion, 2 days clear of Thursday, not the day before it); Sunday now an active "Movement + Prehab" day, no longer full rest; heavy days (Mon/Sat) now lower + movement only. Nothing removed — only spread. One-script rule + node --check clean, gate_test.js 28/28 (gate untouched). | v7.4.2 (Oct 4): dropped "with Yari"/"+ Yari" from every canal/Thursday label — Patrick trains solo now (others welcome, not assumed); the tingling gate handler no longer prescribes retired standing extensions (now "get up and walk, change position"). · HOTFIX (Oct 4): an unescaped apostrophe (in "day's") inside a WEEKS focus: single-quoted string — added by the Oct 1 clinical-read edit — closed the string early → SyntaxError → the ENTIRE script block failed to parse → guide froze at the wave-position loader. Escaped it; node --check clean + gate_test.js 28/28. Root cause: the Oct 1 edit shipped without node --check, which catches exactly this. | v7.4 Two-key gate: ONE source of truth (gateVerdictFor) shared by the log modal and the plan builder, plus absolute walk/reduce limits no rolling median can override (a median CAP was built and then rejected — it compounds with the delta rule and re-creates the every-day-cancelled failure; see gate_test.js), gate chip now shows median · score · delta so a verdict is auditable. Re-Entry W2–W6 annotated with the actual post-TFESI course. Full changelog in CLAUDE.md File Inventory. -->
+<!-- VERSION: 7.9 | Updated: 2026-10-26 | Prior: 7.8 (2026-10-18) | v7.9 (Oct 26): ACTIVE-ISSUE GATE — a logged Issue now gates the PLAN, not just the Library button (Patrick tweaked his L calf Oct 20 on the 2-min intervals, logged it, but Thursday still showed intervals). An issue is ACTIVE from log until MANUALLY cleared (no 7-day auto-decay — quiet signal ≠ recovered); active state in localStorage `<athlete>_active_issues` (per-device; injury_logs history untouched). TARGETED suppression (Patrick's call): applyIssueGate() kills dedicated impact/running blocks by label (ISSUE_BLOCK_KILL /anchor|forward rung|sled|hop|plyo|jump|bound/ — WALK_BASE NOT matched) + strikes region-loading items in surviving blocks (ISSUE_ITEM_CUT), so a calf issue pulls Thursday's whole interval/sled anchor + Sunday's cuffed calf raise but KEEPS walking, bike, upper, squats, step-up, hamstring bridge. Prepends a built-in rehab block per region (ISSUE_REHAB: shin/calf = iso calf → eccentric heel raise (Alfredson) → tib/ankle → pain-free walk; foot, knee canned; others → issueFallbackBlock = Library rehab filter, "the program standard") + a Library rehab deep-link. Active-Issue banner at pain-gate prominence with a ✓ Mark-cleared button (clearIssue → confirm → re-render). saveInjuryLog now setActiveIssue + selectDay (immediate), getActiveInjuryPhase reads active issues (manual) not the 7-day decay. SEPARATE, additive gate — does NOT touch getBreaches/gateVerdictFor, so gate_test.js stays 28/28. node --check clean, ONE script, applyIssueGate unit-tested on real Thu/Sun/Mon block names. Non-lower-limb regions (back/hip/shoulder/other) show the banner + rehab-fallback + Library link but no automatic block cuts yet (back is already pain-gated). Suggested commit: `Patrick v7.9: active-Issue gate — logged issue gates the plan (targeted cut of what loads the region) + built-in region rehab block, manual-clear not auto-decay; separate from the pain gate` | v7.8 (Oct 18): two follow-ups on the v7.7 work. (1) SL-RDL NOT removed after all — restored to GYM_REENTRY as a GREEN-DAY UNLOCK (`greenOnly:true` item + a renderDay filter dropping greenOnly items unless no breach fires: !morning && !morningReduce && !nerve). The bent-knee iso bridge stays the always-on hamstring slot; the straight-leg RDL (nerve-tension pattern) surfaces only on a quiet-nerve day — earned, not default (Patrick's call). (2) Demo-source DEFAULT flipped Invidious → YouTube: yewtu.be searches fine but its video PLAYBACK is dead (instances proxy streams Google blocks → the Play icon just bounces back to YouTube, pure overhead), and Patrick's phone is Android where the real ad-free fix is device-level (NewPipe/LibreTube/Brave set to own youtube.com links). Plain YouTube is now the phone-friendly default; FreeTube stays the desktop toggle, Invidious still selectable for ad-free search. `demoSrc()` fallback + footer button initial label → YouTube. node --check + gate_test.js 28/28, green-day filter unit-checked, one-script rule intact. | v7.7 (Oct 18): LEG/BFR CONSOLIDATION + gentle hamstrings + AM-dizzy retired. (1) BFR_LEGS collapsed from three cuffed moves to ONE squat (split squat) + ONE calf — the cuffed step-up was also loaded Mon/Sat in GYM_REENTRY (triplicated), dropped; OCCLUSION_FINISHER (leg-press + calf, a leftover in one old hardcoded week) deleted — Patrick: "one version of squats + calf is fine, not two," BFR is "a bit much" at slow progression. (2) Gentle hamstring added: bent-knee isometric bridge (knee bent keeps the sciatic nerve slack, so the hamstring loads without SLR nerve tension; supine = zero axial load; isometric-first per Sanford/Aspetar). Replaced the Single-Leg RDL in GYM_REENTRY (RDL = straight-leg hip-hinge = the nerve-tension pattern) — hamstrings now hit Mon/Sat/Sun at the gentlest dose. (3) bfrThrottle(): on a flared day (today's logged pain AVERAGE >4/10, nerve+glute counted as ONE combined radicular term per Patrick) renderDay swaps BFR_LEGS→BFR_LEGS_LIGHT (squat dropped, one calf + hamstring hold). Separate, additive, downregulate-only — does NOT touch the tested two-key gate. (4) AM-dizzy metric retired (one-off syncope long resolved; benign positional lightheadedness is lifelong) — input removed from the log modal + Doctor Summary; historical rows kept & still render (ankle precedent). node --check + gate_test.js 28/28, bfrThrottle unit-tested, one-script rule intact. | v7.6 (Oct 18): per-device AD-FREE demo frontend — every demo/search link now routes through demoUrl(), keyed to a per-device localStorage pref (pt_demo_src): Invidious (default, yewtu.be — phone-verified ad-free; the YT app can't hijack a non-youtube.com domain) · FreeTube (freetube:// — desktop/Edge-verified, handles BOTH search and exact video) · plain YouTube (escape hatch). Footer "Demos ·" button cycles the source and repaints the day. Piped dropped (both public instances dead on Patrick's test). node --check + gate_test.js 28/28, one-script rule intact. | v7.5 (Oct 15): weekly load REDISTRIBUTED in the reentryWeek() factory per Patrick — Thursday stripped to the sled+intervals anchor ONLY (BFR removed from the anchor + movement-restoration pulled off; that stack was the exhausting part); UPPER_REENTRY pulled off Monday AND Saturday → Wednesday (leg-neutral, keeps Thursday's sled/4×4 fresh — Patrick's swap); BFR_LEGS → Sunday (low-load occlusion, 2 days clear of Thursday, not the day before it); Sunday now an active "Movement + Prehab" day, no longer full rest; heavy days (Mon/Sat) now lower + movement only. Nothing removed — only spread. One-script rule + node --check clean, gate_test.js 28/28 (gate untouched). | v7.4.2 (Oct 4): dropped "with Yari"/"+ Yari" from every canal/Thursday label — Patrick trains solo now (others welcome, not assumed); the tingling gate handler no longer prescribes retired standing extensions (now "get up and walk, change position"). · HOTFIX (Oct 4): an unescaped apostrophe (in "day's") inside a WEEKS focus: single-quoted string — added by the Oct 1 clinical-read edit — closed the string early → SyntaxError → the ENTIRE script block failed to parse → guide froze at the wave-position loader. Escaped it; node --check clean + gate_test.js 28/28. Root cause: the Oct 1 edit shipped without node --check, which catches exactly this. | v7.4 Two-key gate: ONE source of truth (gateVerdictFor) shared by the log modal and the plan builder, plus absolute walk/reduce limits no rolling median can override (a median CAP was built and then rejected — it compounds with the delta rule and re-creates the every-day-cancelled failure; see gate_test.js), gate chip now shows median · score · delta so a verdict is auditable. Re-Entry W2–W6 annotated with the actual post-TFESI course. Full changelog in CLAUDE.md File Inventory. -->
 <!-- CHANGELOG: v7.4 two-key gate (absolute backstop + capped median) · log modal and plan now share one verdict function · visible gate numbers · post-TFESI course recorded · v7.3 (Sep 4, committed unstamped under an old “v5.5–v5.8” numbering) rolling-baseline gates + Re-Entry W0–W6 + Thursday anchor / Friday recovery + BFR onto the sled + prone extension restored · v7.2 rehab toggle → Treatment + med-day demo links + label fix · v7.1 medium-day swap · v7.0 hybrid console + grouped 0–10 log + doctor summary + Nerve-umbrella + /10 gates · v6.x wave engine + governor -->
 
 <html lang="en">
@@ -3354,11 +3354,121 @@ function selectDay(idx){
 // ─────────────────────────────────────────
 // RENDER
 // ─────────────────────────────────────────
+// ─────────────────────────────────────────
+// v7.9 — ACTIVE-ISSUE GATE (Patrick, Oct 2026)
+// A logged Issue now gates the PLAN, not just the Library button. It is a SEPARATE, additive
+// gate — it never touches getBreaches()/gateVerdictFor() (the tested pain gate), so gate_test.js
+// stays green. An issue is ACTIVE from when it's logged until Patrick MANUALLY clears it
+// (no 7-day auto-decay — quiet signal ≠ recovered). Active state lives in localStorage
+// <athlete>_active_issues (per-device, like pt_dayover); injury_logs history is untouched.
+// Suppression is TARGETED (Patrick's call): cut only what loads the injured region; walking,
+// upper, bike and non-implicated work stay.
+const LIB_REHAB_URL = 'https://padraik99.github.io/sjr-system/SJR_Library_Master_v4_20260402.html?phase=phase-rehab,phase-bridge&intensity=intensity-sub';
+const REGION_LABEL = { back:'Back', hip:'Hip', knee:'Knee', shin:'Calf / shin', foot:'Foot / ankle', shoulder:'Shoulder', other:'Other' };
+const ISSUE_FAMILY = { shin:'lowerleg', foot:'lowerleg', knee:'knee', hip:'hip', back:'back', shoulder:'shoulder', other:'other' };
+// Kill whole dedicated impact/running blocks (by label); WALK_BASE ("Canal Walk…") is NOT matched.
+const ISSUE_BLOCK_KILL = {
+  lowerleg: /anchor|forward rung|sled|hop|plyo|jump|bound/i,
+  knee:     /anchor|forward rung|sled|hop|plyo|jump|bound/i,
+  hip:      /anchor|forward rung|sled|hop|plyo|jump|bound/i,
+};
+// Strike individual loading items inside surviving blocks (by item name).
+const ISSUE_ITEM_CUT = {
+  lowerleg: /calf raise|heel raise|\bhop\b|pogo|\bjump\b|bound|sprint|\bskip\b|a-?march|plyo|box jump|\brun\b|interval|sled/i,
+  knee:     /\bjump\b|\bhop\b|bound|sprint|plyo|box jump|pistol|deep squat|\blunge\b|\brun\b|interval|sled/i,
+  hip:      /sprint|\bjump\b|bound|plyo|\brun\b|interval|sled/i,
+};
+const ISSUE_CUT_MSG = {
+  lowerleg: 'Running, intervals, sled and hops/plyos (plus direct calf loading) are pulled while this is active — pain-free walking stays.',
+  knee:     'Running, jumps, deep-knee loading and sled are pulled while this is active.',
+  hip:      'Running, jumps and sled are pulled while this is active.',
+};
+// Built-in rehab blocks (Patrick: inline block + Library link). Regions without a canned block
+// fall back to issueFallbackBlock() → the Library rehab filter ("the exercise standard criteria").
+const ISSUE_REHAB = {
+  shin: { label:'Calf / Shin Rehab — Issue', cls:'green', items:[
+    {name:'Isometric calf raise — mid-range hold', note:'Rio analgesia: double-leg to start, progress to single-leg when quiet. Pain ≤2/10, nothing sharp.', dose:'5×30–45s'},
+    {name:'Eccentric heel raise — slow lower (Alfredson)', note:'up on both feet, slow 3s lower emphasising the sore side; add a bent-knee set for the soleus. Build range as it tolerates.', dose:'3×10–12 · straight + bent knee'},
+    {name:'Tibialis raise + ankle alphabet', note:'anterior/posterior balance + gentle mobility, no load into pain', dose:'2×15 + 1 min'},
+    {name:'Walk — pain-free only', note:'0.5–1 mi ONLY if no limp and pain ≤2/10 during and the next morning. Sharp pain or lingering next-day soreness = back off. Running stays off until you clear this.', dose:'0.5–1 mi'},
+  ], link:{ href:LIB_REHAB_URL, text:'Open rehab/bridge options in the Library →' } },
+  foot: { label:'Foot / Ankle Rehab — Issue', cls:'green', items:[
+    {name:'Isometric calf + intrinsic foot holds', note:'short-foot / arch doming + mid-range calf iso, pain ≤2/10', dose:'5×30s'},
+    {name:'Ankle CARs + alphabet', note:'controlled range, no load into pain', dose:'2 min'},
+    {name:'Towel / banded dorsiflexion + eversion', dose:'2×15'},
+    {name:'Walk — pain-free only', note:'flat ground, supportive shoe; stop at any sharp pain or limp', dose:'0.5–1 mi'},
+  ], link:{ href:LIB_REHAB_URL, text:'Open rehab/bridge options in the Library →' } },
+  knee: { label:'Knee Rehab — Issue', cls:'green', items:[
+    {name:'Isometric wall sit / Spanish squat', note:'Rio analgesia, mid-range, pain ≤2/10', dose:'5×30–45s'},
+    {name:'Short-range leg extension / step-down', note:'pain-free range only, slow eccentric', dose:'3×10'},
+    {name:'Glute med + hamstring support', note:'offload the knee by driving the hip', dose:'2×12'},
+    {name:'Walk / bike — pain-free', dose:'easy'},
+  ], link:{ href:LIB_REHAB_URL, text:'Open rehab/bridge options in the Library →' } },
+};
+function issueFallbackBlock(region){
+  return { label:'Rehab — ' + (REGION_LABEL[region] || region) + ' (Issue)', cls:'green', items:[
+    {name:'No built-in block for this region yet', note:'Pull rehab/bridge options from the Library using the program standard — isometric first for pain relief, then graded sub-maximal load as it settles.', dose:'—'},
+  ], link:{ href:LIB_REHAB_URL, text:'Open rehab/bridge options in the Library →' } };
+}
+function getActiveIssuesObj(){ try { return JSON.parse(localStorage.getItem(ATHLETE_ID + '_active_issues') || '{}'); } catch(e){ return {}; } }
+function getActiveIssues(){ const o = getActiveIssuesObj(); return Object.keys(o).map(r => Object.assign({ region:r }, o[r])); }
+function setActiveIssue(region, data){ const o = getActiveIssuesObj(); o[region] = data; localStorage.setItem(ATHLETE_ID + '_active_issues', JSON.stringify(o)); }
+function clearIssue(region){
+  if(!confirm('Mark this issue cleared?\nOnly do this once you are back under your pain-free markers.')) return;
+  const o = getActiveIssuesObj(); delete o[region]; localStorage.setItem(ATHLETE_ID + '_active_issues', JSON.stringify(o));
+  if(typeof updateInjuryGate === 'function') updateInjuryGate();
+  if(typeof selectDay === 'function') selectDay(selectedDay);
+}
+function fmtIssueDate(ds){
+  if(!ds || !/^\d{4}-\d{2}-\d{2}$/.test(ds)) return ds || '';
+  const p = ds.split('-'); const d = new Date(+p[0], +p[1]-1, +p[2]);
+  return d.toLocaleDateString('en-US',{ month:'short', day:'numeric' });
+}
+function activeFamilies(issues){ return issues.map(i => ISSUE_FAMILY[i.region] || 'other'); }
+function applyIssueGate(blocks, issues){
+  const fams = activeFamilies(issues);
+  const killRes = [], cutRes = [];
+  fams.forEach(f => { if(ISSUE_BLOCK_KILL[f]) killRes.push(ISSUE_BLOCK_KILL[f]); if(ISSUE_ITEM_CUT[f]) cutRes.push(ISSUE_ITEM_CUT[f]); });
+  if(!killRes.length && !cutRes.length) return blocks;
+  return blocks
+    .filter(b => !(b && b.label && killRes.some(re => re.test(b.label))))
+    .map(b => {
+      if(!b || !b.items) return b;
+      const items = b.items.filter(it => !cutRes.some(re => re.test(it.name)));
+      return items.length ? Object.assign({}, b, { items:items }) : null;
+    })
+    .filter(Boolean);
+}
+function issueRehabBlocks(issues){
+  const out = [], seen = {};
+  issues.forEach(i => {
+    const fam = ISSUE_FAMILY[i.region] || i.region;
+    if(seen[fam]) return; seen[fam] = 1;
+    out.push(ISSUE_REHAB[i.region] ? ISSUE_REHAB[i.region] : issueFallbackBlock(i.region));
+  });
+  return out;
+}
+function activeIssueBannerHtml(){
+  const issues = getActiveIssues();
+  if(!issues.length) return '';
+  return issues.map(i => {
+    const fam = ISSUE_FAMILY[i.region] || 'other';
+    const since = i.since ? ' · since ' + fmtIssueDate(i.since) : '';
+    const msg = ISSUE_CUT_MSG[fam] || 'Review today\'s plan against this issue — rehab options are below.';
+    return '<div class="hold-banner"><div style="font-size:1rem;flex-shrink:0">⚠</div><div class="hold-text">' +
+      '<strong>Active Issue — ' + escHtml(REGION_LABEL[i.region] || i.region) + since + '</strong>' +
+      escHtml(msg) + ' Rehab is below; this stays until you clear it. ' +
+      '<button class="ex-video-link" style="margin-top:.4rem" onclick="clearIssue(\'' + i.region + '\')">✓ Mark cleared</button>' +
+      '</div></div>';
+  }).join('');
+}
+
 function renderDay(idx){
   RENDER_NAMES = [];
   const week = WEEKS[currentWeek];
   const day = week.days[idx];
   const breaches = getBreaches();
+  const activeIssues = getActiveIssues();
   const effectiveType = getDayType(day.type);
   const modifier = getLoadModifier();
   const weekStart = currentWeekStart();
@@ -3385,6 +3495,9 @@ function renderDay(idx){
   html += `<div class="day-intent">${day.intent}</div>`;
   html += `<div class="day-sub" style="color:var(--accent2);font-size:0.78rem;margin-bottom:0.2rem">${dateLabel}</div>`;
   html += `<div class="day-sub">${day.sub}</div>`;
+
+  // v7.9: active-Issue banner — same prominence as a pain-gate override, shows the targeted cut + Mark-cleared
+  html += activeIssueBannerHtml();
 
   // Override banners
   if(breaches.morning && !day.rest){
@@ -3454,6 +3567,12 @@ function renderDay(idx){
       if(ov.added.length){
         blocks = blocks.concat([{label:'Added Today', cls:'accent', items: ov.added, userAdded:true}]);
       }
+    }
+    // v7.9: active-Issue gate — targeted cut of what loads the injured region + prepend its rehab
+    // block. Additive and separate from the pain gate (getBreaches/gateVerdictFor untouched).
+    if(activeIssues.length){
+      blocks = applyIssueGate(blocks, activeIssues);
+      blocks = issueRehabBlocks(activeIssues).concat(blocks);
     }
     html += buildBlocksHtml(blocks, idx, {editable: isToday && editDayMode, removed: removedNames});
     if(isToday){
@@ -4334,19 +4453,19 @@ async function saveInjuryLog(){
     });
     showSyncStatus('saved');
   } catch(e){ showSyncStatus('offline'); }
+  // v7.9: mark the issue ACTIVE (manual-clear, no auto-decay) so it gates the plan + re-render today
+  setActiveIssue(entry.region, { since: entry.date, severity: entry.severity, note: entry.description, ts: entry.ts });
   closeInjuryModal();
   updateInjuryGate();
+  if(typeof selectDay === 'function') selectDay(selectedDay);
 }
 
+// v7.9: Library-button filter now reflects the MANUALLY-active issues (was a 7-day severity decay).
 function getActiveInjuryPhase(){
-  const now = Date.now();
-  const recent = injuryLogs.filter(l => {
-    const age = (now - new Date(l.date).getTime()) / 86400000;
-    return age <= 7 && l.severity >= 3;
-  });
-  if(!recent.length) return null;
-  if(recent.some(l => ['knee','shin','foot'].includes(l.region))) return 'phase-rehab,phase-bridge';
-  if(recent.some(l => l.severity >= 4)) return 'phase-rehab,phase-bridge';
+  const active = getActiveIssues();
+  if(!active.length) return null;
+  if(active.some(i => ['knee','shin','foot'].includes(i.region))) return 'phase-rehab,phase-bridge';
+  if(active.some(i => i.severity >= 4)) return 'phase-rehab,phase-bridge';
   return 'phase-bridge,phase-gpp';
 }
 
