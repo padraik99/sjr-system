@@ -1,0 +1,997 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; connect-src 'none'; img-src 'self' data:;">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Patrick — Active Flare Protocol</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=IBM+Plex+Mono:wght@300;400;500&family=IBM+Plex+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0f0f0e;
+    --surface: #1a1a18;
+    --surface2: #222220;
+    --border: #2e2e2a;
+    --accent: #c8a96e;
+    --accent2: #7eb8a4;
+    --accent3: #c87e7e;
+    --text: #e8e4dc;
+    --text-muted: #8a8680;
+    --text-dim: #5a5855;
+    --green: #7eb87e;
+    --yellow: #c8b46e;
+    --red: #c87e7e;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-weight: 300;
+    line-height: 1.7;
+    min-height: 100vh;
+  }
+
+  .header {
+    padding: 3rem 2rem 2rem;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .header::before {
+    content: '';
+    position: absolute;
+    top: -80px; right: -80px;
+    width: 300px; height: 300px;
+    background: radial-gradient(circle, rgba(200,169,110,0.08) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .header-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    margin-bottom: 0.75rem;
+  }
+
+  .header h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-weight: 900;
+    line-height: 1.1;
+    color: var(--text);
+    margin-bottom: 0.5rem;
+  }
+
+  .header h1 span { color: var(--accent); }
+
+  .header-sub {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    letter-spacing: 0.05em;
+  }
+
+  .status-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border);
+  }
+
+  .status-pill {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.62rem;
+    letter-spacing: 0.08em;
+    padding: 0.3rem 0.75rem;
+    border-radius: 2px;
+    text-transform: uppercase;
+  }
+
+  .pill-warn { background: rgba(200,169,110,0.12); color: var(--accent); border: 1px solid rgba(200,169,110,0.25); }
+  .pill-ok { background: rgba(126,184,126,0.12); color: var(--green); border: 1px solid rgba(126,184,126,0.25); }
+  .pill-alert { background: rgba(200,126,126,0.12); color: var(--red); border: 1px solid rgba(200,126,126,0.25); }
+
+  nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(15,15,14,0.96);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 2rem;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+
+  nav ul { list-style: none; display: inline-flex; gap: 0; }
+
+  nav a {
+    display: block;
+    padding: 0.85rem 1rem;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.62rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    text-decoration: none;
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s;
+  }
+
+  nav a:hover { color: var(--accent); border-bottom-color: var(--accent); }
+
+  main { max-width: 900px; margin: 0 auto; padding: 2rem; }
+
+  section { margin-bottom: 3.5rem; }
+
+  .section-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.58rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 0.4rem;
+  }
+
+  h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 1.25rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  h3 {
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 0.78rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin: 1.75rem 0 0.75rem;
+  }
+
+  p { color: var(--text-muted); margin-bottom: 0.75rem; font-size: 0.88rem; }
+  strong { color: var(--text); font-weight: 500; }
+
+  ul.plain, ol.plain { margin: 0.5rem 0 0.75rem 1.25rem; }
+  ul.plain li, ol.plain li { color: var(--text-muted); font-size: 0.85rem; margin-bottom: 0.35rem; }
+  ul.plain li strong, ol.plain li strong { color: var(--text); }
+
+  .clinical-box {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent);
+    padding: 1.25rem 1.5rem;
+    margin: 1rem 0;
+    border-radius: 0 2px 2px 0;
+  }
+
+  .clinical-box.green { border-left-color: var(--green); }
+  .clinical-box.red { border-left-color: var(--red); }
+  .clinical-box.blue { border-left-color: var(--accent2); }
+
+  .clinical-box .box-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.58rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 0.5rem;
+  }
+
+  .phase-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1rem;
+    margin: 1rem 0;
+  }
+
+  .phase-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 1.25rem;
+    border-radius: 2px;
+    position: relative;
+  }
+
+  .phase-card::before {
+    content: attr(data-phase);
+    position: absolute;
+    top: -1px; right: 1rem;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.58rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    padding: 0.2rem 0.5rem;
+    background: var(--bg);
+    color: var(--text-dim);
+    border: 1px solid var(--border);
+    border-top: none;
+  }
+
+  .phase-card.active { border-color: var(--accent); }
+  .phase-card.active::before { color: var(--accent); }
+  .phase-card.locked { opacity: 0.55; }
+  .phase-card.locked::before { color: var(--text-dim); }
+
+  .phase-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.1rem;
+    color: var(--text);
+    margin-bottom: 0.4rem;
+  }
+
+  .phase-duration {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.62rem;
+    color: var(--text-dim);
+    margin-bottom: 0.75rem;
+  }
+
+  .phase-card p { font-size: 0.82rem; }
+
+  .ex-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1rem 0;
+    font-size: 0.82rem;
+  }
+
+  .ex-table th {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.58rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    text-align: left;
+    padding: 0.5rem 0.75rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .ex-table td {
+    padding: 0.65rem 0.75rem;
+    border-bottom: 1px solid rgba(46,46,42,0.5);
+    color: var(--text-muted);
+    vertical-align: top;
+  }
+
+  .ex-table tr:hover td { background: rgba(26,26,24,0.6); }
+  .ex-table td:first-child { color: var(--text); font-weight: 400; }
+
+  .flag {
+    display: inline-block;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.52rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 0.12rem 0.35rem;
+    border-radius: 2px;
+    margin-left: 0.4rem;
+    vertical-align: middle;
+  }
+
+  .flag-new { background: rgba(126,184,164,0.15); color: var(--accent2); border: 1px solid rgba(126,184,164,0.3); }
+  .flag-mod { background: rgba(200,180,110,0.15); color: var(--yellow); border: 1px solid rgba(200,180,110,0.3); }
+  .flag-hold { background: rgba(200,126,126,0.15); color: var(--red); border: 1px solid rgba(200,126,126,0.3); }
+  .flag-keep { background: rgba(126,184,126,0.1); color: var(--green); border: 1px solid rgba(126,184,126,0.25); }
+
+  .day-grid { display: grid; gap: 0.6rem; margin: 1rem 0; }
+
+  .day-row {
+    display: grid;
+    grid-template-columns: 130px 1fr;
+    gap: 1rem;
+    align-items: start;
+  }
+
+  .day-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.68rem;
+    color: var(--accent);
+    letter-spacing: 0.08em;
+    padding-top: 0.75rem;
+  }
+
+  .day-content {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 0.75rem 1rem;
+    font-size: 0.82rem;
+    color: var(--text-muted);
+    border-radius: 2px;
+    line-height: 1.6;
+  }
+
+  .highlight-box {
+    background: linear-gradient(135deg, rgba(126,184,164,0.07) 0%, rgba(126,184,164,0.02) 100%);
+    border: 1px solid rgba(126,184,164,0.22);
+    border-radius: 2px;
+    padding: 1.5rem;
+    margin: 1rem 0;
+  }
+
+  .highlight-box h3 { margin-top: 0; color: var(--accent2); }
+
+  .gate {
+    display: flex;
+    gap: 1.25rem;
+    align-items: flex-start;
+    padding: 1rem 1.25rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    margin-bottom: 0.6rem;
+    border-radius: 2px;
+  }
+
+  .gate.light-green { border-left: 3px solid var(--green); }
+  .gate.light-yellow { border-left: 3px solid var(--yellow); }
+  .gate.light-red { border-left: 3px solid var(--red); }
+
+  .gate-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem;
+    line-height: 1;
+    min-width: 1.8rem;
+  }
+
+  .light-green .gate-num { color: var(--green); }
+  .light-yellow .gate-num { color: var(--yellow); }
+  .light-red .gate-num { color: var(--red); }
+
+  .gate-content { flex: 1; }
+  .gate-title { font-size: 0.85rem; font-weight: 500; color: var(--text); margin-bottom: 0.3rem; }
+  .gate-desc { font-size: 0.8rem; color: var(--text-muted); }
+
+  .med-row {
+    display: grid;
+    grid-template-columns: 150px 1fr 110px;
+    gap: 1rem;
+    padding: 0.85rem 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 0.82rem;
+    align-items: start;
+  }
+
+  .med-name { color: var(--text); font-weight: 500; line-height: 1.4; }
+  .med-note { color: var(--text-muted); font-size: 0.8rem; }
+  .med-status { font-family: 'IBM Plex Mono', monospace; font-size: 0.62rem; text-align: right; line-height: 1.6; }
+
+  .timeline { position: relative; padding-left: 2rem; margin: 1rem 0; }
+
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 0.4rem; top: 0.5rem; bottom: 0.5rem;
+    width: 1px;
+    background: var(--border);
+  }
+
+  .tl-item { position: relative; margin-bottom: 1.75rem; }
+
+  .tl-item::before {
+    content: '';
+    position: absolute;
+    left: -1.65rem; top: 0.42rem;
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--border);
+    border: 2px solid var(--bg);
+  }
+
+  .tl-item.current::before { background: var(--accent); }
+  .tl-item.future::before { background: var(--accent2); }
+  .tl-item.goal::before { background: var(--green); }
+
+  .tl-time {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.1em;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    margin-bottom: 0.2rem;
+  }
+
+  .tl-title { font-size: 0.9rem; font-weight: 500; color: var(--text); margin-bottom: 0.25rem; }
+  .tl-desc { font-size: 0.8rem; color: var(--text-muted); }
+
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 2rem;
+    margin-top: 3rem;
+    text-align: center;
+  }
+
+  footer p {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.08em;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    margin-bottom: 0.4rem;
+  }
+
+  ::-webkit-scrollbar { width: 4px; height: 4px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+  @media (max-width: 600px) {
+    .day-row { grid-template-columns: 1fr; gap: 0.2rem; }
+    .day-label { padding-top: 0; }
+    .med-row { grid-template-columns: 1fr; }
+    .med-status { text-align: left; }
+    main { padding: 1rem; }
+    .header { padding: 2rem 1rem 1.5rem; }
+    nav { padding: 0 0.5rem; }
+  }
+
+  .fab-weekly {
+    position: fixed;
+    bottom: 2rem;
+    right: 1.5rem;
+    z-index: 200;
+    background: var(--accent);
+    color: var(--bg);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.68rem;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    text-decoration: none;
+    padding: 0.75rem 1.1rem;
+    border-radius: 3px;
+    box-shadow: 0 4px 20px rgba(200,169,110,0.3);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.2s;
+  }
+  .fab-weekly:hover {
+    background: #d4b87a;
+    box-shadow: 0 6px 28px rgba(200,169,110,0.45);
+    transform: translateY(-1px);
+  }
+  .fab-weekly::before {
+    content: '→';
+    font-size: 0.9rem;
+  }
+</style>
+</head>
+<body>
+
+<div style="background:#2a1a1a;border-bottom:2px solid #c87e7e;color:#e8e4dc;font-family:'IBM Plex Sans',sans-serif;padding:1rem 2rem;line-height:1.6;">
+  <strong style="color:#c87e7e;font-family:'IBM Plex Mono',monospace;letter-spacing:.08em;text-transform:uppercase;font-size:.72rem;">⚠ Archived — do not follow for daily rehab</strong><br>
+  This is the <strong>July 2026, pre-MRI</strong> protocol: extension-bias, standing extensions, a "no flexion" exclusions table, and a Jul-8 medication schedule. The <strong>Jul 28 MRI</strong> relocated the problem to the lateral recess — <strong>flexion is now the therapeutic direction</strong> — and the meds have changed since (Oct 2026). Both the exercise plan and the med table below are out of date. Kept only for clinical history. For current daily rehab use the living doc → <a href="patrick-flare-cheatcard-v2-20260904.html" style="color:#7eb8a4;">Rehab — Daily Cheat Card →</a>
+</div>
+
+<header class="header">
+  <div class="header-label">Sprint · Jump · Resilience — Individual Protocol</div>
+  <h1>Patrick — <span>Active Flare</span> Protocol</h1>
+  <div class="header-sub">9 mo post-surfing injury (Oct 2025) · Re-flare Jun 19, 2026 · Phase 1 — Extension Bias / Centralization</div>
+  <div class="status-bar">
+    <span class="status-pill pill-alert">L4–L5 / L5-S1 — Active Flare</span>
+    <span class="status-pill pill-warn">Morning Pain 8–9/10</span>
+    <span class="status-pill pill-warn">PM Wall 5:30–6:30pm</span>
+    <span class="status-pill pill-warn">Toe Tingling — Lessened, Still Present</span>
+    <span class="status-pill pill-ok">Medrol — Completed Jul 8</span>
+    <span class="status-pill pill-ok">Bansal — Seen Jul 8 ✓</span>
+    <span class="status-pill pill-alert">Kataria (Pain Mgmt) — Jul 28</span>
+  </div>
+</header>
+
+<nav>
+  <ul>
+    <li><a href="patrick-flare-cheatcard-20260709.html" style="color:var(--accent);">▤ Cheat Card</a></li>
+    <li><a href="#status">Status</a></li>
+    <li><a href="#tingling" style="color:var(--accent3);">⚠ Toe Tingling — New</a></li>
+    <li><a href="#medrol">Medrol Taper</a></li>
+    <li><a href="#phase1">Phase 1 Protocol</a></li>
+    <li><a href="#deadhang">Dead Hangs</a></li>
+    <li><a href="#sciatic">Sciatic Glide</a></li>
+    <li><a href="#nexwave">NexWave TENS</a></li>
+    <li><a href="#canal">Canal Walk</a></li>
+    <li><a href="#exclusions">Exclusions</a></li>
+    <li><a href="#phase2">Phase 2</a></li>
+    <li><a href="#trafficlight">Traffic Light</a></li>
+  </ul>
+</nav>
+
+<main>
+
+  <section id="status">
+    <div class="section-label">01 — Current Picture</div>
+    <h2>Status</h2>
+
+    <p>Nine months post L4–L5 foraminal narrowing / L5-S1 nerve root compression (surfing incident, October 2025). A major re-flare hit June 19 from cumulative training load — coaching Yari, a soccer session, and sauna dehydration stacked in the same window. This followed real progress: training had advanced to VO2 max intervals and moderate lifting before the flare. This page governs training and self-care while the flare is active — it does not replace or override the clinical picture in the March protocol doc, which predates this flare and needs its own refresh once Bansal/Kataria weigh in.</p>
+
+    <div class="clinical-box red">
+      <div class="box-label">Pain Distribution</div>
+      <ul class="plain">
+        <li><strong>Left glute / piriformis</strong> (primary) — burning, fiery</li>
+        <li><strong>Lateral + posterior calf</strong> (primary) — pressure, pre-cramp sensation</li>
+        <li><strong>Lateral malleolus</strong> (primary) — S1 dermatome band</li>
+        <li><strong>Bilateral low back ache</strong> (secondary) — right side is compensatory from left-side loading, not an independent problem</li>
+      </ul>
+      <p style="margin-bottom:0;">No motor deficit changes. Morning is worst (8–9/10, forcing out of bed 5–6am); afternoon is manageable until the wall hits 5:30–6:30pm; sleep fragments with waking 2–3am nightly. <strong>That 2–3am wake is pain-driven, not urge-driven</strong> — don't let it get miscoded as nocturia when describing it to Bansal.</p>
+    </div>
+
+    <h3>Care Team &amp; Next Steps</h3>
+    <table class="ex-table">
+      <thead>
+        <tr><th>Who</th><th>Role</th><th>Next</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Dr. Kataria</td>
+          <td>Pain management</td>
+          <td>Performed the piriformis injection and the medial branch block (30% relief, 4hr — insufficient for RFA candidacy). <strong>Jul 28</strong></td>
+        </tr>
+        <tr>
+          <td>Dr. Bansal</td>
+          <td>GP</td>
+          <td><strong>Jul 8</strong> — full agenda below</td>
+        </tr>
+        <tr>
+          <td>Matt</td>
+          <td>PT</td>
+          <td>After Jul 28 — waiting on Kataria's signal before resuming</td>
+        </tr>
+        <tr>
+          <td>NP friend</td>
+          <td>Informal bridge</td>
+          <td>Prescribed the Medrol dose pack as a bridge intervention</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="clinical-box blue">
+      <div class="box-label">Resolved at the Jul 8 Visit</div>
+      <p>The earlier baclofen + gabapentin stack (a covering-physician misread of "replace" as "add") is being unwound: baclofen is now swapped out for cyclobenzaprine. The Kaiser fragmented-care lesson still holds — each handoff needs the explicit ask spelled out — and the gabapentin-efficacy question (see Kataria agenda) survived the visit unaddressed, so it carries to the 28th.</p>
+    </div>
+
+    <div class="clinical-box">
+      <div class="box-label">Medication Evidence Base</div>
+      <p>Baclofen + gabapentin together have weak-to-absent guideline support specifically for radiculopathy. <strong>TCAs (amitriptyline) are the most guideline-supported pharmacological class for radiculopathy</strong> (Finnerup et al., <em>Lancet Neurology</em> 2015; NICE NG59) — which is the actual argument for the amitriptyline ask on the 8th, not just a sleep-aid swap.</p>
+    </div>
+
+    <div class="clinical-box blue">
+      <div class="box-label">Open Thread — Tamsulosin / Neurogenic Bladder</div>
+      <p>Tamsulosin is currently a symptomatic prescription only — no formal urodynamic workup has been done. Given the L4–L5 compression level, there's a plausible neurogenic component that's never been clinically explored. Raise with Kataria on the 28th; may warrant a urology referral.</p>
+    </div>
+
+    <div class="clinical-box green">
+      <div class="box-label">Bansal Visit — Outcome (Jul 8, 2026)</div>
+      <p><strong>Cyclobenzaprine (Flexeril) 10mg</strong>, up to 3×/day, prescribed as the sleep / muscle-relaxant agent — and it <strong>replaces baclofen</strong> (not stacked on top). Ibuprofen <strong>resumed</strong> now the Medrol course is done. Gabapentin was <strong>increased</strong> (headroom to 800–900mg if needed) rather than replaced — Bansal was not interested in the gabapentin-efficacy discussion. He noted he's written only 1–2 TCA scripts in ~15 years over side effects (dry mouth in particular) — worth flagging that cyclobenzaprine is itself a TCA relative carrying the same anticholinergic / dry-mouth liability, which matters given the LPR.</p>
+    </div>
+
+    <div class="clinical-box">
+      <div class="box-label">Current Medication Schedule (effective Jul 8)</div>
+      <table class="ex-table">
+        <thead><tr><th>Time</th><th>Medication</th><th>Note</th></tr></thead>
+        <tbody>
+          <tr><td>~6am</td><td>Ibuprofen 400mg</td><td><span class="flag flag-keep">Resumed</span></td></tr>
+          <tr><td>9am</td><td>Gabapentin 100mg + Famotidine ½ tab</td><td></td></tr>
+          <tr><td>11am</td><td>Tylenol 1000mg</td><td></td></tr>
+          <tr><td>3pm</td><td>Gabapentin 100mg + Ibuprofen 400mg</td><td></td></tr>
+          <tr><td>6pm</td><td>Tamsulosin 0.4mg</td><td></td></tr>
+          <tr><td>7–8pm</td><td>Famotidine full tab</td><td></td></tr>
+          <tr><td>~9pm</td><td>Gabapentin 400mg</td><td>Before cyclobenzaprine (pharmacist) — and ~2h before magnesium</td></tr>
+          <tr><td>11pm</td><td>Cyclobenzaprine 10mg + Magnesium glycinate + Tylenol 1000mg</td><td><span class="flag flag-new">New</span> bedtime finisher — replaces baclofen</td></tr>
+          <tr><td>3am PRN</td><td>Tylenol 1000mg</td><td></td></tr>
+        </tbody>
+      </table>
+      <p style="margin-bottom:0;"><strong>Daytime muscle relaxation</strong> — add only if the bedtime cyclobenzaprine's ~18h carryover isn't enough: prefer <strong>baclofen 5mg</strong> (less sedating, not anticholinergic, and it tapers you off baclofen rather than stopping cold) over a daytime ½-tab of cyclobenzaprine. <strong>Gabapentin held at 600mg</strong> for now — one change at a time during the Medrol washout. Flag any daytime-baclofen plan to the pharmacist, since it deviates from the clean swap. <strong>Keep gabapentin and magnesium ≥2h apart</strong> — magnesium binds gabapentin in the gut and reduces its absorption, so magnesium rides with the 11pm finisher, ~2h after the 9pm gabapentin.</p>
+    </div>
+
+    <h3>Jul 8 — Bansal Agenda (as presented) → outcome in the box above</h3>
+    <ol class="plain" style="list-style:decimal;">
+      <li>Sleep aid: <strong>cyclobenzaprine 5–10mg</strong> preferred, amitriptyline 10–25mg second, tizanidine third — frame as <strong>replacing</strong> gabapentin, not stacking.</li>
+      <li>Syncope (Jun 20) was situational — dehydration, diphenhydramine, acute pain, empty stomach, early morning hypotension. No recurrence. Not a standing fall risk.</li>
+      <li>Baclofen + gabapentin stack carries more sedation risk than amitriptyline alone would.</li>
+      <li>Extended NSAID use with LPR — famotidine timing optimization, possible switch to naproxen.</li>
+      <li>Medrol course started Jul 3 — inform Bansal, bring response data.</li>
+      <li>Tamsulosin — was a neurogenic bladder component ever assessed given the L4–L5 level? Ask for a urology referral / urodynamic workup.</li>
+      <li>Bring Medisafe screenshots, June 19 forward.</li>
+    </ol>
+
+    <h3>Jul 28 — Kataria Agenda</h3>
+    <ol class="plain" style="list-style:decimal;">
+      <li>Medrol response — <strong>partial / muted</strong>: toe tingling lessened but pain stayed leg- and glute-dominant (no clean centralization). Frame it honestly — a partial systemic-steroid response still supports a nerve-root-edema component and makes a <strong>targeted transforaminal ESI</strong> worth revisiting. Bring the days 7–10 post-taper rebound data.</li>
+      <li><strong>Gabapentin efficacy — reopen the conversation Bansal declined.</strong> Gabapentinoids underperform for radicular pain at the group level; bring the evidence packet (Mathieson / PRECISE 2017, Enke / CMAJ 2018, NICE NG59) and ask whether the increased dose is earning its keep for the leg specifically, or should be tapered toward a TCA trial.</li>
+      <li>Neurogenic bladder question — urinary symptoms never connected to the spinal pathology. Request a urodynamic assessment or urology referral.</li>
+      <li>Sleep disruption severity — fragmented since Jun 19, actively amplifying pain perception. A clinical variable Kataria needs, not just a comfort complaint. (Cyclobenzaprine started Jul 8 as the sleep / relaxant agent.)</li>
+      <li>NexWave response data — bring the log.</li>
+      <li>PT pathway — Matt is waiting on Kataria's signal before resuming.</li>
+    </ol>
+
+    <p style="font-size:0.8rem;">Daily pain/response tracking lives in the <strong>Pain Log</strong> in the Weekly Guide (＋Log) — Overnight Pain, Toe Tingle, and AM Dizzy are now logged there alongside Back/Nerve/Glute/Ankle, synced to Supabase like everything else. That's the source of truth for trend data going into both appointments, not this page.</p>
+  </section>
+
+  <section id="tingling">
+    <div class="section-label">01b — New Development</div>
+    <h2>Toe Tingling <span style="color:var(--red);font-family:'IBM Plex Mono',monospace;font-size:0.6rem;letter-spacing:0.1em;">NEW · JUL 2</span></h2>
+
+    <div class="clinical-box red">
+      <div class="box-label">What's New</div>
+      <p>Toe tingling with sustained sitting — <strong>big toe primary (L5)</strong>, diffuse secondary (L5-S1 overlap). Position-dependent: resolves with standing. Consistent with the confirmed pathology, not a new diagnosis — but it's a <strong>progression marker</strong> since the June 19 flare. Reported to Bansal on Jul 8. <strong>Status as of Jul 8:</strong> lessened during the Medrol course but not fully resolved; still position-dependent.</p>
+    </div>
+
+    <div class="clinical-box">
+      <div class="box-label">Rule</div>
+      <p>Tingling → <strong>stand immediately + 10 standing extensions.</strong> (Freeway excepted — use judgment, don't create a driving hazard.)</p>
+    </div>
+
+    <div class="clinical-box blue">
+      <div class="box-label">What the Medrol Response Told Us</div>
+      <p>The tingling lessened but didn't clear during the course — a partial signal that the nerve-root edema component is real but not the whole story. That still supports revisiting ESI with Kataria as targeted delivery of the same anti-inflammatory mechanism, just at higher local concentration. Keep logging it (position, side, post-taper day) — the days 7–10 rebound is now the informative window.</p>
+    </div>
+  </section>
+
+  <section id="medrol">
+    <div class="section-label">01c — Bridge Intervention</div>
+    <h2>Medrol Dose Pack</h2>
+
+    <table class="ex-table">
+      <thead>
+        <tr><th>Parameter</th><th>Detail</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Starts</td>
+          <td><strong>July 3, 2026</strong></td>
+        </tr>
+        <tr>
+          <td>Schedule</td>
+          <td>Standard 6-day taper — 6/5/4/3/2/1 tablets, all doses <strong>before noon</strong></td>
+        </tr>
+        <tr>
+          <td>Ibuprofen</td>
+          <td><span class="flag flag-keep">Resumed Jul 8</span> — suspended only for the course; back in at ~6am / 3pm</td>
+        </tr>
+        <tr>
+          <td>Famotidine</td>
+          <td><span class="flag flag-keep">Continues</span> — GI protection stays in place</td>
+        </tr>
+        <tr>
+          <td>Prescriber</td>
+          <td>NP friend, informal bridge intervention</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="clinical-box green">
+      <div class="box-label">Course Completed Jul 8 — Response (Partial / Muted)</div>
+      <p>Toe tingling <strong>lessened but did not resolve</strong>; pain stayed <strong>leg- and glute-dominant</strong> rather than centralizing to the back — equivocal, not a clean centralization. Read correctly, a <em>partial</em> response to systemic steroid still supports a steroid-responsive inflammatory / nerve-root-edema component — the argument for a <strong>targeted transforaminal ESI</strong> at Kataria. <strong>Watch days 7–10 post-taper for rebound</strong>: leg / tingling symptoms returning as the steroid washes out would further confirm the inflammatory component. Analogy: the oral course watered the whole garden and the dry patch improved a little — the ESI is the drip line aimed at that one root.</p>
+    </div>
+  </section>
+
+  <section id="phase1">
+    <div class="section-label">02 — Active Protocol</div>
+    <h2>Phase 1 — Active Flare Protocol</h2>
+
+    <div class="highlight-box">
+      <h3>Governing Principle</h3>
+      <p><strong>Extension bias. No flexion. McKenzie centralization.</strong> Every exercise below either opens the foramen (extension) or mobilizes the nerve root without loading it (glide). Nothing in this phase compresses, flexes, or stretches tissue around the compression site. Pacing and position-cycling throughout the day is normal nervous system behavior during a flare — not a discipline failure.</p>
+    </div>
+
+    <h3>Morning Sequence <span style="color:var(--text-dim);font-weight:400;">— post-walk, tissues warm</span></h3>
+    <table class="ex-table">
+      <thead>
+        <tr><th>Order</th><th>Exercise</th><th>Dose</th><th>Notes</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>1</td>
+          <td>Dead Hangs</td>
+          <td>30–60s, 2–3 sets</td>
+          <td>Outdoor structure, established routine. Pre-extension decompression — see rationale below.</td>
+        </tr>
+        <tr>
+          <td>2</td>
+          <td>Prone Lying — Passive</td>
+          <td>3–5 min</td>
+          <td>Pillow under chest.</td>
+        </tr>
+        <tr>
+          <td>3</td>
+          <td>Prone Press-Ups</td>
+          <td>10 reps, 1–2 sets</td>
+          <td>Hips stay down — passive lumbar sag, not an active extension push.</td>
+        </tr>
+        <tr>
+          <td>4</td>
+          <td>Sciatic Nerve Glide</td>
+          <td>5 reps ea side</td>
+          <td>Supine hook lying, tension not pain, left extra cautious — full instructions in the dedicated section below.</td>
+        </tr>
+        <tr>
+          <td>5</td>
+          <td>Standing Extensions</td>
+          <td>10 reps</td>
+          <td>Hands on lower back.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>Throughout the Day</h3>
+    <div class="day-grid">
+      <div class="day-row">
+        <div class="day-label">Every 1–2 hrs</div>
+        <div class="day-content">Standing extensions × 10. Position/pacing cycling between sitting, standing, and walking is expected nervous-system behavior during a flare — not something to override.</div>
+      </div>
+    </div>
+
+    <h3>Afternoon <span style="color:var(--text-dim);font-weight:400;">— ~4pm, before the wall</span></h3>
+    <div class="day-grid">
+      <div class="day-row">
+        <div class="day-label">~4:00–4:30pm</div>
+        <div class="day-content">
+          NexWave TENS session, 20–25 min (see below) → Prone lying passive repeat → Standing extensions × 10
+        </div>
+      </div>
+    </div>
+
+    <h3>Evening <span style="color:var(--text-dim);font-weight:400;">— 30–45 min before bed</span></h3>
+    <table class="ex-table">
+      <thead>
+        <tr><th>Exercise</th><th>Dose</th><th>Notes</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Prone Press-Ups</td>
+          <td>8–10 reps, reduced ROM</td>
+          <td>Lighter than the morning set.</td>
+        </tr>
+        <tr>
+          <td>Diaphragmatic Breathing — Prone</td>
+          <td>10 breaths</td>
+          <td>4 in, hold 2, 6 out.</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section id="deadhang">
+    <div class="section-label">03 — Rationale</div>
+    <h2>Dead Hang Sequencing</h2>
+
+    <div class="clinical-box blue">
+      <div class="box-label">Why Dead Hangs Come First</div>
+      <p>A dead hang applies gentle axial traction to the spine — the opposite loading direction of standing or sitting. That traction transiently increases intervertebral disc height and foraminal dimension, the same mechanical target the extension work is chasing, but through decompression rather than active extension. Doing this <strong>before</strong> prone lying and press-ups means the extension work that follows is happening on a foramen that's already been given a moment of relief, rather than one still under the morning's accumulated compressive load from sleep position and the walk over.</p>
+    </div>
+
+    <p>This is why dead hangs are step one, not an afterthought — they set up everything that follows in the sequence rather than standing alone.</p>
+  </section>
+
+  <section id="sciatic">
+    <div class="section-label">04 — Neural Mobility</div>
+    <h2>Sciatic Nerve Glide</h2>
+
+    <table class="ex-table">
+      <thead>
+        <tr><th>Step</th><th>Instruction</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Position</td>
+          <td>Supine, hook lying (knees bent, feet flat)</td>
+        </tr>
+        <tr>
+          <td>Movement</td>
+          <td>Slow straight leg raise to the point of <strong>tension, not pain</strong></td>
+        </tr>
+        <tr>
+          <td>Hold</td>
+          <td>5 seconds</td>
+        </tr>
+        <tr>
+          <td>Volume</td>
+          <td>5 reps each side</td>
+        </tr>
+        <tr>
+          <td>Side note</td>
+          <td>Left side — extra cautious. Go slower, stop earlier.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="clinical-box red">
+      <div class="box-label">Stop Criteria</div>
+      <p><strong>Stop immediately</strong> if calf or ankle symptoms increase during or after the set. A glide should mobilize the nerve through its available range without provoking it — any increase in distal symptoms means the range or the day isn't right for this exercise. Skip it and reassess tomorrow rather than pushing through.</p>
+    </div>
+  </section>
+
+  <section id="nexwave">
+    <div class="section-label">05 — Intervention Device</div>
+    <h2>NexWave TENS Protocol</h2>
+
+    <p>Friend's prescription-class Zynex NexWave unit. The manufacturer's own placement diagram confirms: <strong>low back with leg pain = TENS mode only</strong>, not IFC. Wife places the pads for the lumbar zone.</p>
+
+    <table class="ex-table">
+      <thead>
+        <tr><th>Parameter</th><th>Setting</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Pad placement — lumbar</td>
+          <td>2 lower back paraspinal at L4–L5 (upper CH1/CH2 pads drop to L3 level), 2 left glute following the sciatic path. Wife places the lumbar pads.</td>
+        </tr>
+        <tr>
+          <td>Pad placement — calf/ankle (Zone 3)</td>
+          <td>When the lateral malleolus is active: 3-pad setup — upper lateral calf, lower lateral calf, lateral malleolus (S1). All mirrored to the <strong>left</strong> side (Zones 2 &amp; 3).</td>
+        </tr>
+        <tr>
+          <td>Mode</td>
+          <td>TENS, HMD — modulated frequency, prevents nerve accommodation</td>
+        </tr>
+        <tr>
+          <td>Timer</td>
+          <td>20–25 minutes</td>
+        </tr>
+        <tr>
+          <td>Primary window</td>
+          <td><strong>4:00–4:30pm</strong> — before the afternoon pain wall, not after it</td>
+        </tr>
+        <tr>
+          <td>Secondary window</td>
+          <td>Morning, post-walk — optional</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="clinical-box blue">
+      <div class="box-label">Electrode Reference</div>
+      <p>Diagrams generated via ChatGPT for pad placement — the horizontal-layout image is the best clinical reference on hand. Treat these as a placement aid, not a substitute for the manufacturer's own TENS-only guidance for radicular low-back-with-leg-pain presentations.</p>
+    </div>
+
+    <p style="font-size:0.8rem;">Log before/after pain (/10) for each session in the Pain Log — this is the intervention data going to Kataria on Jul 28.</p>
+  </section>
+
+  <section id="canal">
+    <div class="section-label">06 — Aerobic / CNS Track</div>
+    <h2>Canal Walk Protocol</h2>
+
+    <table class="ex-table">
+      <thead>
+        <tr><th>Parameter</th><th>Prescription</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Total distance</td>
+          <td>2 miles daily</td>
+        </tr>
+        <tr>
+          <td>Warmup</td>
+          <td>First mile, forward, easy</td>
+        </tr>
+        <tr>
+          <td>Backwards walking</td>
+          <td>Pole-to-pole intervals, 3 well-spaced sets</td>
+        </tr>
+        <tr>
+          <td>Transition</td>
+          <td>30 seconds forward-gait normalization after each backwards interval</td>
+        </tr>
+        <tr>
+          <td>Response so far</td>
+          <td>Slight subjective improvement in gait quality; no post-activity flare</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="clinical-box blue">
+      <div class="box-label">Why Backwards Walking</div>
+      <p>Backwards walking loads the spine in a relatively flexion-neutral, low-impact pattern while forcing a novel motor sequence — the reversed gait cycle can't run on autopilot the way forward walking can. That novelty demands more conscious motor control, which appears to help interrupt the guarded, pain-protective movement pattern that builds up around a flare. It's a CNS retraining effect layered on top of the mechanical benefit, not just a different way to log steps.</p>
+    </div>
+
+    <div class="clinical-box">
+      <div class="box-label">Progression Gate — Hold This Line</div>
+      <p><strong>Do not add duration, sets, or intensity</strong> until a minimum of one full week of consistent non-response (no flare, no symptom increase) is confirmed. This is a data discipline, not a pace problem — one good week doesn't confirm tolerance, seven does.</p>
+    </div>
+  </section>
+
+  <section id="exclusions">
+    <div class="section-label">07 — Guardrails</div>
+    <h2>Strict Exclusions This Phase</h2>
+
+    <p>These are not being skipped by oversight — they're deliberately withheld until centralization is confirmed. All are Phase 2 items.</p>
+
+    <table class="ex-table">
+      <thead>
+        <tr><th>Excluded</th><th>Status</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Piriformis stretching</td><td><span class="flag flag-hold">Hold — Phase 2</span></td></tr>
+        <tr><td>Hamstring stretching</td><td><span class="flag flag-hold">Hold — Phase 2</span></td></tr>
+        <tr><td>Flexion exercises</td><td><span class="flag flag-hold">Hold — Phase 2</span></td></tr>
+        <tr><td>Knee to chest</td><td><span class="flag flag-hold">Hold — Phase 2</span></td></tr>
+        <tr><td>Core / stabilization work</td><td><span class="flag flag-hold">Hold — Phase 2</span></td></tr>
+        <tr><td>Hip strengthening</td><td><span class="flag flag-hold">Hold — Phase 2</span></td></tr>
+      </tbody>
+    </table>
+
+    <div class="clinical-box red">
+      <div class="box-label">Why These Are Excluded Now</div>
+      <p>Every item on this list either flexes the lumbar spine (closing the foramen — the opposite of what an extension-bias, McKenzie-centralization approach is trying to achieve) or adds load to tissue that's currently guarding and inflamed. Reintroducing them before centralization is confirmed risks re-provoking the exact mechanism driving the flare.</p>
+    </div>
+  </section>
+
+  <section id="phase2">
+    <div class="section-label">08 — Locked</div>
+    <h2>Phase 2 — Placeholder</h2>
+
+    <div class="phase-grid">
+      <div class="phase-card locked" data-phase="Locked">
+        <div class="phase-title">Stabilization</div>
+        <div class="phase-duration">Unlocks post-centralization</div>
+        <p>Core and lumbar stabilization work — reintroduced only once leg pain has centralized toward the spine and stayed there.</p>
+      </div>
+      <div class="phase-card locked" data-phase="Locked">
+        <div class="phase-title">Hip Strengthening</div>
+        <div class="phase-duration">Unlocks post-centralization</div>
+        <p>Glute med / hip strengthening work — currently excluded because loaded hip work compresses the same segment being decompressed daily.</p>
+      </div>
+      <div class="phase-card locked" data-phase="Locked">
+        <div class="phase-title">Core Work</div>
+        <div class="phase-duration">Unlocks post-centralization</div>
+        <p>Dead bug / bird dog style anti-rotation work — safe in principle, but held until Phase 1 has fully settled to avoid muddying the centralization signal.</p>
+      </div>
+    </div>
+
+    <p style="font-size:0.8rem;">Gate for Phase 2 entry: leg pain has centralized toward the low back and stayed there — not a calendar date. This section stays a placeholder until that's confirmed and Matt (PT) has weighed in post-Jul 28.</p>
+  </section>
+
+  <section id="trafficlight">
+    <div class="section-label">09 — Daily Decision Rule</div>
+    <h2>Traffic Light Response Guide</h2>
+
+    <p>The single rule that governs every session, every day, regardless of what's scheduled:</p>
+
+    <div class="gate light-green">
+      <div class="gate-num">●</div>
+      <div class="gate-content">
+        <div class="gate-title">Green — Leg Pain Same or Reduced</div>
+        <div class="gate-desc">Continue as planned. This is centralization working in your favor — the nerve root is tolerating the current load.</div>
+      </div>
+    </div>
+
+    <div class="gate light-yellow">
+      <div class="gate-num">●</div>
+      <div class="gate-content">
+        <div class="gate-title">Yellow — Back Pain Increases, Leg Pain Unchanged</div>
+        <div class="gate-desc">Acceptable and often expected during centralization — symptoms moving proximally (toward the spine, away from the leg) is the direction you want. Continue, but log it.</div>
+      </div>
+    </div>
+
+    <div class="gate light-red">
+      <div class="gate-num">●</div>
+      <div class="gate-content">
+        <div class="gate-title">Red — Leg Pain Increases</div>
+        <div class="gate-desc">Stop that exercise or session. Peripheralization (symptoms moving distally, away from the spine) is the one signal that overrides everything else in this protocol. Back off, note what preceded it, and don't repeat that variable tomorrow without adjustment. Toe tingling with sitting follows the same logic in miniature — <a href="#tingling" style="color:var(--accent);">see the stand-immediately rule</a>.</div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <p>Patrick — Active Flare Protocol · Sprint Jump Resilience · v1.3 · Updated post-Bansal (Jul 8, 2026)</p>
+  <p>Cross-reference: March Recovery Protocol (pre-flare clinical map — due for refresh) · Pain Log in the Weekly Guide (Overnight / Toe Tingle / AM Dizzy + Wake Time note, tracking source of truth) · Weekly Guide v7 (⚠ FAB links back here)</p>
+  <p style="color: rgba(200,126,126,0.5); margin-top:0.5rem;">Informational only. All clinical decisions should be reviewed with your treating physician.</p>
+</footer>
+
+<a class="fab-weekly" href="SJR_WeeklyGuide_Patrick_v5_20260402.html">
+  This Week
+</a>
+</body>
+</html>

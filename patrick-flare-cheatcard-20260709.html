@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; connect-src 'none'; img-src 'self' data:;">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Patrick — Flare Cheat Card</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=IBM+Plex+Mono:wght@300;400;500&family=IBM+Plex+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0f0f0e; --surface: #1a1a18; --border: #2e2e2a;
+    --accent: #c8a96e; --accent2: #7eb8a4; --accent3: #c87e7e;
+    --text: #e8e4dc; --text-muted: #b0aca2; --text-dim: #8a8680;
+    --green: #7eb87e; --yellow: #c8b46e; --red: #c87e7e;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--bg); color: var(--text);
+    font-family: 'IBM Plex Sans', sans-serif; font-weight: 300;
+    line-height: 1.55; padding: 1.5rem;
+  }
+  .wrap { max-width: 1000px; margin: 0 auto; }
+  header { border-bottom: 1px solid var(--border); padding-bottom: 1rem; margin-bottom: 1.25rem; }
+  .eyebrow { font-family: 'IBM Plex Mono', monospace; font-size: 0.6rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--text-dim); margin-bottom: 0.4rem; }
+  h1 { font-family: 'Playfair Display', serif; font-size: 1.9rem; font-weight: 900; }
+  h1 span { color: var(--accent); }
+  .sub { font-family: 'IBM Plex Mono', monospace; font-size: 0.68rem; color: var(--text-muted); margin-top: 0.3rem; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 0.9rem; }
+  .card { background: var(--surface); border: 1px solid var(--border); border-left: 3px solid var(--accent); border-radius: 0 3px 3px 0; padding: 0.9rem 1.1rem; }
+  .card.am { border-left-color: var(--accent); }
+  .card.day { border-left-color: var(--accent2); }
+  .card.pm { border-left-color: var(--accent3); }
+  .card.walk { border-left-color: var(--accent2); }
+  .card h2 { font-family: 'IBM Plex Mono', monospace; font-size: 0.62rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.6rem; }
+  .card.day h2 { color: var(--accent2); }
+  .card.pm h2 { color: var(--accent3); }
+  .card.walk h2 { color: var(--accent2); }
+  ol, ul { margin-left: 1.05rem; }
+  li { font-size: 0.82rem; color: var(--text-muted); margin-bottom: 0.35rem; }
+  li b, li strong { color: var(--text); font-weight: 500; }
+  .dose { font-family: 'IBM Plex Mono', monospace; font-size: 0.72rem; color: var(--accent); }
+  .light { display: grid; grid-template-columns: auto 1fr; gap: 0.7rem; align-items: baseline; margin-bottom: 0.5rem; font-size: 0.82rem; color: var(--text-muted); }
+  .dot { font-size: 1rem; line-height: 1; }
+  .g { color: var(--green); } .y { color: var(--yellow); } .r { color: var(--red); }
+  .light b { color: var(--text); }
+  .full { grid-column: 1 / -1; }
+  .rule { background: linear-gradient(135deg, rgba(200,126,126,0.09), rgba(200,126,126,0.02)); border: 1px solid rgba(200,126,126,0.28); border-radius: 3px; padding: 0.85rem 1.1rem; font-size: 0.86rem; color: var(--text); }
+  .rule b { color: var(--red); }
+  .meds { font-size: 0.78rem; color: var(--text-muted); }
+  .meds b { color: var(--text); }
+  .links { margin-top: 1.25rem; display: flex; gap: 0.6rem; flex-wrap: wrap; }
+  .links a { font-family: 'IBM Plex Mono', monospace; font-size: 0.65rem; letter-spacing: 0.08em; text-transform: uppercase; text-decoration: none; color: var(--accent); border: 1px solid var(--border); padding: 0.5rem 0.85rem; border-radius: 3px; }
+  .links a:hover { border-color: var(--accent); }
+  footer { margin-top: 1.5rem; font-family: 'IBM Plex Mono', monospace; font-size: 0.58rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-dim); text-align: center; }
+  @media print {
+    body { background: #fff; color: #000; padding: 0.5rem; }
+    .card, .rule { background: #fff; border-color: #999; }
+    li, .meds, .light { color: #222; }
+    .links { display: none; }
+    h1 span, .card h2, .dose { color: #000; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="eyebrow">Sprint · Jump · Resilience — Phase 1 · Extension Bias / Centralization</div>
+    <h1>Flare — <span>Daily Cheat Card</span></h1>
+    <div class="sub">Quick reference. Full rationale lives in the Active Flare Protocol. · Jul 2026</div>
+  </header>
+
+  <div class="grid">
+
+    <div class="card am">
+      <h2>Morning — post-walk, warm</h2>
+      <ol>
+        <li><b>Dead hangs</b> <span class="dose">30–60s × 2–3</span> — decompress first</li>
+        <li><b>Prone lying</b> <span class="dose">3–5 min</span> — pillow under chest</li>
+        <li><b>Prone press-ups</b> <span class="dose">×10, 1–2 sets</span> — hips stay down</li>
+        <li><b>Sciatic glide</b> <span class="dose">5 / side</span> — tension not pain; <b>stop if calf/ankle ↑</b>; left cautious</li>
+        <li><b>Standing extensions</b> <span class="dose">×10</span></li>
+      </ol>
+    </div>
+
+    <div class="card day">
+      <h2>Through the day</h2>
+      <ul>
+        <li><b>Standing extensions ×10</b> every 1–2 hrs</li>
+        <li><b>Tingling →</b> stand immediately + 10 standing extensions</li>
+        <li>Position/pacing cycling is normal flare behavior — not a failure</li>
+      </ul>
+      <h2 style="margin-top:0.8rem;">Afternoon — ~4pm, before the wall</h2>
+      <ul>
+        <li><b>NexWave TENS</b> <span class="dose">20–25 min</span> (HMD mode) → prone lying → standing ext ×10</li>
+        <li>Log before/after pain (/10) — this is Kataria's data</li>
+      </ul>
+    </div>
+
+    <div class="card pm">
+      <h2>Evening — 30–45 min pre-bed</h2>
+      <ul>
+        <li><b>Prone press-ups</b> <span class="dose">×8–10, reduced ROM</span></li>
+        <li><b>Diaphragmatic breathing, prone</b> <span class="dose">×10</span> — 4 in / hold 2 / 6 out</li>
+        <li>Transition straight to sleep position</li>
+      </ul>
+    </div>
+
+    <div class="card walk">
+      <h2>Canal walk — daily</h2>
+      <ul>
+        <li><b>2 miles.</b> First mile easy, forward.</li>
+        <li><b>Backwards intervals ×3</b> (pole-to-pole), well spaced</li>
+        <li>30s forward-gait reset after each interval</li>
+        <li><b>Hold the line:</b> no added duration/sets/intensity until 1 full week of non-response</li>
+      </ul>
+    </div>
+
+    <div class="card full">
+      <h2 style="color:var(--accent);font-family:'IBM Plex Mono',monospace;font-size:0.62rem;letter-spacing:0.14em;text-transform:uppercase;margin-bottom:0.6rem;">Traffic light — governs every session</h2>
+      <div class="light"><span class="dot g">●</span><span><b class="g">Green</b> — leg pain same or reduced → <b>continue.</b> Nerve root is tolerating the load.</span></div>
+      <div class="light"><span class="dot y">●</span><span><b class="y">Yellow</b> — back pain up, leg pain unchanged → <b>OK, log it.</b> Symptoms moving toward the spine is the direction you want (centralizing — judge by direction, not intensity).</span></div>
+      <div class="light"><span class="dot r">●</span><span><b class="r">Red</b> — leg pain increases → <b>STOP.</b> Peripheralization overrides everything. Back off, note the trigger, don't repeat that variable tomorrow.</span></div>
+    </div>
+
+    <div class="card full" style="border-left-color:var(--text-dim);">
+      <h2 style="color:var(--text-dim);">Not this phase (Phase 2 — locked until centralization)</h2>
+      <p style="font-size:0.8rem;color:var(--text-muted);">No flexion · no knee-to-chest · no piriformis or hamstring stretching · no core/stabilization · no hip strengthening.</p>
+    </div>
+
+    <div class="card full" style="border-left-color:var(--accent);">
+      <h2>Meds quick note (effective Jul 8)</h2>
+      <p class="meds"><b>~9pm</b> Gabapentin 400mg (before cyclobenzaprine) · <b>~10pm</b> Cyclobenzaprine 10mg — bedtime anchor, replaces baclofen. Gabapentin held at 600mg total. Daytime relaxation only if needed: prefer <b>baclofen 5mg</b> (less sedating, not anticholinergic) over daytime cyclobenzaprine. Full schedule in the Active Flare Protocol.</p>
+    </div>
+
+    <div class="rule full">
+      <b>The one rule:</b> Leg pain increasing = regression. Centralizing back pain = progress. When in doubt, protect the leg.
+    </div>
+
+  </div>
+
+  <div class="links">
+    <a href="patrick-active-flare-protocol-v1-20260702.html">← Full Flare Protocol</a>
+    <a href="SJR_WeeklyGuide_Patrick_v5_20260402.html">This Week →</a>
+  </div>
+
+  <footer>
+    Patrick — Flare Cheat Card · v1 · Jul 2026 · Informational only — review clinical decisions with your treating physician
+  </footer>
+
+</div>
+</body>
+</html>

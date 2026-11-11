@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="theme-color" content="#0a0a0f">
+<title>Shaylan — Movement, not work</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0a0a0f; --surface:#13131a; --surface2:#1c1c26; --border:#2a2a38;
+  --accent:#00e5ff; --gold:#ffd166; --text:#e8e8f0; --muted:#a6a6c0;
+  --success:#06d6a0; --warn:#ff6b35; --radius:12px;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{font-family:'IBM Plex Sans',sans-serif;background:var(--bg);color:var(--text);
+  font-size:15px;line-height:1.6;padding-bottom:3rem;max-width:780px;margin:0 auto}
+h1,h2,h3{line-height:1.2}
+header{background:rgba(10,10,15,.97);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);
+  padding:1.1rem 1.25rem .9rem;position:sticky;top:0;z-index:50}
+.hdr-name{font-family:'Bebas Neue',sans-serif;font-size:2.1rem;letter-spacing:.06em;color:var(--accent);line-height:1}
+.hdr-sub{font-family:'IBM Plex Mono',monospace;font-size:.62rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin-top:.25rem}
+.chips{display:flex;flex-wrap:wrap;gap:.4rem;margin-top:.6rem}
+.chip{background:var(--surface2);border:1px solid var(--border);border-radius:20px;padding:.25rem .7rem;font-size:.7rem;color:var(--muted)}
+.chip b{color:var(--text);font-weight:500}
+section{padding:1.25rem}
+.section-title{font-family:'Bebas Neue',sans-serif;font-size:1.4rem;letter-spacing:.04em;color:var(--text);margin-bottom:.3rem;display:flex;align-items:center;gap:.5rem}
+.section-title::before{content:'';width:18px;height:2px;background:var(--accent)}
+.section-lede{color:var(--muted);font-size:.9rem;margin-bottom:1rem}
+.northstar{background:linear-gradient(135deg,rgba(0,229,255,.08),rgba(255,209,102,.05));
+  border:1px solid var(--accent);border-radius:var(--radius);padding:1.1rem 1.2rem;margin:1.25rem}
+.northstar .big{font-family:'Bebas Neue',sans-serif;font-size:1.5rem;letter-spacing:.03em;color:var(--accent);margin-bottom:.35rem}
+.northstar p{font-size:.94rem}
+.northstar em{color:var(--gold);font-style:normal;font-weight:600}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:1rem 1.1rem;margin-bottom:.9rem}
+.move{padding:.7rem 0;border-bottom:1px solid var(--border)}
+.move:last-child{border-bottom:none}
+.move-top{display:flex;justify-content:space-between;align-items:baseline;gap:.6rem}
+.move-name{font-size:.98rem;font-weight:500}
+.move-dose{font-family:'IBM Plex Mono',monospace;font-size:.72rem;color:var(--muted);white-space:nowrap}
+.move-cue{font-size:.82rem;color:var(--muted);margin-top:.15rem}
+.demo{display:inline-block;margin-top:.35rem;font-family:'IBM Plex Mono',monospace;font-size:.64rem;letter-spacing:.04em;
+  color:var(--accent);text-decoration:none;border:1px solid var(--border);border-radius:6px;padding:.15rem .5rem}
+.box{border-radius:var(--radius);padding:1rem 1.1rem;margin:0 1.25rem 1rem;font-size:.88rem}
+.box.gold{background:rgba(255,209,102,.07);border:1px solid var(--gold)}
+.box.warn{background:rgba(255,107,53,.07);border:1px solid var(--warn)}
+.box h3{font-size:.95rem;margin-bottom:.5rem}
+ul.clean{list-style:none;display:flex;flex-direction:column;gap:.5rem;margin-top:.3rem}
+ul.clean li{display:flex;gap:.55rem;font-size:.88rem;align-items:flex-start}
+ul.clean li::before{content:'▸';color:var(--accent);flex:none}
+.flow{counter-reset:step;list-style:none}
+.flow li{position:relative;padding:.55rem 0 .55rem 2rem;border-bottom:1px solid var(--border);font-size:.9rem}
+.flow li:last-child{border-bottom:none}
+.flow li::before{counter-increment:step;content:counter(step);position:absolute;left:0;top:.55rem;
+  width:1.4rem;height:1.4rem;border-radius:50%;background:var(--surface2);border:1px solid var(--accent);
+  color:var(--accent);font-family:'IBM Plex Mono',monospace;font-size:.72rem;display:flex;align-items:center;justify-content:center}
+.disclaimer{font-size:.76rem;color:var(--muted);border-top:1px solid var(--border);padding:1.25rem;line-height:1.6}
+.disclaimer b{color:var(--warn)}
+footer{text-align:center;padding:1.5rem;color:var(--muted);font-size:.7rem;font-family:'IBM Plex Mono',monospace;letter-spacing:.08em}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="hdr-name">SHAYLAN</div>
+  <div class="hdr-sub">SJR · Movement — not work</div>
+  <div class="chips">
+    <span class="chip"><b>Phase:</b> post-boot · rebuilding foot</span>
+    <span class="chip"><b>Berkeley:</b> track program is your training</span>
+    <span class="chip"><b>This:</b> optional · anytime · yours</span>
+  </div>
+</header>
+
+<div class="northstar">
+  <div class="big">THIS ISN'T A PROGRAM. IT'S PERMISSION.</div>
+  <p>Berkeley will hand you the real training — the sprints, the lifts, the load. <em>This is the other thing.</em> Movement for its own sake: keep the foot awake, the body supple, refresh between hard days and long travel. Pick what feels good today, skip the rest. Nothing here is a rep you owe. It's a menu, not a plan — the way Ido Portal, Katy Bowman, and Kelly Starrett treat movement as something you <em>get to</em> do, not something you grind.</p>
+</div>
+
+<div class="box warn">
+  <h3>The one line that keeps it safe</h3>
+  Your navicular is healed enough to walk, not healed enough to test. It's a watershed bone — it earns its trust back slowly. So on your own: <b>no impact, no explosive foot work, nothing that makes the old spot speak up.</b> The pounding belongs to the track staff and your PT, who can watch it. If a movement here provokes that navicular spot, it's not for today — back off and tell your PT. When in doubt, ask them before adding load.
+</div>
+
+<section>
+  <div class="section-title">Foot revival</div>
+  <div class="section-lede">The star of this phase. Seven weeks in a boot makes a foot forget how to be a foot — these wake it back up. Barefoot, on a soft floor, unhurried.</div>
+  <div class="card">
+    <div class="move"><div class="move-top"><span class="move-name">Toe yoga</span><span class="move-dose">1–2 min</span></div>
+      <div class="move-cue">Big toe down while the others lift, then flip it. Clumsy at first — that's the point. You're re-teaching the wiring.</div>
+      <a class="demo" href="https://www.youtube.com/results?search_query=toe+yoga+big+toe+lift+control" target="_blank" rel="noopener">▶ search demo</a></div>
+    <div class="move"><div class="move-top"><span class="move-name">Short-foot / arch doming</span><span class="move-dose">5 × slow</span></div>
+      <div class="move-cue">Without curling the toes, gently shorten the foot and lift the arch — like a tiny dome. Hold a breath, release. Intrinsic wake-up.</div>
+      <a class="demo" href="https://www.youtube.com/results?search_query=short+foot+exercise+arch+doming" target="_blank" rel="noopener">▶ search demo</a></div>
+    <div class="move"><div class="move-top"><span class="move-name">Toe splay</span><span class="move-dose">10 slow</span></div>
+      <div class="move-cue">Spread all five toes wide, like a hand. Barefoot on the floor. Katy Bowman's foot-freedom staple.</div>
+      <a class="demo" href="https://www.youtube.com/results?search_query=toe+spread+splay+foot+intrinsic" target="_blank" rel="noopener">▶ search demo</a></div>
+    <div class="move"><div class="move-top"><span class="move-name">Barefoot texture time</span><span class="move-dose">easy</span></div>
+      <div class="move-cue">Grass, sand, a bumpy mat — let the sole feel varied ground. Gentle load, huge sensory input. Ease in; the foot's been in a cast.</div>
+      <a class="demo" href="https://www.youtube.com/results?search_query=barefoot+terrain+foot+sensory+natural+movement" target="_blank" rel="noopener">▶ search demo</a></div>
+  </div>
+</section>
+
+<section>
+  <div class="section-title">Ankle &amp; foot articulation (CARs)</div>
+  <div class="section-lede">Controlled Articular Rotations — the joint-health work already in the SJR system (Spina/FRC). Slow, full-range, owned circles. Restores range the boot stole.</div>
+  <div class="card">
+    <div class="move"><div class="move-top"><span class="move-name">Ankle CARs</span><span class="move-dose">3–5 each way</span></div>
+      <div class="move-cue">Big, slow ankle circles — as wide as you can control, no pain. Draw the whole circle, don't rush the corners.</div>
+      <a class="demo" href="https://www.youtube.com/results?search_query=ankle+CARs+controlled+articular+rotations" target="_blank" rel="noopener">▶ search demo</a></div>
+    <div class="move"><div class="move-top"><span class="move-name">Toe articulation</span><span class="move-dose">easy</span></div>
+      <div class="move-cue">Wave the toes — curl and extend one at a time if you can. Reclaiming fine control down there.</div>
+      <a class="demo" href="https://www.youtube.com/results?search_query=toe+mobility+articulation+control" target="_blank" rel="noopener">▶ search demo</a></div>
+    <div class="move"><div class="move-top"><span class="move-name">Calf &amp; arch mobility</span><span class="move-dose">1–2 min</span></div>
+      <div class="move-cue">Gentle ankle rocks and a soft ball rolled under the arch. Not a deep dig near the navicular — just wake the tissue.</div>
+      <a class="demo" href="https://www.youtube.com/results?search_query=calf+arch+mobility+ball+roll+gentle" target="_blank" rel="noopener">▶ search demo</a></div>
+  </div>
+</section>
+
+<section>
+  <div class="section-title">Movement snacks</div>
+  <div class="section-lede">Whole-body vitamins to sprinkle through a day — between classes, after a long sit, when you're stiff. Bodyweight only, playful, brief. MovNat / Animal Flow / Original Strength territory.</div>
+  <div class="card">
+    <div class="move"><div class="move-top"><span class="move-name">Deep resting squat</span><span class="move-dose">sit in it</span></div>
+      <div class="move-cue">Sink to a full squat and just hang out — 30s building to minutes. Heels down if they'll go. The hips-and-ankles reset humans used to get for free.</div>
+      <a class="demo" href="https://www.youtube.com/results?search_query=deep+resting+squat+hold+mobility" target="_blank" rel="noopener">▶ search demo</a></div>
+    <div class="move"><div class="move-top"><span class="move-name">Ground sitting &amp; transitions</span><span class="move-dose">play</span></div>
+      <div class="move-cue">Sit on the floor to study; get up and down different ways (no hands, cross-legged, side). Hip mobility disguised as living.</div>
+      <a class="demo" href="https://www.youtube.com/results?search_query=getups+ground+sitting+transitions+movement" target="_blank" rel="noopener">▶ search demo</a></div>
+    <div class="move"><div class="move-top"><span class="move-name">Easy hang</span><span class="move-dose">10–30s</span></div>
+      <div class="move-cue">Grab a bar, let the spine and shoulders decompress. Feet light or on the floor — no loading the foot you don't want yet.</div>
+      <a class="demo" href="https://www.youtube.com/results?search_query=passive+hang+decompression+shoulders" target="_blank" rel="noopener">▶ search demo</a></div>
+    <div class="move"><div class="move-top"><span class="move-name">Spinal waves &amp; rolls</span><span class="move-dose">easy</span></div>
+      <div class="move-cue">Cat-cow, segmental roll-downs, gentle twists on the ground. Oil the spine after travel and long sits.</div>
+      <a class="demo" href="https://www.youtube.com/results?search_query=spinal+segmental+cat+cow+rolldown+mobility" target="_blank" rel="noopener">▶ search demo</a></div>
+  </div>
+</section>
+
+<section>
+  <div class="section-title">The 6-minute refresh</div>
+  <div class="section-lede">A tiny sequence for a stiff morning, a travel day, or after too much sitting. Tomorrow's flight counts. No warm-up needed — this <em>is</em> the warm-up.</div>
+  <div class="card">
+    <ol class="flow">
+      <li>Ankle CARs — 3 each way, both feet</li>
+      <li>Toe yoga + toe splay — a slow minute</li>
+      <li>Deep squat sit — settle in, breathe, 30–60s</li>
+      <li>Ground transitions — up and down 3–4 ways</li>
+      <li>Easy hang — one or two, decompress</li>
+      <li>Spinal waves — cat-cow into a gentle twist</li>
+    </ol>
+  </div>
+</section>
+
+<section>
+  <div class="box gold">
+    <h3>How to use this</h3>
+    <ul class="clean">
+      <li><b>It's a menu, not a plan.</b> One item or the whole thing. No streak to keep, no guilt for skipping.</li>
+      <li><b>It complements the track work — it never competes with it.</b> If Berkeley's session was hard, this is the gentle counterweight, not extra grind.</li>
+      <li><b>Fuel and sleep are still the real rehab.</b> The bone rebuilt on those; keep feeding it.</li>
+      <li><b>Loop your new PT and coaches in.</b> Show them this — anything they want changed wins.</li>
+    </ul>
+  </div>
+</section>
+
+<div class="disclaimer">
+  <b>This is optional movement, not a training prescription or medical advice.</b> It's built for a healing navicular that's out of the boot but still earning trust — self-directed work here stays gentle, non-impact, and pain-free, and defers every loading decision to Shaylan's PT and Berkeley staff. Stop anything that provokes the navicular spot and tell your care team.
+</div>
+
+<footer>SJR SYSTEM · SHAYLAN · MOVEMENT v1 · 2026-08-17</footer>
+
+</body>
+</html>

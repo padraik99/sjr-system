@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#0a0a0f">
+<title>Shaylan — Boot Phase · NWB Navicular Block</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0a0a0f; --surface:#13131a; --surface2:#1c1c26; --border:#2a2a38;
+  --accent:#00e5ff; --gold:#ffd166; --text:#e8e8f0; --muted:#8888aa;
+  --success:#06d6a0; --warn:#ff6b35; --red:#ef233c; --radius:12px;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html{scroll-behavior:smooth}
+body{font-family:'IBM Plex Sans',sans-serif;background:var(--bg);color:var(--text);
+  font-size:15px;line-height:1.6;padding-bottom:4rem;max-width:780px;margin:0 auto}
+h1,h2,h3{line-height:1.2}
+a{color:var(--accent)}
+.mono{font-family:'IBM Plex Mono',monospace}
+
+header{background:rgba(10,10,15,0.97);backdrop-filter:blur(16px);
+  border-bottom:1px solid var(--border);padding:1.1rem 1.25rem .9rem;position:sticky;top:0;z-index:50}
+.hdr-top{display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;margin-bottom:.6rem}
+.hdr-name{font-family:'Bebas Neue',sans-serif;font-size:2.1rem;letter-spacing:.07em;color:var(--accent);line-height:1}
+.hdr-sub{font-family:'IBM Plex Mono',monospace;font-size:.62rem;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--muted);margin-top:.2rem}
+.phase-badge{background:var(--surface2);border:1px solid var(--warn);border-radius:6px;
+  padding:.35rem .65rem;font-family:'IBM Plex Mono',monospace;font-size:.6rem;
+  letter-spacing:.08em;text-transform:uppercase;color:var(--warn);white-space:nowrap}
+.chips{display:flex;flex-wrap:wrap;gap:.4rem;margin-top:.5rem}
+.chip{background:var(--surface2);border:1px solid var(--border);border-radius:20px;
+  padding:.25rem .7rem;font-size:.7rem;color:var(--muted)}
+.chip b{color:var(--text);font-weight:500}
+
+section{padding:1.25rem}
+.section-title{font-family:'Bebas Neue',sans-serif;font-size:1.35rem;letter-spacing:.05em;
+  color:var(--text);margin-bottom:.85rem;display:flex;align-items:center;gap:.5rem}
+.section-title::before{content:'';width:18px;height:2px;background:var(--accent)}
+
+.northstar{background:linear-gradient(135deg,rgba(0,229,255,.08),rgba(239,35,60,.06));
+  border:1px solid var(--accent);border-radius:var(--radius);padding:1.1rem 1.2rem;margin:1.25rem}
+.northstar .big{font-family:'Bebas Neue',sans-serif;font-size:1.5rem;letter-spacing:.04em;color:var(--accent);margin-bottom:.3rem}
+.northstar p{color:var(--text);font-size:.92rem}
+.northstar em{color:var(--gold);font-style:normal;font-weight:600}
+
+.timeline{display:flex;flex-direction:column;gap:.5rem}
+.tl-row{display:flex;gap:.75rem;align-items:flex-start;background:var(--surface);
+  border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:8px;padding:.7rem .85rem}
+.tl-row.now{border-left-color:var(--warn);background:var(--surface2)}
+.tl-wk{font-family:'IBM Plex Mono',monospace;font-size:.7rem;color:var(--muted);min-width:88px;padding-top:.1rem}
+.tl-body b{color:var(--text)} .tl-body{font-size:.88rem}
+.tl-tag{display:inline-block;font-family:'IBM Plex Mono',monospace;font-size:.58rem;text-transform:uppercase;
+  letter-spacing:.08em;padding:.1rem .4rem;border-radius:4px;margin-left:.4rem;vertical-align:middle}
+.tag-now{background:var(--warn);color:#000}
+
+.legend{display:flex;flex-wrap:wrap;gap:.6rem;margin-bottom:1rem}
+.lg{display:flex;align-items:center;gap:.45rem;font-size:.78rem;color:var(--muted)}
+.dot{width:11px;height:11px;border-radius:3px;flex:none}
+.dot.go{background:var(--success)} .dot.hold{background:var(--gold)}
+
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);
+  padding:1rem 1.1rem;margin-bottom:.9rem}
+.card.go{border-left:3px solid var(--success)}
+.card.hold{border-left:3px solid var(--gold)}
+.card h3{font-size:1rem;color:var(--text);margin-bottom:.15rem;display:flex;align-items:center;justify-content:space-between;gap:.5rem}
+.card .sub{font-family:'IBM Plex Mono',monospace;font-size:.62rem;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--muted);margin-bottom:.7rem}
+.pill{font-family:'IBM Plex Mono',monospace;font-size:.55rem;letter-spacing:.06em;text-transform:uppercase;
+  padding:.18rem .45rem;border-radius:5px;white-space:nowrap}
+.pill.go{background:rgba(6,214,160,.14);color:var(--success);border:1px solid var(--success)}
+.pill.hold{background:rgba(255,209,102,.12);color:var(--gold);border:1px solid var(--gold)}
+
+table{width:100%;border-collapse:collapse;font-size:.85rem;margin-top:.3rem}
+th,td{text-align:left;padding:.5rem .55rem;border-bottom:1px solid var(--border);vertical-align:top}
+th{font-family:'IBM Plex Mono',monospace;font-size:.6rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:500}
+td b{color:var(--text)} tbody tr:last-child td{border-bottom:none}
+.ex{color:var(--text)} .cue{display:block;font-size:.76rem;color:var(--muted);margin-top:.15rem}
+
+ul.clean{list-style:none;display:flex;flex-direction:column;gap:.5rem}
+ul.clean li{display:flex;gap:.55rem;font-size:.88rem;align-items:flex-start}
+ul.clean li::before{content:'▸';color:var(--accent);flex:none;line-height:1.5}
+ul.check li::before{content:'☐';color:var(--gold)}
+
+.box{border-radius:var(--radius);padding:1rem 1.1rem;margin-bottom:.9rem;font-size:.88rem}
+.box.warn{background:rgba(255,107,53,.07);border:1px solid var(--warn)}
+.box.gold{background:rgba(255,209,102,.07);border:1px solid var(--gold)}
+.box.fuel{background:rgba(6,214,160,.06);border:1px solid var(--success)}
+.box h3{font-size:.95rem;margin-bottom:.5rem;color:var(--text)}
+.box .lead{color:var(--gold);font-weight:600}
+
+.disclaimer{font-size:.76rem;color:var(--muted);border-top:1px solid var(--border);
+  padding:1.25rem;line-height:1.6}
+.disclaimer b{color:var(--warn)}
+footer{text-align:center;padding:1.5rem 1.25rem;color:var(--muted);font-size:.7rem;
+  font-family:'IBM Plex Mono',monospace;letter-spacing:.08em}
+
+/* ── REFRESH FAB + DEMO LINKS ── */
+#refresh-fab{position:fixed;bottom:1.1rem;right:1rem;z-index:500;background:var(--surface2);border:1px solid var(--accent);border-radius:50%;width:2.6rem;height:2.6rem;display:flex;align-items:center;justify-content:center;font-size:1.1rem;cursor:pointer;opacity:.85;transition:opacity .2s,transform .15s;color:var(--accent);text-decoration:none}
+#refresh-fab:active{opacity:1;transform:rotate(180deg)}
+.demo-ctrl{display:inline-flex;gap:.3rem;align-items:center;margin-left:.5rem;vertical-align:middle}
+.demo-link{font-family:'IBM Plex Mono',monospace;font-size:.62rem;letter-spacing:.04em;color:var(--accent);text-decoration:none;border:1px solid var(--accent);border-radius:4px;padding:.06rem .35rem;white-space:nowrap}
+.demo-btn{font-family:'IBM Plex Mono',monospace;font-size:.62rem;letter-spacing:.04em;background:none;border:1px dashed var(--border);color:var(--muted);border-radius:4px;padding:.06rem .35rem;cursor:pointer;white-space:nowrap}
+.demo-btn.add{border-color:var(--accent);color:var(--accent)}
+.demo-search{font-size:.7rem;text-decoration:none;opacity:.6}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="hdr-top">
+    <div>
+      <div class="hdr-name">SHAYLAN</div>
+      <div class="hdr-sub">SJR · Boot Phase · NWB Navicular Block</div>
+    </div>
+    <div class="phase-badge">⚠ Strict NWB</div>
+  </div>
+  <div class="chips">
+    <span class="chip"><b>Injury:</b> R navicular stress fx (nondisplaced)</span>
+    <span class="chip"><b>MRI:</b> 6/15/26</span>
+    <span class="chip"><b>Boot + crutches:</b> 6 wks</span>
+    <span class="chip"><b>Reexam:</b> ~late July</span>
+    <span class="chip"><b>MD:</b> Falcocchia, DO · KP Sports Med</span>
+  </div>
+</header>
+
+<div class="northstar">
+  <div class="big">ONE RULE: NO WEIGHT THROUGH THE RIGHT FOOT</div>
+  <p>For six weeks the navicular gets total protection. It's a watershed-blood-supply bone, which means <em>pain-free is not the same as healed</em> — we protect it, we never test it. Every session below is built to load everything <strong>except</strong> that foot. The goal: arrive at Cal in September strong, conditioned, and un-detrained, with a fully healed bone.</p>
+</div>
+
+<section>
+  <div class="section-title">Where this fits</div>
+  <div class="timeline">
+    <div class="tl-row now">
+      <div class="tl-wk">Wk 1–6<br>now</div>
+      <div class="tl-body"><b>Strict NWB</b> — short boot + crutches.<span class="tl-tag tag-now">You are here</span><br>Train: core + controlled upper-body lifting. Protect the bone, preserve everything else.</div>
+    </div>
+    <div class="tl-row">
+      <div class="tl-wk">Wk 6</div>
+      <div class="tl-body"><b>MD reexam.</b> If clinically pain-free → begin weaning out of boot/crutches.</div>
+    </div>
+    <div class="tl-row">
+      <div class="tl-wk">Wk 6–8</div>
+      <div class="tl-body"><b>Progressive weight-bearing</b> as tolerated, over ~2 weeks.</div>
+    </div>
+    <div class="tl-row">
+      <div class="tl-wk">Wk 8–14</div>
+      <div class="tl-body"><b>PT return-to-run program</b> (~6 wks) — pain-free walk → jog → jump, per their protocol.</div>
+    </div>
+    <div class="tl-row">
+      <div class="tl-wk">~Wk 14</div>
+      <div class="tl-body"><b>Anticipated clearance to return to running</b> — roughly late September.</div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="section-title">How to read the work</div>
+  <div class="legend">
+    <span class="lg"><span class="dot go"></span><b style="color:var(--success)">CLEARED</b> — signed off: do it now</span>
+    <span class="lg"><span class="dot hold"></span><b style="color:var(--gold)">RECONFIRM</b> — verbally cleared; get it in writing at PT follow-up</span>
+  </div>
+  <div class="box go">
+    <h3>Leg work is now cleared — in writing ✓</h3>
+    The PT follow-up put it on the record: <b>core + upper-body lifting</b> plus a full leg list — left-leg loaded work and right-leg <b>open-chain knee, hamstring, bridge and hip work</b> with the foot passive. The amber “reconfirm” tier is now green. <b>Band work and swimming</b> were cleared too (see the additions). You already own the kit for this — <b>TENS/EMS unit, occlusion cuffs, and bands</b> — so the remaining asks are just PT <em>settings</em> (e-stim intensity, cuff pressure) and the <b>swim-kick</b> limit, not equipment.<br><br>
+    The guardrail that still holds regardless: open-chain <em>knee</em> work routes force through the shin, not the foot — but tibialis posterior <b>inserts on the navicular</b>, so anything resisting plantarflexion/inversion or loading the ankle stays out, cleared or not.
+  </div>
+</section>
+
+<section>
+  <div class="section-title">Why the legs don't rest</div>
+  <div class="box gold">
+    <h3>Training the LEFT leg protects the RIGHT one</h3>
+    <p class="lead">This isn't busywork — it's cross-education.</p>
+    <p style="margin-top:.4rem">Train one leg hard and the <b>untrained</b> leg gets stronger too — roughly <b>10–15%</b> of the trained side's gain. The effect is <b>neural</b>: you're training the shared wiring in the spinal cord and motor cortex, not just the muscle. Picture a pianist with one arm in a cast — if the brain keeps rehearsing the piece through the free hand, the silenced hand forgets the music slower and relearns it faster when the cast comes off.</p>
+    <p style="margin-top:.4rem">Studies that <em>immobilized one limb and trained the other</em> show the casted side <b>loses less strength and muscle</b> — and in a recent study of <b>women in slings</b>, it also <b>recovered faster</b> once the sling came off (Farthing 2009; Carr 2025). So every hard left-leg set buys back strength on the right and a faster ramp in September. Two rules to make it count: <b>train heavy with slow, controlled lowering</b> (the eccentric — the down phase — transfers best), and <b>mirror the patterns the right leg needs back</b> (squat / hinge / knee lines), not random machines.</p>
+    <p style="margin-top:.4rem"><b>The dose</b> (expert consensus, Manca 2021): <b>3 sessions/week of heavy, eccentric-biased work for 4–6 weeks</b> — which is essentially your whole boot window, so the timing lines up perfectly. The panel specifically endorsed this for <b>orthopedic and sports injuries</b>, found <b>no reason to program it differently for women</b>, and noted that any left/right imbalance it creates is a worthwhile trade for protecting the hurt side. They also flag one free booster worth trying: a <b>mirror</b> — set it along your midline so the reflection of your working left leg appears where the right one would be, and your brain "watches" the injured leg move strong while you train.</p>
+  </div>
+  <div class="box warn">
+    <h3>The one catch: tension counts, not just body weight</h3>
+    <p>Your instinct here is correct. The navicular isn't only loaded by standing on it. The <b>tibialis posterior — the only tendon that attaches to the navicular</b> — pulls directly on it, and the research on navicular stress fractures specifically names that posterior-tibial pull, alongside compression, as what concentrates stress at the bone's poorly-supplied center. So <em>indirect tension can load a healing navicular even with zero weight through the foot.</em></p>
+    <p style="margin-top:.4rem">That's why the rule isn't "no standing" — it's <b>the right foot and ankle stay completely passive.</b> Knee and hip work with a limp, relaxed foot don't pull on the navicular and are fine. But <b>anything that makes the foot or ankle do work</b> — pointing the toe against a band, turning the sole inward (inversion), gripping with the toes, actively holding the arch — tensions the navicular and stays out until the care team clears it, body weight or not.</p>
+  </div>
+</section>
+
+<section>
+  <div class="section-title">The weekly shape</div>
+  <p style="color:var(--muted);font-size:.88rem;margin-bottom:.9rem">4 sessions/week. You're NWB, not benched — upper body and core can be trained <em>hard</em>, and that's most of what keeps you an athlete through this. Rotate the four days; full rest or easy arm-bike on the others.</p>
+
+  <div class="card go">
+    <h3>Day 1 · Upper Push + Core <span class="pill go">Cleared</span></h3>
+    <div class="sub">Seated / supported · zero foot load</div>
+    <table><thead><tr><th>Movement</th><th>Sets × Reps</th></tr></thead><tbody>
+      <tr><td class="ex">Seated DB shoulder press<span class="cue">Back supported, feet of boot resting flat, no push-off</span></td><td>4 × 8–10</td></tr>
+      <tr><td class="ex">Flat / incline DB bench press<span class="cue">Bench gives you a stable base — no standing</span></td><td>4 × 8–10</td></tr>
+      <tr><td class="ex">Seated cable / band chest fly</td><td>3 × 12</td></tr>
+      <tr><td class="ex">Tricep rope pushdown (seated)</td><td>3 × 12–15</td></tr>
+      <tr><td class="ex">Pallof press + dead-bug<span class="cue">Anti-rotation core, lying/seated</span></td><td>3 × 10/side</td></tr>
+    </tbody></table>
+  </div>
+
+  <div class="card go">
+    <h3>Day 2 · NWB Conditioning + Core <span class="pill go">Cleared</span></h3>
+    <div class="sub">Keep the engine — arms do the work</div>
+    <table><thead><tr><th>Block</th><th>Prescription</th></tr></thead><tbody>
+      <tr><td class="ex">Arm ergometer (upper-body bike)<span class="cue">Your conditioning engine. Swimming is now cleared too (pull-buoy — see additions); the arm bike stays your no-caveat option.</span></td><td>warm 5 min</td></tr>
+      <tr><td class="ex">Intervals: hard / easy<span class="cue">Builds across the block (see progression)</span></td><td>8–12 × 30s/30s</td></tr>
+      <tr><td class="ex">Cool-down spin</td><td>5 min easy</td></tr>
+      <tr><td class="ex">Core circuit: hollow hold · side plank (top leg only / from hip) · cable woodchop</td><td>3 rounds</td></tr>
+    </tbody></table>
+  </div>
+
+  <div class="card go">
+    <h3>Day 3 · Upper Pull + Core <span class="pill go">Cleared</span></h3>
+    <div class="sub">Seated / chest-supported · zero foot load</div>
+    <table><thead><tr><th>Movement</th><th>Sets × Reps</th></tr></thead><tbody>
+      <tr><td class="ex">Lat pulldown (seated)</td><td>4 × 8–10</td></tr>
+      <tr><td class="ex">Chest-supported row<span class="cue">Pad takes your weight — no bracing through legs</span></td><td>4 × 10</td></tr>
+      <tr><td class="ex">Seated face pull / rear-delt</td><td>3 × 15</td></tr>
+      <tr><td class="ex">Seated DB curl</td><td>3 × 12</td></tr>
+      <tr><td class="ex">Suitcase / Pallof anti-side-bend (seated)</td><td>3 × 10/side</td></tr>
+    </tbody></table>
+  </div>
+
+  <div class="card go">
+    <h3>Day 4 · Upper Hypertrophy + Mobility <span class="pill go">Cleared</span></h3>
+    <div class="sub">Higher volume, lighter · finish with mobility</div>
+    <table><thead><tr><th>Movement</th><th>Sets × Reps</th></tr></thead><tbody>
+      <tr><td class="ex">Superset: DB press + DB row</td><td>3 × 12 each</td></tr>
+      <tr><td class="ex">Lateral raise + hammer curl</td><td>3 × 15 each</td></tr>
+      <tr><td class="ex">Overhead tricep + cable curl</td><td>3 × 15 each</td></tr>
+      <tr><td class="ex">Thoracic + hip mobility (seated/lying)<span class="cue">T-spine rotations, 90/90 hip switches done seated — keep the rest of you supple</span></td><td>8–10 min</td></tr>
+    </tbody></table>
+  </div>
+
+  <div class="card go">
+    <h3>Daily Core + Glute Anchor · every day (7×/wk) <span class="pill go">Cleared</span></h3>
+    <div class="sub">PT-prescribed daily set — core and hip strength that needs no foot load. Add 1 rep (or +5s on the holds) each week.</div>
+    <table><thead><tr><th>Movement</th><th>Sets × Reps</th><th>Why / how</th></tr></thead><tbody>
+      <tr><td class="ex">Single-leg bridge + ISO hold<span class="cue">Hold each side · right foot rests flat and passive — the hip does the work, not the foot</span></td><td>3 sets · 10–45s/side · +1 rep/wk</td><td>Posterior chain + glute, no navicular pull</td></tr>
+      <tr><td class="ex">Modified side plank + hip abduction<span class="cue">Top-leg lift driven from the hip</span></td><td>3 sets · 10–45s/side · +1 rep/wk</td><td>Glute med + lateral core — landing-control bank for September</td></tr>
+      <tr><td class="ex">Dead bugs incl. double-leg extension<span class="cue">Low back pinned to the floor; extend both legs only as far as you can hold neutral</span></td><td>3 × 10</td><td>Anti-extension core; the double-leg finish raises the challenge</td></tr>
+    </tbody></table>
+  </div>
+
+  <div class="card go">
+    <h3>Leg Tier · 3×/wk (append to Days 1, 3 &amp; 4) <span class="pill go">Cleared · in writing</span></h3>
+    <div class="sub">Left leg = the cross-education engine: heavy, slow eccentrics (the down-phase transfers best) · right leg: open-chain only, foot dead-passive · mirror at midline if you have one</div>
+    <table><thead><tr><th>Movement</th><th>Sets × Reps</th><th>Why / how</th></tr></thead><tbody>
+      <tr><td class="ex">Left-leg single-leg leg press<span class="cue">Heavy · 3–4s lowering · push through heel/mid-foot of the GOOD leg</span></td><td>3 × 10</td><td>Compound cross-ed driver (mirrors the squat line)</td></tr>
+      <tr><td class="ex">Single-leg knee extension (machine)<span class="cue">Left heavy w/ slow eccentric · right light, boot on, foot DEAD-relaxed</span></td><td>3 × 10 each</td><td>Left drives contralateral strength; right is open-chain — force at the shin, tib post quiet</td></tr>
+      <tr><td class="ex">Left-leg single-leg hamstring curl<span class="cue">Controlled eccentric</span></td><td>3 × 10</td><td>Healthy side; hinge-line transfer</td></tr>
+      <tr><td class="ex">Nordic curls<span class="cue">Both legs · drop slow, assist back up with hands · no foot drive</span></td><td>3 × 10</td><td>Heavy eccentric hamstring — knee-dominant, navicular-safe</td></tr>
+      <tr><td class="ex">Left-leg single-leg heel raise<span class="cue">Full loading fine — it's the good leg. Right calf stays OUT (plantarflexion pulls the navicular)</span></td><td>3 × 25</td><td>Healthy-side calf; right side deliberately excluded</td></tr>
+      <tr><td class="ex">Right quad + glute isometrics<span class="cue">Squeeze the thigh / seat — the foot does absolutely nothing</span></td><td>3 × 20–30s</td><td>Blunts disuse atrophy, no navicular pull</td></tr>
+      <tr><td class="ex">Right-leg quad e-stim (your TENS/EMS unit) <span class="pill hold" style="margin-left:.2rem">PT sets protocol</span><span class="cue">Use the <b>EMS / muscle mode</b> at an intensity that makes the quad <b>visibly twitch/contract</b> — a TENS sensory tingle alone won't build muscle. No joint motion, no foot load.</span></td><td>per PT</td><td>Contraction-level stim blunts quad wasting (Dirks 2014); pairs with BFR</td></tr>
+    </tbody></table>
+  </div>
+</section>
+
+<section>
+  <div class="section-title">Bonus ROI · band, BFR &amp; pool are now on the table</div>
+  <p style="color:var(--muted);font-size:.88rem;margin-bottom:.9rem">The written clearance opened band work and swimming, and there's one more high-value tool worth asking the PT about. All of it keeps the right foot passive.</p>
+
+  <div class="card go">
+    <h3>Band + open-chain hip series · daily-optional <span class="pill go">Cleared</span></h3>
+    <div class="sub">Highest ROI for landing mechanics in September — glute med and hip control are exactly what protect a knee on return, and none of it loads the foot.</div>
+    <table><thead><tr><th>Movement</th><th>Sets × Reps</th><th>Why</th></tr></thead><tbody>
+      <tr><td class="ex">Banded hip abduction / clamshell / fire hydrant<span class="cue">Both hips · band above the knee · foot relaxed</span></td><td>3 × 15</td><td>Glute med fibre spread (Harris) — landing-control bank</td></tr>
+      <tr><td class="ex">Banded hip flexion + straight-leg raise<span class="cue">Right foot limp throughout</span></td><td>3 × 12 each</td><td>Hip flexor + quad with no foot load</td></tr>
+      <tr><td class="ex">Standing banded hip series (left stance)<span class="cue">Crutch-supported · trains single-leg stability on the good side</span></td><td>2 × 12</td><td>Balance + hip drive prep</td></tr>
+    </tbody></table>
+  </div>
+
+  <div class="box gold">
+    <h3>Blood-flow restriction (BFR) — the muscle-saver worth asking about <span class="pill hold">ask PT</span></h3>
+    <p>This is the one genuinely new high-ROI tool. A cuff that partially limits blood flow lets a <b>light</b> load — or even <b>no load at all</b> — produce a heavy-training signal in the muscle. Two uses for you:</p>
+    <p style="margin-top:.4rem"><b>Right (immobilized) thigh:</b> BFR — on its own, or paired with the quad NMES above — <em>attenuates the muscle and strength loss of disuse</em>, with no joint motion and zero foot load (reviewed protocol: ~5 × 5 min cuffed / 3 min free, twice daily; BFR+EMS, Zhao 2020 / Hughes review). <b>Left leg:</b> low-load BFR lets the good leg chase a big stimulus without grinding heavy iron every session.</p>
+    <p style="margin-top:.4rem">BFR is now standard in ACL rehab, so it also rehearses a tool you'll likely use at Berkeley. <b>You already have the occlusion cuffs</b>, so the only open question is the <b>pressure (limb-occlusion %) and rep scheme</b> — get that from the PT. Use the real cuffs, never a band knotted around the leg (uncontrolled pressure).</p>
+  </div>
+
+  <div class="box warn">
+    <h3>Swimming — cleared, with the legs strapped out of it</h3>
+    <p>The pool was previously ruled out; the written clearance puts it <b>back on the table</b>. It's excellent NWB conditioning and a mental reset. The catch is the usual tendon: a <b>flutter or dolphin kick is repeated ankle plantarflexion</b>, which pulls tibialis posterior on the navicular.</p>
+    <p style="margin-top:.4rem">So make kicking <b>physically impossible</b>, don't leave it to willpower: a <b>pull buoy between the thighs PLUS an ankle strap/band binding the ankles together</b> — the standard no-kick rig lap swimmers use to isolate the pull. Arms and lats do all the work; both legs trail dead, the right foot never drives. <b>Confirm with the PT</b> before it's a staple — the clearance is new and the navicular is high-risk.</p>
+  </div>
+</section>
+
+<section>
+  <div class="section-title">6-week progression</div>
+  <p style="color:var(--muted);font-size:.85rem;margin-bottom:.7rem">Same four days; the dial moves on volume and conditioning, not on the foot.</p>
+  <table><thead><tr><th>Week</th><th>Focus</th><th>Upper lifting</th><th>Arm-bike intervals</th></tr></thead><tbody>
+    <tr><td><b>1–2</b></td><td>Re-establish · groove movements, manage boot fatigue</td><td>3 sets, RPE 7</td><td>8 × 30/30</td></tr>
+    <tr><td><b>3–4</b></td><td>Build · add the 4th set, push volume</td><td>4 sets, RPE 8</td><td>10 × 30/30</td></tr>
+    <tr><td><b>5–6</b></td><td>Hold + sharpen · feel strong walking into reexam</td><td>4 sets, RPE 8</td><td>12 × 30/30</td></tr>
+  </tbody></table>
+</section>
+
+<section>
+  <div class="box fuel">
+    <h3>🦴 Fuel the bone</h3>
+    <p class="lead">Good news: the RED-S screen came back clear.</p>
+    <p style="margin-top:.4rem">A healing bone is hungry — this is a phase to eat <b>enough</b>, not less, even though training volume drops. Bone repair runs on adequate energy plus calcium, vitamin D, and protein. Keep meals regular and protein steady across the day. You've been referred to a <b>sports dietitian</b> for the D1 transition — bring the navicular up so they can dial in calcium / vitamin D specifically for bone healing. Trust their numbers over anything generic here.</p>
+  </div>
+</section>
+
+<section>
+  <div class="box gold">
+    <h3>NWB non-negotiables</h3>
+    <ul class="clean">
+      <li><b>Crutches every step.</b> No "quick hops" on the boot — one bad load can cost weeks on a high-risk bone.</li>
+      <li><b>Protect the good side.</b> Crutching overloads your hands, shoulders, and left leg — the upper work doubles as armor against compensation strain.</li>
+      <li><b>Move daily.</b> Even on off days: arm bike, mobility, get blood moving. Stillness is the enemy of morale, not of healing.</li>
+      <li><b>Sleep is rehab.</b> Bone remodels overnight — protect 8+ hours.</li>
+      <li><b>Any new foot pain at rest or sharp pain → stop and tell the care team.</b> Not a "push through" phase.</li>
+    </ul>
+  </div>
+</section>
+
+<section>
+  <div class="section-title">Take these to the 6-week reexam</div>
+  <ul class="clean check">
+    <li><b>Imaging before weight-bearing?</b> Is clearance purely clinical (pain-free), or do you want CT/MRI to confirm bony union first, given it's a high-risk navicular?</li>
+    <li><b>Leg tier — confirmed in writing ✓.</b> Next: when can the right leg progress from open-chain/iso toward early closed-chain, and on what imaging/pain criteria?</li>
+    <li><b>BFR — cuffs on hand ✓:</b> what pressure (limb-occlusion %) and rep scheme for the right thigh (alone or with the quad e-stim)? And low-load BFR targets for the left leg?</li>
+    <li><b>E-stim — TENS/EMS unit on hand ✓:</b> confirm the muscle (EMS) mode + electrode placement to get a real quad contraction, not just sensory TENS.</li>
+    <li><b>NMES / e-stim:</b> can the PT clear quadriceps electrical stim on the right leg to limit muscle wasting? (No joint motion, no foot load — drives the muscle directly.)</li>
+    <li><b>Swimming — cleared ✓.</b> Plan is pull buoy + ankle strap (no kick at all); confirm that's acceptable. Aqua-jog (foot-push) still out.</li>
+    <li><b>Return-to-run protocol:</b> can the PT team share their written progression so the coaching plan dovetails with it?</li>
+    <li><b>Bone-health labs:</b> were vitamin D / calcium checked, and is a DEXA worth it given a female athlete with a stress fracture?</li>
+  </ul>
+</section>
+
+<div class="disclaimer">
+  <b>This is a coaching plan, not medical advice.</b> It works within Dr. Falcocchia's clearances (NWB; core + upper-body lifting, and now a written leg-strengthening clearance plus band work and swimming) and defers every loading decision to Shaylan's medical and PT team. The right foot and ankle stay passive — that limit is unchanged. NMES, BFR and swim-kick mechanics are flagged “ask PT” until confirmed. If anything here conflicts with the care team, the care team wins. Stop any movement that causes foot pain and report it.
+</div>
+
+<footer>SJR SYSTEM · SHAYLAN · BOOT PHASE v1.3 · 2026-06-23 · +self-serve demo links (＋save per exercise) · cache-bust refresh ↺</footer>
+
+<button id="refresh-fab" title="Load latest version" onclick="location.replace(location.pathname+'?t='+Date.now())">↺</button>
+<script>
+// Cache-bust: no ?t= param -> redirect once with Date.now() so the CDN always serves the freshest copy
+(function(){
+  if(!new URLSearchParams(location.search).get('t')){
+    location.replace(location.pathname + '?t=' + Date.now());
+    return;
+  }
+  // ---- Per-exercise demo links (self-serve, saved on this device) ----
+  var KEY='sh_demos', demos={};
+  try{ demos=JSON.parse(localStorage.getItem(KEY)||'{}'); }catch(e){ demos={}; }
+  function save(){ try{ localStorage.setItem(KEY,JSON.stringify(demos)); }catch(e){} }
+  function valid(u){ return /^https?:\/\//i.test(u); }
+  function nameOf(td){
+    var c=td.cloneNode(true);
+    c.querySelectorAll('.cue,.pill,.demo-ctrl').forEach(function(n){ n.remove(); });
+    return c.textContent.trim().replace(/\s+/g,' ');
+  }
+  function build(){
+    document.querySelectorAll('td.ex').forEach(function(td){
+      var name=nameOf(td); if(!name) return;
+      var ex=td.querySelector('.demo-ctrl'); if(ex) ex.remove();
+      var w=document.createElement('span'); w.className='demo-ctrl';
+      var url=demos[name];
+      if(url && valid(url)){
+        var a=document.createElement('a');
+        a.href=url; a.target='_blank'; a.rel='noopener'; a.className='demo-link'; a.textContent='▶ demo';
+        var e=document.createElement('button');
+        e.type='button'; e.className='demo-btn'; e.textContent='✎'; e.title='Change / remove';
+        e.addEventListener('click',function(ev){ ev.stopPropagation(); edit(name); });
+        w.appendChild(a); w.appendChild(e);
+      } else {
+        var b=document.createElement('button');
+        b.type='button'; b.className='demo-btn add'; b.textContent='＋ demo'; b.title='Save a demo video link';
+        b.addEventListener('click',function(ev){ ev.stopPropagation(); edit(name); });
+        var sr=document.createElement('a');
+        sr.href='https://www.youtube.com/results?search_query='+encodeURIComponent(name+' exercise');
+        sr.target='_blank'; sr.rel='noopener'; sr.className='demo-search'; sr.textContent='\ud83d\udd0d'; sr.title='Search YouTube';
+        w.appendChild(b); w.appendChild(sr);
+      }
+      td.appendChild(w);
+    });
+  }
+  function edit(name){
+    var cur=demos[name]||'';
+    var u=prompt('Demo video link for:\n'+name+'\n\nPaste a YouTube URL (e.g. from your unlisted playlist).\nLeave empty to remove.', cur);
+    if(u===null) return;
+    u=u.trim();
+    if(!u){ delete demos[name]; }
+    else if(valid(u)){ demos[name]=u; }
+    else { alert('Please paste a full http(s):// link.'); return; }
+    save(); build();
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded', build);
+  else build();
+})();
+</script>
+</body>
+</html>

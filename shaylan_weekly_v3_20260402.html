@@ -1,0 +1,2366 @@
+<!DOCTYPE html>
+<!-- VERSION: 3.4 | Updated: 2026-08-18 | Prior: 3.3 | GPP · Return block + auto-land past the meet calendar (post-injury base, decoupled from comp dates) + persistent 🧘 Movement quick-link to Library #restoration. Full changelog in CLAUDE.md File Inventory. -->
+<!-- CHANGELOG: v3.4 GPP · Return reset · v3.3 W11 off-week + W12 return + W13 Sacramento (conditional) -->
+
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; connect-src https://jedsnurnnwmpcbdvtlbs.supabase.co; img-src 'self' data:;">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#0a0a0f">
+<title>Shaylan — This Week · v3</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0a0a0f;
+  --surface:#13131a;
+  --surface2:#1c1c26;
+  --border:#2a2a38;
+  --accent:#00e5ff;
+  --gold:#ffd166;
+  --text:#e8e8f0;
+  --muted:#8888aa;
+  --success:#06d6a0;
+  --warn:#ff6b35;
+  --red:#ef233c;
+  --radius:12px;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html{scroll-behavior:smooth;height:100%}
+body{
+  font-family:'IBM Plex Sans',sans-serif;
+  background:var(--bg);color:var(--text);
+  min-height:100vh;
+  padding-bottom:6rem;
+  font-size:15px;line-height:1.6;
+}
+
+/* ── HEADER ── */
+header{
+  background:rgba(10,10,15,0.97);
+  backdrop-filter:blur(16px);
+  border-bottom:1px solid var(--border);
+  padding:1rem 1.25rem .85rem;
+  position:sticky;top:0;z-index:50;
+}
+.hdr-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:.75rem}
+.hdr-name{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:1.9rem;letter-spacing:.08em;
+  color:var(--accent);line-height:1
+}
+.hdr-sub{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:.62rem;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--muted);margin-top:.15rem
+}
+.phase-badge{
+  background:var(--surface2);border:1px solid var(--border);
+  border-radius:6px;padding:.35rem .65rem;
+  font-family:'IBM Plex Mono',monospace;font-size:.65rem;
+  letter-spacing:.08em;text-transform:uppercase;
+  color:var(--gold);text-align:right;line-height:1.4
+}
+.phase-badge span{display:block;color:var(--muted);font-size:.58rem}
+
+/* MEET STRIP */
+.meet-strip{
+  display:grid;grid-template-columns:1fr 1px 1fr;
+  gap:.5rem;align-items:center;
+  background:var(--surface2);border:1px solid var(--border);
+  border-radius:8px;padding:.6rem .85rem;
+}
+.meet-item{text-align:center}
+.meet-label{font-family:'IBM Plex Mono',monospace;font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.meet-name{font-weight:600;font-size:.82rem;color:var(--text);margin:.1rem 0}
+.meet-count{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:.04em;color:var(--gold);line-height:1}
+.meet-divider{width:1px;height:36px;background:var(--border)}
+
+/* ── GATE BANNER ── */
+.gate-banner{
+  margin:1rem 1.25rem 0;
+  border:1px solid var(--border);border-left:3px solid var(--red);
+  background:rgba(239,35,60,.06);border-radius:0 8px 8px 0;
+  padding:.7rem 1rem;
+  display:flex;align-items:center;gap:.65rem;
+}
+.gate-banner-text{font-family:'IBM Plex Mono',monospace;font-size:.7rem;color:var(--red);letter-spacing:.04em;flex:1}
+.gate-banner-text strong{display:block;font-size:.75rem;margin-bottom:.1rem}
+
+/* GATE LOG BUTTON */
+.gate-log-btn{
+  background:var(--surface2);border:1px solid var(--border);
+  border-radius:6px;padding:.35rem .65rem;
+  font-family:'IBM Plex Mono',monospace;font-size:.65rem;
+  color:var(--accent);cursor:pointer;white-space:nowrap;letter-spacing:.06em;
+  text-transform:uppercase;
+}
+
+/* ── DAY SELECTOR ── */
+.day-selector{
+  display:grid;grid-template-columns:repeat(7,1fr);
+  gap:.3rem;padding:1rem 1.25rem .5rem;
+  position:sticky;top:113px;z-index:40;
+  background:var(--bg);
+  border-bottom:1px solid var(--border);
+}
+.day-btn{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:8px;padding:.45rem 0;
+  font-family:'IBM Plex Mono',monospace;font-size:.65rem;
+  letter-spacing:.04em;color:var(--muted);cursor:pointer;
+  transition:all .15s;text-align:center;
+  display:flex;flex-direction:column;align-items:center;gap:.1rem;
+}
+.day-btn .day-initial{font-size:.62rem;font-weight:600;letter-spacing:-.02em}
+.day-btn .day-date{font-size:.58rem;color:var(--muted);line-height:1;margin-top:.05rem}
+.day-btn.today .day-date{color:var(--gold)}
+.day-btn.active .day-date{color:var(--bg)}
+.day-btn .day-dot{width:4px;height:4px;border-radius:50%;background:transparent;transition:background .15s}
+.day-btn.today{border-color:var(--gold);color:var(--gold)}
+.day-btn.today .day-dot{background:var(--gold)}
+.day-btn.active{background:var(--accent);border-color:var(--accent);color:var(--bg)}
+.day-btn.today.active{background:var(--gold);border-color:var(--gold);color:var(--bg)}
+.day-btn.logged .day-dot{background:var(--success)}
+
+/* ── MAIN CONTENT ── */
+main{padding:1.25rem}
+
+.day-intent{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:2.2rem;letter-spacing:.06em;line-height:1;
+  color:var(--text);margin-bottom:.2rem
+}
+.day-sub{font-size:.82rem;color:var(--muted);margin-bottom:1.25rem}
+
+/* COLLAGEN WINDOW */
+.collagen-alert{
+  background:rgba(255,209,102,.07);
+  border:1px solid rgba(255,209,102,.35);
+  border-radius:10px;padding:.8rem 1rem;
+  margin-bottom:1.25rem;
+  display:flex;gap:.65rem;align-items:flex-start;
+}
+.collagen-icon{font-size:1.1rem;flex-shrink:0;margin-top:.05rem}
+.collagen-text{font-family:'IBM Plex Mono',monospace;font-size:.72rem;color:var(--gold);line-height:1.5}
+.collagen-text strong{display:block;font-size:.78rem;margin-bottom:.1rem}
+
+/* EXERCISE BLOCKS */
+.ex-block{margin-bottom:1.25rem}
+.block-label{
+  font-family:'IBM Plex Mono',monospace;font-size:.62rem;
+  letter-spacing:.16em;text-transform:uppercase;
+  color:var(--accent);
+  display:flex;align-items:center;gap:.4rem;
+  margin-bottom:.6rem;padding-bottom:.4rem;
+  border-bottom:1px solid var(--border);
+}
+.block-label::before{content:'';width:10px;height:1px;background:var(--accent)}
+.block-label.gold{color:var(--gold)}
+.block-label.gold::before{background:var(--gold)}
+
+.ex-row{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:.6rem 0;border-bottom:1px solid rgba(42,42,56,.6);
+  gap:.5rem;
+}
+.ex-row:last-child{border-bottom:none}
+.ex-name{font-size:.88rem;color:var(--text);flex:1;line-height:1.4}
+.ex-name small{display:block;font-size:.75rem;color:var(--muted);margin-top:.1rem}
+.ex-dose{
+  font-family:'IBM Plex Mono',monospace;font-size:.75rem;
+  color:var(--accent);white-space:nowrap;
+  background:rgba(0,229,255,.07);border:1px solid rgba(0,229,255,.2);
+  border-radius:4px;padding:.2rem .45rem;
+}
+.ex-dose.gold{color:var(--gold);background:rgba(255,209,102,.07);border-color:rgba(255,209,102,.2)}
+
+/* REST DAY */
+.rest-card{
+  text-align:center;padding:3rem 1.5rem;
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--radius);
+}
+.rest-icon{font-size:2.5rem;margin-bottom:.75rem}
+.rest-title{font-family:'Bebas Neue',sans-serif;font-size:1.8rem;letter-spacing:.08em;color:var(--muted);margin-bottom:.5rem}
+.rest-text{font-size:.85rem;color:var(--muted);max-width:220px;margin:0 auto}
+
+/* ── GATE LOG MODAL ── */
+.modal-bg{
+  display:none;position:fixed;inset:0;z-index:100;
+  background:rgba(0,0,0,.75);backdrop-filter:blur(6px);
+  align-items:flex-end;justify-content:center;
+}
+.modal-bg.open{display:flex}
+.modal{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:16px 16px 0 0;
+  width:100%;max-width:480px;
+  padding:1.5rem 1.5rem 2.5rem;
+}
+.modal-title{
+  font-family:'Bebas Neue',sans-serif;font-size:1.6rem;
+  letter-spacing:.06em;color:var(--text);margin-bottom:.25rem
+}
+.modal-sub{font-size:.8rem;color:var(--muted);margin-bottom:1.5rem}
+
+.score-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:.5rem;margin-bottom:1.5rem}
+.score-btn{
+  background:var(--surface2);border:2px solid var(--border);
+  border-radius:8px;padding:.75rem 0;
+  font-family:'Bebas Neue',sans-serif;font-size:1.5rem;
+  cursor:pointer;transition:all .15s;color:var(--muted);
+  text-align:center;
+}
+.score-btn[data-score="0"]{border-color:var(--success);color:var(--success)}
+.score-btn[data-score="1"]{border-color:#4ecb71;color:#4ecb71}
+.score-btn[data-score="2"]{border-color:var(--gold);color:var(--gold)}
+.score-btn[data-score="3"]{border-color:var(--warn);color:var(--warn)}
+.score-btn[data-score="4"]{border-color:var(--red);color:var(--red)}
+.score-btn[data-score="5"]{border-color:var(--red);color:var(--red)}
+.score-btn.selected{transform:scale(1.08);box-shadow:0 0 16px currentColor}
+
+.score-legend{
+  display:flex;justify-content:space-between;
+  font-family:'IBM Plex Mono',monospace;font-size:.62rem;
+  color:var(--muted);margin-bottom:1.5rem
+}
+
+.timing-toggle{
+  display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin-bottom:1.5rem
+}
+.timing-btn{
+  background:var(--surface2);border:1px solid var(--border);
+  border-radius:8px;padding:.65rem;
+  font-family:'IBM Plex Mono',monospace;font-size:.72rem;
+  letter-spacing:.06em;text-transform:uppercase;
+  cursor:pointer;color:var(--muted);text-align:center;
+  transition:all .15s;
+}
+.timing-btn.active{background:rgba(0,229,255,.1);border-color:var(--accent);color:var(--accent)}
+
+.gate-status{
+  border-radius:8px;padding:.85rem 1rem;
+  margin-bottom:1.25rem;
+  font-family:'IBM Plex Mono',monospace;font-size:.75rem;
+  text-align:center;letter-spacing:.06em;display:none;
+}
+.gate-status.pass{background:rgba(6,214,160,.1);border:1px solid var(--success);color:var(--success)}
+.gate-status.hold{background:rgba(239,35,60,.1);border:1px solid var(--red);color:var(--red)}
+
+.modal-save{
+  width:100%;background:var(--accent);color:var(--bg);
+  border:none;border-radius:10px;padding:1rem;
+  font-family:'IBM Plex Mono',monospace;font-size:.85rem;
+  font-weight:600;letter-spacing:.1em;text-transform:uppercase;
+  cursor:pointer;
+}
+.modal-cancel{
+  width:100%;background:none;border:1px solid var(--border);
+  color:var(--muted);border-radius:10px;padding:.75rem;
+  font-family:'IBM Plex Mono',monospace;font-size:.75rem;
+  letter-spacing:.08em;text-transform:uppercase;cursor:pointer;
+  margin-top:.5rem;
+}
+
+/* ── HISTORY ── */
+.history-section{margin-top:2rem}
+.history-label{
+  font-family:'IBM Plex Mono',monospace;font-size:.62rem;
+  letter-spacing:.16em;text-transform:uppercase;color:var(--muted);
+  margin-bottom:.75rem;display:flex;align-items:center;gap:.4rem
+}
+.history-label::before{content:'';width:10px;height:1px;background:var(--muted)}
+.log-row{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:.55rem 0;border-bottom:1px solid rgba(42,42,56,.5);
+  font-size:.82rem;
+}
+.log-row:last-child{border-bottom:none}
+.log-date{color:var(--muted);font-family:'IBM Plex Mono',monospace;font-size:.72rem}
+.log-score{
+  font-family:'Bebas Neue',sans-serif;font-size:1.2rem;
+  letter-spacing:.04em;
+}
+.log-score.ok{color:var(--success)}
+.log-score.warn{color:var(--gold)}
+.log-score.bad{color:var(--red)}
+.log-timing{font-family:'IBM Plex Mono',monospace;font-size:.62rem;color:var(--muted)}
+
+/* ── WEEK NAV ── */
+.week-nav{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:.75rem 1.25rem;
+  border-top:1px solid var(--border);
+  position:fixed;bottom:0;left:0;right:0;
+  background:rgba(10,10,15,.97);backdrop-filter:blur(12px);
+  z-index:50;
+}
+.week-nav-info{text-align:center}
+.week-nav-label{font-family:'IBM Plex Mono',monospace;font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.week-nav-week{font-family:'Bebas Neue',sans-serif;font-size:1.1rem;letter-spacing:.06em;color:var(--text);line-height:1}
+.nav-arrow{
+  background:var(--surface2);border:1px solid var(--border);
+  border-radius:8px;width:40px;height:40px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:1rem;cursor:pointer;color:var(--muted);
+  transition:all .15s;
+}
+.nav-arrow:hover{border-color:var(--accent);color:var(--accent)}
+.nav-arrow:disabled{opacity:.3;cursor:default}
+
+/* ── EXPANDABLE EXERCISE ROW ── */
+.ex-row{cursor:pointer;user-select:none}
+.ex-row:active{background:rgba(255,255,255,.03)}
+.ex-chevron{
+  font-size:.7rem;color:var(--muted);flex-shrink:0;
+  transition:transform .2s;margin-left:.4rem;
+}
+.ex-row.open .ex-chevron{transform:rotate(180deg)}
+.ex-detail{
+  display:none;
+  padding:.75rem .85rem .85rem;
+  background:var(--surface2);
+  border-radius:0 0 8px 8px;
+  border:1px solid var(--border);
+  border-top:none;
+  margin-top:-2px;
+  margin-bottom:.5rem;
+}
+.ex-detail.open{display:block}
+.ex-detail-section{margin-bottom:.65rem}
+.ex-detail-section:last-child{margin-bottom:0}
+.ex-detail-label{
+  font-family:'IBM Plex Mono',monospace;font-size:.6rem;
+  letter-spacing:.14em;text-transform:uppercase;
+  color:var(--accent);margin-bottom:.25rem
+}
+.ex-detail-label.gold{color:var(--gold)}
+.ex-detail-text{font-size:.82rem;color:var(--text);line-height:1.55}
+.ex-video-link{
+  display:inline-flex;align-items:center;gap:.35rem;
+  margin-top:.6rem;
+  font-family:'IBM Plex Mono',monospace;font-size:.68rem;
+  color:var(--muted);border:1px solid var(--border);
+  border-radius:4px;padding:.3rem .65rem;
+  text-decoration:none;letter-spacing:.06em;
+  transition:color .15s,border-color .15s;
+}
+.ex-video-link:hover{color:var(--accent);border-color:var(--accent)}
+
+/* ── EVENT SELECTOR (comp days) ── */
+.event-selector{
+  background:var(--surface2);
+  border:1px solid var(--border);
+  border-radius:10px;
+  padding:.85rem 1rem;
+  margin-bottom:1.25rem;
+}
+.event-selector-label{
+  font-family:'IBM Plex Mono',monospace;font-size:.62rem;
+  letter-spacing:.16em;text-transform:uppercase;
+  color:var(--accent);margin-bottom:.65rem;
+  display:flex;align-items:center;gap:.4rem;
+}
+.event-selector-label::before{content:'';width:10px;height:1px;background:var(--accent)}
+.event-chips{display:flex;flex-wrap:wrap;gap:.45rem}
+.event-chip{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:20px;padding:.4rem .85rem;
+  font-family:'IBM Plex Mono',monospace;font-size:.7rem;
+  letter-spacing:.06em;color:var(--muted);cursor:pointer;
+  transition:all .15s;user-select:none;
+}
+.event-chip.selected{
+  background:rgba(0,229,255,.12);
+  border-color:var(--accent);color:var(--accent);
+}
+.event-chip.selected.lj{
+  background:rgba(255,209,102,.12);
+  border-color:var(--gold);color:var(--gold);
+}
+.event-chip.selected.relay{
+  background:rgba(6,214,160,.12);
+  border-color:var(--success);color:var(--success);
+}
+.event-prehab-divider{
+  border:none;border-top:1px solid var(--border);
+  margin:1rem 0 1.25rem;
+}
+
+/* ── WEEK HOLD BANNER ── */
+.hold-banner{
+  background:rgba(239,35,60,.08);
+  border:1px solid var(--red);
+  border-radius:10px;padding:1rem 1.1rem;
+  margin-bottom:1.25rem;
+  display:flex;gap:.65rem;align-items:flex-start;
+}
+.hold-icon{font-size:1.1rem;flex-shrink:0}
+.hold-text{font-size:.82rem;color:var(--red);line-height:1.5}
+.hold-text strong{display:block;font-weight:600;margin-bottom:.1rem}
+
+@media(max-width:360px){
+  .day-btn .day-initial{font-size:.62rem}
+  .score-grid{grid-template-columns:repeat(5,1fr);gap:.35rem}
+}
+
+  /* ── FRAMEWORK SKELETON ── */
+  .framework-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.6rem 0.85rem;
+    margin: 0.75rem 0 0.25rem;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--gold);
+    border-radius: 0 4px 4px 0;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  .framework-med {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.58rem;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+  .framework-med strong {
+    color: var(--gold);
+    font-weight: 500;
+  }
+  .browse-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.35rem 0.75rem;
+    background: none;
+    border: 1px solid rgba(255,209,102,0.35);
+    border-radius: 3px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--gold);
+    text-decoration: none;
+    white-space: nowrap;
+    transition: all 0.15s;
+  }
+  .browse-btn:hover {
+    background: rgba(255,209,102,0.08);
+    border-color: var(--gold);
+  }
+  .browse-btn::after { content: ' →'; }
+
+/* ── REFRESH FAB ── */
+#refresh-fab{
+  position:fixed;bottom:4.5rem;right:1rem;z-index:500;
+  background:var(--surface2);border:1px solid var(--accent);
+  border-radius:50%;width:2.6rem;height:2.6rem;
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.1rem;cursor:pointer;opacity:.85;transition:opacity .2s,transform .15s;
+  color:var(--accent);
+}
+#refresh-fab:active{opacity:1;transform:rotate(180deg);}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="hdr-top">
+    <div>
+      <div class="hdr-name">SHAYLAN</div>
+      <div class="hdr-sub">100 · 200 · Long Jump · MJC → Berkeley</div>
+    </div>
+    <div class="phase-badge" id="phase-badge">
+      P1 · W1<span>Mar 14–20</span>
+    </div>
+  </div>
+  <div class="meet-strip" id="meet-strip">
+    <div class="meet-item">
+      <div class="meet-label" id="meet1-label">Next Meet</div>
+      <div class="meet-name" id="meet1-name">—</div>
+      <div class="meet-count" id="meet1-days">—</div>
+    </div>
+    <div class="meet-divider"></div>
+    <div class="meet-item">
+      <div class="meet-label" id="meet2-label">Then</div>
+      <div class="meet-name" id="meet2-name">—</div>
+      <div class="meet-count" id="meet2-days">—</div>
+    </div>
+    <div class="meet-divider"></div>
+    <div class="meet-item">
+      <div class="meet-label">State</div>
+      <div class="meet-name">May 15</div>
+      <div class="meet-count" id="state-count">—</div>
+    </div>
+  </div>
+</header>
+
+<!-- GATE BANNER -->
+<div class="gate-banner" id="gate-banner">
+  <div style="font-size:1rem;flex-shrink:0">🔴</div>
+  <div class="gate-banner-text">
+    <strong>Autoregulation Gates</strong>
+    Knee ≤ 3/10 · Back ≤ 2/10 — during AND 24hrs after
+  </div>
+  <div style="display:flex;gap:.5rem;">
+  <button class="gate-log-btn" style="flex:1;" onclick="openGateModal()">📋 Log</button>
+  <button class="gate-log-btn" style="flex:1;background:var(--surface2);border-color:rgba(200,80,60,0.3);color:#c8503c;" onclick="openInjuryModal()">⚠ Issue</button>
+</div>
+</div>
+
+<!-- DAY SELECTOR -->
+<div class="day-selector" id="day-selector">
+  <button class="day-btn" data-day="0" onclick="selectDay(0)"><span class="day-initial">M</span><span class="day-date" id="ddate-0"></span><span class="day-dot"></span></button>
+  <button class="day-btn" data-day="1" onclick="selectDay(1)"><span class="day-initial">T</span><span class="day-date" id="ddate-1"></span><span class="day-dot"></span></button>
+  <button class="day-btn" data-day="2" onclick="selectDay(2)"><span class="day-initial">W</span><span class="day-date" id="ddate-2"></span><span class="day-dot"></span></button>
+  <button class="day-btn" data-day="3" onclick="selectDay(3)"><span class="day-initial">T</span><span class="day-date" id="ddate-3"></span><span class="day-dot"></span></button>
+  <button class="day-btn" data-day="4" onclick="selectDay(4)"><span class="day-initial">F</span><span class="day-date" id="ddate-4"></span><span class="day-dot"></span></button>
+  <button class="day-btn" data-day="5" onclick="selectDay(5)"><span class="day-initial">S</span><span class="day-date" id="ddate-5"></span><span class="day-dot"></span></button>
+  <button class="day-btn" data-day="6" onclick="selectDay(6)"><span class="day-initial">S</span><span class="day-date" id="ddate-6"></span><span class="day-dot"></span></button>
+</div>
+
+<!-- MAIN -->
+<main id="main-content"></main>
+
+<!-- GATE LOG MODAL -->
+<div class="modal-bg" id="gate-modal">
+  <div class="modal">
+    <div class="modal-title">Pain Log</div>
+    <div class="modal-sub" id="modal-date-label">Logging for today</div>
+
+    <div id="pending-summary" style="display:none;margin-bottom:1rem;
+      background:var(--surface2);border:1px solid var(--border);border-radius:4px;
+      padding:0.6rem 0.85rem;">
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:0.58rem;
+        letter-spacing:0.14em;text-transform:uppercase;color:var(--dim);margin-bottom:0.4rem;">
+        Queued — tap Save all to commit
+      </div>
+      <div id="pending-list" style="font-family:'IBM Plex Mono',monospace;
+        font-size:0.72rem;color:var(--accent2);line-height:1.8;"></div>
+    </div>
+
+    <div class="metric-toggle" style="grid-template-columns:1fr 1fr 1fr;">
+      <button class="metric-btn active" id="mbtn-knee" onclick="selectMetric('knee')">🦵 Knee</button>
+      <button class="metric-btn" id="mbtn-shin" onclick="selectMetric('shin')">🦴 Shin</button>
+      <button class="metric-btn" id="mbtn-back" onclick="selectMetric('back')">🔴 Back</button>
+    </div>
+
+    <div id="score-section-knee">
+      <div class="score-label">Knee Pain — Gate ≤ 3/10</div>
+      <div class="score-grid">
+        <button class="score-btn" data-v="0" onclick="selectScore(0)">0</button>
+        <button class="score-btn" data-v="1" onclick="selectScore(1)">1</button>
+        <button class="score-btn" data-v="2" onclick="selectScore(2)">2</button>
+        <button class="score-btn" data-v="3" onclick="selectScore(3)">3</button>
+        <button class="score-btn" data-v="4" onclick="selectScore(4)">4</button>
+        <button class="score-btn" data-v="5" onclick="selectScore(5)">5</button>
+      </div>
+      <div class="score-legend"><span>0 = None</span><span>3 = Gate limit</span><span>5 = Stop</span></div>
+    </div>
+
+    <div id="score-section-shin" style="display:none">
+      <div class="score-label">Shin Load — Track Trend</div>
+      <div class="score-grid">
+        <button class="score-btn" data-v="0" onclick="selectScore(0)">0</button>
+        <button class="score-btn" data-v="1" onclick="selectScore(1)">1</button>
+        <button class="score-btn" data-v="2" onclick="selectScore(2)">2</button>
+        <button class="score-btn" data-v="3" onclick="selectScore(3)">3</button>
+        <button class="score-btn" data-v="4" onclick="selectScore(4)">4</button>
+        <button class="score-btn" data-v="5" onclick="selectScore(5)">5</button>
+      </div>
+      <div class="score-legend"><span>0 = Silent</span><span>2 = Acceptable</span><span>3+ = Reduce</span></div>
+    </div>
+
+    <div id="score-section-back" style="display:none">
+      <div class="score-label">Back — Log and Monitor</div>
+      <div class="score-grid">
+        <button class="score-btn" data-v="0" onclick="selectScore(0)">0</button>
+        <button class="score-btn" data-v="1" onclick="selectScore(1)">1</button>
+        <button class="score-btn" data-v="2" onclick="selectScore(2)">2</button>
+        <button class="score-btn" data-v="3" onclick="selectScore(3)">3</button>
+        <button class="score-btn" data-v="4" onclick="selectScore(4)">4</button>
+        <button class="score-btn" data-v="5" onclick="selectScore(5)">5</button>
+      </div>
+      <div class="score-legend"><span>0 = None</span><span>2 = Gate limit</span><span>3+ = Day C</span></div>
+    </div>
+
+    <div class="timing-toggle" style="grid-template-columns:1fr 1fr 1fr;">
+      <button class="timing-btn active" id="tbtn-am" onclick="selectTiming('am')">AM</button>
+      <button class="timing-btn" id="tbtn-pre" onclick="selectTiming('pre')">Pre-Session</button>
+      <button class="timing-btn" id="tbtn-post" onclick="selectTiming('post')">Post-Session</button>
+    </div>
+
+    <div class="gate-status" id="gate-status"></div>
+
+    <div style="margin-bottom:.45rem;">
+      <button class="modal-save" style="width:100%;" onclick="saveLog()">Save all</button>
+    </div>
+    <button class="modal-cancel" onclick="closeGateModal()">Cancel</button>
+  </div>
+</div>
+
+
+<!-- WEEK NAV -->
+<div class="week-nav">
+  <button class="nav-arrow" id="prev-week" onclick="changeWeek(-1)" disabled>←</button>
+  <div class="week-nav-info">
+    <div class="week-nav-label">Competition Ramp</div>
+    <div class="week-nav-week" id="nav-week-label">Week 1 of 7</div>
+  </div>
+  <button class="nav-arrow" id="next-week" onclick="changeWeek(1)">→</button>
+</div>
+
+<script>
+// Cache-bust: if no ?t= param, redirect with Date.now() — always a unique URL the CDN hasn't cached
+(function(){
+  if(!new URLSearchParams(window.location.search).get('t'))
+    window.location.replace(window.location.pathname + '?t=' + Date.now());
+})();
+
+// ─────────────────────────────────────────
+// SUPABASE CONFIG
+// ─────────────────────────────────────────
+const ATHLETE_ID = 'shaylan';
+const SUPA_URL = 'https://jedsnurnnwmpcbdvtlbs.supabase.co';
+const SUPA_KEY = 'sb_publishable_3WGolnM5dOK88Y4WdKCFGA_Hi6wj-_z';
+
+async function sbFetch(path, opts = {}){
+  const headers = { 'apikey': SUPA_KEY, 'Content-Type': 'application/json' };
+  if(opts.prefer) headers['Prefer'] = opts.prefer;
+  const res = await fetch(SUPA_URL + path, {
+    method: opts.method || 'GET',
+    headers,
+    body: opts.body || undefined,
+  });
+  if(!res.ok){ const txt = await res.text(); throw new Error('Supabase ' + res.status + ': ' + txt); }
+  if(res.status === 204) return [];
+  const ct = res.headers.get('content-type') || '';
+  return ct.includes('application/json') ? res.json() : [];
+}
+
+function sbDateStr(d){
+  // Always use local date constructor output — never toISOString
+  return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+}
+
+function todayStr(){
+  return sbDateStr(new Date());
+}
+
+async function loadGateLogs(athleteId, logsArray){
+  try {
+    const since = new Date(); since.setDate(since.getDate() - 60);
+    const rows = await sbFetch(
+      '/rest/v1/pain_logs?athlete_id=eq.' + athleteId +
+      '&date=gte.' + sbDateStr(since) +
+      '&order=created_at.desc&select=*'
+    );
+    if(rows && rows.length){
+      const remote = rows.map(r => ({
+        date: r.date, metric: r.metric, score: r.score,
+        timing: r.timing, ts: new Date(r.created_at).getTime(), sb_id: r.id
+      }));
+      const remoteKeys = new Set(remote.map(r => r.date+'|'+r.metric+'|'+r.timing+'|'+r.score));
+      const localOnly = logsArray.filter(l => !l.sb_id && !remoteKeys.has(l.date+'|'+l.metric+'|'+l.timing+'|'+l.score));
+      logsArray.length = 0;
+      remote.forEach(r => logsArray.push(r));
+      localOnly.forEach(r => logsArray.push(r));
+    }
+    showSyncBadge('ok');
+  } catch(e){ console.warn('Supabase load failed — using local:', e.message); showSyncBadge('offline'); }
+}
+
+async function saveGateLog(athleteId, entry){
+  try {
+    const row = { athlete_id: athleteId, date: entry.date, metric: entry.metric || 'knee',
+                  score: entry.score, timing: entry.timing || 'during' };
+    const result = await sbFetch('/rest/v1/pain_logs', {
+      method: 'POST', prefer: 'return=representation', body: JSON.stringify(row)
+    });
+    if(result && result[0]) entry.sb_id = result[0].id;
+    showSyncBadge('ok');
+  } catch(e){ console.warn('Supabase save failed:', e.message); showSyncBadge('offline'); }
+}
+
+async function loadWeekState(athleteId, defaultWeek){
+  try {
+    const rows = await sbFetch('/rest/v1/athlete_state?athlete_id=eq.' + athleteId + '&select=current_week');
+    if(rows && rows[0] && rows[0].current_week !== undefined) return rows[0].current_week;
+  } catch(e){ console.warn('Week state load failed:', e.message); }
+  return defaultWeek;
+}
+
+async function saveWeekState(athleteId, weekIdx){
+  try {
+    await sbFetch('/rest/v1/athlete_state', {
+      method: 'POST', prefer: 'resolution=merge-duplicates,return=minimal',
+      body: JSON.stringify({ athlete_id: athleteId, current_week: weekIdx, updated_at: new Date().toISOString() })
+    });
+  } catch(e){ console.warn('Week state save failed:', e.message); }
+}
+
+function showSyncBadge(state){
+  let el = document.getElementById('supa-sync');
+  if(!el){
+    el = document.createElement('div'); el.id = 'supa-sync';
+    el.style.cssText = 'position:fixed;bottom:5.5rem;right:1rem;z-index:200;' +
+      'font-family:monospace;font-size:0.58rem;letter-spacing:0.1em;text-transform:uppercase;' +
+      'padding:0.25rem 0.55rem;border-radius:3px;pointer-events:none;transition:opacity 0.4s;';
+    document.body.appendChild(el);
+  }
+  if(state === 'ok'){
+    el.textContent = '✓ synced'; el.style.opacity = '1';
+    el.style.background = 'rgba(6,214,160,0.15)'; el.style.color = '#06d6a0';
+    el.style.border = '1px solid rgba(6,214,160,0.3)';
+    setTimeout(() => el.style.opacity = '0', 2500);
+  } else {
+    el.textContent = '⚡ offline'; el.style.opacity = '1';
+    el.style.background = 'rgba(255,107,53,0.1)'; el.style.color = '#ff6b35';
+    el.style.border = '1px solid rgba(255,107,53,0.25)';
+    setTimeout(() => el.style.opacity = '0', 3500);
+  }
+}
+
+// ─────────────────────────────────────────
+// EXERCISE DICTIONARY — cues pulled from master guide
+// ─────────────────────────────────────────
+const EX_INFO = {
+  'Heel Rock — Calcaneal Mobility': {
+    setup: '2×10 each foot. Barefoot on firm surface. Slow, deliberate.',
+    cue: 'Shift weight forward over ball of foot — feel the calcaneus evert (inner ankle tilts toward floor). Then shift back. Not a balance drill — feel the bone move.',
+    url: 'https://www.youtube.com/results?search_query=calcaneal+heel+rock+anatomy+in+motion+subtalar'
+  },
+  'Heel Rock': {
+    setup: '2×10 each foot. Barefoot.',
+    cue: 'Shift weight forward over ball of foot — feel inner ankle tilt toward floor. Then shift back. Feel the bone move.',
+    url: 'https://www.youtube.com/results?search_query=calcaneal+heel+rock+subtalar+mobility'
+  },
+  'Wall Ankle Dorsiflexion Stretch': {
+    setup: '2–3×45s each side.',
+    cue: 'Foot flat against wall base, knee drives toward wall keeping heel down. Target: knee touches wall with foot 10–12cm away. Progress foot further from wall as range improves.',
+    url: 'https://www.youtube.com/results?search_query=wall+ankle+dorsiflexion+stretch+knee+to+wall'
+  },
+  'Short Foot Exercise': {
+    setup: '2–3×10–12s holds each foot. Seated first, then standing.',
+    cue: '"Draw the ball of the foot toward the heel without curling the toes." Toes curling = intrinsics not firing — reduce effort, reset.',
+    url: 'https://www.youtube.com/results?search_query=short+foot+exercise+intrinsic+arch+activation'
+  },
+  'Short Foot Exercise — Intrinsic Activation': {
+    setup: '2–3×10s holds each foot.',
+    cue: '"Draw the ball of the foot toward the heel without curling the toes." Toes curling = wrong. Reduce effort, reset.',
+    url: 'https://www.youtube.com/results?search_query=short+foot+exercise+intrinsic+arch+activation'
+  },
+  'Big Toe Lift': {
+    setup: '2×10–15 reps. Slow eccentric lowering.',
+    cue: 'Lift big toe only, hold 2s, lower under control. Small toes stay pressed down. Progress: lift toe, step forward, feel it activate at push-off.',
+    url: 'https://www.youtube.com/results?search_query=big+toe+extension+windlass+mechanism+sprint+drill'
+  },
+  'Big Toe Lift — Windlass Activation': {
+    setup: '2×15 reps.',
+    cue: 'Lift big toe only. Hold 2s. Lower slowly. Small toes stay down. The windlass mechanism is what drives board push-off stiffness.',
+    url: 'https://www.youtube.com/results?search_query=big+toe+extension+windlass+mechanism+sprint+drill'
+  },
+  'Copenhagen Adductor Plank': {
+    setup: 'W1: 3×10s each. W2: 4×15s. Top foot on bench or chair, bottom leg free.',
+    cue: 'Side-lying, top foot on surface. Lift hips — hold without rotation. Feel inner thigh on the top leg. Hips must not rotate back.',
+    url: 'https://www.youtube.com/results?search_query=Copenhagen+adductor+plank+groin+strength+sprint'
+  },
+  'Banded Clamshell': {
+    setup: '3×15 each side. 3s slow eccentric. Add ankle weight when 15 reps is easy.',
+    cue: 'Side-lying, hips stacked, knees bent. Rotate top knee up like a clamshell. Hips completely still — hip drives it, not the lower back.',
+    url: 'https://www.youtube.com/results?search_query=banded+clamshell+hip+abductor+gluteus+medius'
+  },
+  'Banded Clamshell — add ankle weight if ready': {
+    setup: '3×15 each side. Add ankle weight if 15 reps felt easy all week.',
+    cue: 'Hips stacked, knees bent 90°. Rotate top knee up. Pelvis completely still. Slow controlled lowering. Hip drives it.',
+    url: 'https://www.youtube.com/results?search_query=banded+clamshell+loaded+hip+abductor'
+  },
+  'Single-Leg Glute Bridge': {
+    setup: '3×12 each leg. Add 3s pause at top from W2.',
+    cue: 'Lie on back, one foot flat, other leg extended. Drive through heel, squeeze glute at top. Hips level — don\'t let the free side drop.',
+    url: 'https://www.youtube.com/results?search_query=single+leg+glute+bridge+hip+extension+PFPS'
+  },
+  'VMO Terminal Knee Extension': {
+    setup: '3×15. Light band behind knee. Full terminal extension — no partials.',
+    cue: 'Band around back of knee, step back. Extend fully. Feel the teardrop (VMO — inner lower quad) fire at the very end. No pain — activation only.',
+    url: 'https://www.youtube.com/results?search_query=terminal+knee+extension+VMO+band+patella'
+  },
+  'Patellar Isometric Wall Sit': {
+    setup: '5×45s at ~60° knee flexion. 2-min rest. NOT full depth.',
+    cue: 'Wall sit halfway down — 45–60°. Even weight both feet. Pain 0–4/10 during, and it should DECREASE across sets. If it increases, raise your hips slightly.',
+    url: 'https://www.youtube.com/results?search_query=patellar+isometric+wall+sit+PFPS+Rio'
+  },
+  'Step-Up Loaded': {
+    setup: 'Phase 2 only. 3×10 each leg. 0–60° knee range only.',
+    cue: 'Step onto box, drive through heel, extend fully at top. Control the lowering. Knee tracks over 2nd toe throughout. Pain 0–3/10.',
+    url: 'https://www.youtube.com/results?search_query=step+up+exercise+PFPS+controlled'
+  },
+  'Step-Up Loaded — progress load if Monday clean': {
+    setup: 'Add DB if bodyweight felt manageable Monday and gate was held.',
+    cue: 'Same mechanics — heel drive, 0–60° only, knee over 2nd toe. Only add load if Monday gate score was clean.',
+    url: 'https://www.youtube.com/results?search_query=step+up+loaded+PFPS+knee+control'
+  },
+  'Single-Leg RDL': {
+    setup: '3×8 each leg. 3s slow eccentric. Bodyweight first.',
+    cue: 'Hip hinge, not a squat. "Push the floor away with your heel." Pelvis stays square — rotation is compensation. Feel hamstring load all the way down.',
+    url: 'https://www.youtube.com/results?search_query=single+leg+RDL+Romanian+deadlift+hamstring+sprint'
+  },
+  'Single-Leg RDL — 3s eccentric, bodyweight': {
+    setup: '3×8 each leg. Full 3s on the lowering phase. Bodyweight.',
+    cue: 'Hip hinge back. Free leg extends behind. "Push the floor away with your heel." Pelvis stays square. Count 3 on the way down.',
+    url: 'https://www.youtube.com/results?search_query=single+leg+RDL+hip+hinge+hamstring+eccentric'
+  },
+  'Step-Down Eccentric': {
+    setup: 'Phase 2 only. 3×10 each leg. 10cm step. Pain 0–4/10.',
+    cue: 'Stand on step. Lower free foot to floor over 3–4s. Stance knee tracks over 2nd toe — no caving. Tap floor, don\'t transfer weight. Return to start. The lowering is 100% of the exercise.',
+    url: 'https://www.youtube.com/results?search_query=step+down+eccentric+PFPS+patellofemoral+rehab'
+  },
+  'Step-Down Eccentric — 10cm step': {
+    setup: '3×10 each leg. 10cm step. 3–4s controlled.',
+    cue: 'Lower the free foot slowly. Knee over 2nd toe — no caving. Tap the floor, return. The lowering is the whole exercise.',
+    url: 'https://www.youtube.com/results?search_query=step+down+eccentric+patellofemoral+PFPS'
+  },
+  'Backward Run': {
+    setup: 'P1: 3×30m. P2: 5×60m. Immediately follow each rep with forward sprint.',
+    cue: 'Drive backward from balls of feet. Lean slightly forward. Arms drive like a forward sprint. Look straight ahead. Pain 0/10 — any knee pain, stop.',
+    url: 'https://www.youtube.com/results?search_query=backward+running+sprint+training+Uthoff+PFPS'
+  },
+  'Backward Run — easy pace': {
+    setup: 'Recovery: 3×30m. Comfortable pace.',
+    cue: 'Easy backward jog. Balls of feet, slight forward lean. This is active recovery — zero knee pain.',
+    url: 'https://www.youtube.com/results?search_query=backward+running+PFPS+recovery'
+  },
+  'Backward Run + Forward Sprint Contrast': {
+    setup: '5×30–60m. Backward then immediately forward. No rest between.',
+    cue: 'Backward: balls of feet, forward lean. Immediately turn and sprint forward. The CNS transfer is the stimulus — same distance, no pause.',
+    url: 'https://www.youtube.com/results?search_query=backward+running+forward+sprint+CNS+contrast'
+  },
+  'Backward Run + Sprint Contrast': {
+    setup: '5×30m each direction. No rest between.',
+    cue: 'Backward then immediately forward. The pattern transfer is the training stimulus.',
+    url: 'https://www.youtube.com/results?search_query=backward+running+contrast+forward+sprint'
+  },
+  'Contrast warmup protocol': {
+    setup: 'Collagen + Vit C → 60 min → 6–10 min stiff ankle loading. Every speed day.',
+    cue: 'Collagen taken 60 min ago. Now: jump rope or stiff ankle hops — "hot coals," minimal knee bend. 6–10 min then stop. This is the LOX upregulation window.',
+    url: 'https://www.youtube.com/results?search_query=collagen+window+tendon+loading+Baar+Shaw'
+  },
+  'Contrast warmup protocol — competition day': {
+    setup: '~10 min before normal warmup. Non-negotiable.',
+    cue: 'Collagen taken 60 min ago. Stiff ankle hops — ankles only, minimal knee. "Hot coals." Then proceed to your normal warmup. This is patellar tendon prep.',
+    url: 'https://www.youtube.com/results?search_query=competition+warmup+tendon+loading+collagen'
+  },
+  'Log knee score': {
+    setup: 'Tap the Log button at the top of the page.',
+    cue: 'Rate 0–10. During = while training. 24hr = next morning. Both scores matter. Morning score is the key gate metric.',
+    url: null
+  },
+  'Log knee score — during': {
+    setup: 'Tap the Log button above.',
+    cue: 'Rate during session AND again next morning. Morning score higher than pre-session = exceeded tissue tolerance.',
+    url: null
+  },
+  'Check again Sunday morning': {
+    setup: '24hr gate check — log Sunday morning.',
+    cue: 'If morning score > 3/10, Saturday session exceeded tolerance. Log it. Phase progression holds.',
+    url: null
+  },
+  'Sunday morning 24hr check': {
+    setup: 'Log gate score Sunday morning.',
+    cue: 'Morning-after score is the key metric. Higher than pre-session = overloaded. Log and hold.',
+    url: null
+  },
+  'Dead Bug — Contralateral Hold': {
+    setup: '3×8 each side. Lie on back, arms vertical, knees at 90°. Slow and deliberate.',
+    cue: 'Press lower back INTO the floor — hold that pressure throughout. Extend opposite arm and leg simultaneously. If your back lifts off the floor, you\'ve gone too far. Spine doesn\'t move. Only limbs move.',
+    url: 'https://www.youtube.com/results?search_query=dead+bug+McGill+anti+extension+core+sprint'
+  },
+  'Bird Dog — 8s Hold': {
+    setup: '3×8 each side. Quadruped — hands under shoulders, knees under hips. Full 8 seconds per rep.',
+    cue: 'Extend opposite arm and leg. Spine stays completely neutral — no rotation, no sagging. Squeeze glute on the extended leg. Hold 8s. Draw elbow and knee together before switching sides.',
+    url: 'https://www.youtube.com/results?search_query=bird+dog+McGill+8+second+hold+core+stability'
+  },
+  'Side Plank': {
+    setup: '3×30s each side. Elbow under shoulder, hips stacked. Note if one side is weaker — that\'s the asymmetry flag.',
+    cue: 'Drive hips up — don\'t sag. Straight line ear to ankle. Lateral chain working: QL, glute med, obliques. If right side fatigues faster or feels weaker, flag it to Patrick.',
+    url: 'https://www.youtube.com/results?search_query=side+plank+McGill+lateral+chain+gluteus+medius'
+  },
+  'Penultimate Step Drill — Short Approach': {
+    setup: '4–8 reps. Short run-up (~8–10 strides). Mark your takeoff board. Full recovery between reps — this is CNS quality work, not volume.',
+    cue: '"Stamp the mark." Penultimate step (second-to-last) is the longest step of the approach — it lowers your COM and loads the plant leg. Plant the takeoff foot flat and fast, not reaching forward. Eyes ahead, drive the free knee up. Every rep the same.',
+    url: 'https://www.youtube.com/results?search_query=penultimate+step+long+jump+approach+mechanics+Schexnayder'
+  },
+  'Log back score': {
+    setup: 'Tap the Log button at the top of the page.',
+    cue: 'Rate right-side back 0–10. Gate limit: ≤2/10 morning-after. If right side is consistently higher than left, flag it to Patrick — lateral asymmetry matters in sprint mechanics.',
+  'Heel Walks — Tibialis Anterior': {
+    setup: '2×20m. Lift toes as high as possible, walk on heels only. Controlled pace — activation, not speed.',
+    cue: 'Toes up the whole way. Feel the anterior shin firing. If you feel cramping in the front of the shin, that\'s the right spot — ease off slightly and build over weeks.',
+    url: 'https://www.youtube.com/results?search_query=heel+walks+tibialis+anterior+shin+splints+rehab'
+  },
+  'Resisted Inversion Hold — Tib Post': {
+    setup: '2×30s each foot. Band looped around forefoot. Hold foot in slight inversion (turned in). No movement — pure isometric hold.',
+    cue: 'Feel the pull along the inside of the lower leg — that\'s tibialis posterior, the primary muscle at the medial shin border. Still. 30 seconds.',
+    url: 'https://www.youtube.com/results?search_query=tibialis+posterior+isometric+band+shin+splints+medial+MTSS'
+  },
+  'Single-Leg Calf Raise — Inversion Bias': {
+    setup: '2×10 each leg. Single-leg calf raise — at the top, roll slightly toward the big toe side (inversion). 3-second eccentric down.',
+    cue: 'Rise, bias inward at the top, then a slow 3-count down. The inversion bias loads tib post through range. Knee straight = gastroc; slight bend = soleus. Both matter.',
+    url: 'https://www.youtube.com/results?search_query=tibialis+posterior+strengthening+calf+raise+inversion+shin+splints'
+  },
+    url: null
+  },
+  'Lateral Lunge — Bodyweight': {
+    setup: '2×8 each side. Feet together. Step wide to one side — sit the hips back into the lunge, shin stays vertical, toe points forward. Drive back to start.',
+    cue: 'Ward/Sahrmann frontal plane loading. The hip abductor and adductor are loaded simultaneously on each rep — this is the plane sprinters rarely train. Keep spine tall. The step leg hip drops INTO the stretch (hip-hinge component). Return is driven from the glute. Any hip pinching = reduce depth.',
+    url: 'https://www.youtube.com/results?search_query=lateral+lunge+bodyweight+frontal+plane+hip+mobility+sprint'
+  },
+  'Side-Lying Hip Abduction — End-Range ISO Hold': {
+    setup: '2×30s each side. Side-lying, hips stacked, top leg straight. Raise to end-range and hold isometrically.',
+    cue: 'Spina/Ward frontal plane glute med end-range strength. NOT a dynamic rep — raise to the limit of abduction and hold there. This is strength at end-of-range (closing the passive-active ROM gap). Foot slightly internally rotated at top. Hips stay stacked — no forward tilt. Feels different from standard abduction — that\'s correct.',
+    url: 'https://www.youtube.com/results?search_query=hip+abduction+isometric+hold+end+range+glute+med+strength'
+  },
+};
+
+function getExInfo(name){
+  if(EX_INFO[name]) return EX_INFO[name];
+  const clean = name.split(' —')[0].split(' — ')[0];
+  const key = Object.keys(EX_INFO).find(k => k.startsWith(clean) || clean.startsWith(k.split(' —')[0]));
+  return key ? EX_INFO[key] : null;
+}
+
+// ─────────────────────────────────────────
+// WEEK DATA — Full 9-week competition ramp
+// ─────────────────────────────────────────
+
+// Reusable building blocks
+const TRACK_A_FULL = [
+  {name:'Heel Rock — Calcaneal Mobility', dose:'2×10 ea'},
+  {name:'Wall Ankle Dorsiflexion Stretch', dose:'2×45s ea'},
+  {name:'Short Foot Exercise', dose:'2×12 ea'},
+  {name:'Big Toe Lift', dose:'2×10 ea'},
+];
+const TRACK_A_SHORT = [
+  {name:'Heel Rock', dose:'2×10 ea'},
+  {name:'Short Foot Exercise', dose:'2×12 ea'},
+];
+const MCGILL = [
+  {name:'Dead Bug — Contralateral Hold', note:'McGill · anti-extension', dose:'3×8 ea'},
+  {name:'Bird Dog — 8s Hold', note:'McGill · extensor chain', dose:'3×8 ea'},
+  {name:'Side Plank', note:'McGill · lateral chain', dose:'3×30s ea'},
+];
+const CONTRAST = { label:'Contrast Warmup — Mandatory', gold:true, items:[
+  {name:'Contrast warmup protocol', dose:'~10 min'},
+]};
+const GATE_POST = { label:'Post-Session Gate', items:[
+  {name:'Log knee score', dose:'≤3/10'},
+  {name:'Log back score', note:'right side · ≤2/10', dose:'Log it'},
+]};
+const BACKWARD_30 = {label:'Supplemental', gold:true, items:[{name:'Backward Run', dose:'3×30m'}]};
+const BACKWARD_60 = {label:'Supplemental', gold:true, items:[{name:'Backward Run', dose:'5×60m'}]};
+const BACKWARD_CONTRAST = {label:'Supplemental', gold:true, items:[{name:'Backward Run + Forward Sprint Contrast', dose:'5×30m'}]};
+const SHIN_COMP = { label:'Shin Health — Maintenance', items:[
+  {name:'Heel Walks — Tibialis Anterior',        dose:'2×20m · toes up · controlled pace'},
+  {name:'Resisted Inversion Hold — Tib Post',    dose:'2×30s ea · band around forefoot · inversion hold'},
+  {name:'Single-Leg Calf Raise — Inversion Bias',dose:'2×10 ea · 3s eccentric · slight inversion at top'},
+]};
+const MULTIPLANAR_LOWER = { label:'Multi-Planar — Frontal + End-Range', items:[
+  {name:'Lateral Lunge — Bodyweight', note:'Ward/Sahrmann · frontal plane hip · ankle/hip mobility · keep spine tall', dose:'2×8 ea · slow · feel hip abductor/adductor tension'},
+  {name:'Side-Lying Hip Abduction — End-Range ISO Hold', note:'Spina/Ward · frontal plane glute med · strength at end-of-range', dose:'2×30s ea · raise to top · hold isometrically'},
+]};
+
+
+// ── Competition day template (reused across weeks)
+function compDay(meetName, extraNote){
+  return { name:'Saturday', intent:'Compete — ' + meetName,
+    sub: extraNote || 'Contrast warmup non-negotiable. Gate log same day and next morning.',
+    collagen:true,
+    blocks:[
+      { label:'Pre-Session — Non-Negotiables', items: TRACK_A_FULL },
+      CONTRAST,
+      GATE_POST,
+    ]
+  };
+}
+
+// ── Rest/recovery day
+const REST_DAY = { name:'Sunday', intent:'Rest', sub:'Recovery only. Gate check from yesterday — log it.', collagen:false, rest:true, blocks:[] };
+
+const WEEKS = [
+  // ── WEEK 1 — P1 Proximal Base ──────────────────────────────────────
+  {
+    label:'P1 · W1', dates:'Mar 9–15', phase:'Phase 1',
+    focus:'Proximal base — hip/glute first. No distal loading yet.',
+    days:[
+      { name:'Monday', intent:'Speed + Hip', sub:'Track A before sprints. Hip work after.', collagen:true,
+        blocks:[
+          {label:'Non-Negotiables', items: TRACK_A_FULL},
+          {label:'Prehab Block', items:[
+            {name:'Copenhagen Adductor Plank', dose:'3×10s ea'},
+            {name:'Banded Clamshell', note:'slow eccentric', dose:'3×15 ea'},
+            {name:'Single-Leg Glute Bridge', dose:'3×12 ea'},
+          ]},
+          SHIN_COMP,
+          MULTIPLANAR_LOWER,
+          BACKWARD_30,
+        ]
+      },
+      { name:'Tuesday', intent:'Strength', sub:'Hip/glute loading + McGill spine work.', collagen:false,
+        blocks:[
+          {label:'Non-Negotiables', items: TRACK_A_SHORT},
+          {label:'Prehab / Strength + Core', items:[
+            {name:'Single-Leg Glute Bridge', note:'3s pause', dose:'3×12 ea'},
+            {name:'Banded Clamshell', dose:'3×15 ea'},
+            {name:'VMO Terminal Knee Extension', note:'light band', dose:'3×15'},
+            {name:'Copenhagen Adductor Plank', dose:'3×10s ea'},
+            ...MCGILL,
+          ]},
+          BACKWARD_30,
+        ]
+      },
+      { name:'Wednesday', intent:'Recovery', sub:'Track A only. Flush the legs. No prehab load.', collagen:false,
+        blocks:[
+          {label:'Non-Negotiables', items: TRACK_A_FULL},
+          BACKWARD_30,
+        ]
+      },
+      { name:'Thursday', intent:'Speed-End + Hip', sub:'Same as Monday. Copenhagen can progress if Monday felt easy.', collagen:true,
+        blocks:[
+          {label:'Non-Negotiables', items: TRACK_A_FULL},
+          {label:'Prehab Block', items:[
+            {name:'Copenhagen Adductor Plank', dose:'3×10s ea'},
+            {name:'Banded Clamshell', dose:'3×15 ea'},
+            {name:'Single-Leg Glute Bridge', note:'3s pause', dose:'3×12 ea'},
+          ]},
+        ]
+      },
+      { name:'Friday', intent:'Strength + Core', sub:'Full prehab + McGill. Push clamshell load if 15 reps felt easy.', collagen:false,
+        blocks:[
+          {label:'Non-Negotiables', items: TRACK_A_SHORT},
+          {label:'Prehab / Strength + Core', items:[
+            {name:'Single-Leg Glute Bridge', note:'3s pause', dose:'3×12 ea'},
+            {name:'Banded Clamshell', note:'add ankle weight if ready', dose:'3×15 ea'},
+            {name:'VMO Terminal Knee Extension', note:'light band', dose:'3×15'},
+            {name:'Copenhagen Adductor Plank', dose:'3×10s ea'},
+            ...MCGILL,
+          ]},
+          BACKWARD_30,
+        ]
+      },
+      { name:'Saturday', intent:'Compete / Speed', sub:'Contrast warmup mandatory. Gate log after.', collagen:true,
+        blocks:[
+          {label:'Pre-Session', items: TRACK_A_FULL},
+          CONTRAST,
+          GATE_POST,
+        ]
+      },
+      REST_DAY,
+    ]
+  },
+
+  // ── WEEK 2 — P1 Vol Up ──────────────────────────────────────────────
+  {
+    label:'P1 · W2', dates:'Mar 16–22', phase:'Phase 1',
+    focus:'Volume up on proximal work. No meets this week.',
+    days:[
+      { name:'Monday', intent:'Speed + Hip', sub:'Copenhagen progresses to 4×15s.', collagen:true,
+        blocks:[
+          {label:'Non-Negotiables', items: TRACK_A_FULL},
+          {label:'Prehab Block — Volume Up', items:[
+            {name:'Copenhagen Adductor Plank', note:'progress from W1', dose:'4×15s ea'},
+            {name:'Banded Clamshell', note:'ankle weight if 15 felt easy', dose:'3×15 ea'},
+            {name:'Single-Leg Glute Bridge', note:'3s pause', dose:'3×12 ea'},
+          ]},
+          SHIN_COMP,
+          MULTIPLANAR_LOWER,
+          BACKWARD_CONTRAST,
+        ]
+      },
+      { name:'Tuesday', intent:'Strength + Core', sub:'Full block. Progress clamshell load.', collagen:false,
+        blocks:[
+          {label:'Non-Negotiables', items: TRACK_A_SHORT},
+          {label:'Prehab / Strength + Core', items:[
+            {name:'Single-Leg Glute Bridge', note:'3s pause', dose:'3×12 ea'},
+            {name:'Banded Clamshell', note:'ankle weight', dose:'3×15 ea'},
+            {name:'VMO Terminal Knee Extension', dose:'3×15'},
+            {name:'Copenhagen Adductor Plank', dose:'4×15s ea'},
+            ...MCGILL,
+          ]},
+          BACKWARD_CONTRAST,
+        ]
+      },
+      { name:'Wednesday', intent:'Recovery', sub:'Track A only. Easy flush.', collagen:false,
+        blocks:[
+          {label:'Non-Negotiables', items: TRACK_A_FULL},
+          BACKWARD_30,
+        ]
+      },
+      { name:'Thursday', intent:'Speed-End', sub:'Pre-meet day. Keep it sharp, not heavy.', collagen:true,
+        blocks:[
+          {label:'Non-Negotiables', items: TRACK_A_FULL},
+          {label:'Prehab — Light', items:[
+            {name:'Copenhagen Adductor Plank', dose:'3×10s ea'},
+            {name:'Single-Leg Glute Bridge', dose:'2×10 ea'},
+          ]},
+        ]
+      },
+      { name:'Friday', intent:'Pre-Meet Activate', sub:'Meet tomorrow. Short activation only — no strength work today.', collagen:true,
+        blocks:[
+          {label:'Non-Negotiables', items: TRACK_A_FULL},
+          {label:'Activation Only', items:[
+            {name:'Banded Clamshell', dose:'2×10 ea'},
+            {name:'VMO Terminal Knee Extension', dose:'2×10'},
+            {name:'Dead Bug — Contralateral Hold', note:'light, activation only', dose:'2×6 ea'},
+          ]},
+        ]
+      },
+      { name:'Saturday Mar 21', intent:'Compete / Speed', sub:'Contrast warmup mandatory. Gate log after.', collagen:true,
+        blocks:[
+          {label:'Non-Negotiables', items: TRACK_A_FULL},
+          CONTRAST,
+          GATE_POST,
+        ]
+      },
+      REST_DAY,
+    ]
+  },
+
+  // ── WEEK 3 — P1→P2 / Coast-Valley Fri Mar 27 ───────────────────────
+  {
+    label:'P1→P2 · W3', dates:'Mar 23–29', phase:'Phase 1→2',
+    focus:'Single-leg integration begins. Coast/Valley MJC on Friday Mar 27.',
+    meets:['Coast/Valley MJC — Fri Mar 27'],
+    days:[
+      // idx=0 Mon Mar 23
+      { name:'Monday Mar 23', intent:'Single-Leg Integration', sub:'Step-up and SL RDL enter. Gate check before loading.', collagen:true,
+        blocks:[
+          {label:'Non-Negotiables', items: TRACK_A_FULL},
+          {label:'Integration Block', items:[
+            {name:'Step-Up Loaded', note:'0–60° only', dose:'3×10 ea'},
+            {name:'Single-Leg RDL', note:'3s eccentric, bodyweight', dose:'3×8 ea'},
+            {name:'Patellar Isometric Wall Sit', note:'Rio protocol ~60°', dose:'5×45s'},
+            {name:'Copenhagen Adductor Plank', dose:'4×15s ea'},
+          ]},
+          BACKWARD_60,
+        ]
+      },
+      // idx=1 Tue Mar 24
+      { name:'Tuesday Mar 24', intent:'Strength + Core', sub:'Step-down eccentric enters. McGill anchor.', collagen:false,
+        blocks:[
+          {label:'Non-Negotiables', items: TRACK_A_SHORT},
+          {label:'Integration + Core', items:[
+            {name:'Step-Down Eccentric', note:'10cm step', dose:'3×10 ea'},
+            {name:'Single-Leg RDL', note:'3s eccentric', dose:'3×8 ea'},
+            {name:'Patellar Isometric Wall Sit', dose:'5×45s'},
+            {name:'Single-Leg Glute Bridge', note:'3s pause', dose:'3×12 ea'},
+            ...MCGILL,
+          ]},
+          BACKWARD_60,
+        ]
+      },
+      // idx=2 Wed Mar 25
+      { name:'Wednesday Mar 25', intent:'Recovery', sub:'Track A only. Check gate from Tuesday.', collagen:false,
+        blocks:[
+          {label:'Non-Negotiables', items: TRACK_A_FULL},
+        ]
+      },
+      // idx=3 Thu Mar 26 — pre-meet
+      { name:'Thursday Mar 26', intent:'Pre-Meet Activate', sub:'Coast/Valley tomorrow. Activation only — no new loading.', collagen:true,
+        blocks:[
+          {label:'Non-Negotiables', items: TRACK_A_FULL},
+          {label:'Activation Only', items:[
+            {name:'VMO Terminal Knee Extension', dose:'2×10'},
+            {name:'Banded Clamshell', dose:'2×10 ea'},
+            {name:'Dead Bug — Contralateral Hold', dose:'2×6 ea'},
+          ]},
+        ]
+      },
+      // idx=4 Fri Mar 27 — COAST/VALLEY
+      compDay('Coast/Valley MJC', 'Friday Mar 27. First gate data post-last meet. Contrast warmup mandatory.'),
+      // idx=5 Sat Mar 28 — recovery
+      { name:'Saturday Mar 28', intent:'Recovery', sub:'Post meet. Track A + easy walk only.', collagen:false,
+        blocks:[{label:'Non-Negotiables', items: TRACK_A_FULL}]
+      },
+      // idx=6 Sun Mar 29
+      REST_DAY,
+    ]
+  },
+
+  // ── WEEK 4 — P2 Load / Mike Fanelli Fri Apr 3 ──────────────────────
+  {
+    label:'P2 · W4', dates:'Mar 30–Apr 5', phase:'Phase 2',
+    focus:'Single-leg load increases. Mike Fanelli SF State on Friday Apr 3.',
+    meets:['Mike Fanelli SF State — Fri Apr 3'],
+    days:[
+      // idx=0 Mon Mar 30
+      { name:'Monday Mar 30', intent:'Single-Leg Load', sub:'Step-up and SL RDL both progress.', collagen:true,
+        blocks:[
+          {label:'Non-Negotiables', items: TRACK_A_FULL},
+          {label:'Integration Block — Load Up', items:[
+            {name:'Step-Up Loaded', note:'add DB load', dose:'3×10 ea'},
+            {name:'Single-Leg RDL', note:'add KB/DB load', dose:'3×8 ea'},
+            {name:'Patellar Isometric Wall Sit', note:'70% effort', dose:'5×45s'},
+            {name:'Copenhagen Adductor Plank', dose:'4×15s ea'},
+          ]},
+          BACKWARD_60,
+        ]
+      },
+      // idx=1 Tue Apr 1
+      { name:'Tuesday Apr 1', intent:'Strength + Core', sub:'Full prehab + McGill. Progress loads from last week.', collagen:false,
+        blocks:[
+          {label:'Non-Negotiables', items: TRACK_A_SHORT},
+          {label:'Integration + Core', items:[
+            {name:'Step-Down Eccentric', note:'10cm step', dose:'3×10 ea'},
+            {name:'Single-Leg RDL', dose:'3×8 ea'},
+            {name:'Patellar Isometric Wall Sit', dose:'5×45s'},
+            {name:'Single-Leg Glute Bridge', note:'3s pause', dose:'3×12 ea'},
+            ...MCGILL,
+          ]},
+          BACKWARD_60,
+        ]
+      },
+      // idx=2 Wed Apr 2 — pre-meet recovery
+      { name:'Wednesday Apr 2', intent:'Recovery', sub:'Track A only. Rest before Fanelli.', collagen:false,
+        blocks:[{label:'Non-Negotiables', items: TRACK_A_FULL}]
+      },
+      // idx=3 Thu Apr 2 — pre-meet activate
+      { name:'Thursday Apr 2', intent:'Pre-Meet Activate', sub:'Fanelli tomorrow. Short activation only.', collagen:true,
+        blocks:[
+          {label:'Non-Negotiables', items: TRACK_A_FULL},
+          {label:'Activation Only', items:[
+            {name:'Banded Clamshell', dose:'2×10 ea'},
+            {name:'VMO Terminal Knee Extension', dose:'2×10'},
+            {name:'Dead Bug — Contralateral Hold', dose:'2×6 ea'},
+          ]},
+        ]
+      },
+      // idx=4 Fri Apr 3 — FANELLI
+      compDay('Mike Fanelli SF State', 'Friday Apr 3. Contrast warmup. Gate log same day + Sat morning.'),
+      // idx=5 Sat Apr 4 — recovery
+      { name:'Saturday Apr 4', intent:'Recovery', sub:'Post-Fanelli. Track A + easy walk.', collagen:false,
+        blocks:[{label:'Non-Negotiables', items: TRACK_A_FULL}]
+      },
+      // idx=6 Sun Apr 5
+      REST_DAY,
+    ]
+  },
+
+  // ── WEEK 5 — P3 / NCAL Multi Tue-Wed + UCLA Sat ────────────────────
+  {
+    label:'P3 · W5', dates:'Apr 6–12', phase:'Phase 3',
+    focus:'Penultimate drill enters. NCAL Multi Tue Apr 7 + Wed Apr 8. UCLA Invite Sat Apr 11.',
+    meets:['NCAL Multi Hartnell — Tue Apr 7 + Wed Apr 8', 'UCLA Invite — Sat Apr 11'],
+    days:[
+      // idx=0 Mon Apr 6 — pre-NCAL activate
+      { name:'Monday Apr 6', intent:'Pre-NCAL Activate', sub:'NCAL Multi tomorrow. Short activation only — no loading.', collagen:true,
+        blocks:[
+          {label:'Non-Negotiables', items: TRACK_A_FULL},
+          {label:'Activation Only', items:[
+            {name:'Banded Clamshell', dose:'2×10 ea'},
+            {name:'VMO Terminal Knee Extension', dose:'2×10'},
+            {name:'Dead Bug — Contralateral Hold', note:'light — activation only', dose:'2×6 ea'},
+            {name:'Bird Dog — 8s Hold', dose:'2×6 ea'},
+          ]},
+        ]
+      },
+      // idx=1 Tue Apr 7 — NCAL MULTI DAY 1
+      compDay('NCAL Multi Day 1', 'Hartnell Tue Apr 7. Multi-event demands. Gate log after each event grouping.'),
+      // idx=2 Wed Apr 8 — NCAL MULTI DAY 2
+      compDay('NCAL Multi Day 2', 'Hartnell Wed Apr 8. Track A + contrast warmup. Gate log same protocol.'),
+      // idx=3 Thu Apr 9 — recovery post-multi
+      { name:'Thursday Apr 9', intent:'Recovery Post-Multi', sub:'Post NCAL Multi. Track A + McGill only. No loading.', collagen:false,
+        blocks:[
+          {label:'Non-Negotiables', items: TRACK_A_FULL},
+          {label:'Core Only — McGill', items: MCGILL},
+        ]
+      },
+      // idx=4 Fri Apr 10 — pre-UCLA penultimate
+      { name:'Friday Apr 10', intent:'Speed + Penultimate Drill', sub:'"Stamp the mark." 8 reps short approach. UCLA tomorrow.', collagen:true,
+        blocks:[
+          {label:'Non-Negotiables', items: TRACK_A_FULL},
+          {label:'Activation', items:[
+            {name:'Patellar Isometric Wall Sit', note:'pre-session analgesia', dose:'5×45s'},
+          ]},
+          {label:'Penultimate — Enters This Phase', gold:true, items:[
+            {name:'Penultimate Step Drill — Short Approach', note:'"Stamp the mark" — first real reps', dose:'8 reps'},
+          ]},
+        ]
+      },
+      // idx=5 Sat Apr 11 — UCLA
+      compDay('UCLA Invite', 'Saturday Apr 11. LA. Big field. Contrast warmup. Gate log.'),
+      // idx=6 Sun Apr 12
+      REST_DAY,
+    ]
+  },
+
+  // ── WEEK 6 — P3 / Mt SAC Thu + Last Chance Sat ─────────────────────
+  {
+    label:'P3 · W6', dates:'Apr 13–19', phase:'Phase 3',
+    focus:'Mt SAC Thu Apr 16. Last Chance Yuba Sat Apr 18. High-density — manage load carefully.',
+    meets:['Mt SAC Invite — Thu Apr 16', 'Last Chance Yuba — Sat Apr 18'],
+    days:[
+      // idx=0 Mon Apr 13
+      { name:'Monday Apr 13', intent:'Recovery + Core', sub:'Post-UCLA recovery. McGill + Track A only.', collagen:false,
+        blocks:[
+          {label:'Non-Negotiables', items: TRACK_A_FULL},
+          {label:'Core Only — McGill', items: MCGILL},
+        ]
+      },
+      // idx=1 Tue Apr 14
+      { name:'Tuesday Apr 14', intent:'Speed + Penultimate', sub:'Penultimate drill 6–8 reps. Sharp and focused.', collagen:true,
+        blocks:[
+          {label:'Non-Negotiables', items: TRACK_A_FULL},
+          {label:'Activation', items:[
+            {name:'Patellar Isometric Wall Sit', dose:'5×45s'},
+            {name:'VMO Terminal Knee Extension', dose:'2×10'},
+          ]},
+          {label:'Penultimate', gold:true, items:[
+            {name:'Penultimate Step Drill — Short Approach', note:'"Stamp the mark"', dose:'6–8 reps'},
+          ]},
+        ]
+      },
+      // idx=2 Wed Apr 15 — pre-Mt SAC
+      { name:'Wednesday Apr 15', intent:'Pre-Meet Activate', sub:'Mt SAC tomorrow. Activation + Track A only.', collagen:true,
+        blocks:[
+          {label:'Non-Negotiables', items: TRACK_A_FULL},
+          {label:'Activation Only', items:[
+            {name:'Banded Clamshell', dose:'2×10 ea'},
+            {name:'VMO Terminal Knee Extension', dose:'2×10'},
+            {name:'Dead Bug — Contralateral Hold', dose:'2×6 ea'},
+          ]},
+        ]
+      },
+      // idx=3 Thu Apr 16 — MT SAC
+      compDay('Mt SAC Invite', 'Thursday Apr 16. Walnut. High-level field. Penultimate cue active. Gate log.'),
+      // idx=4 Fri Apr 17 — recovery between meets
+      { name:'Friday Apr 17', intent:'Recovery Between Meets', sub:'Last Chance tomorrow. Track A only. Rest.', collagen:false,
+        blocks:[{label:'Non-Negotiables', items: TRACK_A_FULL}]
+      },
+      // idx=5 Sat Apr 18 — LAST CHANCE
+      compDay('Last Chance Yuba', 'Saturday Apr 18. Final qualifier opportunity. Full approach LJ. Gate log.'),
+      // idx=6 Sun Apr 19
+      REST_DAY,
+    ]
+  },
+
+  // ── WEEK 7 — P3 Peak / Big 8 Thu Apr 23 (rain-out rescheduled) ────
+  {
+    label:'P3 · W7', dates:'Apr 20–26', phase:'Phase 3 Peak',
+    focus:'Big 8 Champs Delta — rescheduled to Thu Apr 23 (Tue Apr 21 rained out).',
+    meets:['Big 8 Champs Delta — Thu Apr 23 (rescheduled)'],
+    days:[
+      // idx=0 Mon Apr 20 — pre-meet activate (meet now Thu)
+      { name:'Monday Apr 20', intent:'Pre-Meet Activate', sub:'Meet rescheduled to Thursday. Keep the body ready — short activation only. No fatigue.', collagen:true,
+        blocks:[
+          {label:'Non-Negotiables', items: TRACK_A_FULL},
+          {label:'Activation', items:[
+            {name:'Patellar Isometric Wall Sit', note:'analgesia pre-session', dose:'5×45s'},
+            {name:'Dead Bug — Contralateral Hold', dose:'2×6 ea'},
+          ]},
+          {label:'Penultimate — 4 Reps Only', gold:true, items:[
+            {name:'Penultimate Step Drill — Short Approach', note:'"Stamp the mark" — 4 reps, no more', dose:'4 reps'},
+          ]},
+        ]
+      },
+      // idx=1 Tue Apr 21 — rain-out
+      { name:'Tuesday Apr 21', intent:'Rain-Out — Hold', sub:'Meet canceled today (rain). No training load. Stay loose. Early night.', collagen:false,
+        blocks:[
+          {label:'Non-Negotiables', items: TRACK_A_SHORT},
+          {label:'Light Flush Only', items:[
+            {name:'Dead Bug — Contralateral Hold', dose:'2×6 ea'},
+            {name:'Side Plank', dose:'2×20s ea — no fatigue'},
+          ]},
+        ]
+      },
+      // idx=2 Wed Apr 22 — pre-meet day
+      { name:'Wednesday Apr 22', intent:'Pre-Meet — Final Activate', sub:'Meet tomorrow. Same protocol as Monday. Penultimate drill only. 4 reps. Done.', collagen:true,
+        blocks:[
+          {label:'Non-Negotiables', items: TRACK_A_FULL},
+          {label:'Activation', items:[
+            {name:'Patellar Isometric Wall Sit', note:'analgesia', dose:'5×45s'},
+            {name:'Dead Bug — Contralateral Hold', dose:'2×6 ea'},
+          ]},
+          {label:'Penultimate — 4 Reps Only', gold:true, items:[
+            {name:'Penultimate Step Drill — Short Approach', note:'"Stamp the mark" — 4 reps, no more', dose:'4 reps'},
+          ]},
+        ]
+      },
+      // idx=3 Thu Apr 23 — BIG 8 CHAMPS (rescheduled)
+      compDay('Big 8 Champs — Rescheduled', 'Delta Thu Apr 23. Moved from Tuesday (rain). Everything since March. Contrast warmup. Gate log.'),
+      // idx=4 Fri Apr 24 — post-meet recovery
+      { name:'Friday Apr 24', intent:'Post-Meet Recovery', sub:'Track A + McGill only. Let the body process. Taper continues.', collagen:false,
+        blocks:[
+          {label:'Non-Negotiables', items: TRACK_A_FULL},
+          {label:'Core Only', items: MCGILL},
+        ]
+      },
+      // idx=5 Sat Apr 25 — rest
+      { name:'Saturday Apr 25', intent:'Rest', sub:'Rest. Walk. Early night.', collagen:false, rest:true, blocks:[] },
+      // idx=6 Sun Apr 26
+      REST_DAY,
+    ]
+  },
+
+  // ── WEEK 8 — TAPER / NorCal Fri-Sat May 1-2 ───────────────────────
+  {
+    label:'Taper · W8', dates:'Apr 27–May 3', phase:'Taper',
+    focus:'Volume −40%. Intensity maintained. No new stimuli. NorCal May 1–2.',
+    meets:['NorCal Champs SRJC — Fri May 1 + Sat May 2'],
+    days:[
+      // idx=0 Mon Apr 27
+      { name:'Monday Apr 27', intent:'Speed — Taper Quality', sub:'Short, sharp. Half the volume. Full the intent.', collagen:true,
+        blocks:[
+          {label:'Non-Negotiables', items: TRACK_A_FULL},
+          {label:'Prehab — Maintenance Dose', items:[
+            {name:'Patellar Isometric Wall Sit', dose:'3×45s'},
+            {name:'Single-Leg Glute Bridge', dose:'2×10 ea'},
+            {name:'Banded Clamshell', dose:'2×10 ea'},
+          ]},
+          {label:'Penultimate', gold:true, items:[
+            {name:'Penultimate Step Drill — Short Approach', note:'4–6 reps — quality over quantity', dose:'4–6 reps'},
+          ]},
+        ]
+      },
+      // idx=1 Tue Apr 28
+      { name:'Tuesday Apr 28', intent:'Core + Easy', sub:'McGill + Track A. No strength loading.', collagen:false,
+        blocks:[
+          {label:'Non-Negotiables', items: TRACK_A_FULL},
+          {label:'Core — McGill Only', items: MCGILL},
+        ]
+      },
+      // idx=2 Wed Apr 29
+      { name:'Wednesday Apr 29', intent:'Speed — Sharp', sub:'Flying sprints. Penultimate 4 reps. Nothing else.', collagen:true,
+        blocks:[
+          {label:'Non-Negotiables', items: TRACK_A_FULL},
+          {label:'Activation', items:[
+            {name:'Patellar Isometric Wall Sit', dose:'3×45s'},
+            {name:'VMO Terminal Knee Extension', dose:'2×10'},
+          ]},
+          {label:'Penultimate — Final Reps Pre-NorCal', gold:true, items:[
+            {name:'Penultimate Step Drill — Short Approach', note:'Last reps before NorCal', dose:'4 reps'},
+          ]},
+        ]
+      },
+      // idx=3 Thu Apr 30
+      { name:'Thursday Apr 30', intent:'Walk-Through Only', sub:'Drills only. No loading. No sprinting.', collagen:false,
+        blocks:[
+          {label:'Non-Negotiables', items: TRACK_A_FULL},
+          {label:'Activation — Minimal', items:[
+            {name:'Dead Bug — Contralateral Hold', dose:'2×6 ea'},
+            {name:'Banded Clamshell', dose:'2×8 ea'},
+          ]},
+        ]
+      },
+      // idx=4 Fri May 1 — NORCAL DAY 1
+      compDay('NorCal Champs Day 1', 'SRJC Friday May 1. The target. Contrast warmup. Everything you\'ve built.'),
+      // idx=5 Sat May 2 — NORCAL DAY 2
+      compDay('NorCal Champs Day 2', 'SRJC Saturday May 2. Day 2 NorCal. Same protocol. Gate log both days.'),
+      // idx=6 Sun May 3
+      REST_DAY,
+    ]
+  },
+
+  // ── WEEK 9 — Post-NorCal / State Prep ──────────────────────────────
+  {
+    label:'W9 · State Prep', dates:'May 4–10', phase:'State Prep',
+    focus:'Flush NorCal. Maintain tissue quality. State Champs Friday May 15.',
+    meets:['State Champs Walnut — Fri May 15 + Sat May 16'],
+    days:[
+      // idx=0 Mon May 4
+      { name:'Monday May 4', intent:'Active Recovery', sub:'Post-NorCal flush. Walk, Track A, nothing else.', collagen:false,
+        blocks:[{label:'Non-Negotiables', items: TRACK_A_FULL}]
+      },
+      // idx=1 Tue May 5
+      { name:'Tuesday May 5', intent:'Easy + Core', sub:'Track A + McGill only. No loading.', collagen:false,
+        blocks:[
+          {label:'Non-Negotiables', items: TRACK_A_FULL},
+          {label:'Core — McGill Only', items: MCGILL},
+        ]
+      },
+      // idx=2 Wed May 6
+      { name:'Wednesday May 6', intent:'Speed — Quality', sub:'Sharp acceleration work. Penultimate drill 4 reps.', collagen:true,
+        blocks:[
+          {label:'Non-Negotiables', items: TRACK_A_FULL},
+          {label:'Activation', items:[
+            {name:'Patellar Isometric Wall Sit', dose:'3×45s'},
+            {name:'VMO Terminal Knee Extension', dose:'2×10'},
+          ]},
+          {label:'Penultimate', gold:true, items:[
+            {name:'Penultimate Step Drill — Short Approach', note:'4 reps — stay sharp', dose:'4 reps'},
+          ]},
+        ]
+      },
+      // idx=3 Thu May 7
+      { name:'Thursday May 7', intent:'Easy', sub:'Track A + clamshell maintenance. No new load.', collagen:false,
+        blocks:[
+          {label:'Non-Negotiables', items: TRACK_A_FULL},
+          {label:'Maintenance Only', items:[
+            {name:'Banded Clamshell', dose:'2×10 ea'},
+            {name:'Single-Leg Glute Bridge', dose:'2×10 ea'},
+          ]},
+        ]
+      },
+      // idx=4 Fri May 8
+      { name:'Friday May 8', intent:'Sharp — Pre-State', sub:'Last quality session before State week. 4 penultimate reps. Nothing new.', collagen:true,
+        blocks:[
+          {label:'Non-Negotiables', items: TRACK_A_FULL},
+          {label:'Activation', items:[
+            {name:'Patellar Isometric Wall Sit', dose:'3×45s'},
+          ]},
+          {label:'Penultimate — Final Pre-State Reps', gold:true, items:[
+            {name:'Penultimate Step Drill — Short Approach', note:'4 reps — last loading reps', dose:'4 reps'},
+          ]},
+        ]
+      },
+      // idx=5 Sat May 9
+      { name:'Saturday May 9', intent:'Rest', sub:'State week starts Monday. Rest today.', collagen:false, rest:true, blocks:[] },
+      // idx=6 Sun May 10
+      REST_DAY,
+    ]
+  },
+
+  // ── WEEK 10 — STATE / Fri-Sat May 15-16 ────────────────────────────
+  {
+    label:'W10 · State', dates:'May 11–17', phase:'State Championship',
+    focus:'State Champs May 15–16. No new stimuli. Trust the work.',
+    meets:['State Champs Walnut — Fri May 15 + Sat May 16'],
+    days:[
+      // idx=0 Mon May 11
+      { name:'Monday May 11', intent:'Easy Activation', sub:'Track A + minimal activation. Body is ready.', collagen:true,
+        blocks:[
+          {label:'Non-Negotiables', items: TRACK_A_FULL},
+          {label:'Activation — Minimal', items:[
+            {name:'Patellar Isometric Wall Sit', dose:'3×45s'},
+            {name:'Banded Clamshell', dose:'2×8 ea'},
+          ]},
+        ]
+      },
+      // idx=1 Tue May 12
+      { name:'Tuesday May 12', intent:'Core Only', sub:'McGill + Track A. Nothing else.', collagen:false,
+        blocks:[
+          {label:'Non-Negotiables', items: TRACK_A_FULL},
+          {label:'Core — McGill Only', items: MCGILL},
+        ]
+      },
+      // idx=2 Wed May 13
+      { name:'Wednesday May 13', intent:'Sharp — Final Drill', sub:'4 penultimate reps. That is all. Done.', collagen:true,
+        blocks:[
+          {label:'Non-Negotiables', items: TRACK_A_FULL},
+          {label:'Final Penultimate Reps', gold:true, items:[
+            {name:'Penultimate Step Drill — Short Approach', note:'Last 4 reps. Trust it.', dose:'4 reps'},
+          ]},
+        ]
+      },
+      // idx=3 Thu May 14
+      { name:'Thursday May 14', intent:'Walk-Through', sub:'Drills only. Active legs. Nothing taxing.', collagen:false,
+        blocks:[
+          {label:'Non-Negotiables', items: TRACK_A_FULL},
+          {label:'Minimal Activation', items:[
+            {name:'Dead Bug — Contralateral Hold', dose:'2×6 ea'},
+          ]},
+        ]
+      },
+      // idx=4 Fri May 15 — STATE DAY 1
+      compDay('State Champs Day 1', 'Walnut Friday May 15. Everything since March. Contrast warmup. Go.'),
+      // idx=5 Sat May 16 — STATE DAY 2
+      compDay('State Champs Day 2', 'Walnut Saturday May 16. Day 2. Gate log. Leave it all on the track.'),
+      // idx=6 Sun May 17
+      REST_DAY,
+    ]
+  },
+  // ── W11: OFF-WEEK / TRANSITION — May 18–24 ──────────────────────
+  {
+    label:'W11 · Off-Week', dates:'May 18–24', phase:'Transition',
+    focus:'State is done. State champion in the 100. This week is yours — move when you want, rest when you need. No structure, no pressure.',
+    days:[
+      { name:'Monday May 18', intent:'Rest + Move', sub:'Congratulations on State. Do what feels good today — walk, easy bike, or nothing. No track.',
+        collagen:false, rest:false,
+        blocks:[
+          { label:'Non-Negotiables', items: TRACK_A_SHORT },
+          { label:'Optional Movement', items:[
+            {name:'Easy walk or bike', dose:'20–30 min · whatever feels good · no pace target'},
+          ]},
+        ]
+      },
+      { name:'Tuesday May 19', intent:'Light Mobility', sub:'Hip and ankle focus. Nothing loaded.',
+        collagen:false, rest:false,
+        blocks:[
+          { label:'Non-Negotiables', items: TRACK_A_FULL },
+          { label:'Hip Mobility', items:[
+            {name:'Hip 90/90 Transitions', dose:'2 min each side · slow · no forcing'},
+            {name:'Supine Figure-4 Stretch', dose:'2×45s ea'},
+            {name:'Lateral Lunge — Bodyweight', note:'frontal plane · slow · feel the hip', dose:'2×8 ea'},
+          ]},
+          SHIN_COMP,
+        ]
+      },
+      { name:'Wednesday May 20', intent:'Core + Shin', sub:'McGill + shin maintenance. 30 min max.',
+        collagen:false, rest:false,
+        blocks:[
+          { label:'Non-Negotiables', items: TRACK_A_FULL },
+          { label:'Core — McGill', items: MCGILL },
+          SHIN_COMP,
+        ]
+      },
+      { name:'Thursday May 21', intent:'Easy Jog', sub:'First jog since State. Easy pace only. If shins flag, walk.',
+        collagen:false, rest:false,
+        blocks:[
+          { label:'Non-Negotiables', items: TRACK_A_FULL },
+          { label:'Easy Run', items:[
+            {name:'Easy jog', note:'flat surface · conversational pace · no watch pressure', dose:'15–20 min · stop if shins > 2/10'},
+          ]},
+          SHIN_COMP,
+        ]
+      },
+      { name:'Friday May 22', intent:'Rest or Walk', sub:'Rest day. Walk if you feel like it.',
+        collagen:false, rest:false,
+        blocks:[
+          { label:'Non-Negotiables', items: TRACK_A_SHORT },
+          { label:'Optional', items:[
+            {name:'Easy walk', dose:'20 min · no agenda'},
+          ]},
+        ]
+      },
+      { name:'Saturday May 23', intent:'Move Freely', sub:'Easy jog + full mobility. No drills, no reps, no pressure.',
+        collagen:false, rest:false,
+        blocks:[
+          { label:'Non-Negotiables', items: TRACK_A_FULL },
+          { label:'Easy Run', items:[
+            {name:'Easy jog', dose:'20–25 min · flat · easy pace'},
+          ]},
+          { label:'Full Mobility', items:[
+            {name:'Hip 90/90', dose:'2 min each side'},
+            {name:'Supine Figure-4 Stretch', dose:'2×45s ea'},
+            {name:'Lateral Lunge', dose:'2×8 ea slow'},
+            {name:'Calf + Achilles Stretch', dose:'2×45s ea'},
+          ]},
+          SHIN_COMP,
+        ]
+      },
+      REST_DAY,
+    ]
+  },
+
+  // ── W12: RETURN-TO-FORM — May 25–31 ──────────────────────────────
+  {
+    label:'W12 · Return to Form', dates:'May 25–31', phase:'Transition / Prep',
+    focus:'Sacramento possible June 2–3. Light speed reintro — drills, short accelerations, penultimate. Shins guide the load.',
+    days:[
+      { name:'Monday May 25', intent:'Drills + Short Accelerations', sub:'Back on the track. Drills + 3×30m build-ups only. Feel the legs.',
+        collagen:true,
+        blocks:[
+          { label:'Non-Negotiables', items: TRACK_A_FULL },
+          { label:'Sprint Prep Drills', items:[
+            {name:'A-Skip', dose:'3×20m'},
+            {name:'B-Skip', dose:'3×20m'},
+            {name:'High Knee Run', dose:'3×20m'},
+            {name:'Ankle Pops — Straight Leg', dose:'2×20m'},
+          ]},
+          { label:'Accelerations', gold:true, items:[
+            {name:'30m Build-Up — 70%', dose:'3 reps · full recovery · feel only'},
+          ]},
+          SHIN_COMP,
+          { label:'Core', items: MCGILL },
+        ]
+      },
+      { name:'Tuesday May 26', intent:'Mobility + Shin Day', sub:'No speed. Hips, ankles, McGill.',
+        collagen:false, rest:false,
+        blocks:[
+          { label:'Non-Negotiables', items: TRACK_A_FULL },
+          { label:'Hip Mobility', items:[
+            {name:'Hip 90/90 Transitions', dose:'2 min each side'},
+            {name:'Lateral Lunge', dose:'2×8 ea'},
+            {name:'Supine Figure-4', dose:'2×45s ea'},
+          ]},
+          SHIN_COMP,
+          { label:'Core', items: MCGILL },
+        ]
+      },
+      { name:'Wednesday May 28', intent:'Speed — Short + Sharp', sub:'60m reps at 85–90%. Penultimate entries if feeling good.',
+        collagen:true,
+        blocks:[
+          { label:'Non-Negotiables', items: TRACK_A_FULL },
+          { label:'Drills', items:[
+            {name:'A-Skip', dose:'3×20m'},
+            {name:'Build-Up Runs', dose:'3×40m · 80%'},
+          ]},
+          { gold:true, label:'Speed Block', items:[
+            {name:'60m Sprint — 85–90%', dose:'4 reps · full recovery · shin check between reps'},
+          ]},
+          { label:'Penultimate — Optional', items:[
+            {name:'Penultimate Step Drill — Short Approach', note:'only if legs feel sharp · 4 reps max', dose:'4 reps'},
+          ]},
+          SHIN_COMP,
+        ]
+      },
+      { name:'Thursday May 29', intent:'Rest', sub:'Rest day. Walk if restless.',
+        collagen:false, rest:false,
+        blocks:[
+          { label:'Non-Negotiables', items: TRACK_A_SHORT },
+        ]
+      },
+      { name:'Friday May 30', intent:'Sharp Activation', sub:'4–5 short reps. Feel fast. Nothing more.',
+        collagen:true,
+        blocks:[
+          { label:'Non-Negotiables', items: TRACK_A_FULL },
+          { label:'Drills', items:[
+            {name:'A-Skip + B-Skip', dose:'2×20m each'},
+          ]},
+          { gold:true, label:'Activation Sprints', items:[
+            {name:'30m Sprint — 90%', dose:'4–5 reps · full recovery · feel sharp not tired'},
+          ]},
+          SHIN_COMP,
+        ]
+      },
+      { name:'Saturday May 31', intent:'Rest — Pre-Sacramento', sub:'If Sacramento is confirmed tomorrow or Monday, full rest today.',
+        collagen:false, rest:false,
+        blocks:[
+          { label:'Non-Negotiables', items: TRACK_A_SHORT },
+          { label:'Optional Light Mobility', items:[
+            {name:'Easy walk', dose:'15–20 min'},
+            {name:'Hip 90/90', dose:'1 min each side'},
+          ]},
+        ]
+      },
+      REST_DAY,
+    ]
+  },
+
+  // ── W13: SACRAMENTO — Jun 1–7 ─────────────────────────────────────
+  {
+    label:'W13 · Sacramento', dates:'Jun 1–7', phase:'Competition',
+    focus:'Sacramento meet ~Jun 2–3 if confirmed. Treat like any comp week — contrast warmup, gate log, trust the fitness.',
+    days:[
+      { name:'Monday Jun 1', intent:'Travel / Activation', sub:'Drills + 3 short reps if not traveling. If traveling, Track A only.',
+        collagen:false, rest:false,
+        blocks:[
+          { label:'Non-Negotiables', items: TRACK_A_FULL },
+          { label:'Activation Only', items:[
+            {name:'A-Skip', dose:'3×20m'},
+            {name:'30m Build-Up — 70%', dose:'3 reps'},
+          ]},
+        ]
+      },
+      { name:'Tuesday Jun 2', intent:'Compete or Rest', sub:'Sacramento Day 1 if confirmed. Contrast warmup. Gate log.',
+        collagen:true, rest:false,
+        blocks:[
+          { label:'Pre-Session — Non-Negotiables', items: TRACK_A_FULL },
+          CONTRAST,
+          GATE_POST,
+        ]
+      },
+      { name:'Wednesday Jun 3', intent:'Compete or Easy', sub:'Sacramento Day 2 if double. Otherwise easy movement.',
+        collagen:true, rest:false,
+        blocks:[
+          { label:'Non-Negotiables', items: TRACK_A_FULL },
+          CONTRAST,
+          GATE_POST,
+        ]
+      },
+      { name:'Thursday Jun 4', intent:'Rest', sub:'Post-meet rest.', collagen:false, rest:false,
+        blocks:[
+          { label:'Non-Negotiables', items: TRACK_A_SHORT },
+        ]
+      },
+      { name:'Friday Jun 5', intent:'Easy Movement', sub:'Light jog or walk. Shins first.',
+        collagen:false, rest:false,
+        blocks:[
+          { label:'Non-Negotiables', items: TRACK_A_FULL },
+          { label:'Easy', items:[
+            {name:'Easy jog', dose:'15 min · conversational'},
+          ]},
+          SHIN_COMP,
+        ]
+      },
+      { name:'Saturday Jun 6', intent:'Rest or Easy', sub:'Week is done. Berkeley in September.',
+        collagen:false, rest:false,
+        blocks:[
+          { label:'Non-Negotiables', items: TRACK_A_SHORT },
+        ]
+      },
+      REST_DAY,
+    ]
+  },
+
+  // ── GPP · RETURN (added Aug 2026) ────────────────────────────────
+  // Post-injury base block, DECOUPLED from the old meet calendar. The guide
+  // auto-lands here once today is past the authored competition weeks (see
+  // initApp + getWeekStart special-case). Bridge until Berkeley's program takes over.
+  {
+    label:'GPP · Return', dates:'Rolling — current week', phase:'GPP — Return to Training', gpp:true,
+    focus:'Post-injury base rebuild, decoupled from the meet calendar. General strength + tissue tolerance + a gradual return to running. Foot and shins guide the load — nothing explosive on your own until Berkeley staff and your PT progress you. This is a bridge until your Berkeley program takes over. Foot revival / CARs / movement snacks live in the Library "Movement & Restoration" section.',
+    days:[
+      { name:'Monday — Lower Strength (GPP)', intent:'Base strength', sub:'Bilateral, submaximal, controlled. Build tissue, not peaks.',
+        blocks:[
+          { label:'Non-Negotiables', items: TRACK_A_FULL },
+          { label:'Strength — General', items:[
+            {name:'Goblet or box squat', dose:'3×8 · controlled'},
+            {name:'Trap-bar / RDL (light)', dose:'3×8 · hinge, neutral spine'},
+            {name:'Split squat (assist if needed)', dose:'2×8 / leg'},
+            {name:'Calf raise — bilateral', dose:'3×12 · pain-free range'},
+          ]},
+          SHIN_COMP,
+        ]
+      },
+      { name:'Tuesday — Aerobic + Tissue', intent:'Easy aerobic', sub:'Rebuild the engine gently. Shins and foot first.',
+        blocks:[
+          { label:'Non-Negotiables', items: TRACK_A_FULL },
+          { label:'Aerobic — Build', items:[
+            {name:'Walk-jog intervals', dose:'20–25 min · jog:walk as tolerated'},
+            {name:'Backward run (non-impact)', dose:'4×30m easy'},
+          ]},
+          SHIN_COMP,
+        ]
+      },
+      { name:'Wednesday — Upper + Core', intent:'Upper / trunk', sub:'Load the top half; keep the foot easy.',
+        blocks:[
+          { label:'Non-Negotiables', items: TRACK_A_SHORT },
+          { label:'Upper + Core', items:[
+            {name:'Push — DB press or push-up', dose:'3×10'},
+            {name:'Pull — row or pulldown', dose:'4×10'},
+            {name:'Anti-rotation — Pallof', dose:'3×10 / side'},
+            {name:'Dead bug / hollow hold', dose:'3×10'},
+          ]},
+        ]
+      },
+      { name:'Thursday — Movement & Restoration', intent:'Mobility / refresh', sub:'Foot revival, CARs, ground movement — from the Library.',
+        blocks:[
+          { label:'Non-Negotiables', items: TRACK_A_SHORT },
+          { label:'Movement & Restoration', items:[
+            {name:'Foot revival — toe yoga · short-foot · splay', dose:'5–8 min'},
+            {name:'Ankle + toe CARs', dose:'3–5 each'},
+            {name:'Deep squat sit + spinal waves', dose:'easy'},
+            {name:'Easy bike or walk', dose:'15–20 min · optional'},
+          ]},
+        ]
+      },
+      { name:'Friday — Single-Leg Reintro', intent:'Single-leg base', sub:'Reintroduce unilateral load — light, controlled, foot-aware.',
+        blocks:[
+          { label:'Non-Negotiables', items: TRACK_A_FULL },
+          { label:'Single-Leg — Light', items:[
+            {name:'Step-up (low box)', dose:'3×8 / leg'},
+            {name:'SL RDL (light / assisted)', dose:'2×8 / leg'},
+            {name:'SL calf raise (build to tolerance)', dose:'2×10 / leg'},
+            {name:'Lateral band walk — glute med', dose:'2×15'},
+          ]},
+          SHIN_COMP,
+        ]
+      },
+      { name:'Saturday — Easy or Rest', intent:'Easy movement', sub:'Walk, mobility, or full rest. Optional.',
+        blocks:[
+          { label:'Non-Negotiables', items: TRACK_A_SHORT },
+          { label:'Optional Easy', items:[
+            {name:'Walk or easy bike', dose:'20–30 min'},
+            {name:'Movement snacks', dose:'as you like'},
+          ]},
+        ]
+      },
+      REST_DAY,
+    ]
+  },
+
+];
+
+function detectCurrentWeek(){
+  const today = todayStr();
+  for(let w = 0; w < WEEKS.length; w++){
+    const ws = getWeekStart(w);
+    for(let d = 0; d < 7; d++){
+      const sd = new Date(ws.getFullYear(), ws.getMonth(), ws.getDate() + d);
+      if(sbDateStr(sd) === today) return { week: w, day: d };
+    }
+  }
+  return null;
+}
+
+
+// ─────────────────────────────────────────
+// STATE
+// ─────────────────────────────────────────
+let currentWeek = parseInt(localStorage.getItem('sh_week') || '0');
+let selectedDay  = 0;
+let gateLogs     = JSON.parse(localStorage.getItem('sh_gate') || '[]');
+// ─────────────────────────────────────────
+// GATE LOG MODAL — 3 metrics, auto-stage, timing persists
+// ─────────────────────────────────────────
+const METRICS = ['knee','shin','back'];
+const METRIC_LABELS = { knee:'Knee', shin:'Shin', back:'Back' };
+const TIMING_LABELS = { am:'AM', pre:'Pre-Session', post:'Post-Session' };
+const GATE_LIMITS = { knee:3, shin:2, back:2 };
+
+let activeMetric = 'knee';
+let selectedScore = null;
+let selectedTiming = 'am';
+let pendingScores = {};
+
+function openGateModal(){
+  pendingScores = {};
+  selectedScore = null;
+  activeMetric = 'knee';
+  selectedTiming = 'am';
+  document.querySelectorAll('.score-btn').forEach(b => b.classList.remove('selected'));
+  METRICS.forEach(k => {
+    document.getElementById('mbtn-'+k).classList.toggle('active', k==='knee');
+    document.getElementById('score-section-'+k).style.display = k==='knee'?'block':'none';
+  });
+  syncTimingButtons();
+  document.getElementById('gate-status').style.display = 'none';
+  document.getElementById('pending-summary').style.display = 'none';
+  document.getElementById('pending-list').textContent = '';
+  const today = new Date().toLocaleDateString('en-US',{weekday:'long',month:'short',day:'numeric'});
+  document.getElementById('modal-date-label').textContent = 'Logging for ' + today;
+  document.getElementById('gate-modal').classList.add('open');
+}
+
+function closeGateModal(){
+  document.getElementById('gate-modal').classList.remove('open');
+  pendingScores = {};
+}
+
+function syncTimingButtons(){
+  ['am','pre','post'].forEach(t => {
+    document.getElementById('tbtn-'+t).classList.toggle('active', t===selectedTiming);
+  });
+}
+
+function selectMetric(m){
+  // Auto-stage current metric if score selected
+  if(selectedScore !== null && activeMetric !== m){
+    pendingScores[activeMetric] = { score: selectedScore, timing: selectedTiming };
+    updatePendingSummary();
+  }
+  activeMetric = m;
+  selectedScore = null;
+  document.querySelectorAll('.score-btn').forEach(b => b.classList.remove('selected'));
+  if(pendingScores[m] !== undefined){
+    const staged = pendingScores[m].score;
+    document.querySelectorAll('#score-section-'+m+' .score-btn').forEach(b => {
+      b.classList.toggle('selected', parseInt(b.dataset.v)===staged);
+    });
+    selectedScore = staged;
+  }
+  METRICS.forEach(k => {
+    document.getElementById('mbtn-'+k).classList.toggle('active', k===m);
+    document.getElementById('score-section-'+k).style.display = k===m?'block':'none';
+  });
+  document.getElementById('gate-status').style.display = 'none';
+  if(selectedScore !== null) updateGateStatus();
+}
+
+function selectScore(n){
+  selectedScore = n;
+  document.querySelectorAll('#score-section-'+activeMetric+' .score-btn').forEach(b => {
+    b.classList.toggle('selected', parseInt(b.dataset.v)===n);
+  });
+  updateGateStatus();
+}
+
+function selectTiming(t){
+  selectedTiming = t;
+  syncTimingButtons();
+  if(pendingScores[activeMetric] !== undefined){
+    pendingScores[activeMetric].timing = t;
+    updatePendingSummary();
+  }
+}
+
+function updateGateStatus(){
+  const el = document.getElementById('gate-status');
+  if(selectedScore === null){ el.style.display='none'; return; }
+  el.style.display = 'block';
+  const s = selectedScore;
+  const limit = GATE_LIMITS[activeMetric];
+  if(activeMetric === 'knee'){
+    if(s<=2){ el.className='gate-status pass'; el.textContent='✓ Knee gate clear — proceed'; }
+    else if(s===3){ el.className='gate-status reduce'; el.textContent='⚠ At gate limit — reduce volume 30%'; }
+    else{ el.className='gate-status hold'; el.textContent='🛑 Gate breached — modify session'; }
+  } else if(activeMetric === 'shin'){
+    if(s<=1){ el.className='gate-status pass'; el.textContent='✓ Shin silent — proceed'; }
+    else if(s<=2){ el.className='gate-status reduce'; el.textContent='⚠ Shin load — monitor, reduce impact'; }
+    else{ el.className='gate-status hold'; el.textContent='🛑 Shin elevated — no impact today'; }
+  } else {
+    if(s<=1){ el.className='gate-status pass'; el.textContent='✓ Back clear'; }
+    else if(s===2){ el.className='gate-status reduce'; el.textContent='⚠ Back noted — log and monitor'; }
+    else{ el.className='gate-status hold'; el.textContent='🛑 Back elevated — reduce loading'; }
+  }
+}
+
+function updatePendingSummary(){
+  const keys = Object.keys(pendingScores);
+  if(!keys.length){ document.getElementById('pending-summary').style.display='none'; return; }
+  document.getElementById('pending-summary').style.display = 'block';
+  document.getElementById('pending-list').innerHTML = keys.map(k => {
+    const p = pendingScores[k];
+    return '✓ ' + METRIC_LABELS[k] + ': ' + p.score + '/10 (' + TIMING_LABELS[p.timing] + ')';
+  }).join('<br>');
+}
+
+function saveLog(){
+  if(selectedScore !== null){
+    pendingScores[activeMetric] = { score: selectedScore, timing: selectedTiming };
+  }
+  const toSave = Object.keys(pendingScores);
+  if(!toSave.length) return;
+  const today = todayStr();
+  const ts = Date.now();
+  toSave.forEach(metric => {
+    const p = pendingScores[metric];
+    const entry = { date:today, metric, score:p.score, timing:p.timing, ts };
+    gateLogs.push(entry);
+    saveGateLog(ATHLETE_ID, entry);
+  });
+  localStorage.setItem('sh_gate', JSON.stringify(gateLogs));
+  closeGateModal();
+  initDaySelector();
+}
+
+document.getElementById('gate-modal').addEventListener('click', function(e){ if(e.target===this) closeGateModal(); });
+
+
+// ─────────────────────────────────────────
+// WEEK NAVIGATION
+// ─────────────────────────────────────────
+function changeWeek(dir){
+  const newWeek = currentWeek + dir;
+  if(newWeek < 0 || newWeek >= WEEKS.length) return;
+  currentWeek = newWeek;
+  localStorage.setItem('sh_week', currentWeek);
+  saveWeekState('shaylan', currentWeek);
+  updateWeekUI();
+  initDaySelector();
+}
+
+function updateWeekUI(){
+  const week = WEEKS[currentWeek];
+  document.getElementById('phase-badge').innerHTML = `${week.label}<span>${week.dates}</span>`;
+  document.getElementById('nav-week-label').textContent = `Week ${currentWeek+1} of ${WEEKS.length}`;
+  document.getElementById('prev-week').disabled = currentWeek === 0;
+  document.getElementById('next-week').disabled = currentWeek === WEEKS.length - 1;
+}
+
+// ─────────────────────────────────────────
+// EXPAND EXERCISE DETAIL
+// ─────────────────────────────────────────
+function toggleExDetail(uid){
+  const detail = document.getElementById(uid);
+  const row = document.getElementById('row-' + uid);
+  if(!detail) return;
+  const isOpen = detail.classList.contains('open');
+  detail.classList.toggle('open', !isOpen);
+  if(row) row.classList.toggle('open', !isOpen);
+}
+
+// ─────────────────────────────────────────
+// WEEK / DAY RENDERING
+// ─────────────────────────────────────────
+function getWeekStart(weekIdx){
+  // GPP · Return block is decoupled from the meet calendar — anchor it to THIS week's Monday
+  if(WEEKS[weekIdx] && WEEKS[weekIdx].gpp){
+    const t = new Date();
+    const dow = t.getDay();                  // 0=Sun .. 6=Sat
+    const diff = (dow === 0 ? -6 : 1 - dow);  // step back to Monday
+    return new Date(t.getFullYear(), t.getMonth(), t.getDate() + diff);
+  }
+  const base = new Date(2026, 2, 9); // Mon Mar 9 2026 — Shaylan base
+  return new Date(base.getFullYear(), base.getMonth(), base.getDate() + weekIdx * 7);
+}
+
+function initDaySelector(){
+  const ws  = getWeekStart(currentWeek);
+  const tod = todayStr();
+  const loggedDates = new Set(gateLogs.map(l => l.date));
+  for(let d = 0; d < 7; d++){
+    const day = new Date(ws.getFullYear(), ws.getMonth(), ws.getDate() + d);
+    const ds  = sbDateStr(day);
+    const lbl = document.getElementById('ddate-' + d);
+    const btn = document.querySelector('.day-btn[data-day="' + d + '"]');
+    if(lbl) lbl.textContent = (day.getMonth()+1) + '/' + day.getDate();
+    if(btn){
+      btn.classList.toggle('today',  ds === tod);
+      btn.classList.toggle('logged', loggedDates.has(ds));
+    }
+  }
+}
+
+function selectDay(d){
+  selectedDay = d;
+  document.querySelectorAll('.day-btn').forEach(b => b.classList.remove('active'));
+  const btn = document.querySelector('.day-btn[data-day="' + d + '"]');
+  if(btn) btn.classList.add('active');
+  renderDay(d);
+}
+
+function renderDay(d){
+  const week = WEEKS[currentWeek];
+  const day  = week && week.days[d];
+  const main = document.getElementById('main-content');
+  if(!day){ main.innerHTML = ''; return; }
+
+  if(day.rest){
+    main.innerHTML = '<div class="rest-card"><div class="rest-icon">🛌</div>'
+      + '<div class="rest-title">Rest Day</div>'
+      + '<div class="rest-text">' + (day.sub || '') + '</div></div>';
+    return;
+  }
+
+  let exCounter = 0;
+  let html = '';
+  html += '<div class="day-intent">' + (day.intent || '') + '</div>';
+  html += '<div class="day-sub">'    + (day.sub    || '') + '</div>';
+
+  if(day.collagen){
+    html += '<div class="collagen-alert">'
+      + '<div class="collagen-icon">⏰</div>'
+      + '<div class="collagen-text"><strong>Collagen Window</strong>'
+      + 'Gelatin + Vit C 30–45 min before. Baar protocol — tendon, ligament, bone stress.</div>'
+      + '</div>';
+  }
+
+  (day.blocks || []).forEach(function(block){
+    const gold = block.gold ? ' gold' : '';
+    html += '<div class="ex-block">';
+    html += '<div class="block-label' + gold + '">' + block.label + '</div>';
+    (block.items || []).forEach(function(ex){
+      const info = getExInfo(ex.name);
+      const uid  = 'ex-' + exCounter++;
+      if(info){
+        html += '<div class="ex-row" id="row-' + uid + '" onclick="toggleExDetail(\'' + uid + '\')">';
+        html += '<div class="ex-name">' + ex.name;
+        if(ex.note) html += '<small>' + ex.note + '</small>';
+        html += '</div>';
+        html += '<div class="ex-dose' + gold + '">' + ex.dose + '</div>';
+        html += '<span class="ex-chevron">▾</span>';
+        html += '</div>';
+        html += '<div class="ex-detail" id="' + uid + '">';
+        html += '<div class="ex-detail-section">';
+        html += '<div class="ex-detail-label' + gold + '">Setup</div>';
+        html += '<div class="ex-detail-text">' + info.setup + '</div>';
+        html += '</div>';
+        html += '<div class="ex-detail-section">';
+        html += '<div class="ex-detail-label' + gold + '">Cue</div>';
+        html += '<div class="ex-detail-text">' + info.cue + '</div>';
+        html += '</div>';
+        if(info.url){
+          html += '<a class="ex-video-link" href="' + info.url + '" target="_blank">▶ Demo search</a>';
+        }
+        html += '</div>';
+      } else {
+        html += '<div class="ex-row">';
+        html += '<div class="ex-name">' + ex.name;
+        if(ex.note) html += '<small>' + ex.note + '</small>';
+        html += '</div>';
+        html += '<div class="ex-dose' + gold + '">' + ex.dose + '</div>';
+        html += '</div>';
+      }
+    });
+    html += '</div>';
+  });
+
+  main.innerHTML = html;
+}
+
+function isGateBreached(){
+  const cutoff = Date.now() - 48 * 3600000;
+  const recent = gateLogs.filter(function(l){ return (l.ts || 0) > cutoff; });
+  return {
+    knee: recent.some(function(l){ return l.metric === 'knee' && l.score > GATE_LIMITS.knee; }),
+    shin: recent.some(function(l){ return l.metric === 'shin' && l.score > GATE_LIMITS.shin; }),
+    back: recent.some(function(l){ return l.metric === 'back' && l.score > GATE_LIMITS.back; }),
+    any:  recent.some(function(l){ return GATE_LIMITS[l.metric] !== undefined && l.score > GATE_LIMITS[l.metric]; })
+  };
+}
+
+// ─────────────────────────────────────────
+// INIT
+// ─────────────────────────────────────────
+async function initApp(){
+  await loadInjuryLogs();
+  const det = detectCurrentWeek();
+  if(det !== null){
+    currentWeek = det.week;
+    localStorage.setItem('sh_week', currentWeek);
+  } else {
+    // past the authored meet calendar → land on the GPP · Return block, not a stale peak week
+    const gppIdx = WEEKS.findIndex(w => w.gpp);
+    currentWeek = gppIdx >= 0 ? gppIdx : await loadWeekState('shaylan', currentWeek);
+    localStorage.setItem('sh_week', currentWeek);
+  }
+  await loadGateLogs('shaylan', gateLogs);
+  updateWeekUI();
+  initDaySelector();
+  if(det !== null) selectDay(det.day);
+}
+initApp();
+// ─────────────────────────────────────────
+// INJURY LOG MODAL
+// ─────────────────────────────────────────
+let injuryLogs = [];
+let selectedInjuryRegion = null;
+let selectedInjurySeverity = null;
+
+function openInjuryModal(){
+  selectedInjuryRegion = null;
+  selectedInjurySeverity = null;
+  document.querySelectorAll('[id^="ireg-"]').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('#injury-score-grid .score-btn').forEach(b => b.classList.remove('selected'));
+  document.getElementById('injury-desc').value = '';
+  const today = new Date().toLocaleDateString('en-US',{weekday:'long',month:'short',day:'numeric'});
+  document.getElementById('injury-date-label').textContent = today;
+  document.getElementById('injury-modal').classList.add('open');
+}
+
+function closeInjuryModal(){
+  document.getElementById('injury-modal').classList.remove('open');
+}
+
+function selectInjuryRegion(r){
+  selectedInjuryRegion = r;
+  document.querySelectorAll('[id^="ireg-"]').forEach(b => b.classList.remove('active'));
+  document.getElementById('ireg-'+r).classList.add('active');
+}
+
+function selectInjurySeverity(n){
+  selectedInjurySeverity = n;
+  document.querySelectorAll('#injury-score-grid .score-btn').forEach(b => {
+    b.classList.toggle('selected', parseInt(b.dataset.v)===n);
+  });
+}
+
+async function saveInjuryLog(){
+  if(!selectedInjuryRegion || !selectedInjurySeverity) return;
+  const desc = document.getElementById('injury-desc').value.trim();
+  const entry = {
+    date: todayStr(),
+    region: selectedInjuryRegion,
+    description: desc,
+    severity: selectedInjurySeverity,
+    ts: Date.now()
+  };
+  injuryLogs.push(entry);
+  localStorage.setItem(ATHLETE_ID + '_injuries', JSON.stringify(injuryLogs));
+  try {
+    await sbFetch('/rest/v1/injury_logs', {
+      method: 'POST',
+      prefer: 'return=representation',
+      body: JSON.stringify({
+        athlete_id: ATHLETE_ID,
+        date: entry.date,
+        region: entry.region,
+        description: entry.description,
+        severity: entry.severity
+      })
+    });
+    showSyncBadge('ok');
+  } catch(e){ showSyncBadge('offline'); }
+  closeInjuryModal();
+  updateInjuryGate();
+}
+
+function getActiveInjuryPhase(){
+  const now = Date.now();
+  const recent = injuryLogs.filter(l => {
+    const age = (now - new Date(l.date).getTime()) / 86400000;
+    return age <= 7 && l.severity >= 3;
+  });
+  if(!recent.length) return null;
+  if(recent.some(l => ['knee','shin','foot'].includes(l.region))) return 'phase-rehab,phase-bridge';
+  if(recent.some(l => l.severity >= 4)) return 'phase-rehab,phase-bridge';
+  return 'phase-bridge,phase-gpp';
+}
+
+function updateInjuryGate(){
+  const override = getActiveInjuryPhase();
+  const brwBtns = document.querySelectorAll('.browse-btn');
+  brwBtns.forEach(btn => {
+    if(override){
+      const url = btn.href;
+      const base = url.split('?')[0];
+      btn.href = base + '?phase=' + override + '&quality=quality-gpp,quality-isometric&hidespinal=1';
+      btn.style.borderColor = 'rgba(200,80,60,0.5)';
+      btn.style.color = '#c8503c';
+      btn.title = '⚠ Active injury — Library filtered to rehab/bridge';
+    } else {
+      btn.style.borderColor = '';
+      btn.style.color = '';
+      btn.title = '';
+    }
+  });
+}
+
+async function loadInjuryLogs(){
+  const cached = localStorage.getItem(ATHLETE_ID + '_injuries');
+  if(cached) try { injuryLogs = JSON.parse(cached); } catch(e){}
+  try {
+    const cutoff = sbDateStr(new Date(Date.now() - 7*86400000));
+    const rows = await sbFetch('/rest/v1/injury_logs?athlete_id=eq.' + ATHLETE_ID + '&date=gte.' + cutoff + '&order=date.desc');
+    if(rows && rows.length){ injuryLogs = rows; localStorage.setItem(ATHLETE_ID + '_injuries', JSON.stringify(rows)); }
+  } catch(e){}
+  updateInjuryGate();
+}
+
+document.getElementById('injury-modal').addEventListener('click', function(e){ if(e.target===this) closeInjuryModal(); });
+
+
+</script><!-- INJURY LOG MODAL -->
+<div class="modal-bg" id="injury-modal">
+  <div class="modal">
+    <div class="modal-title">Log an Issue</div>
+    <div class="modal-sub" id="injury-date-label">Today</div>
+
+    <div style="margin-bottom:.85rem;">
+      <div class="score-label" style="margin-bottom:.4rem;">Region</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:.35rem;">
+        <button class="timing-btn" id="ireg-knee" onclick="selectInjuryRegion('knee')">Knee</button>
+        <button class="timing-btn" id="ireg-shin" onclick="selectInjuryRegion('shin')">Shin</button>
+        <button class="timing-btn" id="ireg-foot" onclick="selectInjuryRegion('foot')">Foot/Ankle</button>
+        <button class="timing-btn" id="ireg-hip" onclick="selectInjuryRegion('hip')">Hip</button>
+        <button class="timing-btn" id="ireg-back" onclick="selectInjuryRegion('back')">Back</button>
+        <button class="timing-btn" id="ireg-shoulder" onclick="selectInjuryRegion('shoulder')">Shoulder</button>
+        <button class="timing-btn" id="ireg-other" onclick="selectInjuryRegion('other')" style="grid-column:1/-1;">Other</button>
+      </div>
+    </div>
+
+    <div style="margin-bottom:.85rem;">
+      <div class="score-label" style="margin-bottom:.4rem;">Description</div>
+      <input id="injury-desc" type="text" placeholder="Brief description..."
+        style="width:100%;box-sizing:border-box;background:var(--surface2);border:1px solid var(--border);
+        border-radius:4px;padding:.5rem .75rem;font-family:'IBM Plex Mono',monospace;
+        font-size:.72rem;color:var(--text);outline:none;"/>
+    </div>
+
+    <div style="margin-bottom:1rem;">
+      <div class="score-label" style="margin-bottom:.25rem;">Severity</div>
+      <div class="score-legend" style="margin-bottom:.4rem;">
+        <span>1–2 = Monitor</span><span>3 = Modify</span><span>4–5 = Stop</span>
+      </div>
+      <div class="score-grid" id="injury-score-grid">
+        <button class="score-btn" data-v="1" onclick="selectInjurySeverity(1)">1</button>
+        <button class="score-btn" data-v="2" onclick="selectInjurySeverity(2)">2</button>
+        <button class="score-btn" data-v="3" onclick="selectInjurySeverity(3)">3</button>
+        <button class="score-btn" data-v="4" onclick="selectInjurySeverity(4)">4</button>
+        <button class="score-btn" data-v="5" onclick="selectInjurySeverity(5)">5</button>
+      </div>
+    </div>
+
+    <div style="margin-bottom:.45rem;">
+      <button class="modal-save" style="width:100%;" onclick="saveInjuryLog()">Save Issue</button>
+    </div>
+    <button class="modal-cancel" onclick="closeInjuryModal()">Cancel</button>
+  </div>
+</div>
+
+
+<button id="refresh-fab" title="Load latest version"
+  onclick="window.location.replace(window.location.pathname+'?t='+Date.now())">↺</button>
+<!-- Movement & Restoration quick-link (v3.4) — persistent option to the Library's restoration section, phase-agnostic so it's NOT filtered by updateInjuryGate (.move-fab ≠ .browse-btn) -->
+<a class="move-fab" href="https://padraik99.github.io/sjr-system/SJR_Library_Master_v4_20260402.html#restoration"
+   style="position:fixed;bottom:1rem;right:1rem;z-index:60;display:flex;align-items:center;gap:.4rem;background:var(--surface2);border:1px solid var(--accent);color:var(--accent);border-radius:22px;padding:.55rem .95rem;font-size:.72rem;font-family:'IBM Plex Mono',monospace;letter-spacing:.05em;text-decoration:none;box-shadow:0 3px 12px rgba(0,0,0,.45)">🧘 Movement</a>
+</body>
+</html>
