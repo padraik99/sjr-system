@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<!-- VERSION: 0.1 | Updated: 2026-11-12 | Prior: none | SJR Today: one-screen log + Build plan. Slot engine fills each day from the Library inside the gates (two-key gate copied from the Patrick guide v7.9, active issues, flare, phase). Manual swap with a logged reason. Per-set log. Shares pt_logs, patrick_active_issues and pt_demos with the guide. Patrick only in 0.1. -->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; connect-src https://jedsnurnnwmpcbdvtlbs.supabase.co; img-src 'self' data:; base-uri 'none'; form-action 'none'">
+<meta name="robots" content="noindex">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#EEF1EC">
+<title>SJR Today</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Roboto+Condensed:wght@400;600;800&family=Roboto+Slab:wght@400;600;800&family=Roboto+Mono:wght@400;600;700&display=swap">
+<style>
+:root{
+  --bg:#EEF1EC; --ink:#22403A; --mute:#3F4E49; --line:#C9D1CA; --field:#FFFFFF;
+  --accent:#1D3FCB; --on-accent:#FFFFFF; --fill:#1D3FCB; --on-fill:#FFFFFF; --go:#14693F; --mod:#8A5200; --hold:#B3261E;
+  --body:"Roboto",system-ui,sans-serif; --display:"Roboto Condensed","Arial Narrow",sans-serif;
+  color-scheme:light;
+}
+:root[data-skin="track"]{--bg:#A63F2A;--ink:#FFF6EE;--mute:#FBE0D4;--line:#C96A55;--field:#8A3221;--accent:#FFDD3C;--on-accent:#2A0F08;--fill:#FFF6EE;--on-fill:#A63F2A;--go:#D6F7C2;--mod:#FFDD3C;--hold:#FFFFFF;color-scheme:dark}
+:root[data-skin="canal"]{--bg:#0E2C31;--ink:#EAF2EE;--mute:#A3BDB8;--line:#2B4D52;--field:#163A40;--accent:#F4B740;--on-accent:#1A1404;--fill:#EAF2EE;--on-fill:#0E2C31;--go:#86DBA6;--mod:#F4B740;--hold:#FF9384;color-scheme:dark}
+:root[data-skin="ink"]{--bg:#FFFFFF;--ink:#0A0A0A;--mute:#4A4A4A;--line:#CFCFCF;--field:#F3F3F3;--accent:#0A0A0A;--on-accent:#FFFFFF;--fill:#0A0A0A;--on-fill:#FFFFFF;--go:#0F6B3C;--mod:#8A5200;--hold:#B3261E}
+:root[data-font="slab"]{--display:"Roboto Slab",Georgia,serif}
+:root[data-font="cond"]{--body:"Roboto Condensed","Arial Narrow",sans-serif}
+:root[data-font="mono"]{--body:"Roboto Mono",ui-monospace,monospace;--display:"Roboto Mono",ui-monospace,monospace}
+
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.4;padding:12px 16px 56px}
+.wrap{max-width:560px;margin:0 auto;display:flex;flex-direction:column;gap:14px}
+button,input{font:inherit;color:inherit}
+button{background:none;border:0;padding:0;cursor:pointer}
+a{color:inherit}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.lab{font-size:12px;letter-spacing:.09em;text-transform:uppercase;color:var(--mute);font-weight:600}
+.disp{font-family:var(--display);font-weight:800;text-transform:uppercase;letter-spacing:.01em;line-height:1}
+.link{font-weight:700;border-bottom:1.5px solid currentColor;font-size:14px;text-decoration:none}
+.note{color:var(--mute);font-size:14px;margin:0}
+
+.top{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.top h1{margin:0;font-size:26px}
+.top .who{display:block;margin-bottom:2px;font-size:11px;text-align:left}
+.tools{display:flex;align-items:center;gap:12px}
+.skins{display:flex;gap:6px}
+.skins button{width:18px;height:18px;border-radius:50%;border:2px solid var(--ink)}
+.skins button[aria-pressed="true"]{box-shadow:0 0 0 2px var(--bg),0 0 0 4px var(--ink)}
+.more{font-weight:700;font-size:15px;border-bottom:2px solid var(--ink)}
+
+.week{display:grid;grid-template-columns:repeat(7,1fr);border-top:2px solid var(--ink);border-bottom:2px solid var(--ink)}
+.week button{padding:4px 0 3px;text-align:center;border-left:1px solid var(--line);font-weight:600;font-size:13px;line-height:1.15}
+.week button:first-child{border-left:0}
+.week b{font-family:var(--display);font-size:16px;font-weight:800;margin-left:3px}
+.week button[aria-pressed="true"]{background:var(--fill);color:var(--on-fill)}
+
+.scores{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.score{display:flex;align-items:center;gap:6px;min-width:0}
+.score label{flex:none}
+.score input{flex:1;width:100%;min-width:0;background:var(--field);border:0;border-bottom:2px solid var(--ink);border-radius:0;
+  font-family:var(--display);font-weight:800;font-size:25px;line-height:1;padding:4px 6px 1px;font-variant-numeric:tabular-nums}
+.score input::placeholder{color:var(--mute);opacity:.5}
+.score input:focus{outline:0;border-bottom-color:var(--accent);box-shadow:inset 0 0 0 2px var(--accent)}
+.under{display:flex;flex-wrap:wrap;gap:6px 8px;margin-top:8px;align-items:center}
+.issues{margin-left:auto;font-size:14px;font-weight:600;display:flex;align-items:center;gap:6px;text-align:right}
+.issues i{width:9px;height:9px;background:var(--hold);display:inline-block;flex:none}
+
+.build{display:flex;gap:8px;align-items:stretch}
+.seg{display:flex;border:1.5px solid var(--ink)}
+.seg button{padding:5px 9px;font-weight:600;font-size:14px;border-left:1px solid var(--line)}
+.seg button:first-child{border-left:0}
+.seg button[aria-pressed="true"]{background:var(--fill);color:var(--on-fill)}
+.go{flex:1;background:var(--accent);color:var(--on-accent);font-family:var(--display);font-weight:800;font-size:18px;text-transform:uppercase;letter-spacing:.04em;padding:5px 12px}
+.go:active{transform:translateY(1px)}
+.msg{display:flex;justify-content:space-between;gap:10px;margin-top:6px;font-size:13px;color:var(--mute);min-height:18px}
+.msg .stale{font-weight:700;color:var(--hold)}
+
+#plan{margin-top:4px}
+.day{display:flex;flex-direction:column;gap:9px}
+.day + .day{margin-top:30px;padding-top:20px;border-top:2px solid var(--ink)}
+.day h2{margin:0;font-size:27px}
+.day .when{display:block;margin-bottom:3px}
+.verdict{display:flex;gap:10px;align-items:baseline;flex-wrap:wrap}
+.status{font-family:var(--display);font-weight:800;font-size:17px;text-transform:uppercase;letter-spacing:.06em;padding:1px 7px 0;border:2px solid currentColor}
+.status.full{color:var(--go)} .status.adj{color:var(--mod)} .status.hold{color:var(--hold)}
+.verdict p{margin:0;flex:1 1 200px;min-width:0;font-size:15px}
+.gate{font-size:13px;color:var(--mute);font-variant-numeric:tabular-nums}
+.changes{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:2px 14px;font-size:14px;color:var(--mute)}
+.changes b{color:var(--ink);font-family:var(--display);font-size:16px;margin-right:4px}
+.blk{display:flex;justify-content:space-between;align-items:flex-end;margin-top:16px;border-bottom:2px solid var(--fill)}
+.blk .disp{background:var(--fill);color:var(--on-fill);padding:4px 10px 3px;font-size:15px;letter-spacing:.07em}
+.blk .lab{padding-bottom:3px}
+.rows{list-style:none;margin:0;padding:0}
+.rows > li{border-bottom:1px solid var(--line)}
+.row{display:grid;grid-template-columns:26px 1fr auto;gap:10px;align-items:center;padding:10px 0}
+.tick{width:22px;height:22px;border:2px solid var(--ink);font-size:14px;font-weight:700;display:grid;place-items:center;line-height:1}
+.tick[aria-pressed="true"]{background:var(--fill);border-color:var(--fill);color:var(--on-fill)}
+.nm{font-size:17px;font-weight:500;min-width:0;text-align:left}
+.nm em{font-style:normal;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);font-weight:700;margin-right:6px}
+.dose{font-size:14px;text-align:right;color:var(--mute);font-variant-numeric:tabular-nums;max-width:150px}
+.dose.did{color:var(--accent);font-weight:700}
+li.done .nm{opacity:.55}
+.open{padding:0 0 14px 36px;display:flex;flex-direction:column;gap:10px}
+.open p{margin:0;color:var(--mute);font-size:15px}
+.acts{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center}
+.sets{display:flex;flex-direction:column;gap:6px}
+.setrow{display:grid;grid-template-columns:18px 1fr 14px 1fr;gap:8px;align-items:center;max-width:300px}
+.setrow span{color:var(--mute);font-size:14px;text-align:center}
+.inp{min-width:0;width:100%;background:var(--field);border:0;border-bottom:2px solid var(--ink);border-radius:0;padding:6px 8px;font-size:16px}
+.inp:focus{outline:0;box-shadow:inset 0 0 0 2px var(--accent)}
+.rowform{display:flex;gap:8px}
+.btn{background:var(--fill);color:var(--on-fill);font-weight:700;padding:6px 12px;font-size:14px;flex:none}
+.err{color:var(--hold);font-weight:600;font-size:14px}
+.opts{display:flex;flex-wrap:wrap;gap:8px}
+.opts button{border:1.5px solid var(--ink);padding:5px 10px;font-weight:600;font-size:15px}
+.opts button[aria-pressed="true"]{background:var(--fill);border-color:var(--fill);color:var(--on-fill)}
+.opts.sm button{padding:2px 9px;font-size:13px}
+.alts{display:flex;flex-direction:column;align-items:flex-start;gap:6px}
+.alts button{font-size:15px;border-bottom:1px solid var(--line);padding:3px 0;text-align:left}
+
+.sheet{position:fixed;inset:0;background:var(--bg);z-index:20;overflow:auto;padding:16px 16px 40px}
+.sheet .wrap{gap:20px}
+.menu{list-style:none;margin:0;padding:0;border-top:2px solid var(--ink)}
+.menu li{border-bottom:1px solid var(--line)}
+.menu a{display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding:11px 0;text-decoration:none}
+.menu .big{font-family:var(--display);font-weight:800;font-size:22px;text-transform:uppercase;line-height:1}
+.menu span:last-child{color:var(--mute);font-size:14px;text-align:right}
+.set .lab{display:block;margin-bottom:8px}
+.page h2{margin:0;font-size:28px}
+.page h3{margin:0 0 4px;font-size:17px}
+.page article{padding:12px 0;border-bottom:1px solid var(--line)}
+.page article p{margin:0 0 6px}
+.page .ref{color:var(--mute);font-size:14px;font-weight:400}
+.iss{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.newiss{display:flex;flex-direction:column;gap:8px;margin-top:8px}
+.tbl{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-variant-numeric:tabular-nums}
+th,td{text-align:left;padding:7px 10px 7px 0;border-bottom:1px solid var(--line);white-space:nowrap}
+th{font-size:12px;letter-spacing:.09em;text-transform:uppercase;color:var(--mute)}
+td.n{font-family:var(--display);font-weight:800;font-size:19px}
+@media (max-width:360px){.score input{font-size:21px}.seg button{padding:5px 7px}}
+</style>
+</head>
+<body>
+<div class="wrap" id="today">
+  <header class="top">
+    <div>
+      <button class="lab who" id="whoBtn" type="button"></button>
+      <h1 class="disp" id="dateH"></h1>
+    </div>
+    <div class="tools">
+      <div class="skins" id="skins" role="group" aria-label="Colour theme"></div>
+      <button class="more" id="moreBtn" type="button">More</button>
+    </div>
+  </header>
+  <nav class="week" id="week" aria-label="Next seven days"></nav>
+  <section aria-label="Today's numbers, 0 to 10">
+    <div class="scores" id="scores"></div>
+    <div class="under" id="under"></div>
+  </section>
+  <section>
+    <div class="build">
+      <div class="seg" id="range" role="group" aria-label="How far ahead"></div>
+      <button class="go" id="goBtn" type="button">Build plan</button>
+    </div>
+    <div class="msg"><span class="stale" id="stale" hidden>Numbers changed. Build again.</span><span id="sync"></span></div>
+  </section>
+  <section id="plan" aria-live="polite"></section>
+</div>
+<div class="sheet" id="sheet" hidden></div>
+
+<script>
+/* ============ SJR Today v0.1 ============ */
+const SUPA_URL='https://jedsnurnnwmpcbdvtlbs.supabase.co';
+const SUPA_KEY='sb_publishable_3WGolnM5dOK88Y4WdKCFGA_Hi6wj-_z';
+const DRY=/[?&]dry\b/.test(location.search);      // ?dry = test mode, nothing is sent to the database
+const A={id:'patrick',pre:'pt_',name:'Patrick',metrics:[['morning','Back'],['nerve','Nerve'],['glute','Glute']],phases:['rehab','bridge','maint']};
+const LIB=[{"n":"Trap Bar Deadlift — Elevated Start","p":"hinge","x":["load"],"d":"3 × 8 · hold the load 3 sessions","sl":"mod","i":"sub","ph":["bridge","comp","gpp","perf","spp"],"sec":"posterior","why":"Centered load under COM avoids anterior bar path and posterior foraminal compression. Elevated start removes end-range lumbar demand. The premier bilateral hip hinge for athletes with lumbar restrictions.","src":"McGill · Grey","q":"trap+bar+deadlift+elevated+start+lumbar+safe+McGill"},{"n":"Trap Bar Deadlift — Full ROM","p":"hinge","x":["load"],"d":"","sl":"high","i":"max","ph":["comp","gpp","perf","spp"],"sec":"posterior","why":"Near-floor pull with high or low handles. Maximal posterior chain recruitment when structural clearance is achieved. Develops the force production base that sprint mechanics demand.","src":"McGill · Natera","q":"trap+bar+deadlift+full+ROM+form+tutorial"},{"n":"Romanian Deadlift (RDL)","p":"hinge","x":["load","slr"],"d":"3 × 8","sl":"mod","i":"sub","ph":["bridge","comp","gpp","perf","spp"],"sec":"posterior","why":"Hip-dominant hinge with eccentric hamstring load. Baar's tissue programming principle applied: controlled lengthening under tension drives collagen remodeling. Keep spine neutral throughout — not a stretch, a load.","src":"Baar · McGill","q":"Romanian+deadlift+RDL+hip+hinge+eccentric+hamstring"},{"n":"Single-Leg RDL (Dumbbell)","p":"hinge","x":["slr"],"d":"2 × 10 each","sl":"low","i":"sub","ph":["bridge","comp","gpp","perf","spp"],"sec":"posterior","why":"Unilateral hip hinge with balance demand. Exposes asymmetries, trains glute-hamstring co-contraction in the single-support phase that mirrors sprint mechanics at toe-off.","src":"Grey · Natera","q":"single+leg+RDL+dumbbell+balance+hamstring"},{"n":"Nordic Hamstring Curl","p":"ham","x":["load"],"d":"2 × 5","sl":"low","i":"sub","ph":["bridge","gpp","rehab"],"sec":"posterior","why":"Petersen et al. 2011: 51% hamstring injury reduction — but the research pool is overwhelmingly male (13 of 15 studies). Male athletes: non-negotiable. Knee-dominant eccentric directly addresses the distal injury mechanism dominant in male sprinters. Use band-assisted entry. Female athletes (Baar / Bosch): anterior pelvic tilt in female sprinters loads the proximal hamstring via a hip-dominant mechanism the Nordic does not address. Bosch: the hamstring must function isometrically across both joints at top speed — isolated knee-dominant eccentric is insufficient alone. Prescription for female sprint athletes: Nordic as part of a paired program only — always combined with single-leg RDL, GHR, or single-leg Roman Chair to address the proximal, hip-dominant end. Never as a standalone intervention.","src":"Petersen · Baar · Bosch","q":"Nordic+hamstring+curl+eccentric+injury+prevention"},{"n":"Glute-Ham Raise (GHR)","p":"ham","x":["load"],"d":"2 × 6","sl":"low","i":"sub","ph":["bridge","comp","gpp","perf","spp"],"sec":"posterior","why":"Full posterior chain integration from glute through hamstring to calf. Trains knee flexion under hip-extended position — the sprint-specific demand. Requires GHR bench or anchored feet.","src":"Schexnayder · Natera","q":"glute+ham+raise+GHR+posterior+chain"},{"n":"Single-Leg Roman Chair (Hip-Dominant Hamstring)","p":"ham","x":["load"],"d":"2 × 8 each","sl":"low","i":"sub","ph":["bridge","comp","gpp","perf","spp"],"sec":"posterior","why":"Bosch's preferred hamstring loading tool for sprint athletes — and the specific prescription for female sprinters as a Nordic curl complement. Meets four criteria simultaneously: sufficient single-leg overload; hamstring attempts to extend the hip AND prevent knee extension; load occurs at optimal muscle length; pelvis can rotate freely to find that optimal length. Trains the isometric coordination function the hamstring must perform at top-end sprint speed — not just eccentric strength at the knee. For female sprint athletes with anterior pelvic tilt, this addresses the proximal hip-dominant injury mechanism the Nordic curl cannot reach.","src":"Bosch","q":"single+leg+Roman+chair+hip+dominant+hamstring+Bosch"},{"n":"Glute Bridge — Bilateral","p":"bridge","x":[],"d":"3 × 10","sl":"low","i":"sub","ph":["bridge","gpp","rehab"],"sec":"posterior","why":"McGill foundational: hip extension without lumbar compression. Entry-level posterior chain activation appropriate even with active nerve compression. Progresses to single-leg as recruitment improves.","src":"McGill · Grey","q":"bilateral+glute+bridge+McGill+hip+extension"},{"n":"Hip Thrust — Barbell","p":"bridge","x":["load"],"d":"3 × 8","sl":"low","i":"sub","ph":["bridge","comp","gpp","perf","spp"],"sec":"posterior","why":"Maximal glute activation in end-range hip extension — position not achievable in deadlift or squat. Bret Contreras research underpins this; consistent with Grey's joint-first loading principle. Load is axial through hips, not spine.","src":"Grey · McGill","q":"barbell+hip+thrust+glute+end+range"},{"n":"Box Squat — Goblet Hold","p":"squat","x":["load"],"d":"3 × 8","sl":"mod","i":"sub","ph":["bridge","comp","gpp","perf","spp"],"sec":"anterior","why":"Box sets safe depth limit. Goblet position shifts COM anteriorly, reducing lumbar extension tendency. Teaches sit-back mechanics. Pre-epidural safe variation that maintains quad and glute recruitment patterns.","src":"McGill · Grey","q":"box+squat+goblet+hold+COM+lumbar+safe"},{"n":"Back Squat — Full Depth","p":"squat","x":["load"],"d":"","sl":"high","i":"max","ph":["comp","gpp","perf","spp"],"sec":"anterior","why":"The standard for bilateral lower body strength development. Requires structural clearance. ISA context: narrow ISA athletes (Shaylan, Cadence) will show natural internal rotation cue at depth — do not coach out.","src":"McGill · Franzblau","q":"back+squat+full+depth+form+cues"},{"n":"Front Squat","p":"squat","x":["load"],"d":"","sl":"mod","i":"sub","ph":["comp","gpp","perf","spp"],"sec":"anterior","why":"Anterior load demands upright torso — reduces posterior chain dominance, increases quad recruitment. Teaches the trunk position required for penultimate step mechanics in long jump.","src":"Schexnayder · McGill","q":"front+squat+upright+torso+technique"},{"n":"Split Squat — Rear Foot Elevated (Bulgarian)","p":"single","x":["load"],"d":"2 × 8 each","sl":"mod","i":"sub","ph":["bridge","comp","gpp","perf","spp"],"sec":"anterior","why":"Unilateral anterior chain loading with reduced spinal compression versus bilateral squat. Hip flexor length challenge at rear leg. Asymmetry detection tool — left-right discrepancy reveals compensation patterns.","src":"McGill · Grey","q":"Bulgarian+split+squat+rear+foot+elevated"},{"n":"Eccentric Step-Down (Touchdown)","p":"single","x":[],"d":"2 × 8 each","sl":"low","i":"sub","ph":["bridge","comp","gpp","perf","spp"],"sec":"anterior","why":"Slow eccentric quad loading in single-leg stance. Controls patellar tracking via VMO engagement timing. Rio et al. eccentric loading principle applied to PFPS management. Depth governs load — 90° knee maximum pre-clearance.","src":"Rio · Grey","q":"eccentric+step+down+touchdown+PFPS+VMO"},{"n":"Leg Press — Partial ROM","p":"squat","x":["load"],"d":"3 × 10","sl":"low","i":"sub","ph":["bridge","gpp","rehab"],"sec":"anterior","why":"Quad loading without spinal compression. Useful bridge when bilateral squat is restricted. Foot position varies emphasis: high foot = posterior chain, low foot = quad dominant. Not a replacement for free squat long-term.","src":"McGill","q":"leg+press+partial+ROM+quad+posterior+chain"},{"n":"Single-Leg Glute Bridge","p":"bridge","x":[],"d":"3 × 8 each","sl":"low","i":"sub","ph":["bridge","gpp","rehab"],"sec":"singleleg","why":"Unilateral hip extension progression from bilateral bridge. Reveals gluteus medius inhibition side-to-side. For neurogenically inhibited glutes (L5 compression), this is the test and the treatment simultaneously.","src":"McGill · Grey","q":"single+leg+glute+bridge+hip+extension+asymmetry"},{"n":"Pistol Squat — Assisted","p":"single","x":["deepknee"],"d":"2 × 5 each","sl":"low","i":"sub","ph":["bridge","comp","gpp","perf","spp"],"sec":"singleleg","why":"Single-leg full squat requiring simultaneous ankle dorsiflexion, hip flexion, and trunk control. Ankle restriction is exposed immediately — the first limiting factor in most sprinters. Use TRX or doorframe for load reduction.","src":"Grey · Ward","q":"assisted+pistol+squat+ankle+dorsiflexion+mobility"},{"n":"Lateral Slide Lunge","p":"single","x":["deepknee"],"d":"2 × 8 each","sl":"low","i":"sub","ph":["bridge","comp","gpp","perf","spp"],"sec":"singleleg","why":"Frontal plane single-leg loading. Adductor and gluteus medius co-contraction. Sport-specific for lateral deceleration in soccer and long jump approach correction. Ward Flow Motion: frontal plane precedes sagittal plane efficiency.","src":"Ward · Grey","q":"lateral+slide+lunge+frontal+plane+adductor+glute+med"},{"n":"Single-Leg Squat to Box","p":"single","x":[],"d":"2 × 8 each","sl":"low","i":"sub","ph":["bridge","comp","gpp","perf","spp"],"sec":"singleleg","why":"Controlled single-leg descent to seated position. Depth is box-governed — safe range can be set precisely. Trains the eccentric control phase of stance in sprint gait. Trunk position mirrors penultimate step demand.","src":"Schexnayder · McGill","q":"single+leg+squat+to+box+eccentric+control"},{"n":"Step-Up — Weighted","p":"single","x":["load"],"d":"2 × 8 each","sl":"low","i":"sub","ph":["comp","gpp","perf","spp"],"sec":"singleleg","why":"Concentric single-leg press from deficit. Hip-dominant at higher box, quad-dominant at lower. Easily loaded with DBs. Mimics the push-off mechanics of drive phase acceleration.","src":"Natera · Grey","q":"weighted+step+up+single+leg+hip+drive"},{"n":"Single-Leg Broad Jump (Stick Landing)","p":"plyo","x":["impact"],"d":"","sl":"low","i":"max","ph":["comp","gpp","perf","spp"],"sec":"singleleg","why":"Horizontal force production and reactive landing control on one leg. Stick landing requirement forces active deceleration — trains the eccentric hip-knee-ankle chain for sprint deceleration and jump takeoff control.","src":"Schexnayder · Barr","q":"single+leg+broad+jump+stick+landing+deceleration"},{"n":"Seated Psoas Hold — Half-Kneeling (Boyle)","p":"hipmob","x":[],"d":"2 × 30 s each","sl":"low","i":"sub","ph":["rehab","bridge","gpp","spp"],"sec":"singleleg","why":"Boyle's hip flexor isolation in half-kneeling: from a split-kneeling position, drive the front knee toward your chest and hold for 5–10s against your own hand or a band. Psoas major is the only hip flexor that originates on the lumbar spine — its weakness and inhibition affects both lumbar stability and sprint drive phase mechanics directly. Most athletes cannot activate psoas voluntarily in the kneeling position; this teaches that neural pattern. Prerequisite to meaningful hip flexor strengthening in the gym. Also relevant for Patrick's spinal rehab — psoas weakness contributes to anterior instability at L4-L5.","src":"Boyle · Grey","q":"seated+psoas+hold+half+kneeling+Boyle+hip+flexor+activation"},{"n":"Skater Squat — Bodyweight to Loaded","p":"single","x":[],"d":"2 × 6 each","sl":"low","i":"sub","ph":["bridge","gpp","spp","comp"],"sec":"singleleg","why":"Single-leg squat to near-floor without a box — the training bridge between assisted pistol and full pistol. Ward and Grey: the skater squat exposes combined ankle dorsiflexion, hip flexion, and contralateral hip stability demands simultaneously. It is more frontal-plane honest than a box squat and less technical than a pistol. The non-working leg extends behind rather than forward, which keeps the trunk more upright and loads the glute medius and TFL throughout the range. Direct carry-over to single-leg deceleration in sprint and jump events. Regress with counterweight (5kg plate held at chest); progress by removing it.","src":"Grey · Ward","q":"skater+squat+single+leg+bodyweight+frontal+plane+progression"},{"n":"Isometric Wall Sit — Mid Angle","p":"iso","x":[],"d":"3 × 45 s","sl":"low","i":"sub","ph":["bridge","gpp","rehab"],"sec":"isometric","why":"Rio et al. 2015: isometric contractions at 70% MVC suppress cortical inhibition and provide immediate analgesia in tendinopathy and PFPS. 45-second holds at 60° knee flexion. Quad activation without joint loading.","src":"Rio · Natera","q":"isometric+wall+sit+Rio+analgesia+protocol"},{"n":"Wall Sit Progression — Co-Contraction Ladder","p":"iso","x":[],"d":"3 × 45 s","sl":"low","i":"sub","ph":["bridge","gpp","rehab","spp"],"sec":"isometric","why":"Grey's staple, built as a ladder rather than a single hold: double-leg → single-leg → heel-elevated (biases the knee extensors, since you're weakest and most loaded in the top range) → add dorsiflexion or external load. The organising principle is the knee as an isometric strut: lock the joint angle and the calf and hamstring are forced to co-contract with the quad, the same stance pattern that lets the glute drive hip extension instead of the quad extending the knee early. Dose by goal — Rio 5×45s for analgesia, longer holds (Baar) for collagen/tendon stiffness, higher intensity for capacity. Spine-safe for Patrick: trunk stays neutral against the wall, zero axial compression, no lumbar extension. Grey caveat: progress one rung at a time — a single- or double-leg wall sit can flare a patellar tendon that isn't ready, so it earns intensity, it isn't handed it. Mechanism is well-supported sprint biomechanics; the \"train to delay knee extension\" intervention is a sound coaching heuristic, not RCT-proven.","src":"Grey · Rio · Baar","q":"David+Grey+wall+sit+progression+co-contraction+knee"},{"n":"Single-Leg Isometric Calf Press (Leg Press Machine)","p":"calf","x":["calf"],"d":"5 × 30–45 s","sl":"low","i":"sub","ph":["bridge","gpp","rehab"],"sec":"isometric","why":"Natera sprint-specific isometric application: load at 70–80% of estimated single-leg max, 5×45s. Soleus and gastrocnemius under joint-appropriate position. Plantar fascia load tolerance protocol entry point.","src":"Natera · Baar · Rio","q":"single+leg+isometric+calf+press+leg+machine+Natera"},{"n":"Spanish Squat — Isometric","p":"iso","x":[],"d":"3 × 45 s","sl":"low","i":"sub","ph":["bridge","gpp","rehab"],"sec":"isometric","why":"Band around fixed point forces vertical tibia — eliminates anterior shear at the knee. Patellar tendon load at long length. Rio isometric analgesia protocol for patellar tendinopathy. 5×45s at 60° knee flexion.","src":"Rio · Natera","q":"Spanish+squat+isometric+patellar+tendinopathy+Rio"},{"n":"Dead Bug — Contralateral Hold","p":"trunk","x":[],"d":"3 × 8 each","sl":"low","i":"sub","ph":["bridge","comp","gpp","perf","rehab","spp"],"sec":"isometric","why":"McGill Big Three. Trains anti-extension and anti-rotation of the spine without compression. Contralateral arm-leg extension mimics the cross-pattern co-contraction of sprint gait. Appropriate from Day 1 of lumbar rehab.","src":"McGill","q":"dead+bug+McGill+anti+extension+lumbar+stability"},{"n":"Side Plank — Full","p":"trunk","x":[],"d":"2 × 25 s each","sl":"low","i":"sub","ph":["bridge","comp","gpp","perf","rehab","spp"],"sec":"isometric","why":"McGill Big Three. Lateral chain isometric — QL, gluteus medius, obliques in co-contraction. Progression from knees. Gluteus medius activation in this position directly supplements clamshell work for L5 inhibition.","src":"McGill","q":"side+plank+McGill+lateral+chain+glute+medius"},{"n":"Bird Dog — Extended Hold","p":"trunk","x":[],"d":"3 × 10 s each","sl":"low","i":"sub","ph":["bridge","comp","gpp","perf","rehab","spp"],"sec":"isometric","why":"McGill Big Three. Extensor chain isometric in quadruped. 8-second holds, not quick reps — the duration is the prescription. Trains L5 stabilizer chain without compression load. Gluteus maximus, multifidus, contralateral lat co-contract.","src":"McGill","q":"bird+dog+McGill+8+second+hold+extensor+chain"},{"n":"Overcoming Isometric — Hip Flexor Wall Drive Hold","p":"iso","x":[],"d":"3 × 5 s each","sl":"low","i":"max","ph":["bridge","gpp","spp","comp","rehab"],"sec":"isometric","why":"Natera sprint-specific potentiation protocol: hands on wall, drive knee into immovable surface at 90%+ MVC for 5 seconds. Targets psoas and iliacus at the exact joint angle of sprint drive phase. Maximal isometric effort at this position drives PAP (post-activation potentiation) — muscle becomes temporarily more explosive after the hold. Use 3×5s per side immediately before sprint work for neurological priming, not as a standalone fatigue set.","src":"Natera · Spina","q":"hip+flexor+isometric+wall+drive+hold+sprint+potentiation+Natera"},{"n":"Overcoming Isometric — Mid-Range Push Against Fixed Bar","p":"iso","x":[],"d":"3 × 5 s","sl":"low","i":"max","ph":["bridge","gpp","spp","comp","rehab"],"sec":"isometric","why":"Natera overcoming isometric: push or pull against an immovable barbell or wall peg at joint-specific sprint position (hip ~90°, knee ~110°). 5s max effort, full intent, zero movement. Unlike yielding isos, overcoming isos recruit maximal motor units without relying on load tolerance — the CNS fires fully against a fixed object. Key mechanism: the force-velocity curve shifts right after maximal isometric effort, meaning subsequent dynamic movements express more force at higher velocities. Dose: 3–5 sets of 5s, 2–3 min rest.","src":"Natera · Rio","q":"overcoming+isometric+barbell+mid+range+sprint+Natera"},{"n":"Isometric Split Squat Hold — Baar Connective Tissue Protocol","p":"iso","x":[],"d":"4 × 30 s each","sl":"low","i":"sub","ph":["rehab","bridge","gpp"],"sec":"isometric","why":"Baar collagen synthesis protocol: hold the bottom position of a split squat at 60–70° knee flexion for 20–30 seconds at submaximal effort (~40–60% MVC). Duration is the prescription — connective tissue responds to sustained mechanical loading, not maximal force. Baar's research: tendons and ligaments up-regulate collagen synthesis with 20–30s continuous loading; shorter holds don't achieve the same stimulus. Best used post-collagen drink (gelatin + vitamin C) in the 60-min synthesis window. Distinguishes itself from the Rio 45s analgesia dose — this is building tissue, not suppressing pain.","src":"Baar · Grey","q":"isometric+split+squat+hold+connective+tissue+Baar+collagen"},{"n":"RDL Isometric Pause — Mid-Shin Sprint Position","p":"hinge","x":["load","slr"],"d":"","sl":"mod","i":"max","ph":["gpp","spp","comp"],"sec":"isometric","why":"Natera's loaded isometric in the sprint-relevant hamstring position: perform an RDL to the mid-shin position and hold for 5s at maximum effort against the load. The hip angle at mid-shin in an RDL directly mirrors the hamstring loading position at late swing phase in sprinting. This is why it transfers — you are training the hamstring isometrically at the exact length and position where it must produce force in top-end sprint gait. Unlike standard RDLs, the pause forces maximal recruitment at that specific joint angle. 3–5 sets of 5s each side.","src":"Natera · Bosch","q":"RDL+isometric+pause+hamstring+sprint+position+Natera"},{"n":"Pallof Press — Anti-Rotation Isometric","p":"trunk","x":[],"d":"5 pulses + 5 s hold × 5 each","sl":"low","i":"max","ph":["bridge","gpp","spp","comp"],"sec":"isometric","why":"McGill/Boyle's anti-rotation standard: cable or band anchored at shoulder height, press straight out and hold for 3–5s while the load attempts to rotate your trunk. The training stimulus is the resistance to rotation — not the pressing movement itself. This directly mirrors the anti-rotation demand of sprint arm drive (contralateral arm and leg force the trunk to resist rotation at every ground contact). Unlike rotation exercises that train through range, the Pallof trains the stiffness that protects the spine and transfers force efficiently. Sprint relevance: Bosch identifies trunk stiffness at ground contact as a key differentiator between elite and sub-elite sprint mechanics. Progress by increasing band tension or extending hold duration.","src":"McGill · Boyle · Bosch","q":"Pallof+press+anti+rotation+isometric+core+McGill"},{"n":"Clamshell — Banded","p":"glutemed","x":[],"d":"3 × 15 each","sl":"low","i":"sub","ph":["bridge","gpp","rehab"],"sec":"glute","why":"Gluteus medius isolation in sidelying. L5 innervates glute med — this is the diagnostic and the treatment for neurogenic inhibition. Volume over intensity: 20–25 reps, light band. Quality of burn matters more than load.","src":"McGill · Grey","q":"banded+clamshell+gluteus+medius+hip+abduction"},{"n":"Band Lateral Shuffle","p":"glutemed","x":[],"d":"3 × 15 each","sl":"low","i":"sub","ph":["bridge","gpp","rehab"],"sec":"glute","why":"Gluteus medius in frontal plane locomotion. Ward Flow Motion: lateral loading unlocks sagittal efficiency. Hip-width stance, knees soft, band above knees. Sport-specific for court and field deceleration.","src":"Ward · Grey","q":"band+lateral+shuffle+glute+medius+frontal+plane"},{"n":"Cable Pull-Through","p":"hinge","x":["load"],"d":"3 × 10","sl":"low","i":"sub","ph":["bridge","comp","gpp","perf","spp"],"sec":"glute","why":"Hip hinge with anterior load (cable between legs) — teaches hip-drive dissociation from lumbar extension. Excellent for athletes who default to back extension during deadlift. Grey joint sequencing: hip first, spine neutral.","src":"Grey · McGill","q":"cable+pull+through+hip+hinge+glute+drive"},{"n":"Monster Walk — Banded Forward/Backward","p":"glutemed","x":[],"d":"2 × 20 steps","sl":"low","i":"sub","ph":["bridge","comp","gpp","perf","spp"],"sec":"glute","why":"Continuous tension glute med and TFL activation through gait cycle. Band above knees, slight hip flexion maintained throughout. Uthoff backward running principle applied to resistance band: flexion-biased hip activation.","src":"Ward · Uthoff","q":"monster+walk+banded+glute+med+TFL+activation"},{"n":"45° Back Extension — Weighted","p":"hinge","x":["load"],"d":"3 × 10","sl":"low","i":"sub","ph":["comp","gpp","perf","spp"],"sec":"glute","why":"Posterior chain integration from glute through erector in hip-extended position. Load held at chest. End-range hip extension strength is the force production limit in top-end sprint velocity. Not a spine exercise — a glute exercise.","src":"Schexnayder · McGill","q":"45+degree+back+extension+weighted+glute+erector"},{"n":"Copenhagen Adductor Hold","p":"glutemed","x":[],"d":"2 × 20 s each","sl":"low","i":"sub","ph":["bridge","comp","gpp","perf","spp"],"sec":"glute","why":"Adductor longus isometric in sidelying with elevated ankle support. Adductor strength is the most underprogrammed variable in sprint and jump athletes. Lateral stability in single-leg stance depends on adductor-abductor balance.","src":"Ward · Grey","q":"Copenhagen+adductor+hold+plank+groin+strength"},{"n":"Bench Press — Controlled","p":"press","x":[],"d":"2 × 20","sl":"low","i":"sub","ph":["bridge","comp","gpp","perf","rehab","spp"],"sec":"upper","why":"Horizontal push maintaining upper body mass and pressing strength through lower body rehabilitation. Avoid Valsalva at heavy loads — intra-abdominal pressure spikes increase disc pressure. Breathe through the rep.","src":"McGill","q":"bench+press+controlled+tempo+breathing+form"},{"n":"Cable / Banded Row — Seated","p":"pull","x":[],"d":"2 × 20","sl":"low","i":"sub","ph":["bridge","comp","gpp","perf","rehab","spp"],"sec":"upper","why":"Horizontal pull maintains posterior shoulder and thoracic erector balance against pressing volume. Seated position removes lumbar demand. Sprint arm mechanics require scapular retraction and depression — this is direct preparation.","src":"McGill · Natera","q":"seated+cable+banded+row+scapular+retraction+depression"},{"n":"Landmine Press","p":"press","x":[],"d":"2 × 12 each","sl":"mod","i":"sub","ph":["bridge","comp","gpp","perf","spp"],"sec":"upper","why":"Angled pressing vector reduces rotator cuff impingement risk versus overhead pressing. Unilateral option adds anti-rotation core demand. Standing position integrates lower body stability. Better shoulder longevity profile than strict overhead press.","src":"McGill · Grey","q":"landmine+press+shoulder+angled+press+core"},{"n":"Pull-Up / Lat Pulldown","p":"pull","x":[],"d":"3 × 5–8","sl":"low","i":"sub","ph":["bridge","comp","gpp","perf","spp"],"sec":"upper","why":"Vertical pull develops lat strength critical for sprint arm drive and trunk stiffness at ground contact. Lat connects to thoracolumbar fascia — direct spinal stability contributor. Decompress the spine as a bonus.","src":"McGill · Natera","q":"pull+up+lat+pulldown+vertical+pull+form"},{"n":"Dumbbell Shoulder Complex (Y-T-W)","p":"pull","x":[],"d":"2 × 10","sl":"low","i":"sub","ph":["bridge","comp","gpp","perf","spp"],"sec":"upper","why":"Prone scapular stability work targeting lower trap and serratus. Corrects the forward shoulder position common in athletes with heavy pressing history. Protects rotator cuff under sprint arm drive demands. Low load, high intent.","src":"Grey · McGill","q":"dumbbell+Y+T+W+scapular+stability+lower+trap"},{"n":"Power Clean — Hang Position","p":"power","x":["load","impact"],"d":"","sl":"high","i":"max","ph":["comp","gpp","perf","spp"],"sec":"upper","why":"Triple extension (hip, knee, ankle) under rapid neural demand. Bridges strength training to sprint and jump mechanics. Hang position reduces lumbar demand versus floor pull. Rate of force development more important than load.","src":"Schexnayder · Natera","q":"hang+power+clean+triple+extension+RFD"},{"n":"Scapular Wall Slide — Serratus/Lower Trap Activation","p":"pull","x":[],"d":"2 × 10","sl":"low","i":"sub","ph":["rehab","bridge","gpp","spp","comp"],"sec":"upper","why":"McGill/Mack scapular motor control prerequisite: stand with back against wall, forearms on wall at 90°, slide arms overhead while maintaining forearm and lower back contact. Activates serratus anterior and lower trapezius — the muscles that anchor the scapula against the ribcage and control overhead arm movement. Failure of this pattern (the scapula wings off the thorax) is the root of suboccipital tension, neck tightness with pulling movements, and rotator cuff vulnerability under sprint arm drive loads. Ian Mack's movement quality baseline: no overhead loading until wall slide pattern is clean. For Patrick: resolves the neck tension pattern identified with vertical pulling work.","src":"McGill · Mack · Grey","q":"scapular+wall+slide+serratus+lower+trap+activation"},{"n":"A-March","p":"sprint","x":["impact"],"d":"","sl":"low","i":"sub","ph":["bridge","comp","gpp","perf","spp"],"sec":"sprint","why":"Barr ground impulse foundation: teaches vertical force application, hip cycle mechanics, and dorsiflexed foot position at ground contact. Slow tempo makes the mechanics trainable. Every sprint drill starts here.","src":"Barr · Schexnayder","q":"A+march+sprint+drill+ground+impulse+hip+cycle"},{"n":"A-Skip","p":"sprint","x":["impact"],"d":"","sl":"low","i":"sub","ph":["bridge","comp","gpp","perf","spp"],"sec":"sprint","why":"A-March with elastic energy component — teaches reactive ground contact rhythm. Barr: the skip phase trains the foot-ankle to behave as a spring, not a brake. Rhythm before speed.","src":"Barr · Schexnayder","q":"A+skip+sprint+drill+elastic+energy+rhythm"},{"n":"B-Skip","p":"sprint","x":["impact"],"d":"","sl":"low","i":"sub","ph":["comp","gpp","perf","spp"],"sec":"sprint","why":"A-skip plus extension of the swing leg before ground contact. Trains the front-side mechanic critical for top-end speed: leg must be moving backward relative to the body at contact. Schexnayder: most coached drill in elite LJ preparation.","src":"Schexnayder · Barr","q":"B+skip+sprint+drill+front+side+mechanics"},{"n":"Wall Drive Drill — Alternating","p":"sprint","x":["impact"],"d":"","sl":"low","i":"sub","ph":["bridge","comp","gpp","perf","spp"],"sec":"sprint","why":"Hands on wall, drive alternating knees at sprint cadence. Isolates hip flexor mechanics without locomotion variables. Natera sprint-specific application: teaches the acceleration posture (forward lean, high knee drive) in a controlled environment.","src":"Natera · Barr","q":"wall+drive+drill+alternating+sprint+acceleration+posture"},{"n":"Wicket Runs","p":"sprint","x":["impact"],"d":"","sl":"low","i":"max","ph":["comp","gpp","perf","spp"],"sec":"sprint","why":"Hurdles or sticks at set intervals constrain stride length and force optimal mechanics. Schexnayder: wickets are the most efficient tool for encoding front-side sprint mechanics under speed. Spacing determines training emphasis.","src":"Schexnayder · Barr","q":"wicket+runs+hurdle+sprint+mechanics+Schexnayder"},{"n":"Backward Running","p":"run","x":["impact"],"d":"2–3 poles on / 1 off","sl":"low","i":"sub","ph":["bridge","comp","gpp","perf","spp"],"sec":"sprint","why":"Uthoff Ep. 498: backward running eliminates heel strike, loads forefoot-calf complex, and reduces spinal compressive load versus forward running. Rehab and performance application simultaneously. Flexion-biased spine opens L4–L5 foramen. Genuine performance tool, not just rehab.","src":"Uthoff · Natera","q":"backward+running+Uthoff+rehab+performance+calf+complex"},{"n":"Flying Sprint (30m)","p":"sprint","x":["impact"],"d":"","sl":"low","i":"max","ph":["comp","gpp","perf","spp"],"sec":"sprint","why":"Max velocity sprint with running start — eliminates acceleration demand. Trains absolute top-end speed mechanics. Barr: ground contact at max velocity is 80–100ms — the nervous system, not the muscle, is the limiter. Full recovery between reps is non-negotiable.","src":"Barr · Schexnayder","q":"flying+sprint+30m+max+velocity+mechanics"},{"n":"Acceleration Sprint (10–30m)","p":"sprint","x":["impact"],"d":"","sl":"low","i":"max","ph":["comp","gpp","perf","spp"],"sec":"sprint","why":"Drive phase mechanics from static or 3-point start. First 10m is force production; 10–30m is transition to upright. Natera: the first 3 steps encode the entire acceleration pattern — start mechanics training here before extending distance.","src":"Natera · Schexnayder","q":"acceleration+sprint+drive+phase+10+30m+start+mechanics"},{"n":"Resisted Sprint — Sled or Band (10–20m)","p":"sled","x":["impact","sled"],"d":"","sl":"low","i":"max","ph":["gpp","spp","comp"],"sec":"sprint","why":"Schexnayder/Shepherd's primary acceleration development tool: sprint with horizontal resistance (sled at 20–30% bodyweight, or elastic band) over 10–20m. The resistance forces an exaggerated forward lean and extended ground contact — encoding the acceleration posture (shin angle, arm drive, triple extension) under overload. Shepherd: 20–30% bodyweight is the optimal sled load — enough to create mechanical demand without degrading sprint mechanics. Beyond 30%, technique breaks down and the transfer to free sprinting diminishes. CNS demand is high — treat as a maximal quality set. 4–6 reps, full recovery. Distinguish from sled pulls (backward, foraminal decompression for Patrick) — this is forward, acceleration-specific, for the girls.","src":"Schexnayder · Shepherd · Natera","q":"resisted+sprint+sled+acceleration+mechanics+20+percent+bodyweight"},{"n":"Hip CAR — Controlled Articular Rotation (Spina/FRC)","p":"hipmob","x":[],"d":"5 slow each","sl":"low","i":"sub","ph":["rehab","bridge","gpp","spp","comp"],"sec":"mobility","why":"Spina's foundational joint health protocol: in standing or quadruped, draw the largest possible circle with the femur head within the hip socket under full muscular control. CARs are not passive stretches — the working hip is maximally contracted throughout its full active range. The key distinction: CAR reveals the gap between passive ROM (flexibility) and active ROM (mobility) — and closes it. Spina: we have 10–15° more passive range than the CNS will allow active access to; that gap is where injuries happen. For sprint athletes, hip CARs are the daily joint maintenance that sustains the ranges built in training. 2–3 reps per side per day. Pair with ankle CARs as a warm-up sequence.","src":"Spina · Grey","q":"hip+CAR+controlled+articular+rotation+FRC+Spina+joint+health"},{"n":"Ankle CAR — Controlled Articular Rotation (Spina/FRC)","p":"foot","x":[],"d":"5 slow each","sl":"low","i":"sub","ph":["rehab","bridge","gpp","spp","comp"],"sec":"mobility","why":"Spina's ankle joint health protocol: seated or standing, draw the maximum circle through the full ankle range under active muscular control — not a passive dangle. Ankle CARs address the subtalar and talocrural joints simultaneously. Ward Flow Motion: restricted ankle mobility is upstream of knee valgus, patellar tracking issues, and shin pain in sprint athletes. CARs preserve and expand the active range that eccentric calf work and dorsiflexion mobs create structurally. Cadence and Shaylan application: daily maintenance for the plantar fascia and shin load tolerance protocols. 2–3 reps per ankle per day, non-negotiable warm-up item.","src":"Spina · Ward","q":"ankle+CAR+controlled+articular+rotation+FRC+mobility"},{"n":"90/90 Hip Transition — Internal/External Rotation","p":"hipmob","x":[],"d":"2 × 5 each","sl":"low","i":"sub","ph":["rehab","bridge","gpp","spp"],"sec":"mobility","why":"Spina/Cressey hip mobility drill: seated with both knees bent at 90° in front and to the side, rotate through the hip to switch between internal rotation (back leg) and external rotation (front leg) positions. Addresses the combined hip IR/ER range that sprint mechanics require — the hip must externally rotate at initial contact and internally rotate through swing phase. Restricted hip IR is the most common bottleneck in sprint athletes with anterior pelvic tilt. The 90/90 position is the most efficient way to load both ends of the rotational range simultaneously. Active transitions (not passive slumping) are the prescription. 5–8 slow reps per side.","src":"Spina · Cressey · Ward","q":"90+90+hip+mobility+internal+external+rotation+Cressey"},{"n":"Sciatic Nerve Slider (Neural Glide)","p":"neural","x":[],"d":"2 × 8–10 slow","sl":"low","i":"sub","ph":["rehab","bridge","gpp","spp","comp"],"sec":"mobility","why":"A neurodynamic SLIDER, not a stretch: seated tall, extend the knee while extending the neck (look up), then bend the knee while tucking the chin. The reciprocal motion glides the L4–S3 nerve root through its sheath with near-zero net tension — the opposite of a \"tensioner,\" which loads both ends at once and aggravates an irritable root. For foraminal-stenosis / radicular presentations the slider is the lower-strain default; head-to-head slider-vs-tensioner trial evidence is still thin (Basson 2014 critical review), but the mechanistic case for minimal strain on a sensitized nerve is sound (Coppieters, Shacklock). Two clinical rules: strictly pain-free, and stop the moment symptoms peripheralize down the leg. The slider is only half the fix — the other half is removing the provocative posture (deep crossed-leg flexion, forward-folding to reach the foot). Desensitize the nerve by gliding it, not by stretching it into tension.","src":"Coppieters · Basson · Shacklock","q":"sciatic+nerve+slider+neural+glide+flossing+technique"},{"n":"Penultimate Step Drill — Walkthrough","p":"sprint","x":["impact"],"d":"","sl":"low","i":"sub","ph":["bridge","comp","gpp","perf","spp"],"sec":"jump","why":"Schexnayder: the penultimate step is the most technically complex moment in long jump. Walkthrough at 50% speed encodes the COM lowering pattern without impact stress. Key cue: hips drop behind the foot, not over it. The mechanic that separates flat jumps from explosive ones.","src":"Schexnayder","q":"penultimate+step+drill+long+jump+COM+lowering+Schexnayder"},{"n":"Full Approach Long Jump","p":"plyo","x":["impact"],"d":"","sl":"low","i":"max","ph":["comp","gpp","perf","spp"],"sec":"jump","why":"The event itself. Schexnayder: full approach is only trained when all sub-components are consolidated — penultimate mechanics, board contact, takeoff position, flight technique. High CNS demand; 2–3 quality reps per session maximum. More is not better.","src":"Schexnayder · Barr","q":"full+approach+long+jump+technique+takeoff"},{"n":"Broad Jump — Bilateral","p":"plyo","x":["impact"],"d":"","sl":"low","i":"sub","ph":["bridge","comp","gpp","perf","spp"],"sec":"jump","why":"Horizontal force production from bilateral stance. Teaches triple extension (hip-knee-ankle) with forward projection. Stick landing requirement encodes deceleration. Entry-level jump training appropriate early in return-to-power progressions.","src":"Barr · Schexnayder","q":"bilateral+broad+jump+triple+extension+stick+landing"},{"n":"Box Jump — Bilateral","p":"plyo","x":["impact"],"d":"","sl":"low","i":"max","ph":["comp","gpp","perf","spp"],"sec":"jump","why":"Vertical force expression onto elevated surface eliminates landing impact. Focus: the jump, not the box height. Step down, don't jump down. Schexnayder: box height is irrelevant — maximal intent on takeoff is the training stimulus.","src":"Schexnayder · Natera","q":"bilateral+box+jump+maximal+intent+Schexnayder"},{"n":"Depth Jump — Reactive","p":"plyo","x":["impact"],"d":"","sl":"low","i":"max","ph":["comp","gpp","perf","spp"],"sec":"jump","why":"Step off box, minimal ground contact, immediate maximal jump. Trains the stretch-shortening cycle at high velocity. Barr: contact time is the variable — not jump height. Only appropriate with established landing mechanics. Highest CNS demand in plyometric hierarchy.","src":"Barr · Schexnayder","q":"depth+jump+reactive+stretch+shortening+cycle+Barr"},{"n":"Alternate-Leg Bounds","p":"plyo","x":["impact"],"d":"","sl":"low","i":"max","ph":["comp","gpp","perf","spp"],"sec":"jump","why":"Horizontal bounding emphasizing long ground contact and maximal push-off. Trains the transition between sprint mechanics and jump takeoff. Schexnayder: bounds should feel like running in slow motion — same mechanics, exaggerated expression.","src":"Schexnayder · Barr","q":"alternate+leg+bounds+horizontal+sprint+mechanics"},{"n":"Single-Leg Hop Series (3-hop)","p":"plyo","x":["impact"],"d":"","sl":"low","i":"max","ph":["comp","gpp","perf","spp"],"sec":"jump","why":"Three consecutive single-leg hops for maximum distance. Limb symmetry index benchmark: injured or inhibited limb should reach ≥90% of dominant side distance before return to sprint. Functional readiness test and training tool simultaneously.","src":"Barr · Natera","q":"single+leg+hop+series+3+hop+limb+symmetry+index"},{"n":"Vertical Jump — Countermovement","p":"plyo","x":["impact"],"d":"","sl":"low","i":"sub","ph":["bridge","comp","gpp","perf","spp"],"sec":"jump","why":"The countermovement (dip before jump) tests elastic energy utilization — the same mechanism as the penultimate step. Measuring CMJ vs static jump height reveals SSC contribution. A shrinking gap indicates stiffness or neural inhibition.","src":"Barr · Schexnayder","q":"countermovement+vertical+jump+CMJ+elastic+energy"},{"n":"Eccentric Heel Raise — Single Leg (Alfredson)","p":"calf","x":["calf"],"d":"3 × 10–12","sl":"low","i":"sub","ph":["bridge","gpp","rehab"],"sec":"ankle","why":"Alfredson et al. 1998: 3×15 single-leg eccentric heel drops off step edge, twice daily, 12 weeks. Still the strongest evidence base for Achilles tendinopathy. Baar: the slow eccentric phase is where collagen is synthesized. Pain during is acceptable; pain the next day is the monitoring variable.","src":"Alfredson · Baar","q":"eccentric+heel+raise+Alfredson+Achilles+tendinopathy"},{"n":"Plantar Fascia Intrinsic Loading — Towel Scrunches / Marble Pickup","p":"foot","x":[],"d":"2 min","sl":"low","i":"sub","ph":["bridge","gpp","rehab"],"sec":"ankle","why":"Baar collagen window: intrinsic foot muscle loading drives plantar fascial tissue adaptation. Not glamorous — but the plantar fascia responds to progressive load the same way tendons do. Prerequisite to single-leg calf loading in return-to-sprint.","src":"Baar · Grey","q":"plantar+fascia+intrinsic+loading+towel+scrunches+marble+pickup"},{"n":"Ankle Dorsiflexion Mob — Weight-Bearing","p":"foot","x":[],"d":"2 × 10 each","sl":"low","i":"sub","ph":["bridge","gpp","rehab"],"sec":"ankle","why":"Ward Flow Motion: restricted ankle dorsiflexion is upstream of knee valgus, patellar tracking dysfunction, and hamstring over-reliance in sprint gait. Weight-bearing against wall tests and trains simultaneously. 10cm gap target before progressing sprint load.","src":"Ward · Grey","q":"ankle+dorsiflexion+mobilization+weight+bearing+wall+test"},{"n":"Single-Leg Calf Raise — Loaded","p":"calf","x":["calf"],"d":"3 × 12","sl":"low","i":"sub","ph":["bridge","comp","gpp","perf","spp"],"sec":"ankle","why":"Progressive loading of soleus and gastrocnemius under body weight plus external load. Baar programming principle: begin at 3×10, progress to 3×15, then add load. Soleus is the primary plantar fascia tensioner — this is load tolerance training, not stretching.","src":"Baar · Alfredson","q":"single+leg+calf+raise+loaded+progressive+Baar"},{"n":"Pogo Hops — Bilateral","p":"plyo","x":["impact","calf"],"d":"","sl":"low","i":"sub","ph":["bridge","comp","gpp","perf","spp"],"sec":"ankle","why":"Rapid bilateral ankle spring — minimal knee bend, maximum ankle stiffness. Barr: this is the mechanically cleanest way to train the foot-ankle spring that distinguishes elite sprinters. Start 2×10 at low height; build contact stiffness before height.","src":"Barr · Ward","q":"bilateral+pogo+hops+ankle+stiffness+spring+Barr"},{"n":"Single-Leg Pogo — Reactive","p":"plyo","x":["impact","calf"],"d":"","sl":"low","i":"max","ph":["comp","gpp","perf","spp"],"sec":"ankle","why":"Maximal single-leg ankle stiffness under repeated reactive demand. The closest gym analog to sprint ground contact mechanics. Barr: contact time under 100ms at single-leg pogo is the target that transfers to top-end sprint mechanics. Build bilateral version first.","src":"Barr · Natera","q":"single+leg+pogo+reactive+ankle+stiffness+sprint"},{"n":"Stationary Bike — Low Resistance Steady State","p":"bike","x":[],"d":"30 min · 3 × 5 min at RPE 6","sl":"low","i":"sub","ph":["bridge","comp","gpp","perf","spp"],"sec":"energy","why":"Hip flexion opens L4–L5 foramen measurably — nerve decompression with cardiovascular side effect. Upright-to-forward position. 15–30 min. Entry point for all athletes with lumbar or lower limb restrictions. Uthoff principle: non-impact cardio preserves training capacity during structural rehab.","src":"Uthoff · McGill","q":"stationary+bike+steady+state+nerve+decompression"},{"n":"Bike Intervals — Sprint Protocol","p":"bikehard","x":[],"d":"","sl":"low","i":"max","ph":["comp","gpp","perf","spp"],"sec":"energy","why":"10–15s max effort, 2–3 min full recovery. Trains alactic power system without skeletal loading. Schexnayder: sprint athletes need the same energy system trained regardless of modality. On a bike, CNS recruits similarly to track sprints without impact accumulation.","src":"Schexnayder · Uthoff","q":"bike+intervals+sprint+protocol+alactic+power+BFR"},{"n":"Walking — Extended Duration","p":"walk","x":[],"d":"2 mi","sl":"low","i":"sub","ph":["bridge","comp","gpp","perf","spp"],"sec":"energy","why":"Underrated aerobic base builder with genuine spinal loading benefit. 45–60 min daily maintains metabolic base, proprioceptive input, and mood. McGill: walking is the most spine-appropriate cardiovascular exercise — axial load in functional range with no impact spikes.","src":"McGill · Uthoff","q":"walking+extended+duration+aerobic+base+McGill+spine"},{"n":"Tempo Runs — 70% Effort","p":"run","x":["impact"],"d":"","sl":"low","i":"sub","ph":["bridge","comp","gpp","perf","spp"],"sec":"energy","why":"Schexnayder: tempo runs at 70% develop aerobic capacity without CNS fatigue. 100–200m repeats with short rest (30–60s walk). Volume replaces intensity. Builds the aerobic base that supports sprint recovery between maximal efforts. Technique holds at this speed.","src":"Schexnayder · Natera","q":"tempo+runs+70+percent+aerobic+capacity+Schexnayder"},{"n":"Short-to-Long Sprint Series","p":"sprint","x":["impact"],"d":"","sl":"low","i":"max","ph":["comp","gpp","perf","spp"],"sec":"energy","why":"Progressive distance sprints building from 20m to 60m in a session. Schexnayder periodization: early season trains short acceleration; late season extends to full speed endurance. Maintains mechanical quality across fatigue accumulation. The sport-prep energy system standard.","src":"Schexnayder","q":"short+to+long+sprint+series+periodization+Schexnayder"},{"n":"Medicine Ball Rotational Throw — Side Wall","p":"power","x":[],"d":"","sl":"low","i":"sub","ph":["comp","gpp","perf","spp"],"sec":"energy","why":"Rotational power expression linking hip drive to upper body. Ward: the transverse plane is undertrained in linear athletes — lateral power transfer is what separates soccer and court athletes from pure track athletes. Use 3–4kg ball; speed of release is the training variable, not load.","src":"Ward · Schexnayder","q":"medicine+ball+rotational+throw+side+wall+transverse+power"},{"n":"Tibialis Anterior Raise — Wall-Seated or Standing","p":"foot","x":[],"d":"2 × 15","sl":"low","i":"sub","ph":["rehab","bridge","gpp"],"sec":"energy","why":"Baar/Alfredson anterior shin loading protocol: seated with legs extended, dorsiflex both feet as high as possible and hold 2–3s. Or standing with heels against wall, raise toes as high as possible for reps. Tibialis anterior is the primary decelerator of foot slap at ground contact — its weakness is directly implicated in medial shin pain (shin splints) in sprint athletes. Baar: the same progressive loading principle that applies to Achilles tendinopathy applies here — eccentric and isometric tibialis loading drives tendon adaptation. For Shaylan and Cadence: direct prescription for shin load tolerance. Begin with 3×15 bodyweight; progress to loaded version with ankle weight or resistance band.","src":"Baar · Alfredson · Ward","q":"tibialis+anterior+raise+shin+splints+loading+protocol"},{"n":"Toe Yoga","p":"foot","x":[],"d":"2 min","sl":"low","i":"sub","ph":["rehab","maint","bridge"],"sec":"restoration","why":"Independent control of the big toe versus the lesser toes — press the big toe down while lifting the others, then reverse. Re-teaches the intrinsic foot wiring that immobilization (a boot, or just modern shoes) switches off. Foundational foot-health work (Bowman); the base layer under any barefoot or arch progression. Clumsy at first is normal — that IS the neurological gap being closed.","src":"Bowman","q":"toe+yoga+big+toe+lift+control"},{"n":"Short-Foot / Arch Doming","p":"foot","x":[],"d":"2 min","sl":"low","i":"sub","ph":["rehab","maint","bridge"],"sec":"restoration","why":"Without curling the toes, gently shorten the foot to lift the medial arch into a small dome; hold a breath, release. Activates the intrinsic arch stabilizers (abductor hallucis et al.) that support the navicular and the medial longitudinal arch. Janda's short-foot; a cornerstone of foot rehab and posterior-tibial support, and directly relevant to reloading after a navicular injury.","src":"Janda · Bowman","q":"short+foot+exercise+arch+doming"},{"n":"Toe Splay","p":"foot","x":[],"d":"2 min","sl":"low","i":"sub","ph":["rehab","maint"],"sec":"restoration","why":"Spread all five toes wide and even, like fanning a hand, barefoot on the floor. Restores toe abduction and the wide, stable base a foot is built to have. Bowman foot-freedom staple; pairs with wider-toe-box footwear and undoes years of tapered shoes.","src":"Bowman","q":"toe+spread+splay+foot+intrinsic"},{"n":"Barefoot Terrain Exposure","p":"foot","x":[],"d":"5 min","sl":"low","i":"sub","ph":["rehab","maint","bridge"],"sec":"restoration","why":"Time barefoot on varied ground — grass, sand, a textured mat — for rich sensory input and gentle, distributed load. Rebuilds foot proprioception and tissue tolerance gradually. Natural-movement principle (Le Corre / MovNat, Bowman). Ease in progressively after any period of immobilization; let the sole relearn the ground before adding pace.","src":"Le Corre · Bowman","q":"barefoot+terrain+natural+movement+foot+sensory"},{"n":"Ankle CARs (Controlled Articular Rotations)","p":"foot","x":[],"d":"5 slow each","sl":"low","i":"sub","ph":["rehab","maint","bridge"],"sec":"restoration","why":"Slow, maximal-range ankle circles under active control — the FRC joint-health staple already used across the SJR system (Spina). Reclaims the range a boot or a sprain steals and keeps the ankle articulating through its full circle. Draw the whole circle; don't rush the corners. Strictly pain-free, owned end ranges.","src":"Spina (FRC)","q":"ankle+CARs+controlled+articular+rotations"},{"n":"Toe Articulation","p":"foot","x":[],"d":"2 min","sl":"low","i":"sub","ph":["rehab","maint"],"sec":"restoration","why":"Wave the toes — curl and extend, ideally one at a time. Fine motor control at the far end of the chain: the difference between a foot that grips and adapts and one that acts as a passive block. Complements CARs and short-foot in restoring an articulate, responsive foot.","src":"Spina · Bowman","q":"toe+mobility+articulation+control"},{"n":"Deep Resting Squat","p":"planes","x":[],"d":"30–90 s","sl":"low","i":"sub","ph":["rehab","maint","bridge"],"sec":"restoration","why":"Sink to a full, heels-down squat and simply rest there, building from 30s toward minutes. The hips-ankles-and-spine reset humans evolved to get for free from daily life. Restores end-range hip and ankle mobility; a movement position, not a lift (Ido Portal, Bowman). Hold a support if balance or depth isn't there yet.","src":"Ido Portal · Bowman","q":"deep+resting+squat+hold+mobility"},{"n":"Ground Sitting & Transitions","p":"planes","x":[],"d":"5 min","sl":"low","i":"sub","ph":["rehab","maint"],"sec":"restoration","why":"Live on the floor — sit to work, then get up and down in as many ways as you can (no hands, cross-legged, side, kneeling). Hip mobility and whole-body coordination disguised as ordinary living; the \"movement opportunity\" school in one habit (Ido Portal, MovNat). Getting-up variety is also a documented longevity marker.","src":"Ido Portal · Le Corre","q":"ground+sitting+get+ups+movement+transitions"},{"n":"Passive Hang","p":"hang","x":[],"d":"2 × 50–60 s","sl":"low","i":"sub","ph":["rehab","maint","bridge"],"sec":"restoration","why":"Hang from a bar and let the shoulders and spine decompress, 10–30s. Grip and shoulder health plus a gentle traction the seated day erases. Keep feet light or grounded so lower-limb load stays your choice — useful when a foot or ankle isn't ready for full weight (Starrett, Ido Portal).","src":"Starrett · Ido Portal","q":"passive+hang+shoulder+spine+decompression"},{"n":"Spinal Waves & Segmental Rolls","p":"planes","x":[],"d":"2 min","sl":"low","i":"sub","ph":["rehab","maint"],"sec":"restoration","why":"Cat-cow, slow roll-downs, gentle twists on the ground — articulate the spine segment by segment. Oils the back after travel and long sits; a restorative movement snack, not a stretch to force. Stay within easy, pain-free range — this is refresh, not a mobility test.","src":"Starrett · Spina","q":"spinal+segmental+cat+cow+roll+down+mobility"},{"n":"Rung 1 — Supported Hip Hinge, Hands on Thighs","p":"flex","x":[],"d":"5 breaths × 3","sl":"low","i":"sub","ph":["rehab","bridge","maint"],"sec":"flexion","why":"Stand, slide both hands down the front of the thighs and hinge back at the hips while the hands carry some of the load. Spine stays long; this is not yet a bend. The point is to re-enter the movement direction with the arms as a safety rail, so the first exposure carries no uncertainty. Entry rung of the flexion ladder — everything above it assumes this is unremarkable for three sessions first.","src":"O’Sullivan · Lehman","q":"supported+hip+hinge+hands+on+thighs+technique"},{"n":"Rung 2 — Seated Forward Reach, Graded","p":"flex","x":[],"d":"5 breaths × 3","sl":"low","i":"sub","ph":["rehab","bridge","maint"],"sec":"flexion","why":"Seated, feet flat, reach the hands toward the knees, then shins, then ankles across sessions. Unloaded and the spine is allowed to round — rounding is the movement, not an error. Sitting removes the hamstring and balance variables so the only thing being trained is spinal flexion tolerance. Progress by one landmark, never two, and hold the end position for five slow breaths rather than pulsing.","src":"Wernli · O’Sullivan","q":"seated+forward+reach+graded+flexion+exposure+low+back"},{"n":"Rung 3 — Standing Forward Bend, Depth Ladder","p":"flex","x":[],"d":"5 breaths × 3 · log the landmark","sl":"mod","i":"sub","ph":["rehab","bridge","maint"],"sec":"flexion","why":"The centrepiece. Standing, bend forward to a set landmark — mid-thigh, knee, mid-shin, ankle, floor — and hold five breaths. Advance one landmark only after three sessions clean at 24 and 48 hours. Timing is part of the prescription: never within two hours of waking. Discs are maximally hydrated overnight and bending stress on them is substantially higher in the early morning (Adams & Hutton, diurnal variation), so this belongs in the afternoon window. The Curtin programme (Wernli, Kent, Caneiro, O’Sullivan) found improvements in forward bending track improvements in pain and disability — which makes this an outcome measure, not a stretch. Log the landmark reached alongside the day’s rung.","src":"Wernli · Caneiro · O’Sullivan · Adams & Hutton","q":"graded+exposure+forward+bend+chronic+low+back+pain+cognitive+functional+therapy"},{"n":"Rung 4 — Unloaded Jefferson Curl","p":"flex","x":[],"d":"3 slow reps","sl":"mod","i":"sub","ph":["rehab","bridge","maint"],"sec":"flexion","why":"Segmental forward roll-down from standing, chin to chest first, vertebra by vertebra, then reverse to stack back up. Bodyweight only — the loaded barbell version is a different exercise with a different risk profile and is not the goal here. This is the top rung of the ladder: it asks for controlled flexion through the full spine rather than a static end-range hold. Only after Rung 3 reaches the floor cleanly. Same afternoon-window rule applies.","src":"Lehman","q":"unloaded+jefferson+curl+segmental+spinal+articulation+bodyweight"},{"n":"Supine Rotation — Knees Fall","p":"planes","x":[],"d":"8 each side","sl":"low","i":"sub","ph":["rehab","bridge","maint"],"sec":"flexion","why":"Lying on the back, knees bent and together, let both knees fall slowly to one side and return. Transverse plane, fully unloaded, gravity doing the work at a rate you control. The rotation gap is real for anyone whose training has become sagittal by default — walking, jogging, cycling and sled work are all forward and back. Start with a small arc and let range come over weeks. Stop short of any distal symptom, not short of discomfort.","src":"Lehman · Boyle","q":"supine+knee+drop+rotation+lumbar+mobility+gentle"},{"n":"Half-Kneeling Thoracic Rotation","p":"planes","x":[],"d":"2 × 8 each","sl":"low","i":"sub","ph":["rehab","bridge","maint"],"sec":"flexion","why":"From half-kneeling, hands behind the head, rotate the ribcage toward the front leg and back. The half-kneeling base locks the pelvis so rotation happens at the thoracic spine rather than being borrowed from the lumbar segments — which is the point when the lumbar spine is the thing under management. Rotation has to come from somewhere; this teaches it to come from above.","src":"Boyle · Ward","q":"half+kneeling+thoracic+rotation+hands+behind+head"},{"n":"Wall-Supported Lateral Flexion","p":"planes","x":[],"d":"5 breaths each side","sl":"low","i":"sub","ph":["rehab","bridge","maint"],"sec":"flexion","why":"Stand side-on a forearm’s distance from a wall, forearm resting on it, and let the hips drift toward the wall to open the opposite side of the trunk. Frontal plane, supported, no balance demand. Ward’s Flow Motion principle: frontal-plane competence precedes efficient sagittal-plane movement. For a left-sided radicular presentation, compare the two sides and note which one is stiffer — that asymmetry is worth having a number for.","src":"Ward","q":"standing+wall+supported+lateral+side+bend+trunk"},{"n":"Deep Squat Sit — Supported","p":"planes","x":[],"d":"30–90 s","sl":"low","i":"sub","ph":["rehab","bridge","maint"],"sec":"flexion","why":"Sit into a deep squat holding a doorframe, post or strap for support, and stay for 30–90 seconds while breathing normally. Loaded lumbar flexion in a shape the body is built for, with the arms unloading as much as needed. Useful as a daily position rather than a set: it accumulates flexion exposure passively while also addressing ankle dorsiflexion and hip range. Le Corre’s natural-movement staple; the supported version keeps it accessible while tolerance is still being built.","src":"Le Corre · Ward","q":"supported+deep+squat+sit+hold+doorframe+assisted"},{"n":"DB bench press","p":"press","x":[],"d":"2 × 20 · 40 lb","sl":"low","i":"sub","ph":[],"sec":"guide","why":"Supine pressing puts no compression through the spine. A load you can breathe through.","src":"McGill · judgment dose","q":""},{"n":"Goblet squat — 16° wedges","p":"squat","x":["load"],"d":"3 × 10","sl":"low","i":"sub","ph":[],"sec":"guide","why":"Heels up cuts the ankle demand and keeps the torso upright, so less lumbar flexion at depth.","src":"Judgment dose","q":""},{"n":"Hamstring bridge — bent-knee isometric","p":"bridge","x":[],"d":"3 × 20–30 s","sl":"low","i":"sub","ph":[],"sec":"guide","why":"Knee bent keeps the sciatic nerve slack, so the hamstring loads without straight-leg nerve tension.","src":"Judgment dose","q":""},{"n":"Step-up","p":"single","x":[],"d":"2 × 8 each","sl":"low","i":"sub","ph":[],"sec":"guide","why":"Single-leg strength with an upright trunk.","src":"Judgment dose","q":""},{"n":"Isometric glute med at wall","p":"glutemed","x":[],"d":"4 × 25 s each","sl":"low","i":"sub","ph":[],"sec":"guide","why":"Duration is the prescription: 20–30 s holds build tissue, 5 s only primes a pattern.","src":"Baar hold length, borrowed","q":""},{"n":"Forward run","p":"rung","x":["impact"],"d":"","sl":"low","i":"sub","ph":[],"sec":"guide","why":"A tolerance ladder, not a fitness stimulus. Hold a rung three sessions; judge it at 24 and 48 hours.","src":"Graded return · judgment","q":""},{"n":"Backward jog intervals","p":"backjog","x":["impact"],"d":"2–3 poles on / 1 off","sl":"low","i":"sub","ph":[],"sec":"guide","why":"Maintained base. Do not progress it in a week the rung changes.","src":"Uthoff · judgment dose","q":""},{"n":"Sled pull — backward, then forward","p":"sled","x":["sled"],"d":"2–3 poles on / 1 off · then 2 poles × 3","sl":"low","i":"sub","ph":[],"sec":"guide","why":"Concentric only, horizontal load. Reads like a walk, loads like a lift.","src":"Judgment dose","q":""},{"n":"Split squat — cuffed (BFR)","p":"bfr","x":["load"],"d":"30/15/15/15 · 30–45 s rest","sl":"low","i":"sub","ph":[],"sec":"guide","why":"Low load with the cuff on gives a muscle stimulus the spine does not have to pay for.","src":"Patterson 2019 · matches","q":""},{"n":"Calf raise — cuffed (BFR)","p":"bfrcalf","x":["calf"],"d":"30/15/15/15","sl":"low","i":"sub","ph":[],"sec":"guide","why":"Same occlusion protocol for the calf.","src":"Patterson 2019 · matches","q":""},{"n":"Isometric calf raise — mid-range hold","p":"rehabshin","x":[],"d":"5 × 30–45 s","sl":"low","i":"sub","ph":[],"sec":"guide","why":"First-stage calf loading while the issue is open. Pain 2/10 or less.","src":"Judgment (not the Rio protocol)","q":""},{"n":"Slow calf lowering","p":"rehabshin","x":[],"d":"3 × 10–12 · straight + bent knee","sl":"low","i":"sub","ph":[],"sec":"guide","why":"Up on both feet, slow three-second lower. Build range as it tolerates.","src":"Judgment (not the Alfredson protocol)","q":""},{"n":"Tibialis raise + ankle alphabet","p":"rehabshin","x":[],"d":"2 × 15 + 1 min","sl":"low","i":"sub","ph":[],"sec":"guide","why":"Front-of-shin balance and gentle ankle range.","src":"Judgment dose","q":""},{"n":"Short-foot + mid-range calf hold","p":"rehabfoot","x":[],"d":"5 × 30 s","sl":"low","i":"sub","ph":[],"sec":"guide","why":"Arch doming with a gentle calf hold. Pain 2/10 or less.","src":"Judgment dose","q":""},{"n":"Wall sit — mid-range hold","p":"rehabknee","x":[],"d":"5 × 30–45 s","sl":"low","i":"sub","ph":[],"sec":"guide","why":"Mid-range knee isometric. Pain 2/10 or less.","src":"Rio 2015 dose, patellar tendon","q":""},{"n":"Short-range step-down","p":"rehabknee","x":[],"d":"3 × 10","sl":"low","i":"sub","ph":[],"sec":"guide","why":"Pain-free range only, slow lower.","src":"Judgment dose","q":""},{"n":"Prone lying","p":"rest","x":[],"d":"2 min","sl":"low","i":"sub","ph":[],"sec":"guide","why":"An unloaded position that lets a hot back settle.","src":"Flare protocol","q":""},{"n":"Slow breathing","p":"rest","x":[],"d":"5 min","sl":"low","i":"sub","ph":[],"sec":"guide","why":"Long exhale, belly soft. Turns the guarding down.","src":"O'Sullivan · RESTORE 2023","q":""}];
+const BY={};LIB.forEach(e=>{BY[e.n]=e});
+
+const $=id=>document.getElementById(id);
+const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function ld(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}}
+function sv(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
+
+/* ---- dates: local constructors only ---- */
+const NOW=new Date(), T0=new Date(NOW.getFullYear(),NOW.getMonth(),NOW.getDate());
+function ds(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
+function addD(d,n){return new Date(d.getFullYear(),d.getMonth(),d.getDate()+n)}
+function fromDs(s){const p=s.split('-');return new Date(+p[0],+p[1]-1,+p[2])}
+const TODAY=ds(T0);
+const DAYL=['M','T','W','Th','F','Sa','Su'], DAYN=['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'], MON=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+const dow=d=>(d.getDay()+6)%7;
+const nice=d=>d.getDate()+' '+MON[d.getMonth()];
+
+/* ---- stored state ---- */
+let logs=ld('pt_logs',[]);                       // shared with the weekly guide
+let issues=ld(A.id+'_active_issues',{});         // shared with the weekly guide
+let demos=ld('pt_demos',{});                     // shared with the weekly guide
+let cfg=ld('pt_t_cfg',{}), plan=ld('pt_t_plan',{}), sets=ld('pt_t_sets',{}), done=ld('pt_t_done',{}), swaps=ld('pt_t_swaps',[]);
+cfg=Object.assign({skin:'chalk',font:'roboto',mode:'Wave',variety:'Some',rungA:'R5',rungB:'R6',flex:3},cfg);
+const S={day:0,range:1,open:null,saving:null,swapOpen:null,lastSwap:null,err:'',clearAsk:null,region:null};
+
+/* ---- Supabase (apikey header only) ---- */
+async function sbFetch(path,opts={}){
+  const headers={'apikey':SUPA_KEY,'Content-Type':'application/json'};
+  if(opts.prefer)headers['Prefer']=opts.prefer;
+  const res=await fetch(SUPA_URL+path,{method:opts.method||'GET',headers,body:opts.body||undefined});
+  if(!res.ok){const t=await res.text();throw new Error('Supabase '+res.status+': '+t)}
+  if(res.status===204)return [];
+  const ct=res.headers.get('content-type')||'';
+  return ct.includes('application/json')?res.json():[];
+}
+function sync(t){$('sync').textContent=DRY?'Test mode · nothing is sent':t}
+async function loadLogsFromSupabase(){
+  try{
+    const rows=await sbFetch('/rest/v1/pain_logs?athlete_id=eq.'+A.id+'&date=gte.'+ds(addD(T0,-30))+'&order=created_at.desc&select=*');
+    if(rows&&rows.length){
+      const remote=rows.map(r=>({date:r.date,metric:r.metric,score:r.score,timing:r.timing,ts:new Date(r.created_at).getTime(),sb_id:r.id}));
+      const keys=new Set(remote.map(r=>r.date+'|'+r.metric+'|'+r.timing+'|'+r.score));
+      const localOnly=logs.filter(l=>!l.sb_id&&!keys.has(l.date+'|'+l.metric+'|'+l.timing+'|'+l.score));
+      logs=remote.concat(localOnly); sv('pt_logs',logs);
+    }
+    sync('In sync');
+  }catch(e){sync('Offline · kept on this phone')}
+}
+async function saveLogToSupabase(entry){
+  if(DRY)return;
+  try{
+    const r=await sbFetch('/rest/v1/pain_logs',{method:'POST',prefer:'return=representation',
+      body:JSON.stringify({athlete_id:A.id,date:entry.date,metric:entry.metric,score:entry.score,timing:entry.timing})});
+    if(r&&r[0]&&r[0].id){entry.sb_id=r[0].id;sv('pt_logs',logs)}
+    sync('Saved');
+  }catch(e){sync('Offline · kept on this phone')}
+}
+
+/* ---- the gate: copied from the weekly guide v7.9, two keys and one lock ---- */
+const BASELINE_WINDOW_DAYS=14;
+const ABS_LIMITS={morning:{walk:7.0,reduce:5.5},nerve:{walk:6.5,reduce:4.5}};
+function getLatestScore(metric){
+  const cutoff=Date.now()-24*3600000;
+  const recent=logs.filter(l=>l.metric===metric&&l.ts>cutoff);
+  if(!recent.length)return null;
+  return recent.sort((a,b)=>b.ts-a.ts)[0].score;
+}
+function getBaseline(metric){
+  const cutoff=Date.now()-BASELINE_WINDOW_DAYS*24*3600000;
+  const vals=logs.filter(l=>l.metric===metric&&l.ts>cutoff).map(l=>l.score).sort((a,b)=>a-b);
+  if(vals.length<4)return null;
+  const mid=Math.floor(vals.length/2);
+  return vals.length%2?vals[mid]:(vals[mid-1]+vals[mid])/2;
+}
+function gateVerdictFor(metric,score){
+  const lim=ABS_LIMITS[metric], base=getBaseline(metric), delta=base===null?null:score-base;
+  if(!lim)return {level:'pass',base,delta,driver:'none'};
+  if(score>=lim.walk)return {level:'hold',base,delta,driver:'absolute'};
+  if(delta!==null&&delta>=1.5)return {level:'hold',base,delta,driver:'delta'};
+  if(score>=lim.reduce)return {level:'reduce',base,delta,driver:'absolute'};
+  if(delta!==null&&delta>=0.5)return {level:'reduce',base,delta,driver:'delta'};
+  return {level:'pass',base,delta,driver:delta===null?'absolute':'delta'};
+}
+function lastAny(metric){const a=logs.filter(l=>l.metric===metric).sort((x,y)=>y.ts-x.ts);return a.length?a[0].score:null}
+function todayVal(metric){const a=logs.filter(l=>l.metric===metric&&l.date===TODAY).sort((x,y)=>y.ts-x.ts);return a.length?a[0].score:null}
+function prevVal(metric){const a=logs.filter(l=>l.metric===metric&&l.date<TODAY).sort((x,y)=>y.ts-x.ts);return a.length?a[0].score:null}
+
+/* ---- wave calendar (same anchor as the guide) ---- */
+const WAVE_ANCHOR=new Date(2026,2,23);
+function mondayOf(d){return addD(d,-dow(d))}
+function wave(d){const wi=Math.round((mondayOf(d)-WAVE_ANCHOR)/(7*86400000)),c=((wi%4)+4)%4;return {deload:c===3,label:c===3?'Deload':'Build '+(c+1)+'/3'}}
+
+/* ---- issues ---- */
+const REGION_LABEL={back:'Back',hip:'Hip',knee:'Knee',shin:'Calf / shin',foot:'Foot / ankle',shoulder:'Shoulder',other:'Other'};
+const ISSUE_FAMILY={shin:'lowerleg',foot:'lowerleg',knee:'knee',hip:'hip'};
+const FAMILY_CUT={lowerleg:['impact','calf','sled'],knee:['impact','sled','deepknee'],hip:['impact','sled']};
+const CUT_WORD={impact:'running and jumps',calf:'direct calf work',sled:'sled',deepknee:'deep knee bends'};
+function flareAuto(){
+  if(cfg.flare&&!(cfg.flare.auto&&!cfg.flare.on))return;   // a manual choice, or an auto "open", is never overwritten
+  const hot=logs.filter(l=>(l.metric==='morning'||l.metric==='nerve')&&l.score>=5.5&&l.date>=ds(addD(T0,-14))).map(l=>l.date).sort();
+  cfg.flare=hot.length?{on:true,since:hot[0],auto:true}:{on:false,since:null,auto:true}; sv('pt_t_cfg',cfg);
+}
+function flareDay(){return cfg.flare&&cfg.flare.on&&cfg.flare.since?Math.round((T0-fromDs(cfg.flare.since))/86400000)+1:0}
+
+/* ---- the verdict: one object the whole plan is built from ---- */
+const f1=n=>n==null?'–':String(Math.round(n*10)/10);
+function verdict(){
+  let m=getLatestScore('morning'), n=getLatestScore('nerve'); const logged=m!==null;
+  if(m===null)m=lastAny('morning'); if(n===null)n=lastAny('nerve');
+  const vm=m==null?null:gateVerdictFor('morning',m), vn=n==null?null:gateVerdictFor('nerve',n);
+  const lv=x=>x?x.level:'pass';
+  const hold=lv(vm)==='hold'||lv(vn)==='hold';
+  const reduce=!hold&&(lv(vm)==='reduce'||lv(vn)==='reduce');
+  const flare=!!(cfg.flare&&cfg.flare.on), regs=Object.keys(issues);
+  const cut=new Set(); regs.forEach(r=>(FAMILY_CUT[ISSUE_FAMILY[r]]||[]).forEach(h=>cut.add(h)));
+  const rehabOnly=cfg.mode==='Rehab only';
+  const noLoad=reduce||flare||rehabOnly;
+  const green=!hold&&!reduce&&!flare&&!regs.length&&!rehabOnly&&!!vm;
+  const status=hold?'hold':(green?'full':'adj');
+  const gate=[m==null?'':'Back '+f1(m)+(vm.base!=null?' vs median '+f1(vm.base):''), n==null?'':'Nerve '+f1(n)+(vn.base!=null?' vs median '+f1(vn.base):'')].filter(Boolean).join(' · ');
+  let line;
+  if(m==null)line='No numbers yet. Log today to gate the plan. Until then it is kept light.';
+  else if(hold){const w=lv(vm)==='hold'?'Back '+f1(m):'Nerve '+f1(n);line=w+'/10. Session held. Recovery set only.'}
+  else if(status==='full')line='Gate clear, nothing open. Plan as written.';
+  else{
+    const why=[]; if(flare)why.push('Flare open, day '+flareDay()); if(reduce)why.push((lv(vn)==='reduce'?'nerve':'back')+' up'); regs.forEach(r=>why.push((REGION_LABEL[r]||r)+' open')); if(rehabOnly)why.push('rehab-only mode');
+    const fx=[]; if(noLoad)fx.push('No loaded lifts'); if(cut.size)fx.push('no '+[...cut].map(h=>CUT_WORD[h]).join(', '));
+    line=why.join(' · ')+'. '+(fx.length?fx.join('; ')+'.':'');
+    line=line.charAt(0).toUpperCase()+line.slice(1);
+  }
+  if(!logged&&m!=null)line='No log in the last 24 hours, so your last numbers were used. '+line;
+  if(m==null)return {hold:false,reduce:false,noLoad:true,green:false,cut,status:'adj',line,gate,regs,sig:'0|1|0|'+[...cut].sort().join('+')};
+  return {hold,reduce,noLoad,green,cut,status,line,gate,regs,sig:[hold?1:0,noLoad?1:0,green?1:0,[...cut].sort().join('+')].join('|')};
+}
+
+/* ---- the engine: day = slots, slot = a movement pattern, filled from the Library inside the gates ---- */
+const BLOCKS=['Base','Rehab + nerve','Engine','Strength','Movement · after midday','Extra'];
+const DAYPLAN=[
+  {t:'Strength · Garage',s:['walk','hinge','squat','bridge','single','glutemed','flex','plane']},
+  {t:'Run · Forward rung',s:['walk','backjog','runA','neural']},
+  {t:'Bike + Upper',s:['walk','bike','press','pull','hang','trunk','flex','plane']},
+  {t:'Anchor · Intervals + Sled',s:['walk','backjog','runB','sled']},
+  {t:'Recovery',s:['walk','bike','neural','flex','plane']},
+  {t:'Strength · Garage',s:['walk','hinge','squat','bridge','single','flex','plane']},
+  {t:'Movement + Prehab',s:['walk','bfr','bfrcalf','bridge','flex','plane']}];
+const SLOT={
+  walk:{p:'walk',b:0}, backjog:{p:'backjog',b:2}, runA:{p:'rung',b:2}, runB:{p:'rung',b:2}, sled:{p:'sled',b:2}, bike:{p:'bike',b:2},
+  hinge:{p:'hinge',b:3,main:true,fb:'bridge',home:'Trap Bar Deadlift — Elevated Start'},
+  squat:{p:'squat',b:3,main:true,fb:'iso',home:'Goblet squat — 16° wedges'},
+  bridge:{p:'bridge',b:3,home:'Hamstring bridge — bent-knee isometric'},
+  single:{p:'single',b:3,home:'Step-up'},
+  press:{p:'press',b:3,home:'DB bench press'}, pull:{p:'pull',b:3,home:'Cable / Banded Row — Seated'},
+  hang:{p:'hang',b:3}, trunk:{p:'trunk',b:3,home:'Pallof Press — Anti-Rotation Isometric'},
+  bfr:{p:'bfr',b:3}, bfrcalf:{p:'bfrcalf',b:3},
+  glutemed:{p:'glutemed',b:1,home:'Isometric glute med at wall'}, neural:{p:'neural',b:1},
+  flex:{p:'flex',b:4}, plane:{p:'planes',b:4,home:'Half-Kneeling Thoracic Rotation'}};
+const RUNGS={R4:'60 s run / 90 s walk × 8',R5:'2 min run / 2 min walk × 6',R6:'3 min run / 2 min walk × 5',R7:'5 min run / 2 min walk × 4'};
+const DISPLAY={'Walking — Extended Duration':'Canal walk','Stationary Bike — Low Resistance Steady State':'Bike, upright','Sciatic Nerve Slider (Neural Glide)':'Sciatic nerve slider','Passive Hang':'Dead hang','Cable / Banded Row — Seated':'Banded row','Pallof Press — Anti-Rotation Isometric':'Pallof press','Trap Bar Deadlift — Elevated Start':'Trap bar, elevated start','Bench Press — Controlled':'Barbell bench press','Hip CAR — Controlled Articular Rotation (Spina/FRC)':'Hip CAR'};
+function disp(n,slot){
+  if(n==='Forward run')return 'Forward run, rung '+(slot==='runB'?cfg.rungB:cfg.rungA);
+  if(/^Rung \d/.test(n))return 'Flexion rung '+n.charAt(5);
+  return DISPLAY[n]||n;
+}
+function doseOf(n,slot){
+  if(n==='Forward run')return RUNGS[slot==='runB'?cfg.rungB:cfg.rungA];
+  return BY[n]?BY[n].d:'';
+}
+function allowed(e,V){
+  if(!e.d&&e.p!=='rung')return false;
+  if(e.ph.length&&!e.ph.some(p=>A.phases.includes(p)))return false;
+  if(e.sl==='high')return false;
+  if(e.i==='max'&&e.p!=='trunk')return false;
+  if(e.x.some(h=>V.cut.has(h)))return false;
+  if(V.noLoad&&e.x.includes('load'))return false;
+  if(!V.green&&e.x.includes('slr'))return false;
+  return true;
+}
+function cands(p,V){
+  if(p==='flex'){const e=LIB.find(x=>x.p==='flex'&&x.n.startsWith('Rung '+cfg.flex));return e?[e.n]:[]}
+  return LIB.filter(e=>e.p===p&&allowed(e,V)).map(e=>e.n);
+}
+function hash(s){let h=2166136261;for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619)}return ((h>>>0)%1000)/1000}
+function pref(n){let s=0;swaps.forEach(w=>{if(w.to===n)s+=.5;if(w.from===n)s-=.5});return Math.max(-2,Math.min(2,s))}
+function lastUsed(slot,key){const k=Object.keys(plan).filter(d=>d<key&&plan[d][slot]).sort().pop();return k?plan[k][slot].n:null}
+function choose(slot,key,list,V){
+  const pins=plan[key], pin=pins[slot], sl=SLOT[slot], home=sl.home;
+  if(pin&&list.includes(pin.n)&&(pin.sig==='user'||pin.sig===V.sig))return pin.n;
+  let pick;
+  if(home&&list.includes(home)&&(cfg.variety==='None'||(cfg.variety==='Some'&&sl.main)))pick=home;
+  else{
+    const last=lastUsed(slot,key);
+    pick=list.map(n=>[n,(n===home?1:0)+pref(n)-(n===last?2:0)+hash(key+slot+n)]).sort((a,b)=>b[1]-a[1])[0][0];
+  }
+  pins[slot]={n:pick,sig:V.sig}; return pick;
+}
+function buildDay(date,V){
+  const key=ds(date), dp=DAYPLAN[dow(date)]; plan[key]=plan[key]||{};
+  const items=[], ch=[], used=new Set(), wv=wave(date);
+  const push=(slot,n,b,tag,dose)=>{used.add(n);items.push({slot,n,b,tag:tag||'',dose:dose||doseOf(n,slot)})};
+  if(V.hold){
+    ch.push(['−',dp.t]);
+    push('h0','Walking — Extended Duration',0,'','Easy and pain-free'); push('h1','Prone lying',1); push('h2','Sciatic Nerve Slider (Neural Glide)',1); push('h3','Slow breathing',1);
+  }else{
+    dp.s.forEach(slot=>{
+      const sl=SLOT[slot]; const neutral={cut:new Set(),noLoad:false,green:true};
+      const homeN=sl.home||cands(sl.p,neutral)[0];
+      let list=cands(sl.p,V).filter(n=>!used.has(n));
+      if(!list.length&&sl.fb)list=cands(sl.fb,V).filter(n=>!used.has(n));
+      if(!list.length){if(homeN)ch.push(['−',disp(homeN,slot)]);delete plan[key][slot];return}
+      const pick=choose(slot,key,list,V);
+      const homeOut=homeN&&!list.includes(homeN)&&BY[homeN]&&BY[homeN].p===sl.p;
+      if(homeOut)ch.push(['→',disp(homeN,slot)+' to '+disp(pick,slot)]);
+      push(slot,pick,sl.b,homeOut?'Swapped in':'');
+    });
+    if(V.noLoad){
+      [['xg','glutemed'],['xn','neural']].forEach(([slot,p])=>{
+        if(items.some(i=>BY[i.n]&&BY[i.n].p===p))return;
+        const list=cands(p,V).filter(n=>!used.has(n)); if(!list.length)return;
+        SLOT[slot]=SLOT[slot]||{p,b:1,home:p==='glutemed'?'Band Lateral Shuffle':undefined};
+        const pick=choose(slot,key,list,V); push(slot,pick,1,'Added'); ch.push(['+',disp(pick)]);
+      });
+    }
+    const seen={};
+    V.regs.forEach(r=>{const fam=ISSUE_FAMILY[r]||r; if(seen[fam])return; seen[fam]=1;
+      LIB.filter(e=>e.p==='rehab'+r).forEach(e=>{push('r:'+e.n,e.n,1,'Rehab');ch.push(['+',e.n])})});
+    items.forEach(i=>{
+      const e=BY[i.n]; if(!e)return;
+      if(e.p==='flex'&&V.status!=='full'){i.tag='Held';ch.push(['=','Flexion ladder held'])}
+      if(e.p==='rung'&&V.reduce){i.tag='Reduced';i.dose+=' · about 60% of the reps';ch.push(['=','Run rung at about 60%'])}
+    });
+    if(wv.deload||cfg.mode==='Deload')ch.push(['=','Deload: drop one set from each lift']);
+  }
+  (plan[key]._extra||[]).forEach((n,ix)=>items.push({slot:'e:'+ix,n,b:5,tag:'',dose:BY[n]?BY[n].d:''}));
+  return {key,title:V.hold?'Recovery':dp.t,items,ch,status:V.status,line:V.line,gate:V.gate,wave:wv};
+}
+
+/* ---- sets ---- */
+const sk=(key,n)=>key+'|'+n;
+function setRec(key,n){return (sets[key]||{})[n]}
+function lastSets(n,before){const k=Object.keys(sets).filter(d=>d<before&&sets[d][n]&&sets[d][n].rows.some(x=>x.r)).sort().pop();return k?{date:k,rec:sets[k][n]}:null}
+function unitOf(key,n){
+  const r=setRec(key,n); if(r&&r.u)return r.u;
+  const l=lastSets(n,'9'); if(l&&l.rec.u)return l.rec.u;
+  const d=doseOf(n,'');
+  return /band/i.test(n)?'band':/\d\s*(s|min)\b/.test(d)?'time':'lb';
+}
+function fmtSet(x,u){if(!x.w)return x.r;return u==='lb'?x.r+' @ '+x.w+' lb':u==='time'?x.r+' × '+x.w+' s':x.r+' · '+x.w+' band'}
+function setsText(rec){
+  if(!rec)return ''; const a=rec.rows.filter(x=>x.r), u=rec.u||'lb'; if(!a.length)return '';
+  if(a.length===1)return fmtSet(a[0],u);
+  const ws=a.filter(x=>parseFloat(x.w));
+  if(u!=='band'&&ws.length){const t=ws.reduce((m,x)=>parseFloat(x.w)>parseFloat(m.w)?x:m);return a.length+' sets · top '+fmtSet(t,u)}
+  return a.length+' sets · '+fmtSet(a[a.length-1],u);
+}
+function ensureRec(key,n){sets[key]=sets[key]||{};return sets[key][n]=sets[key][n]||{u:unitOf(key,n),rows:[{}]}}
+
+/* ---- render ---- */
+function fieldVals(){return A.metrics.map((m,i)=>{const v=$('sc'+i).value;return v===''?null:parseFloat(v)})}
+function renderTop(){
+  const d=addD(T0,S.day), w=wave(d);
+  $('whoBtn').textContent='SJR · '+A.name+' · '+(cfg.mode==='Wave'?w.label:cfg.mode);
+  $('dateH').textContent=DAYN[dow(d)].slice(0,3)+' '+nice(d);
+  $('week').innerHTML=[0,1,2,3,4,5,6].map(i=>{const x=addD(T0,i);return `<button type="button" data-day="${i}" aria-pressed="${i===S.day}">${DAYL[dow(x)]}<b>${x.getDate()}</b></button>`}).join('');
+  $('range').innerHTML=[[1,'Today'],[3,'3 days'],[7,'Week']].map(([n,l])=>`<button type="button" data-n="${n}" aria-pressed="${S.range===n}">${l}</button>`).join('');
+  $('skins').innerHTML=[['chalk','#EEF1EC'],['track','#A63F2A'],['canal','#0E2C31'],['ink','#FFFFFF']].map(([k,c])=>`<button type="button" data-skin="${k}" style="background:${c}" aria-label="${k} theme" aria-pressed="${k===cfg.skin}"></button>`).join('');
+}
+function renderLog(){
+  $('scores').innerHTML=A.metrics.map(([m,l],i)=>{const t=todayVal(m),p=prevVal(m);
+    return `<div class="score"><label class="lab" for="sc${i}">${l}</label><input id="sc${i}" type="text" inputmode="decimal" autocomplete="off" maxlength="4" value="${t==null?'':t}" placeholder="${p==null?'':p}"></div>`}).join('');
+  renderUnder();
+}
+function renderUnder(){
+  const open=[]; if(cfg.flare&&cfg.flare.on)open.push('Sciatica flare'); Object.keys(issues).forEach(r=>open.push(REGION_LABEL[r]||r));
+  $('under').innerHTML=`<button class="link" id="sameY" type="button">Same as yesterday</button>
+    <button class="issues" id="issBtn" type="button">${open.length?`<i></i>${open.length} open · ${esc(open.join(', '))}`:'No open issues'} ›</button>`;
+}
+function demoActs(n){
+  const e=BY[n], q='https://www.youtube.com/results?search_query='+(e&&e.q?e.q:encodeURIComponent(n+' exercise demo')), mine=demos[n];
+  let h='<div class="acts">';
+  if(mine&&/^https?:\/\//i.test(mine))h+=`<a class="link" href="${esc(mine)}" target="_blank" rel="noopener">My demo</a>`;
+  h+=`<a class="link" href="${esc(q)}" target="_blank" rel="noopener">Search demo</a>`;
+  h+=`<button type="button" class="link" data-save="${esc(n)}">${mine?'Change my demo':'Save my demo'}</button>`;
+  h+=`<button type="button" class="link" data-why="${esc(n)}">Why</button></div>`;
+  if(S.saving===n)h+=`<div class="rowform"><input class="inp" id="demoUrl" type="url" inputmode="url" placeholder="Paste a video link"><button type="button" class="btn" data-savego="${esc(n)}">Save</button></div>${S.err?`<div class="err">${esc(S.err)}</div>`:''}<p class="note">Leave it empty and save to remove.</p>`;
+  return h;
+}
+function altsFor(it,key,V){
+  const sl=SLOT[it.slot]; if(!sl)return [];
+  const usedNow=new Set(S.items[key].map(i=>i.n));
+  let a=cands(sl.p,V); if(sl.fb)a=a.concat(cands(sl.fb,V));
+  return [...new Set(a)].filter(n=>n!==it.n&&!usedNow.has(n));
+}
+function renderPlan(){
+  const V=verdict(); S.V=V; S.items={};
+  let html='';
+  for(let k=0;k<S.range&&S.day+k<7;k++){
+    const d=addD(T0,S.day+k), r=buildDay(d,V), key=r.key, future=S.day+k>0; S.items[key]=r.items;
+    const word={full:'Full',adj:'Adjusted',hold:'Hold'}[r.status];
+    html+=`<div class="day"><div><span class="lab when">${DAYN[dow(d)]} ${nice(d)}${future?' · provisional':''}</span><h2 class="disp">${esc(r.title)}</h2></div>`;
+    html+=`<div class="verdict"><span class="status ${r.status}">${word}</span><p>${esc(r.line)}</p></div>`;
+    if(r.gate&&k===0)html+=`<div class="gate">${esc(r.gate)}</div>`;
+    if(r.ch.length)html+=`<ul class="changes">${r.ch.map(([s,t])=>`<li><b>${s}</b>${esc(t)}</li>`).join('')}</ul>`;
+    if(r.status!=='full'&&k===0)html+=`<div><a class="link" href="#cheats">Cheat sheet for today</a></div>`;
+    BLOCKS.forEach((bn,bi)=>{
+      const its=r.items.filter(i=>i.b===bi); if(!its.length)return;
+      html+=`<div><div class="blk"><span class="disp">${bn}</span><span class="lab">${its.length} ${its.length===1?'move':'moves'}</span></div><ul class="rows">`;
+      its.forEach(it=>{
+        const id=sk(key,it.n), isDone=!!(done[key]&&done[key][it.n]), open=S.open===id, rec=setRec(key,it.n), did=setsText(rec), e=BY[it.n];
+        html+=`<li class="${isDone?'done':''}"><div class="row"><button type="button" class="tick" data-tick="${esc(id)}" aria-pressed="${isDone}" aria-label="Mark done">${isDone?'✓':''}</button>
+          <button type="button" class="nm" data-open="${esc(id)}" aria-expanded="${open}">${it.tag?`<em>${it.tag}</em>`:''}${esc(disp(it.n,it.slot))}</button>
+          <button type="button" class="dose ${did?'did':''}" data-dose="${esc(id)}" data-plan="${esc(it.dose)}" data-open="${esc(id)}">${esc(did?'Did '+did:it.dose)}</button></div>`;
+        if(open){
+          const un=unitOf(key,it.n), rows=rec&&rec.rows.length?rec.rows:[{}], last=lastSets(it.n,key), alts=altsFor(it,key,V);
+          const sw=S.lastSwap!=null&&swaps[S.lastSwap]&&swaps[S.lastSwap].date===key&&swaps[S.lastSwap].to===it.n?swaps[S.lastSwap]:null;
+          html+=`<div class="open">`;
+          if(e&&e.why)html+=`<p>${esc(e.why.split('. ')[0].replace(/\.$/,''))}.</p>`;
+          if(sw)html+=`<div class="acts"><span class="lab">Swapped from ${esc(disp(sw.from))}. Why?</span><div class="opts sm">${['Variety','Equipment','Feels better','Pain','Time'].map(x=>`<button type="button" data-reason="${x}" aria-pressed="${sw.reason===x}">${x}</button>`).join('')}</div></div>`;
+          html+=`<div class="sets"><div class="acts"><span class="lab">What I did</span><div class="opts sm">${[['lb','Weight'],['time','Time'],['band','Band']].map(([u,l])=>`<button type="button" data-unit="${esc(id)}" data-u="${u}" aria-pressed="${un===u}">${l}</button>`).join('')}</div></div>
+            ${rows.map((x,ix)=>`<div class="setrow"><span>${ix+1}</span>
+              <input class="inp" type="text" inputmode="numeric" placeholder="reps" aria-label="Set ${ix+1} reps" data-set="${esc(id)}" data-i="${ix}" data-f="r" value="${esc(x.r||'')}"><span>${{lb:'@',time:'×',band:'·'}[un]}</span>
+              <input class="inp" type="text" ${un==='band'?'':'inputmode="decimal"'} placeholder="${{lb:'lb',time:'sec',band:'band'}[un]}" aria-label="Set ${ix+1} ${un}" data-set="${esc(id)}" data-i="${ix}" data-f="w" value="${esc(x.w||'')}"></div>`).join('')}
+            <div class="acts"><button type="button" class="link" data-addset="${esc(id)}">+ Set</button>${rows.length>1?`<button type="button" class="link" data-delset="${esc(id)}">Remove last</button>`:''}${last?`<button type="button" class="link" data-copylast="${esc(id)}">Same as ${esc(nice(fromDs(last.date)))}: ${esc(setsText(last.rec))}</button>`:''}</div></div>`;
+          html+=demoActs(it.n);
+          if(it.slot.startsWith('e:'))html+=`<div class="acts"><button type="button" class="link" data-rmextra="${esc(id)}">Remove from today</button></div>`;
+          else if(alts.length)html+=`<div class="acts"><button type="button" class="link" data-swap="${esc(id)}">${S.swapOpen===id?'Close swap':'Swap for something else'}</button></div>${S.swapOpen===id?`<div class="alts">${alts.map(n=>`<button type="button" data-swapto="${esc(n)}" data-from="${esc(id)}" data-slot="${esc(it.slot)}">${esc(disp(n))} <span class="note">${esc(BY[n].d)}</span></button>`).join('')}</div>`:''}`;
+          html+=`</div>`;
+        }
+        html+=`</li>`;
+      });
+      html+=`</ul></div>`;
+    });
+    if(k===0)html+=`<div class="rowform" style="margin-top:14px"><input class="inp" id="extraIn" type="text" list="libNames" placeholder="Add something I did" autocomplete="off"><button type="button" class="btn" id="extraGo">Add</button></div>`;
+    html+=`</div>`;
+  }
+  html+=`<datalist id="libNames">${LIB.filter(e=>e.d).map(e=>`<option value="${esc(e.n)}">`).join('')}</datalist>`;
+  $('plan').innerHTML=html; sv('pt_t_plan',plan);
+  if(S.saving){const i=$('demoUrl');if(i)i.focus()}
+}
+function stale(on){$('stale').hidden=!on}
+
+/* ---- actions ---- */
+async function doBuild(){
+  const v=fieldVals(), fresh=[];
+  A.metrics.forEach(([m],i)=>{if(v[i]!=null&&!isNaN(v[i])&&v[i]!==todayVal(m)){const e={date:TODAY,metric:m,score:v[i],timing:new Date().getHours()<12?'am':'pm',ts:Date.now()+i};logs.push(e);fresh.push(e)}});
+  if(fresh.length){
+    sv('pt_logs',logs);
+    if(!cfg.flare.on&&fresh.some(e=>(e.metric==='morning'||e.metric==='nerve')&&e.score>=5.5)){cfg.flare={on:true,since:TODAY};sv('pt_t_cfg',cfg)}
+  }
+  stale(false); renderLog(); renderPlan();
+  for(const e of fresh)await saveLogToSupabase(e);
+  if(fresh.length&&DRY)sync('');
+}
+function prune(){
+  const lim=ds(addD(T0,-120));
+  [plan,sets,done].forEach(o=>Object.keys(o).forEach(k=>{if(k<lim)delete o[k]}));
+  Object.keys(plan).forEach(k=>{if(k>TODAY)Object.keys(plan[k]).forEach(s=>{if(s!=='_extra'&&plan[k][s].sig!=='user')delete plan[k][s]})});
+}
+function splitId(id){const i=id.indexOf('|');return [id.slice(0,i),id.slice(i+1)]}
+
+/* ---- sheets ---- */
+const back='<button type="button" class="link" data-close>← Today</button>';
+function optRow(label,key,vals){return `<div class="set"><span class="lab">${label}</span><div class="opts">${vals.map(v=>`<button type="button" data-cfg="${key}" data-v="${v}" aria-pressed="${String(cfg[key])===String(v)}">${v}</button>`).join('')}</div></div>`}
+function sheet(name){
+  let h='';
+  if(name==='menu'){
+    h=`${back}<ul class="menu">
+      <li><a href="#library"><span class="big">Library</span><span>Every exercise, with demos</span></a></li>
+      <li><a href="#history"><span class="big">History</span><span>Your numbers · private</span></a></li>
+      <li><a href="#issues"><span class="big">Issues</span><span>Flare and injuries · private</span></a></li>
+      <li><a href="#cheats"><span class="big">Cheat sheets</span><span>Short rules for a bad day</span></a></li>
+      <li><a href="#why"><span class="big">Why</span><span>Rationale, sources, swap log</span></a></li>
+      <li><a href="https://padraik99.github.io/sjr-system/SJR_VBT_Tracker_v1_20260609.html"><span class="big">Bar speed</span><span>Camera tracker</span></a></li>
+      <li><a href="https://padraik99.github.io/sjr-system/SJR_WeeklyGuide_Patrick_v5_20260402.html"><span class="big">Old guide</span><span>The weekly guide</span></a></li></ul>
+      ${optRow('Variety','variety',['None','Some','Lots'])}
+      <p class="note">Some: the main lifts stay put so the load can progress, everything else rotates.</p>
+      ${optRow('Training mode','mode',['Wave','Deload','Rehab only'])}
+      ${optRow('Run rung · Tuesday','rungA',['R4','R5','R6','R7'])}
+      ${optRow('Run rung · Thursday','rungB',['R4','R5','R6','R7'])}
+      ${optRow('Flexion rung','flex',[1,2,3,4])}
+      ${optRow('Typeface','font',['roboto','slab','cond','mono'])}
+      <p class="note">SJR Today v0.1${DRY?' · test mode':''}</p>`;
+  }
+  if(name==='issues'){
+    const fl=cfg.flare||{on:false};
+    h=`${back}<div class="page"><h2 class="disp">Issues</h2><p class="note">Private. An open issue changes the plan until you clear it.</p>
+      <article class="iss"><div><h3>Sciatica flare</h3><span class="ref">${fl.on?'Open since '+esc(nice(fromDs(fl.since)))+' · day '+flareDay()+'. No loaded lifts while open.':'Not open'}</span></div><div class="opts"><button type="button" data-flare aria-pressed="${fl.on}">${fl.on?'Open':'Closed'}</button></div></article>
+      ${Object.keys(issues).map(r=>{const x=issues[r];return `<article class="iss"><div><h3>${esc(REGION_LABEL[r]||r)}</h3><span class="ref">${x.since?'Since '+esc(nice(fromDs(x.since))):''}${x.note?' · '+esc(x.note):''}</span></div><div class="opts"><button type="button" data-clear="${esc(r)}">${S.clearAsk===r?'Tap again to clear':'Clear'}</button></div></article>`}).join('')}
+      <div style="margin-top:18px"><span class="lab">Log an issue</span><div class="newiss">
+        <div class="opts sm">${Object.keys(REGION_LABEL).map(r=>`<button type="button" data-region="${r}" aria-pressed="${S.region===r}">${REGION_LABEL[r]}</button>`).join('')}</div>
+        <div class="rowform"><input class="inp" id="isBad" type="text" inputmode="decimal" placeholder="How bad, 0–10" autocomplete="off" style="max-width:150px"><input class="inp" id="isNote" type="text" placeholder="Note (optional)" maxlength="200" autocomplete="off"></div>
+        <div><button type="button" class="btn" data-addissue>Add issue</button> <span class="err" id="isErr"></span></div></div></div></div>`;
+  }
+  if(name==='why'){
+    const key=ds(addD(T0,S.day)), its=(S.items&&S.items[key])||[];
+    h=`${back}<div class="page"><h2 class="disp">Why</h2><p class="note">Today's moves. Sources marked "judgment" have no study behind the dose.</p>
+      ${its.map(i=>{const e=BY[i.n];return e?`<article id="why-${esc(i.n)}"><h3>${esc(disp(i.n,i.slot))}</h3><p>${esc(e.why)}</p><p class="ref">${esc(e.src||'Judgment dose')}</p></article>`:''}).join('')}
+      <h2 class="disp" style="margin-top:24px">Swap log</h2>
+      ${swaps.length?swaps.slice().reverse().slice(0,40).map(w=>`<article><p>${esc(nice(fromDs(w.date)))} · ${esc(disp(w.from))} to ${esc(disp(w.to))}</p><p class="ref">${esc(w.reason||'No reason given')}</p></article>`).join(''):'<p class="note">No swaps yet. Each one you make is recorded here and nudges what gets picked next.</p>'}</div>`;
+  }
+  if(name==='history'){
+    const dates=[...new Set(logs.map(l=>l.date))].sort().reverse().slice(0,21);
+    const cell=(d,m)=>{const a=logs.filter(l=>l.date===d&&l.metric===m).sort((x,y)=>y.ts-x.ts);return a.length?f1(a[0].score):'–'};
+    h=`${back}<div class="page"><h2 class="disp">History</h2><p class="note">Private. Kept in your log, never on the public site.</p><div class="tbl"><table><thead><tr><th>Day</th>${A.metrics.map(m=>`<th>${m[1]}</th>`).join('')}<th>Sets logged</th></tr></thead><tbody>
+      ${dates.map(d=>`<tr><td>${esc(nice(fromDs(d)))}</td>${A.metrics.map(m=>`<td class="n">${cell(d,m[0])}</td>`).join('')}<td>${sets[d]?Object.keys(sets[d]).length:''}</td></tr>`).join('')||'<tr><td colspan="5">No logs yet.</td></tr>'}</tbody></table></div></div>`;
+  }
+  if(name==='cheats'){
+    h=`${back}<div class="page"><h2 class="disp">Cheat sheets</h2>
+      <article><h3>Nerve up</h3><p>Walk first. Slider before anything loaded. No stretching into the leg.</p><p>Bike upright, hips open. Stop a set at the first change down the leg.</p><p>Flexion work after midday only.</p></article>
+      <article><h3>Calf / shin open</h3><p>No running, sled, hops or calf raises. Pain-free walking stays.</p><p>Calf holds daily. Clear the issue yourself once it has been quiet.</p></article>
+      <article><h3>Hold day</h3><p>Walk, prone lying, slider, breathing. Nothing else. Log again tomorrow morning.</p></article>
+      <article><p><a class="link" href="https://padraik99.github.io/sjr-system/patrick-flare-cheatcard-v2-20260904.html">Full rehab cheat card</a></p></article></div>`;
+  }
+  if(name==='library'){
+    h=`${back}<div class="page"><h2 class="disp">Library</h2><input class="inp" id="libQ" type="search" placeholder="Search ${LIB.length} exercises" autocomplete="off"><div id="libList"></div></div>`;
+  }
+  $('sheet').innerHTML=`<div class="wrap">${h}</div>`; $('sheet').hidden=false;
+  if(name==='library')lib('');
+}
+function lib(q){
+  const ql=q.toLowerCase(), list=LIB.filter(e=>(e.n+' '+e.p+' '+e.sec).toLowerCase().includes(ql)).slice(0,ql?60:25);
+  $('libList').innerHTML=list.map(e=>`<article><h3>${esc(e.n)}${e.d?` <span class="ref">· ${esc(e.d)}</span>`:''}</h3><p>${esc(e.why)}</p><p class="ref">${esc(e.src)}</p>${demoActs(e.n)}</article>`).join('')||'<p class="note">Nothing matches.</p>';
+  if(!ql)$('libList').insertAdjacentHTML('beforeend','<p class="note">Type to search the rest.</p>');
+}
+const SHEETS=['menu','why','history','cheats','library','issues'];
+function route(){const h=location.hash.slice(1);if(SHEETS.includes(h)){sheet(h);$('sheet').scrollTop=0}else $('sheet').hidden=true}
+function reSheet(){const h=location.hash.slice(1);if(SHEETS.includes(h))sheet(h)}
+function refreshDemo(){if(!$('sheet').hidden&&$('libList')){lib($('libQ').value);const i=$('demoUrl');if(i)i.focus()}else renderPlan()}
+
+/* ---- events ---- */
+document.addEventListener('click',async ev=>{
+  const t=ev.target.closest('button,a'); if(!t)return; const d=t.dataset;
+  if(d.skin){cfg.skin=d.skin;sv('pt_t_cfg',cfg);applyLook();renderTop()}
+  else if(t.id==='moreBtn'||t.id==='whoBtn'){location.hash='menu'}
+  else if('close' in d){location.hash='today'}
+  else if(d.day){S.day=+d.day;S.open=null;renderTop();renderPlan()}
+  else if(d.n){S.range=+d.n;renderTop();renderPlan()}
+  else if(t.id==='sameY'){A.metrics.forEach(([m],i)=>{const p=prevVal(m);if(p!=null)$('sc'+i).value=p});stale(true)}
+  else if(t.id==='issBtn'){location.hash='issues'}
+  else if(t.id==='goBtn'){await doBuild()}
+  else if(d.tick){const [k,n]=splitId(d.tick);done[k]=done[k]||{};done[k][n]=!done[k][n];sv('pt_t_done',done);renderPlan()}
+  else if(d.open){S.open=S.open===d.open?null:d.open;S.saving=null;S.swapOpen=null;S.err='';renderPlan()}
+  else if(d.unit){const [k,n]=splitId(d.unit);ensureRec(k,n).u=d.u;sv('pt_t_sets',sets);renderPlan()}
+  else if(d.addset){const [k,n]=splitId(d.addset),r=ensureRec(k,n);r.rows.push(Object.assign({},r.rows[r.rows.length-1]));sv('pt_t_sets',sets);renderPlan()}
+  else if(d.delset){const [k,n]=splitId(d.delset);ensureRec(k,n).rows.pop();sv('pt_t_sets',sets);renderPlan()}
+  else if(d.copylast){const [k,n]=splitId(d.copylast),l=lastSets(n,k);if(l){sets[k]=sets[k]||{};sets[k][n]=JSON.parse(JSON.stringify(l.rec));done[k]=done[k]||{};done[k][n]=true;sv('pt_t_sets',sets);sv('pt_t_done',done);renderPlan()}}
+  else if(d.swap){S.swapOpen=S.swapOpen===d.swap?null:d.swap;renderPlan()}
+  else if(d.swapto){
+    const [k,from]=splitId(d.from);
+    swaps.push({date:k,slot:d.slot,from,to:d.swapto,reason:'',ts:Date.now()}); sv('pt_t_swaps',swaps);
+    plan[k][d.slot]={n:d.swapto,sig:'user'}; S.lastSwap=swaps.length-1; S.swapOpen=null; S.open=sk(k,d.swapto); renderPlan();
+  }
+  else if(d.reason){if(S.lastSwap!=null){swaps[S.lastSwap].reason=d.reason;sv('pt_t_swaps',swaps);renderPlan()}}
+  else if(d.rmextra){const [k,n]=splitId(d.rmextra);plan[k]._extra=(plan[k]._extra||[]).filter(x=>x!==n);S.open=null;renderPlan()}
+  else if(t.id==='extraGo'){const v=$('extraIn').value.trim().slice(0,80);if(v){plan[TODAY]=plan[TODAY]||{};const a=plan[TODAY]._extra=plan[TODAY]._extra||[];if(!a.includes(v))a.push(v);S.open=sk(TODAY,v);renderPlan()}}
+  else if(d.save){S.saving=S.saving===d.save?null:d.save;S.err='';refreshDemo()}
+  else if(d.savego){
+    const v=$('demoUrl').value.trim();
+    if(v===''){delete demos[d.savego];S.saving=null}
+    else if(/^https?:\/\/\S+$/i.test(v)){demos[d.savego]=v;S.saving=null;S.err=''}
+    else S.err='That does not look like a link. It should start with https://';
+    sv('pt_demos',demos);refreshDemo();
+  }
+  else if(d.why){location.hash='why';setTimeout(()=>{const el=document.getElementById('why-'+d.why);if(el)el.scrollIntoView()},60)}
+  else if(d.cfg){cfg[d.cfg]=d.cfg==='flex'?+d.v:d.v;sv('pt_t_cfg',cfg);applyLook();renderTop();renderPlan();sheet('menu')}
+  else if('flare' in d){const on=!(cfg.flare&&cfg.flare.on);cfg.flare={on,since:on?TODAY:null};sv('pt_t_cfg',cfg);renderUnder();renderPlan();sheet('issues')}
+  else if(d.clear){
+    if(S.clearAsk!==d.clear){S.clearAsk=d.clear;sheet('issues')}
+    else{delete issues[d.clear];sv(A.id+'_active_issues',issues);S.clearAsk=null;renderUnder();renderPlan();sheet('issues')}
+  }
+  else if(d.region){S.region=d.region;const b=$('isBad').value,n=$('isNote').value;sheet('issues');$('isBad').value=b;$('isNote').value=n}
+  else if('addissue' in d){
+    const bad=parseFloat($('isBad').value), note=$('isNote').value.trim().slice(0,200);
+    if(!S.region){$('isErr').textContent='Pick where it is.';return}
+    if(isNaN(bad)||bad<0||bad>10){$('isErr').textContent='Give it a number from 0 to 10.';return}
+    const sev=Math.max(1,Math.min(5,Math.round((bad+0.5)/2))), region=S.region;
+    issues[region]={since:TODAY,severity:sev,note,ts:Date.now()}; sv(A.id+'_active_issues',issues);
+    const inj=ld(A.id+'_injuries',[]); inj.push({date:TODAY,region,description:note,severity:sev,ts:Date.now()}); sv(A.id+'_injuries',inj);
+    S.region=null; renderUnder(); renderPlan(); sheet('issues');
+    if(!DRY){try{await sbFetch('/rest/v1/injury_logs',{method:'POST',prefer:'return=representation',body:JSON.stringify({athlete_id:A.id,date:TODAY,region,description:note,severity:sev})});sync('Saved')}catch(e){sync('Offline · kept on this phone')}}
+  }
+});
+document.addEventListener('input',ev=>{
+  const i=ev.target;
+  if(i.id==='libQ')lib(i.value);
+  if(i.matches('.score input')){i.value=i.value.replace(',','.').replace(/[^0-9.]/g,'');stale(true)}
+  if(i.dataset.set){
+    const [k,n]=splitId(i.dataset.set), rec=ensureRec(k,n), ix=+i.dataset.i;
+    (rec.rows[ix]=rec.rows[ix]||{})[i.dataset.f]=i.value.trim().slice(0,20); sv('pt_t_sets',sets);
+    const el=document.querySelector('[data-dose="'+CSS.escape(i.dataset.set)+'"]'), txt=setsText(rec);
+    if(el){el.textContent=txt?'Did '+txt:el.dataset.plan;el.classList.toggle('did',!!txt)}
+    if(txt&&!(done[k]&&done[k][n])){done[k]=done[k]||{};done[k][n]=true;sv('pt_t_done',done);const li=i.closest('li');li.classList.add('done');const tk=li.querySelector('.tick');tk.setAttribute('aria-pressed','true');tk.textContent='✓'}
+  }
+});
+/* tap a number: it empties so typing starts clean; leave it blank and the old number comes back */
+document.addEventListener('focusin',ev=>{const i=ev.target;if(i.matches('.score input')){i.dataset.was=i.value;i.dataset.ph=i.placeholder;if(i.value)i.placeholder=i.value;i.value=''}});
+document.addEventListener('focusout',ev=>{const i=ev.target;if(i.matches('.score input')){
+  if(i.value==='')i.value=i.dataset.was||'';
+  else{const n=Math.min(10,Math.max(0,parseFloat(i.value)));i.value=isNaN(n)?(i.dataset.was||''):String(Math.round(n*2)/2)}
+  i.placeholder=i.dataset.ph||'';
+}});
+document.addEventListener('keydown',ev=>{
+  if(ev.key!=='Enter')return; const t=ev.target;
+  if(t.matches('.score input, .setrow input'))t.blur();
+  if(t.id==='demoUrl'){const b=document.querySelector('[data-savego]');if(b)b.click()}
+  if(t.id==='extraIn')$('extraGo').click();
+});
+window.addEventListener('hashchange',route);
+
+function applyLook(){
+  const r=document.documentElement; r.setAttribute('data-skin',cfg.skin); r.setAttribute('data-font',cfg.font);
+  const m=document.querySelector('meta[name="theme-color"]'); if(m)m.setAttribute('content',{chalk:'#EEF1EC',track:'#A63F2A',canal:'#0E2C31',ink:'#FFFFFF'}[cfg.skin]||'#EEF1EC');
+}
+async function init(){
+  applyLook(); prune(); flareAuto(); renderTop(); renderLog(); renderPlan(); route(); sync('');
+  await loadLogsFromSupabase();
+  flareAuto(); renderUnder();
+  const act=document.activeElement; if(!(act&&act.matches&&act.matches('input')))renderLog();
+  if(S.open===null)renderPlan();
+}
+init();
+</script>
+</body>
+</html>
