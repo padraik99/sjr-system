@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- VERSION: 0.1 | Updated: 2026-11-12 | Prior: none | SJR Today: one-screen log + Build plan. Slot engine fills each day from the Library inside the gates (two-key gate copied from the Patrick guide v7.9, active issues, flare, phase). Manual swap with a logged reason. Per-set log. Shares pt_logs, patrick_active_issues and pt_demos with the guide. Patrick only in 0.1. -->
+<!-- VERSION: 0.2 | Updated: 2026-11-12 | Prior: 0.1 | v0.2: set units are Weight / Sec / Min / Band (was one "Time" that assumed seconds); a set can be a hold with no reps (3 sets of 40 s); unit guessed from the exercise name for things you add; exercise actions tidied into one quiet line (no underlines), set controls are small chips. |SJR Today: one-screen log + Build plan. Slot engine fills each day from the Library inside the gates (two-key gate copied from the Patrick guide v7.9, active issues, flare, phase). Manual swap with a logged reason. Per-set log. Shares pt_logs, patrick_active_issues and pt_demos with the guide. Patrick only in 0.1. -->
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -103,6 +103,9 @@ li.done .nm{opacity:.55}
 .open{padding:0 0 14px 36px;display:flex;flex-direction:column;gap:10px}
 .open p{margin:0;color:var(--mute);font-size:15px}
 .acts{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center}
+.quiet{display:flex;flex-wrap:wrap;align-items:center;margin-top:2px}
+.quiet > *{font-size:14px;font-weight:500;color:var(--mute);text-decoration:none;padding:5px 0}
+.quiet > * + *::before{content:"·";margin:0 9px;color:var(--mute);opacity:.6}
 .sets{display:flex;flex-direction:column;gap:6px}
 .setrow{display:grid;grid-template-columns:18px 1fr 14px 1fr;gap:8px;align-items:center;max-width:300px}
 .setrow span{color:var(--mute);font-size:14px;text-align:center}
@@ -415,17 +418,28 @@ function buildDay(date,V){
 /* ---- sets ---- */
 const sk=(key,n)=>key+'|'+n;
 function setRec(key,n){return (sets[key]||{})[n]}
-function lastSets(n,before){const k=Object.keys(sets).filter(d=>d<before&&sets[d][n]&&sets[d][n].rows.some(x=>x.r)).sort().pop();return k?{date:k,rec:sets[k][n]}:null}
+function lastSets(n,before){const k=Object.keys(sets).filter(d=>d<before&&sets[d][n]&&sets[d][n].rows.some(x=>x.r||x.w)).sort().pop();return k?{date:k,rec:sets[k][n]}:null}
+const normU=u=>u==='time'?'sec':u;
 function unitOf(key,n){
-  const r=setRec(key,n); if(r&&r.u)return r.u;
-  const l=lastSets(n,'9'); if(l&&l.rec.u)return l.rec.u;
+  const r=setRec(key,n); if(r&&r.u)return normU(r.u);
+  const l=lastSets(n,'9'); if(l&&l.rec.u)return normU(l.rec.u);
   const d=doseOf(n,'');
-  return /band/i.test(n)?'band':/\d\s*(s|min)\b/.test(d)?'time':'lb';
+  if(/band/i.test(n))return 'band';
+  if(/\bmin\b|\bmi\b/.test(d)||/bike|walk|run|jog|row(ing|er)|swim|sled/i.test(n))return 'min';
+  if(/\d\s*s\b/.test(d)||/plank|hold|hang|iso|wall sit|bird ?dog|breath/i.test(n))return 'sec';
+  return 'lb';
 }
-function fmtSet(x,u){if(!x.w)return x.r;return u==='lb'?x.r+' @ '+x.w+' lb':u==='time'?x.r+' × '+x.w+' s':x.r+' · '+x.w+' band'}
+const UNIT_TXT={lb:' lb',sec:' s',min:' min',band:' band'};
+function fmtSet(x,u){
+  u=normU(u);
+  if(!x.w)return x.r;
+  if(!x.r)return x.w+UNIT_TXT[u];
+  return u==='lb'?x.r+' @ '+x.w+' lb':u==='band'?x.r+' · '+x.w+' band':x.r+' × '+x.w+UNIT_TXT[u];
+}
 function setsText(rec){
-  if(!rec)return ''; const a=rec.rows.filter(x=>x.r), u=rec.u||'lb'; if(!a.length)return '';
+  if(!rec)return ''; const a=rec.rows.filter(x=>x.r||x.w), u=normU(rec.u||'lb'); if(!a.length)return '';
   if(a.length===1)return fmtSet(a[0],u);
+  if(a.every(x=>(x.r||'')===(a[0].r||'')&&(x.w||'')===(a[0].w||'')))return a.length+' × '+fmtSet(a[0],u);
   const ws=a.filter(x=>parseFloat(x.w));
   if(u!=='band'&&ws.length){const t=ws.reduce((m,x)=>parseFloat(x.w)>parseFloat(m.w)?x:m);return a.length+' sets · top '+fmtSet(t,u)}
   return a.length+' sets · '+fmtSet(a[a.length-1],u);
@@ -452,13 +466,13 @@ function renderUnder(){
   $('under').innerHTML=`<button class="link" id="sameY" type="button">Same as yesterday</button>
     <button class="issues" id="issBtn" type="button">${open.length?`<i></i>${open.length} open · ${esc(open.join(', '))}`:'No open issues'} ›</button>`;
 }
-function demoActs(n){
+function demoActs(n,extra){
   const e=BY[n], q='https://www.youtube.com/results?search_query='+(e&&e.q?e.q:encodeURIComponent(n+' exercise demo')), mine=demos[n];
-  let h='<div class="acts">';
-  if(mine&&/^https?:\/\//i.test(mine))h+=`<a class="link" href="${esc(mine)}" target="_blank" rel="noopener">My demo</a>`;
-  h+=`<a class="link" href="${esc(q)}" target="_blank" rel="noopener">Search demo</a>`;
-  h+=`<button type="button" class="link" data-save="${esc(n)}">${mine?'Change my demo':'Save my demo'}</button>`;
-  h+=`<button type="button" class="link" data-why="${esc(n)}">Why</button></div>`;
+  let h='<div class="quiet">';
+  if(mine&&/^https?:\/\//i.test(mine))h+=`<a href="${esc(mine)}" target="_blank" rel="noopener">My demo</a>`;
+  h+=`<a href="${esc(q)}" target="_blank" rel="noopener">Search demo</a>`;
+  h+=`<button type="button" data-save="${esc(n)}">${mine?'Change demo':'Save demo'}</button>`;
+  h+=`<button type="button" data-why="${esc(n)}">Why</button>${extra||''}</div>`;
   if(S.saving===n)h+=`<div class="rowform"><input class="inp" id="demoUrl" type="url" inputmode="url" placeholder="Paste a video link"><button type="button" class="btn" data-savego="${esc(n)}">Save</button></div>${S.err?`<div class="err">${esc(S.err)}</div>`:''}<p class="note">Leave it empty and save to remove.</p>`;
   return h;
 }
@@ -493,14 +507,13 @@ function renderPlan(){
           html+=`<div class="open">`;
           if(e&&e.why)html+=`<p>${esc(e.why.split('. ')[0].replace(/\.$/,''))}.</p>`;
           if(sw)html+=`<div class="acts"><span class="lab">Swapped from ${esc(disp(sw.from))}. Why?</span><div class="opts sm">${['Variety','Equipment','Feels better','Pain','Time'].map(x=>`<button type="button" data-reason="${x}" aria-pressed="${sw.reason===x}">${x}</button>`).join('')}</div></div>`;
-          html+=`<div class="sets"><div class="acts"><span class="lab">What I did</span><div class="opts sm">${[['lb','Weight'],['time','Time'],['band','Band']].map(([u,l])=>`<button type="button" data-unit="${esc(id)}" data-u="${u}" aria-pressed="${un===u}">${l}</button>`).join('')}</div></div>
+          html+=`<div class="sets"><div class="acts"><span class="lab">What I did</span><div class="opts sm">${[['lb','Weight'],['sec','Sec'],['min','Min'],['band','Band']].map(([u,l])=>`<button type="button" data-unit="${esc(id)}" data-u="${u}" aria-pressed="${un===u}">${l}</button>`).join('')}</div></div>
             ${rows.map((x,ix)=>`<div class="setrow"><span>${ix+1}</span>
-              <input class="inp" type="text" inputmode="numeric" placeholder="reps" aria-label="Set ${ix+1} reps" data-set="${esc(id)}" data-i="${ix}" data-f="r" value="${esc(x.r||'')}"><span>${{lb:'@',time:'×',band:'·'}[un]}</span>
-              <input class="inp" type="text" ${un==='band'?'':'inputmode="decimal"'} placeholder="${{lb:'lb',time:'sec',band:'band'}[un]}" aria-label="Set ${ix+1} ${un}" data-set="${esc(id)}" data-i="${ix}" data-f="w" value="${esc(x.w||'')}"></div>`).join('')}
-            <div class="acts"><button type="button" class="link" data-addset="${esc(id)}">+ Set</button>${rows.length>1?`<button type="button" class="link" data-delset="${esc(id)}">Remove last</button>`:''}${last?`<button type="button" class="link" data-copylast="${esc(id)}">Same as ${esc(nice(fromDs(last.date)))}: ${esc(setsText(last.rec))}</button>`:''}</div></div>`;
-          html+=demoActs(it.n);
-          if(it.slot.startsWith('e:'))html+=`<div class="acts"><button type="button" class="link" data-rmextra="${esc(id)}">Remove from today</button></div>`;
-          else if(alts.length)html+=`<div class="acts"><button type="button" class="link" data-swap="${esc(id)}">${S.swapOpen===id?'Close swap':'Swap for something else'}</button></div>${S.swapOpen===id?`<div class="alts">${alts.map(n=>`<button type="button" data-swapto="${esc(n)}" data-from="${esc(id)}" data-slot="${esc(it.slot)}">${esc(disp(n))} <span class="note">${esc(BY[n].d)}</span></button>`).join('')}</div>`:''}`;
+              <input class="inp" type="text" inputmode="numeric" placeholder="${un==='sec'||un==='min'?'reps (optional)':'reps'}" aria-label="Set ${ix+1} reps" data-set="${esc(id)}" data-i="${ix}" data-f="r" value="${esc(x.r||'')}"><span>${{lb:'@',sec:'×',min:'×',band:'·'}[un]}</span>
+              <input class="inp" type="text" ${un==='band'?'':'inputmode="decimal"'} placeholder="${{lb:'lb',sec:'sec',min:'min',band:'band'}[un]}" aria-label="Set ${ix+1} ${un}" data-set="${esc(id)}" data-i="${ix}" data-f="w" value="${esc(x.w||'')}"></div>`).join('')}
+            <div class="opts sm"><button type="button" data-addset="${esc(id)}">+ Set</button>${rows.length>1?`<button type="button" data-delset="${esc(id)}">− Set</button>`:''}${last?`<button type="button" data-copylast="${esc(id)}">Same as ${esc(nice(fromDs(last.date)))}: ${esc(setsText(last.rec))}</button>`:''}</div></div>`;
+          html+=demoActs(it.n,it.slot.startsWith('e:')?`<button type="button" data-rmextra="${esc(id)}">Remove</button>`:alts.length?`<button type="button" data-swap="${esc(id)}">${S.swapOpen===id?'Close swap':'Swap'}</button>`:'');
+                    if(!it.slot.startsWith('e:')&&alts.length)html+=`${S.swapOpen===id?`<div class="alts">${alts.map(n=>`<button type="button" data-swapto="${esc(n)}" data-from="${esc(id)}" data-slot="${esc(it.slot)}">${esc(disp(n))} <span class="note">${esc(BY[n].d)}</span></button>`).join('')}</div>`:''}`;
           html+=`</div>`;
         }
         html+=`</li>`;
@@ -556,7 +569,7 @@ function sheet(name){
       ${optRow('Run rung · Thursday','rungB',['R4','R5','R6','R7'])}
       ${optRow('Flexion rung','flex',[1,2,3,4])}
       ${optRow('Typeface','font',['roboto','slab','cond','mono'])}
-      <p class="note">SJR Today v0.1${DRY?' · test mode':''}</p>`;
+      <p class="note">SJR Today v0.2${DRY?' · test mode':''}</p>`;
   }
   if(name==='issues'){
     const fl=cfg.flare||{on:false};
