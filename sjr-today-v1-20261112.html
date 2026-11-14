@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- VERSION: 0.2 | Updated: 2026-11-12 | Prior: 0.1 | v0.2: set units are Weight / Sec / Min / Band (was one "Time" that assumed seconds); a set can be a hold with no reps (3 sets of 40 s); unit guessed from the exercise name for things you add; exercise actions tidied into one quiet line (no underlines), set controls are small chips. |SJR Today: one-screen log + Build plan. Slot engine fills each day from the Library inside the gates (two-key gate copied from the Patrick guide v7.9, active issues, flare, phase). Manual swap with a logged reason. Per-set log. Shares pt_logs, patrick_active_issues and pt_demos with the guide. Patrick only in 0.1. -->
+<!-- VERSION: 0.3 | Updated: 2026-11-14 | Prior: 0.2 | v0.3: sets, done-ticks and swaps sync to Supabase (session_logs, swap_logs) with the phone as working copy; falls back to phone-only if the tables are missing. Anything logged for a date shows under Extra. |v0.2: set units are Weight / Sec / Min / Band (was one "Time" that assumed seconds); a set can be a hold with no reps (3 sets of 40 s); unit guessed from the exercise name for things you add; exercise actions tidied into one quiet line (no underlines), set controls are small chips. |SJR Today: one-screen log + Build plan. Slot engine fills each day from the Library inside the gates (two-key gate copied from the Patrick guide v7.9, active issues, flare, phase). Manual swap with a logged reason. Per-set log. Shares pt_logs, patrick_active_issues and pt_demos with the guide. Patrick only in 0.1. -->
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -237,6 +237,56 @@ async function saveLogToSupabase(entry){
   }catch(e){sync('Offline · kept on this phone')}
 }
 
+/* ---- cloud sync for sets, done-ticks and swaps (tables session_logs + swap_logs) ----
+   The phone stays the working copy. Every change is marked dirty and pushed a moment later;
+   on load the cloud is pulled and the newer side wins per exercise. If the tables do not
+   exist yet, cloud=false and everything simply stays on this phone. */
+let dirty=ld('pt_t_dirty',{}), cloud=null, flushT=null;
+const noTable=e=>/PGRST205|42P01|Supabase 404/.test(e.message);
+function touch(k,n){
+  const r=(sets[k]||{})[n]; if(r)r.t=Date.now();
+  dirty[k+'|'+n]=1; sv('pt_t_dirty',dirty); sv('pt_t_sets',sets);
+  clearTimeout(flushT); flushT=setTimeout(flush,1500);
+}
+async function flush(){
+  const ids=Object.keys(dirty); if(DRY||cloud===false||!ids.length)return;
+  const body=ids.map(id=>{const i=id.indexOf('|'),k=id.slice(0,i),n=id.slice(i+1),rec=(sets[k]||{})[n];
+    return {athlete_id:A.id,date:k,exercise:n,unit:rec?normU(rec.u||'lb'):null,sets:rec?rec.rows.filter(x=>x.r||x.w):[],done:!!(done[k]&&done[k][n]),updated_at:new Date().toISOString()}});
+  try{
+    await sbFetch('/rest/v1/session_logs?on_conflict=athlete_id,date,exercise',{method:'POST',prefer:'resolution=merge-duplicates,return=minimal',body:JSON.stringify(body)});
+    ids.forEach(id=>{delete dirty[id]}); sv('pt_t_dirty',dirty); cloud=true; sync('Saved');
+  }catch(e){ if(noTable(e))cloud=false; sync(cloud===false?'Sets kept on this phone':'Offline · kept on this phone') }
+}
+async function pushSwap(w){
+  if(DRY||cloud===false||!w)return;
+  try{
+    await sbFetch('/rest/v1/swap_logs?on_conflict=athlete_id,client_ts',{method:'POST',prefer:'resolution=merge-duplicates,return=minimal',
+      body:JSON.stringify({athlete_id:A.id,date:w.date,slot:w.slot,from_ex:w.from,to_ex:w.to,reason:w.reason||'',client_ts:w.ts})});
+    w.s=1; sv('pt_t_swaps',swaps);
+  }catch(e){ if(noTable(e))cloud=false }
+}
+async function pullCloud(){
+  if(DRY)return;
+  try{
+    const rows=await sbFetch('/rest/v1/session_logs?athlete_id=eq.'+A.id+'&date=gte.'+ds(addD(T0,-120))+'&select=date,exercise,unit,sets,done,updated_at');
+    cloud=true;
+    rows.forEach(r=>{
+      if(dirty[r.date+'|'+r.exercise])return;                       // an unsent local edit wins
+      const rt=new Date(r.updated_at).getTime(), loc=(sets[r.date]||{})[r.exercise];
+      if(loc&&rt<=(loc.t||0))return;
+      if(r.sets&&r.sets.length){sets[r.date]=sets[r.date]||{};sets[r.date][r.exercise]={u:r.unit||'lb',rows:r.sets,t:rt}}
+      done[r.date]=done[r.date]||{}; done[r.date][r.exercise]=!!r.done;
+    });
+    sv('pt_t_sets',sets); sv('pt_t_done',done);
+    const sw=await sbFetch('/rest/v1/swap_logs?athlete_id=eq.'+A.id+'&order=client_ts.asc&select=date,slot,from_ex,to_ex,reason,client_ts');
+    const have=new Set(swaps.map(w=>w.ts));
+    sw.forEach(r=>{const ts=Number(r.client_ts);if(!have.has(ts))swaps.push({date:r.date,slot:r.slot,from:r.from_ex,to:r.to_ex,reason:r.reason||'',ts,s:1})});
+    swaps.sort((a,b)=>a.ts-b.ts); sv('pt_t_swaps',swaps);
+    for(const w of swaps.filter(x=>!x.s))await pushSwap(w);
+    await flush();
+  }catch(e){ if(noTable(e))cloud=false }
+}
+
 /* ---- the gate: copied from the weekly guide v7.9, two keys and one lock ---- */
 const BASELINE_WINDOW_DAYS=14;
 const ABS_LIMITS={morning:{walk:7.0,reduce:5.5},nerve:{walk:6.5,reduce:4.5}};
@@ -411,7 +461,10 @@ function buildDay(date,V){
     });
     if(wv.deload||cfg.mode==='Deload')ch.push(['=','Deload: drop one set from each lift']);
   }
-  (plan[key]._extra||[]).forEach((n,ix)=>items.push({slot:'e:'+ix,n,b:5,tag:'',dose:BY[n]?BY[n].d:''}));
+  // extras: what you added by hand, plus anything logged for this date that the plan does not show (e.g. logged on another device)
+  const ex=(plan[key]._extra||[]).slice();
+  Object.keys(sets[key]||{}).forEach(n=>{if(!ex.includes(n)&&!items.some(i=>i.n===n)&&sets[key][n].rows.some(x=>x.r||x.w))ex.push(n)});
+  ex.forEach((n,ix)=>items.push({slot:'e:'+ix,n,b:5,tag:'',dose:BY[n]?BY[n].d:''}));
   return {key,title:V.hold?'Recovery':dp.t,items,ch,status:V.status,line:V.line,gate:V.gate,wave:wv};
 }
 
@@ -569,7 +622,9 @@ function sheet(name){
       ${optRow('Run rung · Thursday','rungB',['R4','R5','R6','R7'])}
       ${optRow('Flexion rung','flex',[1,2,3,4])}
       ${optRow('Typeface','font',['roboto','slab','cond','mono'])}
-      <p class="note">SJR Today v0.2${DRY?' · test mode':''}</p>`;
+      <p class="note">Sets and swaps: ${DRY?'test mode, not saved':cloud===true?'saved to your database':cloud===false?'on this phone only (database step not done yet)':'checking…'}</p>
+      <p class="note"><a class="link" href="https://padraik99.github.io/sjr-system/SJR_Dashboard_v1_20260402.html">Coach dashboard</a></p>
+      <p class="note">SJR Today v0.3${DRY?' · test mode':''}</p>`;
   }
   if(name==='issues'){
     const fl=cfg.flare||{on:false};
@@ -628,19 +683,19 @@ document.addEventListener('click',async ev=>{
   else if(t.id==='sameY'){A.metrics.forEach(([m],i)=>{const p=prevVal(m);if(p!=null)$('sc'+i).value=p});stale(true)}
   else if(t.id==='issBtn'){location.hash='issues'}
   else if(t.id==='goBtn'){await doBuild()}
-  else if(d.tick){const [k,n]=splitId(d.tick);done[k]=done[k]||{};done[k][n]=!done[k][n];sv('pt_t_done',done);renderPlan()}
+  else if(d.tick){const [k,n]=splitId(d.tick);done[k]=done[k]||{};done[k][n]=!done[k][n];sv('pt_t_done',done);touch(k,n);renderPlan()}
   else if(d.open){S.open=S.open===d.open?null:d.open;S.saving=null;S.swapOpen=null;S.err='';renderPlan()}
-  else if(d.unit){const [k,n]=splitId(d.unit);ensureRec(k,n).u=d.u;sv('pt_t_sets',sets);renderPlan()}
-  else if(d.addset){const [k,n]=splitId(d.addset),r=ensureRec(k,n);r.rows.push(Object.assign({},r.rows[r.rows.length-1]));sv('pt_t_sets',sets);renderPlan()}
-  else if(d.delset){const [k,n]=splitId(d.delset);ensureRec(k,n).rows.pop();sv('pt_t_sets',sets);renderPlan()}
-  else if(d.copylast){const [k,n]=splitId(d.copylast),l=lastSets(n,k);if(l){sets[k]=sets[k]||{};sets[k][n]=JSON.parse(JSON.stringify(l.rec));done[k]=done[k]||{};done[k][n]=true;sv('pt_t_sets',sets);sv('pt_t_done',done);renderPlan()}}
+  else if(d.unit){const [k,n]=splitId(d.unit);ensureRec(k,n).u=d.u;touch(k,n);renderPlan()}
+  else if(d.addset){const [k,n]=splitId(d.addset),r=ensureRec(k,n);r.rows.push(Object.assign({},r.rows[r.rows.length-1]));touch(k,n);renderPlan()}
+  else if(d.delset){const [k,n]=splitId(d.delset);ensureRec(k,n).rows.pop();touch(k,n);renderPlan()}
+  else if(d.copylast){const [k,n]=splitId(d.copylast),l=lastSets(n,k);if(l){sets[k]=sets[k]||{};sets[k][n]=JSON.parse(JSON.stringify(l.rec));done[k]=done[k]||{};done[k][n]=true;touch(k,n);sv('pt_t_done',done);renderPlan()}}
   else if(d.swap){S.swapOpen=S.swapOpen===d.swap?null:d.swap;renderPlan()}
   else if(d.swapto){
     const [k,from]=splitId(d.from);
-    swaps.push({date:k,slot:d.slot,from,to:d.swapto,reason:'',ts:Date.now()}); sv('pt_t_swaps',swaps);
+    swaps.push({date:k,slot:d.slot,from,to:d.swapto,reason:'',ts:Date.now()}); sv('pt_t_swaps',swaps); pushSwap(swaps[swaps.length-1]);
     plan[k][d.slot]={n:d.swapto,sig:'user'}; S.lastSwap=swaps.length-1; S.swapOpen=null; S.open=sk(k,d.swapto); renderPlan();
   }
-  else if(d.reason){if(S.lastSwap!=null){swaps[S.lastSwap].reason=d.reason;sv('pt_t_swaps',swaps);renderPlan()}}
+  else if(d.reason){if(S.lastSwap!=null){swaps[S.lastSwap].reason=d.reason;sv('pt_t_swaps',swaps);pushSwap(swaps[S.lastSwap]);renderPlan()}}
   else if(d.rmextra){const [k,n]=splitId(d.rmextra);plan[k]._extra=(plan[k]._extra||[]).filter(x=>x!==n);S.open=null;renderPlan()}
   else if(t.id==='extraGo'){const v=$('extraIn').value.trim().slice(0,80);if(v){plan[TODAY]=plan[TODAY]||{};const a=plan[TODAY]._extra=plan[TODAY]._extra||[];if(!a.includes(v))a.push(v);S.open=sk(TODAY,v);renderPlan()}}
   else if(d.save){S.saving=S.saving===d.save?null:d.save;S.err='';refreshDemo()}
@@ -676,7 +731,7 @@ document.addEventListener('input',ev=>{
   if(i.matches('.score input')){i.value=i.value.replace(',','.').replace(/[^0-9.]/g,'');stale(true)}
   if(i.dataset.set){
     const [k,n]=splitId(i.dataset.set), rec=ensureRec(k,n), ix=+i.dataset.i;
-    (rec.rows[ix]=rec.rows[ix]||{})[i.dataset.f]=i.value.trim().slice(0,20); sv('pt_t_sets',sets);
+    (rec.rows[ix]=rec.rows[ix]||{})[i.dataset.f]=i.value.trim().slice(0,20); touch(k,n);
     const el=document.querySelector('[data-dose="'+CSS.escape(i.dataset.set)+'"]'), txt=setsText(rec);
     if(el){el.textContent=txt?'Did '+txt:el.dataset.plan;el.classList.toggle('did',!!txt)}
     if(txt&&!(done[k]&&done[k][n])){done[k]=done[k]||{};done[k][n]=true;sv('pt_t_done',done);const li=i.closest('li');li.classList.add('done');const tk=li.querySelector('.tick');tk.setAttribute('aria-pressed','true');tk.textContent='✓'}
@@ -705,6 +760,7 @@ async function init(){
   applyLook(); prune(); flareAuto(); renderTop(); renderLog(); renderPlan(); route(); sync('');
   await loadLogsFromSupabase();
   flareAuto(); renderUnder();
+  await pullCloud();
   const act=document.activeElement; if(!(act&&act.matches&&act.matches('input')))renderLog();
   if(S.open===null)renderPlan();
 }
