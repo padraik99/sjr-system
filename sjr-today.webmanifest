@@ -1,0 +1,16 @@
+{
+  "name": "SJR Today",
+  "short_name": "SJR Today",
+  "description": "Log the day, build the plan.",
+  "start_url": "./sjr-today-v1-20261112.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#EEF1EC",
+  "theme_color": "#EEF1EC",
+  "icons": [
+    { "src": "sjr-today-icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "sjr-today-icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "sjr-today-icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

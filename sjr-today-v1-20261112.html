@@ -1,10 +1,14 @@
 <!DOCTYPE html>
-<!-- VERSION: 0.3 | Updated: 2026-11-14 | Prior: 0.2 | v0.3: sets, done-ticks and swaps sync to Supabase (session_logs, swap_logs) with the phone as working copy; falls back to phone-only if the tables are missing. Anything logged for a date shows under Extra. |v0.2: set units are Weight / Sec / Min / Band (was one "Time" that assumed seconds); a set can be a hold with no reps (3 sets of 40 s); unit guessed from the exercise name for things you add; exercise actions tidied into one quiet line (no underlines), set controls are small chips. |SJR Today: one-screen log + Build plan. Slot engine fills each day from the Library inside the gates (two-key gate copied from the Patrick guide v7.9, active issues, flare, phase). Manual swap with a logged reason. Per-set log. Shares pt_logs, patrick_active_issues and pt_demos with the guide. Patrick only in 0.1. -->
+<!-- VERSION: 0.4 | Updated: 2026-11-14 | Prior: 0.3 | v0.4: installable as an app (manifest, icons, network-first service worker sjr-today-sw.js; CSP gains manifest-src and worker-src); opens offline from the last copy seen. |v0.3: sets, done-ticks and swaps sync to Supabase (session_logs, swap_logs) with the phone as working copy; falls back to phone-only if the tables are missing. Anything logged for a date shows under Extra. |v0.2: set units are Weight / Sec / Min / Band (was one "Time" that assumed seconds); a set can be a hold with no reps (3 sets of 40 s); unit guessed from the exercise name for things you add; exercise actions tidied into one quiet line (no underlines), set controls are small chips. |SJR Today: one-screen log + Build plan. Slot engine fills each day from the Library inside the gates (two-key gate copied from the Patrick guide v7.9, active issues, flare, phase). Manual swap with a logged reason. Per-set log. Shares pt_logs, patrick_active_issues and pt_demos with the guide. Patrick only in 0.1. -->
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; connect-src https://jedsnurnnwmpcbdvtlbs.supabase.co; img-src 'self' data:; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; connect-src https://jedsnurnnwmpcbdvtlbs.supabase.co; img-src 'self' data:; manifest-src 'self'; worker-src 'self'; base-uri 'none'; form-action 'none'">
+<link rel="manifest" href="sjr-today.webmanifest">
+<link rel="icon" href="sjr-today-icon-192.png">
+<link rel="apple-touch-icon" href="sjr-today-apple-touch-icon.png">
+<meta name="apple-mobile-web-app-title" content="SJR Today">
 <meta name="robots" content="noindex">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -624,7 +628,7 @@ function sheet(name){
       ${optRow('Typeface','font',['roboto','slab','cond','mono'])}
       <p class="note">Sets and swaps: ${DRY?'test mode, not saved':cloud===true?'saved to your database':cloud===false?'on this phone only (database step not done yet)':'checking…'}</p>
       <p class="note"><a class="link" href="https://padraik99.github.io/sjr-system/SJR_Dashboard_v1_20260402.html">Coach dashboard</a></p>
-      <p class="note">SJR Today v0.3${DRY?' · test mode':''}</p>`;
+      <p class="note">SJR Today v0.4${DRY?' · test mode':''}</p>`;
   }
   if(name==='issues'){
     const fl=cfg.flare||{on:false};
@@ -765,6 +769,7 @@ async function init(){
   if(S.open===null)renderPlan();
 }
 init();
+if('serviceWorker' in navigator && /^https?:$/.test(location.protocol)) navigator.serviceWorker.register('sjr-today-sw.js').catch(()=>{});
 </script>
 </body>
 </html>
