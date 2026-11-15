@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- VERSION: 0.4 | Updated: 2026-11-14 | Prior: 0.3 | v0.4: installable as an app (manifest, icons, network-first service worker sjr-today-sw.js; CSP gains manifest-src and worker-src); opens offline from the last copy seen. |v0.3: sets, done-ticks and swaps sync to Supabase (session_logs, swap_logs) with the phone as working copy; falls back to phone-only if the tables are missing. Anything logged for a date shows under Extra. |v0.2: set units are Weight / Sec / Min / Band (was one "Time" that assumed seconds); a set can be a hold with no reps (3 sets of 40 s); unit guessed from the exercise name for things you add; exercise actions tidied into one quiet line (no underlines), set controls are small chips. |SJR Today: one-screen log + Build plan. Slot engine fills each day from the Library inside the gates (two-key gate copied from the Patrick guide v7.9, active issues, flare, phase). Manual swap with a logged reason. Per-set log. Shares pt_logs, patrick_active_issues and pt_demos with the guide. Patrick only in 0.1. -->
+<!-- VERSION: 0.5 | Updated: 2026-11-14 | Prior: 0.4 | v0.5: shared sign-in (Supabase auth, raw REST): email + password once per phone, session in localStorage sjr_session, silent refresh before expiry and on 401, Bearer user token added in sbFetch. Works signed out while the anon policies exist. Saved / offline notices also flash as a toast at the bottom of the screen. |v0.4: installable as an app (manifest, icons, network-first service worker sjr-today-sw.js; CSP gains manifest-src and worker-src); opens offline from the last copy seen. |v0.3: sets, done-ticks and swaps sync to Supabase (session_logs, swap_logs) with the phone as working copy; falls back to phone-only if the tables are missing. Anything logged for a date shows under Extra. |v0.2: set units are Weight / Sec / Min / Band (was one "Time" that assumed seconds); a set can be a hold with no reps (3 sets of 40 s); unit guessed from the exercise name for things you add; exercise actions tidied into one quiet line (no underlines), set controls are small chips. |SJR Today: one-screen log + Build plan. Slot engine fills each day from the Library inside the gates (two-key gate copied from the Patrick guide v7.9, active issues, flare, phase). Manual swap with a logged reason. Per-set log. Shares pt_logs, patrick_active_issues and pt_demos with the guide. Patrick only in 0.1. -->
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -125,6 +125,7 @@ li.done .nm{opacity:.55}
 .alts{display:flex;flex-direction:column;align-items:flex-start;gap:6px}
 .alts button{font-size:15px;border-bottom:1px solid var(--line);padding:3px 0;text-align:left}
 
+.toast{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);z-index:30;background:var(--ink);color:var(--bg);font-size:14px;font-weight:500;padding:7px 14px;max-width:90vw;text-align:center}
 .sheet{position:fixed;inset:0;background:var(--bg);z-index:20;overflow:auto;padding:16px 16px 40px}
 .sheet .wrap{gap:20px}
 .menu{list-style:none;margin:0;padding:0;border-top:2px solid var(--ink)}
@@ -170,11 +171,12 @@ td.n{font-family:var(--display);font-weight:800;font-size:19px}
       <div class="seg" id="range" role="group" aria-label="How far ahead"></div>
       <button class="go" id="goBtn" type="button">Build plan</button>
     </div>
-    <div class="msg"><span class="stale" id="stale" hidden>Numbers changed. Build again.</span><span id="sync"></span></div>
+    <div class="msg"><span class="stale" id="stale" hidden>Numbers changed. Build again.</span><span><span id="sync"></span> <button class="link" id="signBtn" type="button" hidden>Sign in</button></span></div>
   </section>
   <section id="plan" aria-live="polite"></section>
 </div>
 <div class="sheet" id="sheet" hidden></div>
+<div class="toast" id="toast" role="status" hidden></div>
 
 <script>
 /* ============ SJR Today v0.1 ============ */
@@ -209,16 +211,49 @@ cfg=Object.assign({skin:'chalk',font:'roboto',mode:'Wave',variety:'Some',rungA:'
 const S={day:0,range:1,open:null,saving:null,swapOpen:null,lastSwap:null,err:'',clearAsk:null,region:null};
 
 /* ---- Supabase (apikey header only) ---- */
-async function sbFetch(path,opts={}){
+/* ---- sign-in: one shared login, raw REST, sticky session ----
+   The publishable key stays in the apikey header only. Once signed in, the user's own token
+   rides in Authorization: Bearer. Typed once per phone; renewed silently before it expires and on any 401. */
+let session=ld('sjr_session',null), refreshing=null, authBlocked=false;
+function setSession(j,email){
+  if(j){session={access_token:j.access_token,refresh_token:j.refresh_token,expires_at:Date.now()+(j.expires_in||3600)*1000,email:email||(session&&session.email)||''};sv('sjr_session',session)}
+  else{session=null;try{localStorage.removeItem('sjr_session')}catch(e){}}
+}
+async function authCall(grant,body){
+  const res=await fetch(SUPA_URL+'/auth/v1/token?grant_type='+grant,{method:'POST',headers:{'apikey':SUPA_KEY,'Content-Type':'application/json'},body:JSON.stringify(body)});
+  const j=await res.json().catch(()=>({}));
+  if(!res.ok)throw new Error(j.error_description||j.msg||j.message||('Sign-in failed ('+res.status+')'));
+  return j;
+}
+async function signIn(email,password){const j=await authCall('password',{email,password});setSession(j,email);authBlocked=false}
+function refreshSession(){
+  if(!session)return Promise.resolve(false);
+  if(!refreshing)refreshing=authCall('refresh_token',{refresh_token:session.refresh_token})
+    .then(j=>{setSession(j);return true})
+    .catch(e=>{if(!(e instanceof TypeError))setSession(null);return false})   // offline keeps the session; a refused token ends it
+    .finally(()=>{refreshing=null});
+  return refreshing;
+}
+async function sbFetch(path,opts={},retried){
+  if(session&&session.expires_at-Date.now()<60000)await refreshSession();
   const headers={'apikey':SUPA_KEY,'Content-Type':'application/json'};
+  if(session)headers['Authorization']='Bearer '+session.access_token;
   if(opts.prefer)headers['Prefer']=opts.prefer;
   const res=await fetch(SUPA_URL+path,{method:opts.method||'GET',headers,body:opts.body||undefined});
+  if(res.status===401&&session&&!retried&&await refreshSession())return sbFetch(path,opts,true);
+  if(res.status===403&&session)authBlocked=true;
   if(!res.ok){const t=await res.text();throw new Error('Supabase '+res.status+': '+t)}
   if(res.status===204)return [];
   const ct=res.headers.get('content-type')||'';
   return ct.includes('application/json')?res.json():[];
 }
-function sync(t){$('sync').textContent=DRY?'Test mode · nothing is sent':t}
+let toastT=null;
+function sync(t){
+  if(authBlocked)t='Signed in, but the database is not set up for sign-in yet';
+  $('sync').textContent=DRY?'Test mode · nothing is sent':t;
+  $('signBtn').hidden=!!session||DRY;
+  if(!DRY&&t&&t!=='In sync'){const el=$('toast');el.textContent=t;el.hidden=false;clearTimeout(toastT);toastT=setTimeout(()=>{el.hidden=true},2200)}
+}
 async function loadLogsFromSupabase(){
   try{
     const rows=await sbFetch('/rest/v1/pain_logs?athlete_id=eq.'+A.id+'&date=gte.'+ds(addD(T0,-30))+'&order=created_at.desc&select=*');
@@ -627,8 +662,16 @@ function sheet(name){
       ${optRow('Flexion rung','flex',[1,2,3,4])}
       ${optRow('Typeface','font',['roboto','slab','cond','mono'])}
       <p class="note">Sets and swaps: ${DRY?'test mode, not saved':cloud===true?'saved to your database':cloud===false?'on this phone only (database step not done yet)':'checking…'}</p>
+      <p class="note">${session?`Signed in${session.email?' as '+esc(session.email):''} · <button type="button" class="link" data-signout>Sign out</button>`:`Not signed in · <button type="button" class="link" data-signin>Sign in</button>`}</p>
       <p class="note"><a class="link" href="https://padraik99.github.io/sjr-system/SJR_Dashboard_v1_20260402.html">Coach dashboard</a></p>
-      <p class="note">SJR Today v0.4${DRY?' · test mode':''}</p>`;
+      <p class="note">SJR Today v0.5${DRY?' · test mode':''}</p>`;
+  }
+  if(name==='signin'){
+    h=`${back}<div class="page"><h2 class="disp">Sign in</h2><p class="note">Once per phone. It keeps your logs private, and you stay signed in.</p>
+      <form id="signForm" class="newiss" autocomplete="on" style="margin-top:14px">
+        <input class="inp" id="siEmail" type="email" inputmode="email" autocomplete="username" placeholder="Email" required>
+        <input class="inp" id="siPass" type="password" autocomplete="current-password" placeholder="Password" required>
+        <div><button class="btn" type="submit">Sign in</button> <span class="err" id="siErr"></span></div></form></div>`;
   }
   if(name==='issues'){
     const fl=cfg.flare||{on:false};
@@ -665,13 +708,24 @@ function sheet(name){
   }
   $('sheet').innerHTML=`<div class="wrap">${h}</div>`; $('sheet').hidden=false;
   if(name==='library')lib('');
+  if(name==='signin'&&cfg.email)$('siEmail').value=cfg.email;
 }
 function lib(q){
   const ql=q.toLowerCase(), list=LIB.filter(e=>(e.n+' '+e.p+' '+e.sec).toLowerCase().includes(ql)).slice(0,ql?60:25);
   $('libList').innerHTML=list.map(e=>`<article><h3>${esc(e.n)}${e.d?` <span class="ref">· ${esc(e.d)}</span>`:''}</h3><p>${esc(e.why)}</p><p class="ref">${esc(e.src)}</p>${demoActs(e.n)}</article>`).join('')||'<p class="note">Nothing matches.</p>';
   if(!ql)$('libList').insertAdjacentHTML('beforeend','<p class="note">Type to search the rest.</p>');
 }
-const SHEETS=['menu','why','history','cheats','library','issues'];
+const SHEETS=['menu','why','history','cheats','library','issues','signin'];
+async function reloadData(){await loadLogsFromSupabase();flareAuto();renderUnder();await pullCloud();renderLog();renderPlan()}
+document.addEventListener('submit',async ev=>{
+  if(ev.target.id!=='signForm')return; ev.preventDefault();
+  const email=$('siEmail').value.trim(), pass=$('siPass').value, err=$('siErr'); err.textContent='';
+  if(!email||!pass){err.textContent='Enter both.';return}
+  try{
+    await signIn(email,pass); $('siPass').value=''; cfg.email=email; sv('pt_t_cfg',cfg);
+    location.hash='today'; sync('Signed in'); await reloadData();
+  }catch(e){err.textContent=e instanceof TypeError?'No connection. Try again.':(/invalid/i.test(e.message)?'Wrong email or password.':e.message)}
+});
 function route(){const h=location.hash.slice(1);if(SHEETS.includes(h)){sheet(h);$('sheet').scrollTop=0}else $('sheet').hidden=true}
 function reSheet(){const h=location.hash.slice(1);if(SHEETS.includes(h))sheet(h)}
 function refreshDemo(){if(!$('sheet').hidden&&$('libList')){lib($('libQ').value);const i=$('demoUrl');if(i)i.focus()}else renderPlan()}
@@ -686,6 +740,8 @@ document.addEventListener('click',async ev=>{
   else if(d.n){S.range=+d.n;renderTop();renderPlan()}
   else if(t.id==='sameY'){A.metrics.forEach(([m],i)=>{const p=prevVal(m);if(p!=null)$('sc'+i).value=p});stale(true)}
   else if(t.id==='issBtn'){location.hash='issues'}
+  else if(t.id==='signBtn'||'signin' in d){location.hash='signin'}
+  else if('signout' in d){setSession(null);authBlocked=false;sync('Signed out');sheet('menu')}
   else if(t.id==='goBtn'){await doBuild()}
   else if(d.tick){const [k,n]=splitId(d.tick);done[k]=done[k]||{};done[k][n]=!done[k][n];sv('pt_t_done',done);touch(k,n);renderPlan()}
   else if(d.open){S.open=S.open===d.open?null:d.open;S.saving=null;S.swapOpen=null;S.err='';renderPlan()}
