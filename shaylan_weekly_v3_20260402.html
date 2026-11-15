@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- VERSION: 3.4 | Updated: 2026-08-18 | Prior: 3.3 | GPP · Return block + auto-land past the meet calendar (post-injury base, decoupled from comp dates) + persistent 🧘 Movement quick-link to Library #restoration. Full changelog in CLAUDE.md File Inventory. -->
+<!-- VERSION: 3.5 | Updated: 2026-11-14 | Prior: 3.4 (2026-08-18) | v3.5 (Nov 14): shared sign-in — sbFetch sends the user token from localStorage sjr_session, renews it before expiry and on 401; header link to the sign-in page. No training content changed. | GPP · Return block + auto-land past the meet calendar (post-injury base, decoupled from comp dates) + persistent 🧘 Movement quick-link to Library #restoration. Full changelog in CLAUDE.md File Inventory. -->
 <!-- CHANGELOG: v3.4 GPP · Return reset · v3.3 W11 off-week + W12 return + W13 Sacramento (conditional) -->
 
 <html lang="en">
@@ -475,7 +475,7 @@ main{padding:1.25rem}
   <div class="hdr-top">
     <div>
       <div class="hdr-name">SHAYLAN</div>
-      <div class="hdr-sub">100 · 200 · Long Jump · MJC → Berkeley</div>
+      <div class="hdr-sub">100 · 200 · Long Jump · MJC → Berkeley · <a id="sjr-signin-link" href="https://padraik99.github.io/sjr-system/sjr-signin-v1-20261114.html?next=shaylan_weekly_v3_20260402.html" style="color:inherit;text-decoration:underline">Sign in</a></div>
     </div>
     <div class="phase-badge" id="phase-badge">
       P1 · W1<span>Mar 14–20</span>
@@ -631,14 +631,40 @@ const ATHLETE_ID = 'shaylan';
 const SUPA_URL = 'https://jedsnurnnwmpcbdvtlbs.supabase.co';
 const SUPA_KEY = 'sb_publishable_3WGolnM5dOK88Y4WdKCFGA_Hi6wj-_z';
 
-async function sbFetch(path, opts = {}){
+// ── SHARED SIGN-IN (Nov 2026) ──────────────────────────────────────
+// The session is created on sjr-signin-v1-20261114.html (or in SJR Today) and kept in
+// localStorage 'sjr_session'. Same origin, so every SJR page on this site sees it.
+// Signed out, this page still works on the public key for as long as the anon policies
+// exist; once they are dropped it needs the session to read or save.
+// The publishable key stays in the apikey header ONLY. The Bearer below is the USER token.
+let sjrSession = null, sjrRefreshing = null;
+function sjrReadSession(){ try { sjrSession = JSON.parse(localStorage.getItem('sjr_session') || 'null'); } catch(e){ sjrSession = null; } return sjrSession; }
+function sjrRefresh(){
+  if(!sjrSession) return Promise.resolve(false);
+  if(!sjrRefreshing) sjrRefreshing = fetch(SUPA_URL + '/auth/v1/token?grant_type=refresh_token', {
+      method:'POST', headers:{ 'apikey': SUPA_KEY, 'Content-Type':'application/json' },
+      body: JSON.stringify({ refresh_token: sjrSession.refresh_token }) })
+    .then(r => r.ok ? r.json() : Promise.reject(new Error('refused')))
+    .then(j => { sjrSession = { access_token:j.access_token, refresh_token:j.refresh_token, expires_at: Date.now() + (j.expires_in || 3600)*1000, email: (sjrSession && sjrSession.email) || '' };
+                 localStorage.setItem('sjr_session', JSON.stringify(sjrSession)); return true; })
+    .catch(e => { if(!(e instanceof TypeError)){ sjrSession = null; try { localStorage.removeItem('sjr_session'); } catch(x){} } return false; })  // offline keeps the session; a refused token ends it
+    .finally(() => { sjrRefreshing = null; });
+  return sjrRefreshing;
+}
+(function(){ const a = document.getElementById('sjr-signin-link'); if(a) a.textContent = sjrReadSession() ? 'Signed in' : 'Sign in'; })();
+
+async function sbFetch(path, opts = {}, retried){
+  sjrReadSession();                                   // another tab or page may have renewed or ended it
+  if(sjrSession && sjrSession.expires_at - Date.now() < 60000) await sjrRefresh();
   const headers = { 'apikey': SUPA_KEY, 'Content-Type': 'application/json' };
+  if(sjrSession) headers['Authorization'] = 'Bearer ' + sjrSession.access_token;
   if(opts.prefer) headers['Prefer'] = opts.prefer;
   const res = await fetch(SUPA_URL + path, {
     method: opts.method || 'GET',
     headers,
     body: opts.body || undefined,
   });
+  if(res.status === 401 && sjrSession && !retried && await sjrRefresh()) return sbFetch(path, opts, true);
   if(!res.ok){ const txt = await res.text(); throw new Error('Supabase ' + res.status + ': ' + txt); }
   if(res.status === 204) return [];
   const ct = res.headers.get('content-type') || '';

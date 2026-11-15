@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- VERSION: 0.5 | Updated: 2026-11-14 | Prior: 0.4 | v0.5: shared sign-in (Supabase auth, raw REST): email + password once per phone, session in localStorage sjr_session, silent refresh before expiry and on 401, Bearer user token added in sbFetch. Works signed out while the anon policies exist. Saved / offline notices also flash as a toast at the bottom of the screen. |v0.4: installable as an app (manifest, icons, network-first service worker sjr-today-sw.js; CSP gains manifest-src and worker-src); opens offline from the last copy seen. |v0.3: sets, done-ticks and swaps sync to Supabase (session_logs, swap_logs) with the phone as working copy; falls back to phone-only if the tables are missing. Anything logged for a date shows under Extra. |v0.2: set units are Weight / Sec / Min / Band (was one "Time" that assumed seconds); a set can be a hold with no reps (3 sets of 40 s); unit guessed from the exercise name for things you add; exercise actions tidied into one quiet line (no underlines), set controls are small chips. |SJR Today: one-screen log + Build plan. Slot engine fills each day from the Library inside the gates (two-key gate copied from the Patrick guide v7.9, active issues, flare, phase). Manual swap with a logged reason. Per-set log. Shares pt_logs, patrick_active_issues and pt_demos with the guide. Patrick only in 0.1. -->
+<!-- VERSION: 0.5.1 | Updated: 2026-11-14 | Prior: 0.5 | v0.5.1: re-reads the shared session before every database call, so a token renewed by another SJR page (the guide, Shay's page) is picked up and not reused stale. |v0.5: shared sign-in (Supabase auth, raw REST): email + password once per phone, session in localStorage sjr_session, silent refresh before expiry and on 401, Bearer user token added in sbFetch. Works signed out while the anon policies exist. Saved / offline notices also flash as a toast at the bottom of the screen. |v0.4: installable as an app (manifest, icons, network-first service worker sjr-today-sw.js; CSP gains manifest-src and worker-src); opens offline from the last copy seen. |v0.3: sets, done-ticks and swaps sync to Supabase (session_logs, swap_logs) with the phone as working copy; falls back to phone-only if the tables are missing. Anything logged for a date shows under Extra. |v0.2: set units are Weight / Sec / Min / Band (was one "Time" that assumed seconds); a set can be a hold with no reps (3 sets of 40 s); unit guessed from the exercise name for things you add; exercise actions tidied into one quiet line (no underlines), set controls are small chips. |SJR Today: one-screen log + Build plan. Slot engine fills each day from the Library inside the gates (two-key gate copied from the Patrick guide v7.9, active issues, flare, phase). Manual swap with a logged reason. Per-set log. Shares pt_logs, patrick_active_issues and pt_demos with the guide. Patrick only in 0.1. -->
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -235,6 +235,7 @@ function refreshSession(){
   return refreshing;
 }
 async function sbFetch(path,opts={},retried){
+  session=ld('sjr_session',null);                 // another SJR page may have renewed or ended it
   if(session&&session.expires_at-Date.now()<60000)await refreshSession();
   const headers={'apikey':SUPA_KEY,'Content-Type':'application/json'};
   if(session)headers['Authorization']='Bearer '+session.access_token;
@@ -664,7 +665,7 @@ function sheet(name){
       <p class="note">Sets and swaps: ${DRY?'test mode, not saved':cloud===true?'saved to your database':cloud===false?'on this phone only (database step not done yet)':'checking…'}</p>
       <p class="note">${session?`Signed in${session.email?' as '+esc(session.email):''} · <button type="button" class="link" data-signout>Sign out</button>`:`Not signed in · <button type="button" class="link" data-signin>Sign in</button>`}</p>
       <p class="note"><a class="link" href="https://padraik99.github.io/sjr-system/SJR_Dashboard_v1_20260402.html">Coach dashboard</a></p>
-      <p class="note">SJR Today v0.5${DRY?' · test mode':''}</p>`;
+      <p class="note">SJR Today v0.5.1${DRY?' · test mode':''}</p>`;
   }
   if(name==='signin'){
     h=`${back}<div class="page"><h2 class="disp">Sign in</h2><p class="note">Once per phone. It keeps your logs private, and you stay signed in.</p>

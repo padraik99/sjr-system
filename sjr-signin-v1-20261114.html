@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<!-- VERSION: 1.0 | Updated: 2026-11-14 | Prior: none | Shared sign-in for the SJR pages. Signs in to Supabase (raw REST), stores the session in localStorage 'sjr_session' (same origin, so every SJR page on this site picks it up), then returns to the page named in ?next=. The password is never stored. -->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; connect-src https://jedsnurnnwmpcbdvtlbs.supabase.co; base-uri 'none'; form-action 'none'">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#EEF1EC">
+<title>SJR · Sign in</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#EEF1EC;color:#22403A;font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;font-size:16px;line-height:1.4;padding:28px 16px}
+.wrap{max-width:420px;margin:0 auto;display:flex;flex-direction:column;gap:14px}
+h1{margin:0;font-size:28px;font-weight:800;text-transform:uppercase;letter-spacing:.01em}
+p{margin:0;color:#3F4E49;font-size:15px}
+form{display:flex;flex-direction:column;gap:10px;margin-top:6px}
+input{font:inherit;color:inherit;width:100%;background:#fff;border:0;border-bottom:2px solid #22403A;border-radius:0;padding:9px 10px}
+input:focus{outline:0;box-shadow:inset 0 0 0 2px #1D3FCB}
+button{font:inherit;cursor:pointer;border:0;background:#1D3FCB;color:#fff;font-weight:700;padding:9px 16px;align-self:flex-start}
+button.plain{background:none;color:#22403A;border-bottom:1.5px solid currentColor;padding:0;font-size:14px}
+a{color:#1D3FCB;font-weight:700}
+.err{color:#B3261E;font-weight:600;font-size:14px;min-height:20px}
+[hidden]{display:none!important}
+:focus-visible{outline:3px solid #1D3FCB;outline-offset:2px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>SJR sign in</h1>
+  <div id="out">
+    <p>Once per phone. It keeps the training logs private, and you stay signed in.</p>
+    <form id="f" autocomplete="on">
+      <input id="email" type="email" inputmode="email" autocomplete="username" placeholder="Email" required>
+      <input id="pass" type="password" autocomplete="current-password" placeholder="Password" required>
+      <button type="submit">Sign in</button>
+      <div class="err" id="err" role="alert"></div>
+    </form>
+  </div>
+  <div id="in" hidden>
+    <p id="who"></p>
+    <p><a id="go" href="https://padraik99.github.io/sjr-system/">Continue</a></p>
+    <p><button class="plain" id="outBtn" type="button">Sign out on this phone</button></p>
+  </div>
+</div>
+<script>
+const SUPA_URL='https://jedsnurnnwmpcbdvtlbs.supabase.co';
+const SUPA_KEY='sb_publishable_3WGolnM5dOK88Y4WdKCFGA_Hi6wj-_z';
+const $=id=>document.getElementById(id);
+// ?next= may only name a page in this same folder, so a crafted link cannot send anyone elsewhere
+const nx=new URLSearchParams(location.search).get('next')||'';
+const next=/^[A-Za-z0-9_.-]+\.html$/.test(nx)?nx:'sjr-today-v1-20261112.html';
+function read(){try{return JSON.parse(localStorage.getItem('sjr_session')||'null')}catch(e){return null}}
+function show(){
+  const s=read();
+  $('out').hidden=!!s; $('in').hidden=!s;
+  if(s){$('who').textContent='Signed in'+(s.email?' as '+s.email:'')+'.'; $('go').href=next}
+}
+$('f').addEventListener('submit',async ev=>{
+  ev.preventDefault();
+  const email=$('email').value.trim(), pass=$('pass').value; $('err').textContent='';
+  if(!email||!pass){$('err').textContent='Enter both.';return}
+  try{
+    const res=await fetch(SUPA_URL+'/auth/v1/token?grant_type=password',{method:'POST',headers:{'apikey':SUPA_KEY,'Content-Type':'application/json'},body:JSON.stringify({email:email,password:pass})});
+    const j=await res.json().catch(()=>({}));
+    if(!res.ok){$('err').textContent=/invalid/i.test(j.error_description||j.msg||j.message||'')?'Wrong email or password.':(j.error_description||j.msg||j.message||'Sign-in failed.');return}
+    localStorage.setItem('sjr_session',JSON.stringify({access_token:j.access_token,refresh_token:j.refresh_token,expires_at:Date.now()+(j.expires_in||3600)*1000,email:email}));
+    $('pass').value='';
+    location.replace(next);
+  }catch(e){$('err').textContent='No connection. Try again.'}
+});
+$('outBtn').addEventListener('click',()=>{try{localStorage.removeItem('sjr_session')}catch(e){} show()});
+show();
+</script>
+</body>
+</html>
