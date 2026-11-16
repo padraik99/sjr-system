@@ -366,7 +366,9 @@ const REGION_LABEL={back:'Back',hip:'Hip',knee:'Knee',shin:'Calf / shin',foot:'F
 // body-part dropdown: [id, label, storage key]. Parts that drive a gate keep the old region key, so this page and the weekly guide gate the same way.
 const PARTS=[['neck','Neck','neck'],['shoulder','Shoulder','shoulder'],['elbow','Elbow','elbow'],['wrist','Wrist / hand','wrist'],['upperback','Upper back','upperback'],['back','Lower back','back'],['glute','Glute','hip'],['hip','Hip','hip'],['groin','Groin','hip'],['hamstring','Hamstring','hamstring'],['quad','Quad','quad'],['knee','Knee','knee'],['calf','Calf','shin'],['shin','Shin','shin'],['achilles','Achilles','shin'],['ankle','Ankle','foot'],['foot','Foot','foot'],['other','Other','other']];
 function issLabel(r){const x=issues[r];return (x&&x.label)||REGION_LABEL[r]||r}
-async function sendInjuries(){   // posts every issue the database has not accepted yet; returns true when none are left
+let injQ=Promise.resolve();
+function sendInjuries(){return injQ=injQ.then(sendInjuriesNow,sendInjuriesNow)}   // one run at a time, so two callers can never post the same issue twice
+async function sendInjuriesNow(){   // posts every issue the database has not accepted yet; returns true when none are left
   if(DRY)return false;
   const inj=ld(A.id+'_injuries',[]); let ok=true;
   for(const e of inj){
