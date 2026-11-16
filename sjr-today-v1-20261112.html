@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- VERSION: 0.5.1 | Updated: 2026-11-14 | Prior: 0.5 | v0.5.1: re-reads the shared session before every database call, so a token renewed by another SJR page (the guide, Shay's page) is picked up and not reused stale. |v0.5: shared sign-in (Supabase auth, raw REST): email + password once per phone, session in localStorage sjr_session, silent refresh before expiry and on 401, Bearer user token added in sbFetch. Works signed out while the anon policies exist. Saved / offline notices also flash as a toast at the bottom of the screen. |v0.4: installable as an app (manifest, icons, network-first service worker sjr-today-sw.js; CSP gains manifest-src and worker-src); opens offline from the last copy seen. |v0.3: sets, done-ticks and swaps sync to Supabase (session_logs, swap_logs) with the phone as working copy; falls back to phone-only if the tables are missing. Anything logged for a date shows under Extra. |v0.2: set units are Weight / Sec / Min / Band (was one "Time" that assumed seconds); a set can be a hold with no reps (3 sets of 40 s); unit guessed from the exercise name for things you add; exercise actions tidied into one quiet line (no underlines), set controls are small chips. |SJR Today: one-screen log + Build plan. Slot engine fills each day from the Library inside the gates (two-key gate copied from the Patrick guide v7.9, active issues, flare, phase). Manual swap with a logged reason. Per-set log. Shares pt_logs, patrick_active_issues and pt_demos with the guide. Patrick only in 0.1. -->
+<!-- VERSION: 0.5.3 | Updated: 2026-11-15 | Prior: 0.5.2 | v0.5.3: issues now reach injury_logs (the table has location + description; the page was sending region + severity, which the database refused). Unsent issues kept on the phone are resent once on load. Log an issue uses two dropdowns (body part, side) in place of seven buttons; the label is stored with the issue; logging an open issue again keeps its start date. |v0.5.2: the sciatica flare can no longer be closed by one stray tap: Close asks for a second tap, a close made today can be undone with its original start date, every closed flare is kept in cfg.flareLog, and the start date of an open flare can be corrected. |v0.5.1: re-reads the shared session before every database call, so a token renewed by another SJR page (the guide, Shay's page) is picked up and not reused stale. |v0.5: shared sign-in (Supabase auth, raw REST): email + password once per phone, session in localStorage sjr_session, silent refresh before expiry and on 401, Bearer user token added in sbFetch. Works signed out while the anon policies exist. Saved / offline notices also flash as a toast at the bottom of the screen. |v0.4: installable as an app (manifest, icons, network-first service worker sjr-today-sw.js; CSP gains manifest-src and worker-src); opens offline from the last copy seen. |v0.3: sets, done-ticks and swaps sync to Supabase (session_logs, swap_logs) with the phone as working copy; falls back to phone-only if the tables are missing. Anything logged for a date shows under Extra. |v0.2: set units are Weight / Sec / Min / Band (was one "Time" that assumed seconds); a set can be a hold with no reps (3 sets of 40 s); unit guessed from the exercise name for things you add; exercise actions tidied into one quiet line (no underlines), set controls are small chips. |SJR Today: one-screen log + Build plan. Slot engine fills each day from the Library inside the gates (two-key gate copied from the Patrick guide v7.9, active issues, flare, phase). Manual swap with a logged reason. Per-set log. Shares pt_logs, patrick_active_issues and pt_demos with the guide. Patrick only in 0.1. -->
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -208,7 +208,7 @@ let issues=ld(A.id+'_active_issues',{});         // shared with the weekly guide
 let demos=ld('pt_demos',{});                     // shared with the weekly guide
 let cfg=ld('pt_t_cfg',{}), plan=ld('pt_t_plan',{}), sets=ld('pt_t_sets',{}), done=ld('pt_t_done',{}), swaps=ld('pt_t_swaps',[]);
 cfg=Object.assign({skin:'chalk',font:'roboto',mode:'Wave',variety:'Some',rungA:'R5',rungB:'R6',flex:3},cfg);
-const S={day:0,range:1,open:null,saving:null,swapOpen:null,lastSwap:null,err:'',clearAsk:null,region:null};
+const S={day:0,range:1,open:null,saving:null,swapOpen:null,lastSwap:null,err:'',clearAsk:null,flareAsk:false};
 
 /* ---- Supabase (apikey header only) ---- */
 /* ---- sign-in: one shared login, raw REST, sticky session ----
@@ -363,6 +363,21 @@ function wave(d){const wi=Math.round((mondayOf(d)-WAVE_ANCHOR)/(7*86400000)),c=(
 
 /* ---- issues ---- */
 const REGION_LABEL={back:'Back',hip:'Hip',knee:'Knee',shin:'Calf / shin',foot:'Foot / ankle',shoulder:'Shoulder',other:'Other'};
+// body-part dropdown: [id, label, storage key]. Parts that drive a gate keep the old region key, so this page and the weekly guide gate the same way.
+const PARTS=[['neck','Neck','neck'],['shoulder','Shoulder','shoulder'],['elbow','Elbow','elbow'],['wrist','Wrist / hand','wrist'],['upperback','Upper back','upperback'],['back','Lower back','back'],['glute','Glute','hip'],['hip','Hip','hip'],['groin','Groin','hip'],['hamstring','Hamstring','hamstring'],['quad','Quad','quad'],['knee','Knee','knee'],['calf','Calf','shin'],['shin','Shin','shin'],['achilles','Achilles','shin'],['ankle','Ankle','foot'],['foot','Foot','foot'],['other','Other','other']];
+function issLabel(r){const x=issues[r];return (x&&x.label)||REGION_LABEL[r]||r}
+async function sendInjuries(){   // posts every issue the database has not accepted yet; returns true when none are left
+  if(DRY)return false;
+  const inj=ld(A.id+'_injuries',[]); let ok=true;
+  for(const e of inj){
+    if(e.sent||!e.date||e.date<='2026-04-16')continue;
+    const loc=e.location||REGION_LABEL[e.region]||e.region||'Other';
+    const desc=e.location?(e.description||''):[e.severity?'Severity '+e.severity+'/5':'',e.description||''].filter(Boolean).join(' · ');
+    try{await sbFetch('/rest/v1/injury_logs',{method:'POST',prefer:'return=minimal',body:JSON.stringify({athlete_id:A.id,date:e.date,location:String(loc).slice(0,200),description:String(desc).slice(0,1000)})});e.sent=true}
+    catch(err){ok=false;break}
+  }
+  sv(A.id+'_injuries',inj); return ok;
+}
 const ISSUE_FAMILY={shin:'lowerleg',foot:'lowerleg',knee:'knee',hip:'hip'};
 const FAMILY_CUT={lowerleg:['impact','calf','sled'],knee:['impact','sled','deepknee'],hip:['impact','sled']};
 const CUT_WORD={impact:'running and jumps',calf:'direct calf work',sled:'sled',deepknee:'deep knee bends'};
@@ -371,6 +386,7 @@ function flareAuto(){
   const hot=logs.filter(l=>(l.metric==='morning'||l.metric==='nerve')&&l.score>=5.5&&l.date>=ds(addD(T0,-14))).map(l=>l.date).sort();
   cfg.flare=hot.length?{on:true,since:hot[0],auto:true}:{on:false,since:null,auto:true}; sv('pt_t_cfg',cfg);
 }
+function openFlare(){const l=cfg.flare&&cfg.flare.last,undo=!!(l&&l.closed===TODAY);if(undo&&cfg.flareLog)cfg.flareLog.pop();cfg.flare={on:true,since:undo?l.since:TODAY};sv('pt_t_cfg',cfg)}   // a flare closed today reopens with its original start date
 function flareDay(){return cfg.flare&&cfg.flare.on&&cfg.flare.since?Math.round((T0-fromDs(cfg.flare.since))/86400000)+1:0}
 
 /* ---- the verdict: one object the whole plan is built from ---- */
@@ -394,7 +410,7 @@ function verdict(){
   else if(hold){const w=lv(vm)==='hold'?'Back '+f1(m):'Nerve '+f1(n);line=w+'/10. Session held. Recovery set only.'}
   else if(status==='full')line='Gate clear, nothing open. Plan as written.';
   else{
-    const why=[]; if(flare)why.push('Flare open, day '+flareDay()); if(reduce)why.push((lv(vn)==='reduce'?'nerve':'back')+' up'); regs.forEach(r=>why.push((REGION_LABEL[r]||r)+' open')); if(rehabOnly)why.push('rehab-only mode');
+    const why=[]; if(flare)why.push('Flare open, day '+flareDay()); if(reduce)why.push((lv(vn)==='reduce'?'nerve':'back')+' up'); regs.forEach(r=>why.push(issLabel(r)+' open')); if(rehabOnly)why.push('rehab-only mode');
     const fx=[]; if(noLoad)fx.push('No loaded lifts'); if(cut.size)fx.push('no '+[...cut].map(h=>CUT_WORD[h]).join(', '));
     line=why.join(' · ')+'. '+(fx.length?fx.join('; ')+'.':'');
     line=line.charAt(0).toUpperCase()+line.slice(1);
@@ -555,7 +571,7 @@ function renderLog(){
   renderUnder();
 }
 function renderUnder(){
-  const open=[]; if(cfg.flare&&cfg.flare.on)open.push('Sciatica flare'); Object.keys(issues).forEach(r=>open.push(REGION_LABEL[r]||r));
+  const open=[]; if(cfg.flare&&cfg.flare.on)open.push('Sciatica flare'); Object.keys(issues).forEach(r=>open.push(issLabel(r)));
   $('under').innerHTML=`<button class="link" id="sameY" type="button">Same as yesterday</button>
     <button class="issues" id="issBtn" type="button">${open.length?`<i></i>${open.length} open · ${esc(open.join(', '))}`:'No open issues'} ›</button>`;
 }
@@ -628,7 +644,7 @@ async function doBuild(){
   A.metrics.forEach(([m],i)=>{if(v[i]!=null&&!isNaN(v[i])&&v[i]!==todayVal(m)){const e={date:TODAY,metric:m,score:v[i],timing:new Date().getHours()<12?'am':'pm',ts:Date.now()+i};logs.push(e);fresh.push(e)}});
   if(fresh.length){
     sv('pt_logs',logs);
-    if(!cfg.flare.on&&fresh.some(e=>(e.metric==='morning'||e.metric==='nerve')&&e.score>=5.5)){cfg.flare={on:true,since:TODAY};sv('pt_t_cfg',cfg)}
+    if(!cfg.flare.on&&fresh.some(e=>(e.metric==='morning'||e.metric==='nerve')&&e.score>=5.5)){openFlare()}
   }
   stale(false); renderLog(); renderPlan();
   for(const e of fresh)await saveLogToSupabase(e);
@@ -665,7 +681,7 @@ function sheet(name){
       <p class="note">Sets and swaps: ${DRY?'test mode, not saved':cloud===true?'saved to your database':cloud===false?'on this phone only (database step not done yet)':'checking…'}</p>
       <p class="note">${session?`Signed in${session.email?' as '+esc(session.email):''} · <button type="button" class="link" data-signout>Sign out</button>`:`Not signed in · <button type="button" class="link" data-signin>Sign in</button>`}</p>
       <p class="note"><a class="link" href="https://padraik99.github.io/sjr-system/SJR_Dashboard_v1_20260402.html">Coach dashboard</a></p>
-      <p class="note">SJR Today v0.5.1${DRY?' · test mode':''}</p>`;
+      <p class="note">SJR Today v0.5.3${DRY?' · test mode':''}</p>`;
   }
   if(name==='signin'){
     h=`${back}<div class="page"><h2 class="disp">Sign in</h2><p class="note">Once per phone. It keeps your logs private, and you stay signed in.</p>
@@ -677,10 +693,10 @@ function sheet(name){
   if(name==='issues'){
     const fl=cfg.flare||{on:false};
     h=`${back}<div class="page"><h2 class="disp">Issues</h2><p class="note">Private. An open issue changes the plan until you clear it.</p>
-      <article class="iss"><div><h3>Sciatica flare</h3><span class="ref">${fl.on?'Open since '+esc(nice(fromDs(fl.since)))+' · day '+flareDay()+'. No loaded lifts while open.':'Not open'}</span></div><div class="opts"><button type="button" data-flare aria-pressed="${fl.on}">${fl.on?'Open':'Closed'}</button></div></article>
-      ${Object.keys(issues).map(r=>{const x=issues[r];return `<article class="iss"><div><h3>${esc(REGION_LABEL[r]||r)}</h3><span class="ref">${x.since?'Since '+esc(nice(fromDs(x.since))):''}${x.note?' · '+esc(x.note):''}</span></div><div class="opts"><button type="button" data-clear="${esc(r)}">${S.clearAsk===r?'Tap again to clear':'Clear'}</button></div></article>`}).join('')}
+      <article class="iss"><div><h3>Sciatica flare</h3><span class="ref">${fl.on?'Open since '+esc(nice(fromDs(fl.since)))+' · day '+flareDay()+'. No loaded lifts while open.':fl.last?'Closed '+esc(nice(fromDs(fl.last.closed)))+' · was open from '+esc(nice(fromDs(fl.last.since))):'Not open'}</span>${fl.on?`<label class="ref" style="display:block;margin-top:6px">Started <input type="date" id="flSince" value="${esc(fl.since)}" max="${TODAY}" style="font:inherit;color:inherit;background:transparent;border:1px solid currentColor;padding:2px 4px"></label>`:''}</div><div class="opts"><button type="button" data-flare>${fl.on?(S.flareAsk?'Tap again to close':'Close'):(fl.last&&fl.last.closed===TODAY?'Undo close':'Open')}</button></div></article>
+      ${Object.keys(issues).map(r=>{const x=issues[r];return `<article class="iss"><div><h3>${esc(issLabel(r))}</h3><span class="ref">${x.since?'Since '+esc(nice(fromDs(x.since))):''}${x.note?' · '+esc(x.note):''}</span></div><div class="opts"><button type="button" data-clear="${esc(r)}">${S.clearAsk===r?'Tap again to clear':'Clear'}</button></div></article>`}).join('')}
       <div style="margin-top:18px"><span class="lab">Log an issue</span><div class="newiss">
-        <div class="opts sm">${Object.keys(REGION_LABEL).map(r=>`<button type="button" data-region="${r}" aria-pressed="${S.region===r}">${REGION_LABEL[r]}</button>`).join('')}</div>
+        <div class="rowform"><select class="inp" id="isPart" aria-label="Body part"><option value="">Where</option>${PARTS.map(p=>`<option value="${p[0]}">${p[1]}</option>`).join('')}</select><select class="inp" id="isSide" aria-label="Side" style="max-width:120px"><option value="">Side</option><option>Left</option><option>Right</option><option>Both</option></select></div>
         <div class="rowform"><input class="inp" id="isBad" type="text" inputmode="decimal" placeholder="How bad, 0–10" autocomplete="off" style="max-width:150px"><input class="inp" id="isNote" type="text" placeholder="Note (optional)" maxlength="200" autocomplete="off"></div>
         <div><button type="button" class="btn" data-addissue>Add issue</button> <span class="err" id="isErr"></span></div></div></div></div>`;
   }
@@ -717,7 +733,7 @@ function lib(q){
   if(!ql)$('libList').insertAdjacentHTML('beforeend','<p class="note">Type to search the rest.</p>');
 }
 const SHEETS=['menu','why','history','cheats','library','issues','signin'];
-async function reloadData(){await loadLogsFromSupabase();flareAuto();renderUnder();await pullCloud();renderLog();renderPlan()}
+async function reloadData(){await loadLogsFromSupabase();flareAuto();renderUnder();await pullCloud();sendInjuries();renderLog();renderPlan()}
 document.addEventListener('submit',async ev=>{
   if(ev.target.id!=='signForm')return; ev.preventDefault();
   const email=$('siEmail').value.trim(), pass=$('siPass').value, err=$('siErr'); err.textContent='';
@@ -727,7 +743,7 @@ document.addEventListener('submit',async ev=>{
     location.hash='today'; sync('Signed in'); await reloadData();
   }catch(e){err.textContent=e instanceof TypeError?'No connection. Try again.':(/invalid/i.test(e.message)?'Wrong email or password.':e.message)}
 });
-function route(){const h=location.hash.slice(1);if(SHEETS.includes(h)){sheet(h);$('sheet').scrollTop=0}else $('sheet').hidden=true}
+function route(){const h=location.hash.slice(1);S.clearAsk=null;S.flareAsk=false;if(SHEETS.includes(h)){sheet(h);$('sheet').scrollTop=0}else $('sheet').hidden=true}
 function reSheet(){const h=location.hash.slice(1);if(SHEETS.includes(h))sheet(h)}
 function refreshDemo(){if(!$('sheet').hidden&&$('libList')){lib($('libQ').value);const i=$('demoUrl');if(i)i.focus()}else renderPlan()}
 
@@ -769,23 +785,31 @@ document.addEventListener('click',async ev=>{
   }
   else if(d.why){location.hash='why';setTimeout(()=>{const el=document.getElementById('why-'+d.why);if(el)el.scrollIntoView()},60)}
   else if(d.cfg){cfg[d.cfg]=d.cfg==='flex'?+d.v:d.v;sv('pt_t_cfg',cfg);applyLook();renderTop();renderPlan();sheet('menu')}
-  else if('flare' in d){const on=!(cfg.flare&&cfg.flare.on);cfg.flare={on,since:on?TODAY:null};sv('pt_t_cfg',cfg);renderUnder();renderPlan();sheet('issues')}
+  else if('flare' in d){
+    const f=cfg.flare||{on:false};
+    if(f.on&&!S.flareAsk){S.flareAsk=true;sheet('issues');return}
+    S.flareAsk=false;
+    if(f.on){const rec={since:f.since,closed:TODAY};cfg.flareLog=(cfg.flareLog||[]).concat(rec);cfg.flare={on:false,since:null,last:rec};sv('pt_t_cfg',cfg)}
+    else openFlare();
+    renderUnder();renderPlan();sheet('issues');
+  }
   else if(d.clear){
     if(S.clearAsk!==d.clear){S.clearAsk=d.clear;sheet('issues')}
     else{delete issues[d.clear];sv(A.id+'_active_issues',issues);S.clearAsk=null;renderUnder();renderPlan();sheet('issues')}
   }
-  else if(d.region){S.region=d.region;const b=$('isBad').value,n=$('isNote').value;sheet('issues');$('isBad').value=b;$('isNote').value=n}
   else if('addissue' in d){
-    const bad=parseFloat($('isBad').value), note=$('isNote').value.trim().slice(0,200);
-    if(!S.region){$('isErr').textContent='Pick where it is.';return}
+    const bad=parseFloat($('isBad').value), note=$('isNote').value.trim().slice(0,200), part=PARTS.find(p=>p[0]===$('isPart').value), side=$('isSide').value;
+    if(!part){$('isErr').textContent='Pick where it is.';return}
     if(isNaN(bad)||bad<0||bad>10){$('isErr').textContent='Give it a number from 0 to 10.';return}
-    const sev=Math.max(1,Math.min(5,Math.round((bad+0.5)/2))), region=S.region;
-    issues[region]={since:TODAY,severity:sev,note,ts:Date.now()}; sv(A.id+'_active_issues',issues);
-    const inj=ld(A.id+'_injuries',[]); inj.push({date:TODAY,region,description:note,severity:sev,ts:Date.now()}); sv(A.id+'_injuries',inj);
-    S.region=null; renderUnder(); renderPlan(); sheet('issues');
-    if(!DRY){try{await sbFetch('/rest/v1/injury_logs',{method:'POST',prefer:'return=representation',body:JSON.stringify({athlete_id:A.id,date:TODAY,region,description:note,severity:sev})});sync('Saved')}catch(e){sync('Offline · kept on this phone')}}
+    const sev=Math.max(1,Math.min(5,Math.round((bad+0.5)/2))), region=part[2];
+    const label=side?side+' '+part[1].toLowerCase():part[1], was=issues[region];
+    issues[region]={since:(was&&was.since)||TODAY,severity:sev,note,label,ts:Date.now()}; sv(A.id+'_active_issues',issues);   // logging an open issue again keeps its start date
+    const inj=ld(A.id+'_injuries',[]); inj.push({date:TODAY,region,location:label,description:bad+'/10'+(note?' · '+note:''),severity:sev,ts:Date.now()}); sv(A.id+'_injuries',inj);
+    renderUnder(); renderPlan(); sheet('issues');
+    if(!DRY)sync(await sendInjuries()?'Issue saved':'Issue not sent · kept on this phone');
   }
 });
+document.addEventListener('change',ev=>{const i=ev.target;if(i.id==='flSince'&&cfg.flare&&cfg.flare.on&&/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/.test(i.value)&&i.value<=TODAY){cfg.flare.since=i.value;sv('pt_t_cfg',cfg);renderUnder();renderPlan();sheet('issues')}});
 document.addEventListener('input',ev=>{
   const i=ev.target;
   if(i.id==='libQ')lib(i.value);
@@ -821,7 +845,7 @@ async function init(){
   applyLook(); prune(); flareAuto(); renderTop(); renderLog(); renderPlan(); route(); sync('');
   await loadLogsFromSupabase();
   flareAuto(); renderUnder();
-  await pullCloud();
+  await pullCloud(); sendInjuries();
   const act=document.activeElement; if(!(act&&act.matches&&act.matches('input')))renderLog();
   if(S.open===null)renderPlan();
 }
