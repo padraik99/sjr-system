@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- VERSION: 0.6 | Updated: 2026-11-15 | Prior: 0.5.3 | v0.6: Event mode. Training mode gains "Event": a name and a date entered in the menu, counted back into Taper 1, Specific 3, Build (4-week waves, up to 8) and Base (the rest). Weeks are earned: a week with the flare open 3+ days does not count. When the weeks still needed exceed the weeks left, the plan shows "Event at risk" with both choices (push the date, or shorten Base then Build; Specific and Taper are never cut; both need a second tap). The block nudges which Library entry is picked (gpp / spp / comp tags) and never overrides a gate. |v0.5.3: issues now reach injury_logs (the table has location + description; the page was sending region + severity, which the database refused). Unsent issues kept on the phone are resent once on load. Log an issue uses two dropdowns (body part, side) in place of seven buttons; the label is stored with the issue; logging an open issue again keeps its start date; every open issue has an editable Started date, like the flare. |v0.5.2: the sciatica flare can no longer be closed by one stray tap: Close asks for a second tap, a close made today can be undone with its original start date, every closed flare is kept in cfg.flareLog, and the start date of an open flare can be corrected. |v0.5.1: re-reads the shared session before every database call, so a token renewed by another SJR page (the guide, Shay's page) is picked up and not reused stale. |v0.5: shared sign-in (Supabase auth, raw REST): email + password once per phone, session in localStorage sjr_session, silent refresh before expiry and on 401, Bearer user token added in sbFetch. Works signed out while the anon policies exist. Saved / offline notices also flash as a toast at the bottom of the screen. |v0.4: installable as an app (manifest, icons, network-first service worker sjr-today-sw.js; CSP gains manifest-src and worker-src); opens offline from the last copy seen. |v0.3: sets, done-ticks and swaps sync to Supabase (session_logs, swap_logs) with the phone as working copy; falls back to phone-only if the tables are missing. Anything logged for a date shows under Extra. |v0.2: set units are Weight / Sec / Min / Band (was one "Time" that assumed seconds); a set can be a hold with no reps (3 sets of 40 s); unit guessed from the exercise name for things you add; exercise actions tidied into one quiet line (no underlines), set controls are small chips. |SJR Today: one-screen log + Build plan. Slot engine fills each day from the Library inside the gates (two-key gate copied from the Patrick guide v7.9, active issues, flare, phase). Manual swap with a logged reason. Per-set log. Shares pt_logs, patrick_active_issues and pt_demos with the guide. Patrick only in 0.1. -->
+<!-- VERSION: 0.6 | Updated: 2026-11-15 | Prior: 0.5.3 | v0.6: Event mode. Training mode gains "Event": a name and a date entered in the menu, counted back into Taper 1, Specific 3, Build (4-week waves, up to 8) and Base (the rest). Weeks are earned: a week with the flare open 3+ days does not count. When the weeks still needed exceed the weeks left, the plan shows "Event at risk" with both choices (push the date, or shorten Base then Build; Specific and Taper are never cut; both need a second tap). The block nudges which Library entry is picked (gpp / spp / comp tags) and never overrides a gate. Aids: in Event mode an isometric is scheduled on strength days and BFR gains a Wednesday in Base and Build; in any mode, with the flare open and today's numbers not up, the cuffed split squat stands in on strength days (it was cut as a loaded lift before). Never cuffed split squats two days running. |v0.5.3: issues now reach injury_logs (the table has location + description; the page was sending region + severity, which the database refused). Unsent issues kept on the phone are resent once on load. Log an issue uses two dropdowns (body part, side) in place of seven buttons; the label is stored with the issue; logging an open issue again keeps its start date; every open issue has an editable Started date, like the flare. |v0.5.2: the sciatica flare can no longer be closed by one stray tap: Close asks for a second tap, a close made today can be undone with its original start date, every closed flare is kept in cfg.flareLog, and the start date of an open flare can be corrected. |v0.5.1: re-reads the shared session before every database call, so a token renewed by another SJR page (the guide, Shay's page) is picked up and not reused stale. |v0.5: shared sign-in (Supabase auth, raw REST): email + password once per phone, session in localStorage sjr_session, silent refresh before expiry and on 401, Bearer user token added in sbFetch. Works signed out while the anon policies exist. Saved / offline notices also flash as a toast at the bottom of the screen. |v0.4: installable as an app (manifest, icons, network-first service worker sjr-today-sw.js; CSP gains manifest-src and worker-src); opens offline from the last copy seen. |v0.3: sets, done-ticks and swaps sync to Supabase (session_logs, swap_logs) with the phone as working copy; falls back to phone-only if the tables are missing. Anything logged for a date shows under Extra. |v0.2: set units are Weight / Sec / Min / Band (was one "Time" that assumed seconds); a set can be a hold with no reps (3 sets of 40 s); unit guessed from the exercise name for things you add; exercise actions tidied into one quiet line (no underlines), set controls are small chips. |SJR Today: one-screen log + Build plan. Slot engine fills each day from the Library inside the gates (two-key gate copied from the Patrick guide v7.9, active issues, flare, phase). Manual swap with a logged reason. Per-set log. Shares pt_logs, patrick_active_issues and pt_demos with the guide. Patrick only in 0.1. -->
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -446,7 +446,7 @@ function verdict(){
   const flare=!!(cfg.flare&&cfg.flare.on), regs=Object.keys(issues);
   const cut=new Set(); regs.forEach(r=>(FAMILY_CUT[ISSUE_FAMILY[r]]||[]).forEach(h=>cut.add(h)));
   const rehabOnly=cfg.mode==='Rehab only';
-  const noLoad=reduce||flare||rehabOnly;
+  const noLoad=reduce||flare||rehabOnly, bfrOK=flare&&!hold&&!reduce&&!rehabOnly;   // cuffed work may stand in for cut lifts in a flare, never on a day the numbers are up
   const green=!hold&&!reduce&&!flare&&!regs.length&&!rehabOnly&&!!vm;
   const status=hold?'hold':(green?'full':'adj');
   const gate=[m==null?'':'Back '+f1(m)+(vm.base!=null?' vs median '+f1(vm.base):''), n==null?'':'Nerve '+f1(n)+(vn.base!=null?' vs median '+f1(vn.base):'')].filter(Boolean).join(' · ');
@@ -461,8 +461,8 @@ function verdict(){
     line=line.charAt(0).toUpperCase()+line.slice(1);
   }
   if(!logged&&m!=null)line='No log in the last 24 hours, so your last numbers were used. '+line;
-  if(m==null)return {hold:false,reduce:false,noLoad:true,green:false,cut,status:'adj',line,gate,regs,sig:'0|1|0|'+[...cut].sort().join('+')};
-  return {hold,reduce,noLoad,green,cut,status,line,gate,regs,sig:[hold?1:0,noLoad?1:0,green?1:0,[...cut].sort().join('+')].join('|')};
+  if(m==null)return {hold:false,reduce:false,noLoad:true,bfrOK:false,green:false,cut,status:'adj',line,gate,regs,sig:'0|1|0|'+[...cut].sort().join('+')};
+  return {hold,reduce,noLoad,bfrOK,green,cut,status,line,gate,regs,sig:[hold?1:0,noLoad?1:0,green?1:0,[...cut].sort().join('+')].join('|')};
 }
 
 /* ---- the engine: day = slots, slot = a movement pattern, filled from the Library inside the gates ---- */
@@ -483,7 +483,7 @@ const SLOT={
   single:{p:'single',b:3,home:'Step-up'},
   press:{p:'press',b:3,home:'DB bench press'}, pull:{p:'pull',b:3,home:'Cable / Banded Row — Seated'},
   hang:{p:'hang',b:3}, trunk:{p:'trunk',b:3,home:'Pallof Press — Anti-Rotation Isometric'},
-  bfr:{p:'bfr',b:3}, bfrcalf:{p:'bfrcalf',b:3},
+  bfr:{p:'bfr',b:3}, bfrcalf:{p:'bfrcalf',b:3}, iso:{p:'iso',b:3},
   glutemed:{p:'glutemed',b:1,home:'Isometric glute med at wall'}, neural:{p:'neural',b:1},
   flex:{p:'flex',b:4}, plane:{p:'planes',b:4,home:'Half-Kneeling Thoracic Rotation'}};
 const RUNGS={R4:'60 s run / 90 s walk × 8',R5:'2 min run / 2 min walk × 6',R6:'3 min run / 2 min walk × 5',R7:'5 min run / 2 min walk × 4'};
@@ -503,7 +503,7 @@ function allowed(e,V){
   if(e.sl==='high')return false;
   if(e.i==='max'&&e.p!=='trunk')return false;
   if(e.x.some(h=>V.cut.has(h)))return false;
-  if(V.noLoad&&e.x.includes('load'))return false;
+  if(V.noLoad&&e.x.includes('load')&&!(V.bfrOK&&e.p==='bfr'))return false;
   if(!V.green&&e.x.includes('slr'))return false;
   return true;
 }
@@ -525,6 +525,10 @@ function choose(slot,key,list,V){
   }
   pins[slot]={n:pick,sig:V.sig}; return pick;
 }
+/* aids: BFR and isometrics. Scheduled: BFR Sunday (plus Wednesday in an event's Base and Build); an isometric on strength days in Event mode.
+   Substitute: with the flare open, BFR stands in on strength days. Never BFR two days running. */
+function bfrWant(date,V){const w=dow(date);if(w===6)return true;if(V.bfrOK&&DAYPLAN[w].s.includes('squat'))return true;if(w===2&&evOn()){const b=evState(date).block;return b==='Base'||b==='Build'}return false}
+function bfrHas(date,V){return bfrWant(date,V)&&!bfrHas(addD(date,-1),V)}
 function buildDay(date,V){
   const key=ds(date), dp=DAYPLAN[dow(date)]; plan[key]=plan[key]||{};
   const items=[], ch=[], used=new Set(), wv=wave(date);
@@ -533,8 +537,15 @@ function buildDay(date,V){
     ch.push(['−',dp.t]);
     push('h0','Walking — Extended Duration',0,'','Easy and pain-free'); push('h1','Prone lying',1); push('h2','Sciatic Nerve Slider (Neural Glide)',1); push('h3','Slow breathing',1);
   }else{
-    dp.s.forEach(slot=>{
-      const sl=SLOT[slot]; const neutral={cut:new Set(),noLoad:false,green:true};
+    let slots=dp.s.slice(); const strength=slots.includes('squat'), at=()=>slots.includes('flex')?slots.indexOf('flex'):slots.length;
+    const subBfr=strength&&V.bfrOK, hasBfr=bfrHas(date,V);
+    if(evOn()&&strength)slots.splice(at(),0,'iso');
+    if(hasBfr&&!slots.includes('bfr'))slots.splice(at(),0,'bfr');
+    if(!hasBfr&&slots.includes('bfr')){slots=slots.filter(x=>x!=='bfr');ch.push(['=','Cuffed split squat done yesterday, skipped today'])}
+    slots.forEach(slot=>{
+      const sl=SLOT[slot];
+      if(slot==='iso'&&items.some(i=>BY[i.n]&&BY[i.n].p==='iso'))return;   // the squat slot already fell back to an isometric
+      const neutral={cut:new Set(),noLoad:false,green:true};
       const homeN=sl.home||cands(sl.p,neutral)[0];
       let list=cands(sl.p,V).filter(n=>!used.has(n));
       if(!list.length&&sl.fb)list=cands(sl.fb,V).filter(n=>!used.has(n));
@@ -542,7 +553,8 @@ function buildDay(date,V){
       const pick=choose(slot,key,list,V);
       const homeOut=homeN&&!list.includes(homeN)&&BY[homeN]&&BY[homeN].p===sl.p;
       if(homeOut)ch.push(['→',disp(homeN,slot)+' to '+disp(pick,slot)]);
-      push(slot,pick,sl.b,homeOut?'Swapped in':'');
+      push(slot,pick,sl.b,homeOut?'Swapped in':(slot==='bfr'&&subBfr?'Substitute':''));
+      if(slot==='bfr'&&subBfr)ch.push(['+',disp(pick,slot)+' in place of the loaded lifts']);
     });
     if(V.noLoad){
       [['xg','glutemed'],['xn','neural']].forEach(([slot,p])=>{
