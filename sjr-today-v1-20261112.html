@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- VERSION: 0.5.3 | Updated: 2026-11-15 | Prior: 0.5.2 | v0.5.3: issues now reach injury_logs (the table has location + description; the page was sending region + severity, which the database refused). Unsent issues kept on the phone are resent once on load. Log an issue uses two dropdowns (body part, side) in place of seven buttons; the label is stored with the issue; logging an open issue again keeps its start date; every open issue has an editable Started date, like the flare. |v0.5.2: the sciatica flare can no longer be closed by one stray tap: Close asks for a second tap, a close made today can be undone with its original start date, every closed flare is kept in cfg.flareLog, and the start date of an open flare can be corrected. |v0.5.1: re-reads the shared session before every database call, so a token renewed by another SJR page (the guide, Shay's page) is picked up and not reused stale. |v0.5: shared sign-in (Supabase auth, raw REST): email + password once per phone, session in localStorage sjr_session, silent refresh before expiry and on 401, Bearer user token added in sbFetch. Works signed out while the anon policies exist. Saved / offline notices also flash as a toast at the bottom of the screen. |v0.4: installable as an app (manifest, icons, network-first service worker sjr-today-sw.js; CSP gains manifest-src and worker-src); opens offline from the last copy seen. |v0.3: sets, done-ticks and swaps sync to Supabase (session_logs, swap_logs) with the phone as working copy; falls back to phone-only if the tables are missing. Anything logged for a date shows under Extra. |v0.2: set units are Weight / Sec / Min / Band (was one "Time" that assumed seconds); a set can be a hold with no reps (3 sets of 40 s); unit guessed from the exercise name for things you add; exercise actions tidied into one quiet line (no underlines), set controls are small chips. |SJR Today: one-screen log + Build plan. Slot engine fills each day from the Library inside the gates (two-key gate copied from the Patrick guide v7.9, active issues, flare, phase). Manual swap with a logged reason. Per-set log. Shares pt_logs, patrick_active_issues and pt_demos with the guide. Patrick only in 0.1. -->
+<!-- VERSION: 0.6 | Updated: 2026-11-15 | Prior: 0.5.3 | v0.6: Event mode. Training mode gains "Event": a name and a date entered in the menu, counted back into Taper 1, Specific 3, Build (4-week waves, up to 8) and Base (the rest). Weeks are earned: a week with the flare open 3+ days does not count. When the weeks still needed exceed the weeks left, the plan shows "Event at risk" with both choices (push the date, or shorten Base then Build; Specific and Taper are never cut; both need a second tap). The block nudges which Library entry is picked (gpp / spp / comp tags) and never overrides a gate. |v0.5.3: issues now reach injury_logs (the table has location + description; the page was sending region + severity, which the database refused). Unsent issues kept on the phone are resent once on load. Log an issue uses two dropdowns (body part, side) in place of seven buttons; the label is stored with the issue; logging an open issue again keeps its start date; every open issue has an editable Started date, like the flare. |v0.5.2: the sciatica flare can no longer be closed by one stray tap: Close asks for a second tap, a close made today can be undone with its original start date, every closed flare is kept in cfg.flareLog, and the start date of an open flare can be corrected. |v0.5.1: re-reads the shared session before every database call, so a token renewed by another SJR page (the guide, Shay's page) is picked up and not reused stale. |v0.5: shared sign-in (Supabase auth, raw REST): email + password once per phone, session in localStorage sjr_session, silent refresh before expiry and on 401, Bearer user token added in sbFetch. Works signed out while the anon policies exist. Saved / offline notices also flash as a toast at the bottom of the screen. |v0.4: installable as an app (manifest, icons, network-first service worker sjr-today-sw.js; CSP gains manifest-src and worker-src); opens offline from the last copy seen. |v0.3: sets, done-ticks and swaps sync to Supabase (session_logs, swap_logs) with the phone as working copy; falls back to phone-only if the tables are missing. Anything logged for a date shows under Extra. |v0.2: set units are Weight / Sec / Min / Band (was one "Time" that assumed seconds); a set can be a hold with no reps (3 sets of 40 s); unit guessed from the exercise name for things you add; exercise actions tidied into one quiet line (no underlines), set controls are small chips. |SJR Today: one-screen log + Build plan. Slot engine fills each day from the Library inside the gates (two-key gate copied from the Patrick guide v7.9, active issues, flare, phase). Manual swap with a logged reason. Per-set log. Shares pt_logs, patrick_active_issues and pt_demos with the guide. Patrick only in 0.1. -->
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -208,7 +208,7 @@ let issues=ld(A.id+'_active_issues',{});         // shared with the weekly guide
 let demos=ld('pt_demos',{});                     // shared with the weekly guide
 let cfg=ld('pt_t_cfg',{}), plan=ld('pt_t_plan',{}), sets=ld('pt_t_sets',{}), done=ld('pt_t_done',{}), swaps=ld('pt_t_swaps',[]);
 cfg=Object.assign({skin:'chalk',font:'roboto',mode:'Wave',variety:'Some',rungA:'R5',rungB:'R6',flex:3},cfg);
-const S={day:0,range:1,open:null,saving:null,swapOpen:null,lastSwap:null,err:'',clearAsk:null,flareAsk:false};
+const S={day:0,range:1,open:null,saving:null,swapOpen:null,lastSwap:null,err:'',clearAsk:null,flareAsk:false,evAsk:null};
 
 /* ---- Supabase (apikey header only) ---- */
 /* ---- sign-in: one shared login, raw REST, sticky session ----
@@ -359,7 +359,50 @@ function prevVal(metric){const a=logs.filter(l=>l.metric===metric&&l.date<TODAY)
 /* ---- wave calendar (same anchor as the guide) ---- */
 const WAVE_ANCHOR=new Date(2026,2,23);
 function mondayOf(d){return addD(d,-dow(d))}
-function wave(d){const wi=Math.round((mondayOf(d)-WAVE_ANCHOR)/(7*86400000)),c=((wi%4)+4)%4;return {deload:c===3,label:c===3?'Deload':'Build '+(c+1)+'/3'}}
+function wave(d){
+  if(evOn()){const s=evState(d);return {deload:s.deload,taper:s.taper,block:s.block,label:s.block+' '+s.wk+'/'+s.of}}
+  const wi=Math.round((mondayOf(d)-WAVE_ANCHOR)/(7*86400000)),c=((wi%4)+4)%4;return {deload:c===3,label:c===3?'Deload':'Build '+(c+1)+'/3'}}
+
+/* ---- event mode: count back from a fixed date into blocks. Weeks are earned: a week with the flare open 3+ days does not count. ---- */
+const EV_BLOCKS=['Base','Build','Specific','Taper'], EV_PH={Base:'gpp',Build:'gpp',Specific:'spp',Taper:'comp'};
+const dayDiff=(a,b)=>Math.round((a-b)/86400000);
+const wks=n=>n+(n===1?' week':' weeks');
+function evOn(){const e=cfg.event;return cfg.mode==='Event'&&!!e&&!!e.blocks&&e.date>TODAY}
+function evPlanBlocks(n){const taper=n>=1?1:0,spec=Math.max(0,Math.min(3,n-taper)),r=n-taper-spec,build=r>=4?Math.min(8,4*Math.floor(r/4)):r;return {base:r-build,build,spec,taper}}
+function evWeeks(){const e=cfg.event;return Math.max(1,Math.ceil(dayDiff(fromDs(e.date),fromDs(e.start))/7))}   // weeks from the start to the event
+function evIdx(d){const n=evWeeks();return Math.max(0,Math.min(n-1,n-Math.ceil(dayDiff(fromDs(cfg.event.date),d)/7)))}   // which week a date is in, 0 = first
+function flareOn(x){   // was the flare open on this date
+  const spans=(cfg.flareLog||[]).slice(); if(cfg.flare&&cfg.flare.on&&cfg.flare.since)spans.push({since:cfg.flare.since,closed:null});
+  return spans.some(s=>s.since<=x&&(s.closed?x<s.closed:x<=TODAY));
+}
+function evLost(i){const e=cfg.event,n=evWeeks(),ev=fromDs(e.date);let c=0;for(let k=0;k<7;k++){const x=ds(addD(ev,-7*(n-i)+k));if(x>=e.start&&x<=TODAY&&flareOn(x))c++}return c>=3}
+function evState(d){
+  const e=cfg.event,b=e.blocks,n=evWeeks(),i=evIdx(d),iNow=evIdx(T0),lens=[b.base,b.build,b.spec,b.taper],total=lens[0]+lens[1]+lens[2]+lens[3];
+  let lostBefore=0,lostAll=0; for(let j=0;j<=iNow;j++)if(evLost(j)){lostAll++;if(j<i)lostBefore++}
+  const earned=Math.max(0,Math.min(i-lostBefore,total-1)); let k=0,pos=earned; while(k<3&&pos>=lens[k]){pos-=lens[k];k++}
+  return {block:EV_BLOCKS[k],wk:pos+1,of:lens[k],deload:k<2&&earned%4===3,taper:k===3,short:Math.max(0,total+lostAll-n),lostAll,lostNow:evLost(iNow),total,n,
+    weeksLeft:Math.ceil(dayDiff(fromDs(e.date),d)/7)};
+}
+function evCut(){   // how the shortfall would come out of Base first, then Build (Build never below 2 weeks; Specific and Taper never cut)
+  const st=evState(T0),b=cfg.event.blocks,spare=st.lostNow?1:0;
+  const canBase=st.block==='Base'?Math.max(0,b.base-st.wk+spare):0;
+  const future=st.block==='Build'?b.build-st.wk+spare:(st.block==='Base'?b.build:0), canBuild=Math.max(0,Math.min(future,b.build-2));
+  const base=Math.min(st.short,canBase), build=Math.min(st.short-base,canBuild);
+  return {base,build,ok:st.short>0&&base+build>=st.short};
+}
+function evCard(){
+  if(!evOn())return '';
+  const e=cfg.event,st=evState(T0);
+  let h=`<div style="margin:12px 0 14px"><span class="lab">${esc(e.name)} · ${wks(st.weeksLeft)} · ${st.block} ${st.wk}/${st.of}${st.lostNow?' · week not counted':''}</span>`;
+  if(st.short){
+    const c=evCut(), to=nice(addD(fromDs(e.date),7*st.short));
+    const cutTxt=[c.base?'Base by '+c.base:'',c.build?'Build by '+c.build:''].filter(Boolean).join(', ');
+    h+=`<p class="err" style="margin:6px 0">Event at risk: ${wks(st.short)} short.</p><div class="opts sm">
+      <button type="button" data-evpush>${S.evAsk==='push'?'Tap again: move to '+esc(to):'Push date '+wks(st.short)}</button>
+      ${c.ok?`<button type="button" data-evcut>${S.evAsk==='cut'?'Tap again to shorten':'Shorten '+cutTxt}</button>`:''}</div>`;
+  }
+  return h+'</div>';
+}
 
 /* ---- issues ---- */
 const REGION_LABEL={back:'Back',hip:'Hip',knee:'Knee',shin:'Calf / shin',foot:'Foot / ankle',shoulder:'Shoulder',other:'Other'};
@@ -477,8 +520,8 @@ function choose(slot,key,list,V){
   let pick;
   if(home&&list.includes(home)&&(cfg.variety==='None'||(cfg.variety==='Some'&&sl.main)))pick=home;
   else{
-    const last=lastUsed(slot,key);
-    pick=list.map(n=>[n,(n===home?1:0)+pref(n)-(n===last?2:0)+hash(key+slot+n)]).sort((a,b)=>b[1]-a[1])[0][0];
+    const last=lastUsed(slot,key), evPh=evOn()?EV_PH[evState(fromDs(key)).block]:null;   // the block nudges the pick, it never overrides a gate
+    pick=list.map(n=>[n,(n===home?1:0)+pref(n)-(n===last?2:0)+(evPh&&BY[n]&&BY[n].ph.includes(evPh)?.75:0)+hash(key+slot+n)]).sort((a,b)=>b[1]-a[1])[0][0];
   }
   pins[slot]={n:pick,sig:V.sig}; return pick;
 }
@@ -518,6 +561,7 @@ function buildDay(date,V){
       if(e.p==='rung'&&V.reduce){i.tag='Reduced';i.dose+=' · about 60% of the reps';ch.push(['=','Run rung at about 60%'])}
     });
     if(wv.deload||cfg.mode==='Deload')ch.push(['=','Deload: drop one set from each lift']);
+    else if(wv.taper)ch.push(['=','Taper: drop one set from each lift']);
   }
   // extras: what you added by hand, plus anything logged for this date that the plan does not show (e.g. logged on another device)
   const ex=(plan[key]._extra||[]).slice();
@@ -561,7 +605,7 @@ function ensureRec(key,n){sets[key]=sets[key]||{};return sets[key][n]=sets[key][
 function fieldVals(){return A.metrics.map((m,i)=>{const v=$('sc'+i).value;return v===''?null:parseFloat(v)})}
 function renderTop(){
   const d=addD(T0,S.day), w=wave(d);
-  $('whoBtn').textContent='SJR · '+A.name+' · '+(cfg.mode==='Wave'?w.label:cfg.mode);
+  $('whoBtn').textContent='SJR · '+A.name+' · '+(cfg.mode==='Wave'||evOn()?w.label:cfg.mode);
   $('dateH').textContent=DAYN[dow(d)].slice(0,3)+' '+nice(d);
   $('week').innerHTML=[0,1,2,3,4,5,6].map(i=>{const x=addD(T0,i);return `<button type="button" data-day="${i}" aria-pressed="${i===S.day}">${DAYL[dow(x)]}<b>${x.getDate()}</b></button>`}).join('');
   $('range').innerHTML=[[1,'Today'],[3,'3 days'],[7,'Week']].map(([n,l])=>`<button type="button" data-n="${n}" aria-pressed="${S.range===n}">${l}</button>`).join('');
@@ -595,7 +639,7 @@ function altsFor(it,key,V){
 }
 function renderPlan(){
   const V=verdict(); S.V=V; S.items={};
-  let html='';
+  let html=evCard();
   for(let k=0;k<S.range&&S.day+k<7;k++){
     const d=addD(T0,S.day+k), r=buildDay(d,V), key=r.key, future=S.day+k>0; S.items[key]=r.items;
     const word={full:'Full',adj:'Adjusted',hold:'Hold'}[r.status];
@@ -675,7 +719,11 @@ function sheet(name){
       <li><a href="https://padraik99.github.io/sjr-system/SJR_WeeklyGuide_Patrick_v5_20260402.html"><span class="big">Old guide</span><span>The weekly guide</span></a></li></ul>
       ${optRow('Variety','variety',['None','Some','Lots'])}
       <p class="note">Some: the main lifts stay put so the load can progress, everything else rotates.</p>
-      ${optRow('Training mode','mode',['Wave','Deload','Rehab only'])}
+      ${optRow('Training mode','mode',['Wave','Event','Deload','Rehab only'])}
+      ${cfg.mode==='Event'?(()=>{const e=cfg.event,on=evOn(),b=on?e.blocks:null;return `<div class="set"><span class="lab">Event</span><div class="newiss">
+        <div class="rowform"><input class="inp" id="evName" type="text" maxlength="40" placeholder="Event name" autocomplete="off" value="${esc(e?e.name:'')}"><input class="inp" id="evDate" type="date" min="${ds(addD(T0,1))}" value="${esc(e?e.date:'')}" style="max-width:170px"></div>
+        <div><button type="button" class="btn" data-evsave>Save event</button>${e?` <button type="button" class="link" data-evclear>${S.evAsk==='clear'?'Tap again to clear':'Clear'}</button>`:''} <span class="err" id="evErr"></span></div>
+        <p class="note">${on?wks(evState(T0).weeksLeft)+' to go: '+[['Base',b.base],['Build',b.build],['Specific',b.spec],['Taper',b.taper]].filter(x=>x[1]).map(x=>x[0]+' '+x[1]).join(' · ')+'. A week with the flare open 3 or more days does not count.':e?'That date has passed. Set a new one, or switch back to Wave.':'Until an event is saved, the plan runs as Wave.'}</p></div></div>`})():''}
       ${optRow('Run rung · Tuesday','rungA',['R4','R5','R6','R7'])}
       ${optRow('Run rung · Thursday','rungB',['R4','R5','R6','R7'])}
       ${optRow('Flexion rung','flex',[1,2,3,4])}
@@ -683,7 +731,7 @@ function sheet(name){
       <p class="note">Sets and swaps: ${DRY?'test mode, not saved':cloud===true?'saved to your database':cloud===false?'on this phone only (database step not done yet)':'checking…'}</p>
       <p class="note">${session?`Signed in${session.email?' as '+esc(session.email):''} · <button type="button" class="link" data-signout>Sign out</button>`:`Not signed in · <button type="button" class="link" data-signin>Sign in</button>`}</p>
       <p class="note"><a class="link" href="https://padraik99.github.io/sjr-system/SJR_Dashboard_v1_20260402.html">Coach dashboard</a></p>
-      <p class="note">SJR Today v0.5.3${DRY?' · test mode':''}</p>`;
+      <p class="note">SJR Today v0.6${DRY?' · test mode':''}</p>`;
   }
   if(name==='signin'){
     h=`${back}<div class="page"><h2 class="disp">Sign in</h2><p class="note">Once per phone. It keeps your logs private, and you stay signed in.</p>
@@ -745,7 +793,7 @@ document.addEventListener('submit',async ev=>{
     location.hash='today'; sync('Signed in'); await reloadData();
   }catch(e){err.textContent=e instanceof TypeError?'No connection. Try again.':(/invalid/i.test(e.message)?'Wrong email or password.':e.message)}
 });
-function route(){const h=location.hash.slice(1);S.clearAsk=null;S.flareAsk=false;if(SHEETS.includes(h)){sheet(h);$('sheet').scrollTop=0}else $('sheet').hidden=true}
+function route(){const h=location.hash.slice(1);S.clearAsk=null;S.flareAsk=false;S.evAsk=null;if(SHEETS.includes(h)){sheet(h);$('sheet').scrollTop=0}else $('sheet').hidden=true}
 function reSheet(){const h=location.hash.slice(1);if(SHEETS.includes(h))sheet(h)}
 function refreshDemo(){if(!$('sheet').hidden&&$('libList')){lib($('libQ').value);const i=$('demoUrl');if(i)i.focus()}else renderPlan()}
 
@@ -784,6 +832,28 @@ document.addEventListener('click',async ev=>{
     else if(/^https?:\/\/\S+$/i.test(v)){demos[d.savego]=v;S.saving=null;S.err=''}
     else S.err='That does not look like a link. It should start with https://';
     sv('pt_demos',demos);refreshDemo();
+  }
+  else if('evsave' in d){
+    const name=$('evName').value.trim().slice(0,40), date=$('evDate').value, err=$('evErr');
+    if(!name){err.textContent='Give it a name.';return}
+    if(!/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/.test(date)||date<=TODAY){err.textContent='Pick a date after today.';return}
+    if(evOn()){   // editing a live event keeps the progress made; extra weeks go to Base, or to Build once Base is done
+      const e=cfg.event; e.name=name;
+      if(date!==e.date){e.date=date;const st=evState(T0),extra=st.n-(st.total+st.lostAll);if(extra>0){if(st.block==='Base')e.blocks.base+=extra;else e.blocks.build+=extra}}
+    }else cfg.event={name,date,start:TODAY,blocks:evPlanBlocks(Math.ceil(dayDiff(fromDs(date),T0)/7))};
+    S.evAsk=null; sv('pt_t_cfg',cfg); renderTop(); renderPlan(); sheet('menu');
+  }
+  else if('evclear' in d){
+    if(S.evAsk!=='clear'){S.evAsk='clear';sheet('menu')}
+    else{S.evAsk=null;cfg.event=null;sv('pt_t_cfg',cfg);renderTop();renderPlan();sheet('menu')}
+  }
+  else if('evpush' in d||'evcut' in d){
+    const what='evpush' in d?'push':'cut';
+    if(S.evAsk!==what){S.evAsk=what;renderPlan();return}
+    const e=cfg.event, st=evState(T0); S.evAsk=null;
+    if(what==='push')e.date=ds(addD(fromDs(e.date),7*st.short));
+    else{const c=evCut();e.blocks.base-=c.base;e.blocks.build-=c.build}
+    sv('pt_t_cfg',cfg); renderTop(); renderPlan();
   }
   else if(d.why){location.hash='why';setTimeout(()=>{const el=document.getElementById('why-'+d.why);if(el)el.scrollIntoView()},60)}
   else if(d.cfg){cfg[d.cfg]=d.cfg==='flex'?+d.v:d.v;sv('pt_t_cfg',cfg);applyLook();renderTop();renderPlan();sheet('menu')}
